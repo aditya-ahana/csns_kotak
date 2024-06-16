@@ -1,0 +1,13 @@
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoRedColor {
+  color: rgb(238 50 57);
+}
