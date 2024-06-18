@@ -13,7 +13,7 @@ function SharedLayout() {
           className="main d-flex flex-row"
           style={{ height: "-webkit-fill-available" }}
         >
-          <div className="sidebar-child" style={{ width: "21%" }}>
+          <div className="sidebar-child" style={{ width: "18%" }}>
             <Sidebar />
           </div>
           <div
