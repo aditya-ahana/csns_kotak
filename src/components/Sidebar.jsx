@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarData } from "./data/SidebarData";
 
+import logo from "../static/logo.png";
 export default function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,23 +41,30 @@ export default function Sidebar() {
 
   return (
     <div
-      //   className="border"
-      style={{
-        width: "35vh",
-        height: "100vh",
-      }}
+    // className="border"
+    // className="d-flex flex-col"
     >
-      <Menu
-        onClick={({ key }) => {
-          click(key);
-        }}
-        defaultSelectedKeys={[location.pathname.toLowerCase()]}
-        mode="inline"
-        // theme="dark"
-        // inlineCollapsed={true}
-        items={sidebarItems}
-        style={{ border: "none" }}
-      />
+      <div
+        className="sidenavLogoContainer d-flex align-items-end justify-content-center"
+        style={{ height: "9vh" }}
+      >
+        <img src={logo} alt="Kotak Logo" style={{ width: "21vh" }} />
+      </div>
+
+      <div className="p-2"></div>
+      <div className="p-2">
+        <Menu
+          onClick={({ key }) => {
+            click(key);
+          }}
+          defaultSelectedKeys={[location.pathname.toLowerCase()]}
+          // mode="inline"
+          // theme="dark"
+          // inlineCollapsed={true}
+          items={sidebarItems}
+          style={{ border: "none" }}
+        />
+      </div>
     </div>
   );
 }
