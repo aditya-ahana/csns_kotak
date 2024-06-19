@@ -26,21 +26,28 @@ export default function Login() {
 
   return (
     <>
-      <div className="bg-light p-3">
-        <div>
-          <img src={logo} alt="Kotak Logo" style={{ width: "18vh" }} />
-        </div>
-        <div className="center" style={{ height: "95vh" }}>
+      <div className="parent" style={{ backgroundColor: "rgb(235 235 235)" }}>
+        <div className="main" style={{ height: "100vh" }}>
           <div
-            className="p-4 bg-white border rounded"
-            style={{ width: "75vh" }}
+            className="logoHeader d-flex align-items-center justify-content-start"
+            style={{ height: "10vh" }}
           >
-            <div className="d-flex flex-column justify-content-start">
-              <h3 className="logoRedColor" style={{ fontWeight: "600" }}>
-                Sign In
-              </h3>
-              <div className="inputs-fields">
-                {/* <TextField
+            <div className="p-4">
+              <img src={logo} alt="Kotak Logo" style={{ width: "15vh" }} />
+            </div>
+          </div>
+
+          <div className="center" style={{ height: "80vh" }}>
+            <div
+              className="p-4 bg-white rounded"
+              style={{ width: "75vh", boxShadow: "0px 0px 13px -6px gray" }}
+            >
+              <div className="d-flex flex-column justify-content-start">
+                <h3 className="logoRedColor" style={{ fontWeight: "600" }}>
+                  Sign In
+                </h3>
+                <div className="inputs-fields">
+                  {/* <TextField
                   label="Username"
                   placeholder="abc@example.com"
                   style={{ width: "100%" }}
@@ -54,53 +61,57 @@ export default function Login() {
                   // defaultValue="Normal"
                 /> */}
 
-                <div className="p-2"></div>
+                  <div className="p-2"></div>
 
-                {/* username */}
-                <FormControl style={{ width: "100%" }} variant="outlined">
-                  <InputLabel>Username</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type="text"
-                    placeholder="abc@example.com"
-                    label="Username"
-                  />
-                </FormControl>
+                  {/* username */}
+                  <FormControl style={{ width: "100%" }} variant="outlined">
+                    <InputLabel>Username</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type="text"
+                      placeholder="abc@example.com"
+                      label="Username"
+                    />
+                  </FormControl>
 
-                <div className="p-2"></div>
+                  <div className="p-2"></div>
 
-                {/* password */}
-                <FormControl style={{ width: "100%" }} variant="outlined">
-                  <InputLabel>Password</InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          //   onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Password"
-                  />
-                </FormControl>
+                  {/* password */}
+                  <FormControl style={{ width: "100%" }} variant="outlined">
+                    <InputLabel>Password</InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            //   onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                    />
+                  </FormControl>
 
-                <div className="p-2"></div>
+                  <div className="p-2"></div>
 
-                <div className="d-flex justify-content-between">
-                  <span>Remember me</span>
-                  <span>Forgot Password?</span>
+                  <div className="d-flex justify-content-start">
+                    <div>
+                      <input type="checkbox" name="" id="" />
+                      <span> Remember me</span>
+                    </div>
+                    {/* <span>Forgot Password?</span> */}
+                  </div>
                 </div>
               </div>
+              <div className="p-2"></div>
             </div>
-            <div className="p-2"></div>
           </div>
         </div>
       </div>

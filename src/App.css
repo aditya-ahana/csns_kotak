@@ -18,3 +18,7 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
   font-weight: bold;
   background-color: rgba(252, 232, 233, 1);
 }
+
+.MuiInputBase-input {
+  padding: 3% !important;
+}
