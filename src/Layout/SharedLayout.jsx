@@ -1,9 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import BreadcrumbsComponent from "./BreadCumbsComponent";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-// import SidebarComp from "./SideBarComp";
+import BreadCrumb from "../components/BreadCrumb";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 function SharedLayout() {
   return (
@@ -13,7 +12,7 @@ function SharedLayout() {
           className="main d-flex flex-row"
           style={{ height: "-webkit-fill-available" }}
         >
-          <div className="sidebar-child" style={{ width: "18%" }}>
+          <div className="sidebar-child" style={{ width: "19%" }}>
             <Sidebar />
           </div>
           <div
@@ -22,26 +21,17 @@ function SharedLayout() {
           >
             <div
               className="child"
-              style={{ position: "sticky", top: "0px", zIndex: "100" }}
+              style={{ height: "7vh" }}
+              // style={{ position: "sticky", top: "0px", zIndex: "100" }}
             >
               <Header />
-              <div
-                style={
-                  {
-                    // position: "relative",
-                    // top: "-6px",
-                    // backgroundColor: "white",
-                  }
-                }
-              >
-                <BreadcrumbsComponent />
-              </div>
             </div>
 
             <div
-              className="content"
-              style={{ backgroundColor: "rgb(235 235 235)" }}
+              className="content px-5 py-2"
+              style={{ height: "93vh", backgroundColor: "rgb(235 235 235)" }}
             >
+              <BreadCrumb />
               <Outlet />
             </div>
           </div>

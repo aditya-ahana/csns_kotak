@@ -41,18 +41,19 @@ export default function Sidebar() {
 
   return (
     <div
-    // className="border"
-    // className="d-flex flex-col"
+      className="border"
+      // className="d-flex flex-col"
+      style={{ height: "100%" }}
     >
       <div
         className="sidenavLogoContainer d-flex align-items-end justify-content-center"
-        style={{ height: "9vh" }}
+        style={{ height: "7vh" }}
       >
-        <img src={logo} alt="Kotak Logo" style={{ width: "21vh" }} />
+        <img src={logo} alt="Kotak Logo" style={{ width: "18vh" }} />
       </div>
 
       <div className="p-2"></div>
-      <div className="p-2">
+      <div className="p-1">
         <Menu
           onClick={({ key }) => {
             click(key);

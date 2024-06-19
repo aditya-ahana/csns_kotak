@@ -3,14 +3,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 
-import Login from "./pages/Login/Login";
+import Login from "./pages/login/Login";
 
-import Dashboard from "./pages/Dashboard/Dashboard";
-import CreateRequest from "./pages/CreateRequest/CreateRequest";
-import ViewUpdate from "./pages/ViewUpdate/ViewUpdate";
+import Dashboard from "./pages/dashboard/Dashboard";
+import CreateRequest from "./pages/createRequest/CreateRequest";
+import ViewUpdate from "./pages/viewUpdate/ViewUpdate";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
-import WithNav from "./components/WithNav";
+import WithNav from "./Layout/WithNav";
 
 export default function App() {
   return (

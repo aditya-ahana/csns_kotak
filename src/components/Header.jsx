@@ -6,8 +6,8 @@ export default function Header() {
   return (
     <>
       <div
-        style={{ height: "9vh" }}
         className="headerContainer d-flex align-items-center justify-content-end"
+        style={{ height: "-webkit-fill-available" }}
       >
         <div className="headerContainer me-3" style={{ width: "6%" }}>
           <div className="d-flex flex-row justify-content-between align-items-center">
