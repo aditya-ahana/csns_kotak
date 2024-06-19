@@ -41,7 +41,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className="border"
+      // className="border"
       // className="d-flex flex-col"
       style={{ height: "100%" }}
     >
