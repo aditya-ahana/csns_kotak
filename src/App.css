@@ -1,3 +1,7 @@
+:root {
+  --logoColor: rgb(238 50 57);
+}
+
 * {
   font-family: "Roboto", sans-serif;
 }
@@ -9,7 +13,7 @@
 }
 
 .logoRedColor {
-  color: rgb(238 50 57);
+  color: var(--logoColor);
 }
 
 li.ant-menu-item.ant-menu-item-selected,
@@ -21,4 +25,9 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
 
 .MuiInputBase-input {
   padding: 3% !important;
+}
+
+button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dangerous {
+  background-color: var(--logoColor);
+  width: -webkit-fill-available;
 }
