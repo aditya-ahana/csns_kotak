@@ -31,3 +31,11 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
   background-color: var(--logoColor);
   width: -webkit-fill-available;
 }
+
+.widthAuto {
+  width: auto !important;
+}
+
+.boxHover:hover {
+  box-shadow: 0px 0px 12px 0px gray !important;
+}

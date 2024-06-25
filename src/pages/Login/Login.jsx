@@ -39,7 +39,7 @@ export default function Login() {
 
           <div className="center" style={{ height: "81vh" }}>
             <div
-              className="p-4 bg-white rounded"
+              className="p-4 bg-white rounded boxHover"
               style={{ width: "66vh", boxShadow: "0px 0px 13px -6px gray" }}
             >
               <div className="d-flex flex-column justify-content-start">

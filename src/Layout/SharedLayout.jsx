@@ -47,7 +47,10 @@ function SharedLayout() {
               }}
             >
               <BreadCrumb />
-              <Outlet />
+
+              <div className="py-2">
+                <Outlet />
+              </div>
             </div>
           </div>
         </div>

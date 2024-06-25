@@ -50,11 +50,13 @@ export default function BreadCrumb() {
 
   return (
     <>
-      {pathnames[0] === "dashboard" || pathnames[1] === "dashboard" ? (
-        ""
-      ) : (
-        <Breadcrumb separator=">" itemRender={itemRender} items={pathItems} />
-      )}
+      <div style={{ height: "3vh" }}>
+        {pathnames[0] === "dashboard" || pathnames[1] === "dashboard" ? (
+          <></>
+        ) : (
+          <Breadcrumb separator=">" itemRender={itemRender} items={pathItems} />
+        )}
+      </div>
     </>
   );
 }
