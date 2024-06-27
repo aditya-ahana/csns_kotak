@@ -8,21 +8,43 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import TextField from "@mui/material/TextField";
 
+// import IconButton from "@mui/material/IconButton";
+import Input from "@mui/material/Input";
+import FilledInput from "@mui/material/FilledInput";
+// import OutlinedInput from "@mui/material/OutlinedInput";
+// import InputLabel from "@mui/material/InputLabel";
+// import InputAdornment from "@mui/material/InputAdornment";
+import FormHelperText from "@mui/material/FormHelperText";
+// import FormControl from "@mui/material/FormControl";
+// import TextField from "@mui/material/TextField";
+// import Visibility from "@mui/icons-material/Visibility";
+// import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button } from "antd";
-import { Checkbox } from "antd";
+// import { Checkbox } from "antd";
+
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
 import logo from "../../static/logo.png";
 
 export default function Login() {
   const nav = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  // const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   function signInHandle(e) {
     nav("/dashboard");
   }
+
+  // const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <>
@@ -39,7 +61,7 @@ export default function Login() {
 
           <div className="center" style={{ height: "81vh" }}>
             <div
-              className="p-4 bg-white rounded boxHover"
+              className="p-4 bg-white rounded"
               style={{ width: "66vh", boxShadow: "0px 0px 13px -6px gray" }}
             >
               <div className="d-flex flex-column justify-content-start">
@@ -50,7 +72,27 @@ export default function Login() {
                   <div className="p-2"></div>
 
                   {/* username */}
-                  <FormControl style={{ width: "100%" }} variant="outlined">
+
+                  <FormControl
+                    style={{ width: "100%", height: "3.25rem" }}
+                    variant="outlined"
+                    className="height3rem"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Username
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type="text"
+                      endAdornment={
+                        <InputAdornment position="end"></InputAdornment>
+                      }
+                      label="Username"
+                      placeholder="Eg: abc@example.com"
+                    />
+                  </FormControl>
+
+                  {/* <FormControl style={{ width: "100%" }} variant="outlined">
                     <InputLabel>Username</InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-password"
@@ -58,12 +100,41 @@ export default function Login() {
                       placeholder="abc@example.com"
                       label="Username"
                     />
-                  </FormControl>
+                  </FormControl> */}
 
                   <div className="p-2"></div>
 
                   {/* password */}
-                  <FormControl style={{ width: "100%" }} variant="outlined">
+
+                  <FormControl
+                    style={{ width: "100%", height: "3.25rem" }}
+                    variant="outlined"
+                    // className="height3rem"
+                  >
+                    <InputLabel htmlFor="outlined-adornment-password">
+                      Password
+                    </InputLabel>
+                    <OutlinedInput
+                      id="outlined-adornment-password"
+                      type={showPassword ? "text" : "password"}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Password"
+                      placeholder="Enter your password"
+                    />
+                  </FormControl>
+
+                  {/* <FormControl style={{ width: "100%" }} variant="outlined">
                     <InputLabel>Password</InputLabel>
                     <OutlinedInput
                       id="outlined-adornment-password"
@@ -83,7 +154,7 @@ export default function Login() {
                       }
                       label="Password"
                     />
-                  </FormControl>
+                  </FormControl> */}
 
                   <div className="p-2"></div>
 
@@ -92,7 +163,12 @@ export default function Login() {
                       {/* <input type="checkbox" name="" id="" />
                       <span> Remember me</span> */}
 
-                      <Checkbox>Remember Me</Checkbox>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Remember Me"
+                      />
+
+                      {/* <Checkbox>Remember Me</Checkbox> */}
                     </div>
                     {/* <span>Forgot Password?</span> */}
                   </div>
@@ -101,7 +177,7 @@ export default function Login() {
                   <Button
                     type="primary"
                     danger
-                    className="rounded"
+                    className="rounded height3rem"
                     onClick={(e) => {
                       signInHandle();
                     }}

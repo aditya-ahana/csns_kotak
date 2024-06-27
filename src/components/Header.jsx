@@ -15,7 +15,7 @@ export default function Header() {
         >
           <div className="d-flex flex-row justify-content-between align-items-center">
             <div className="headerUserName">
-              <span style={{ fontSize: "14px" }}>Admin</span>
+              <span>Admin</span>
             </div>
             <div className="p-1"></div>
             <div className="headerUserIcon">

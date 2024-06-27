@@ -47,9 +47,9 @@ export default function Sidebar() {
     >
       <div
         className="sidenavLogoContainer d-flex align-items-end justify-content-center"
-        style={{ height: "7vh" }}
+        style={{ height: "11.5vh" }}
       >
-        <img src={logo} alt="Kotak Logo" style={{ width: "18vh" }} />
+        <img src={logo} alt="Kotak Logo" style={{ width: "21vh" }} />
       </div>
 
       <div className="p-2"></div>
@@ -63,7 +63,7 @@ export default function Sidebar() {
           // theme="dark"
           // inlineCollapsed={true}
           items={sidebarItems}
-          style={{ border: "none" }}
+          style={{ border: "none", height: "80vh", padding: "6%" }}
         />
       </div>
     </div>

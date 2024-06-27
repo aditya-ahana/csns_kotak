@@ -15,26 +15,31 @@ export default function Dashboard() {
     <>
       <div>
         {/* heading */}
-        <div className="d-flex justify-content-between">
-          <span style={{ fontWeight: "600" }}>Dashboard</span>
+        <div className="d-flex justify-content-between align-items-end">
+          <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+            Dashboard
+          </span>
           <Button
             type="primary"
             danger
-            className="rounded widthAuto"
+            className="rounded"
             onClick={(e) => {
               createRequestNav();
             }}
+            style={{ width: "30vh", height: "6.5vh" }}
           >
-            + Create Request
+            <span style={{ fontWeight: "bold", fontSize: "large" }}>
+              + Create Request
+            </span>
           </Button>
         </div>
         {/* space */}
-        <div className="p-1"></div>
+        <div className="p-2"></div>
         {/* content */}
 
         <div
-          className="boxHover d-flex justify-content-center align-items-center bg-white rounded"
-          style={{ height: "76vh" }}
+          className="d-flex justify-content-center align-items-center bg-white rounded"
+          style={{ height: "73vh" }}
         >
           <div
             className="d-flex flex-column justify-content-center align-items-center"
@@ -52,8 +57,6 @@ export default function Dashboard() {
             </span>
           </div>
         </div>
-
-        {/*  */}
       </div>
     </>
   );

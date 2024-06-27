@@ -9,7 +9,7 @@ function SharedLayout() {
     <>
       <div
         className="parent"
-        style={{ height: "100vh", backgroundColor: "rgb(235 235 235)" }}
+        style={{ height: "100vh", backgroundColor: "rgba(245, 248, 250, 1)" }}
       >
         <div
           className="main d-flex flex-row"
@@ -17,7 +17,7 @@ function SharedLayout() {
         >
           <div
             className="sidebar-child"
-            style={{ width: "19%", background: "white" }}
+            style={{ width: "25.5%", background: "white" }}
           >
             <Sidebar />
           </div>
@@ -28,7 +28,7 @@ function SharedLayout() {
             <div
               className="child"
               style={{
-                height: "7vh",
+                height: "9vh",
                 // boxShadow: "0px 0px 9px gray",
                 // marginBottom: "1%",
                 background: "white",
@@ -39,9 +39,9 @@ function SharedLayout() {
             </div>
 
             <div
-              className="content px-5 py-2"
+              className="content px-4 py-3"
               style={{
-                height: "93vh",
+                height: "91vh",
                 boxShadow: "inset 0px 0px 13px -6px gray",
                 overflow: "auto",
               }}

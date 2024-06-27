@@ -50,7 +50,9 @@ export default function BreadCrumb() {
 
   return (
     <>
-      <div style={{ height: "3vh" }}>
+      <div
+      // style={{ height: "3vh" }}
+      >
         {pathnames[0] === "dashboard" || pathnames[1] === "dashboard" ? (
           <></>
         ) : (
