@@ -11,6 +11,7 @@ import ViewUpdate from "./pages/viewUpdate/ViewUpdate";
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import WithNav from "./Layout/WithNav";
+import ViewRequestDetails from "./pages/viewUpdate/ViewRequestDetails";
 
 export default function App() {
   return (
@@ -25,6 +26,10 @@ export default function App() {
             <Route element={<Dashboard />} path="/Dashboard" />
             <Route element={<CreateRequest />} path="/CreateRequest" />
             <Route element={<ViewUpdate />} path="/ViewUpdate" />
+            <Route
+              element={<ViewRequestDetails />}
+              path="/viewRequestDetails"
+            />
           </Route>
         </Routes>
       </BrowserRouter>

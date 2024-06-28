@@ -4,18 +4,17 @@ import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAlt } from "react-icons/md";
 // import Elements from "../../Elements/Elements";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { TbReload } from "react-icons/tb";
 import Modal from "react-modal";
 import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
 // import Sidenavsample from "../../../static/sidenavsample";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ViewRequest() {
-  const [searchInput, setSearchInput] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-  const [searchMode, setSearchMode] = useState(false);
-  const route_to = useNavigate();
-
+export default function ViewRequestDetails() {
+  const location = useLocation();
+  //  const { ticketDetails } = location.state;
   const current_date = new Date();
   const modified_date = current_date.toISOString().split("T")[0];
   const viewRequestTableHeaders = [
@@ -23,62 +22,58 @@ export default function ViewRequest() {
     "Requests",
     "Status",
     "Created Date",
-    "Created by",
     "Action",
   ];
+  const route_to = useNavigate();
 
   const requestDetails = [
     {
       ticketId: "1248",
-      requests: [
-        { value: "Statement in PDF/Excel" },
-        { value: "Beneficiary Details of IMPS Txns" },
-        { value: "Beneficiary Details of UPI Txns" },
-        { value: "IP Logs" },
-        { value: "Device Details" },
-      ],
+      requests: [{ value: "Statement in PDF/Excel" }],
       status: "In-progress",
       createdDateTime: modified_date,
-      createdBy: "System",
+      createdBy: "User",
     },
     {
-      ticketId: "1300",
-      requests: [
-        { value: "Statement in PDF/Excel" },
-        { value: "Beneficiary Details of IMPS Txns" },
-        { value: "Beneficiary Details of UPI Txns" },
-        { value: "IP Logs" },
-        { value: "Device Details" },
-      ],
+      ticketId: "1248",
+      requests: [{ value: "Beneficiary Details of IMPS Txns" }],
       status: "Completed",
       createdDateTime: modified_date,
       createdBy: "User",
     },
     {
-      ticketId: "1413",
-      requests: [
-        { value: "Statement in PDF/Excel" },
-        { value: "Beneficiary Details of IMPS Txns" },
-        { value: "Device Details" },
-      ],
+      ticketId: "1248",
+      requests: [{ value: "Beneficiary Details of UPI Txns" }],
       status: "Failed",
       createdDateTime: modified_date,
-      createdBy: "Admin",
+      createdBy: "User",
+    },
+    {
+      ticketId: "1248",
+      requests: [{ value: "IP Logs" }],
+      status: "In-progress",
+      createdDateTime: modified_date,
+      createdBy: "User",
+    },
+    {
+      ticketId: "1248",
+      requests: [{ value: "Device Details" }],
+      status: "In-progress",
+      createdDateTime: modified_date,
+      createdBy: "User",
     },
   ];
-
-  // console.log('ticketId' , ticketId);
-  // console.log('ticket status : ',ticketStatus);
 
   const ticketDetails = requestDetails.map((request, index) => ({
     ticketid: request.ticketId,
     requests: (
       <div style={{ alignSelf: "center" }}>
         {request.requests.map((req, index) => (
-          <p style={{ lineHeight: "1.5vh" }}>{`${index + 1}. ${req.value}`}</p>
+          <p style={{ lineHeight: "1.5vh" }}>{`${req.value}`}</p>
         ))}
       </div>
     ),
+    status_text: request.status,
     status: (
       <div
         style={{
@@ -151,79 +146,65 @@ export default function ViewRequest() {
     ),
   }));
 
-  console.log("TICKET", ticketDetails);
+  const requestActions = ticketDetails.map((detail, index) => ({
+    ...detail,
+    //  action : (
+    // <div>
+    //   <div>
+    //   { detail.status === 'Failed' && (
+    //     <button style={{ backgroundColor : "black"}}>
+    //        Failed
+    //     </button>
+    //   )}
+    //   </div>
 
-  const handleSearchQuery = (e) => {
-    const searched = e.target.value.toLowerCase();
-    setSearchInput(searched);
-    const queried_data = ticketDetails.filter(
-      (ticket) =>
-        ticket.createdby.toLowerCase().includes(searched) ||
-        ticket.createddatetime.toLowerCase().includes(searched) ||
-        ticket.ticketid.toLowerCase().includes(searched)
-    );
-    setSearchResult(queried_data);
-    setSearchMode(true);
-  };
+    //   <div>
+    // { detail.status === 'Completed' && (
+    //     <div></div>
+    // )}
+    //   </div>
+    // </div>
+    //  )
+    action: (
+      <div>
+        {detail.status_text === "Failed" ? (
+          <button className="retry-button">
+            <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
+            <p className="retry-text">Retry</p>
+          </button>
+        ) : (
+          <IoMdArrowDropdown size="1.95vw" color="rgba(95, 99, 104, 1)" />
+        )}
+      </div>
+    ),
+  }));
 
-  useEffect(() => {
-    if (searchInput === "") {
-      setSearchMode(false);
-    }
-  }, [searchInput]);
-
+  console.log("Request with Action", requestActions);
   return (
     <div className="page">
-      {/* <Elements />   
+      {/* <Elements />
 
-      <div>
+     <div>
       <Sidenavsample />
       </div> */}
 
-      <div className="view-request-screen">
+      <div className="view-request-details-screen">
         <div className="route-header">
           {/* <h3 className="prev-screen">Home</h3>
         <IoIosArrowForward className="router-icon" size='1.2vw' />
-        <h3 className="current-screen">View Request</h3> */}
+        <h3 className="current-screen">View details</h3> */}
         </div>
 
-        <h1 className="vr-heading">View request</h1>
+        <h1 className="vr-heading">View request details</h1>
 
-        <div className="view-request-container">
-          <div className="view-request-header">
-            <div className="request-searchbar">
-              <IoMdSearch className="request-search-icon" size="2.4vw" />
-              <input
-                type="text"
-                placeholder="Search by Ticket Id/Created by"
-                className="request-search-input"
-                onChange={(e) => handleSearchQuery(e)}
-              ></input>
-            </div>
-
-            <div className="request-filter-section">
-              <MdOutlineFilterAlt
-                className="filter-icon"
-                color="#606060"
-                size="30px"
-              />
-              <p className="filter-heading">Filter</p>
-            </div>
-          </div>
-
-          <div className="request-ticket-section">
-            <div className="view-request-table">
-              <TableSimple
-                data={
-                  searchMode === true && searchInput.length >= 3
-                    ? searchResult
-                    : ticketDetails
-                }
-                columns="ticketid.requests.status.createddatetime.createdby.void"
-                headers={viewRequestTableHeaders}
-                className="ticket-table"
-              />
-            </div>
+        <div className="view-details-container">
+          <div className="view-request-table">
+            <TableSimple
+              data={requestActions}
+              columns="ticketid.requests.status.createddatetime.action"
+              headers={viewRequestTableHeaders}
+              className="details-table"
+            />
           </div>
         </div>
       </div>
