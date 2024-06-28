@@ -984,7 +984,10 @@ export default function CreateRequest() {
         <h3 className="current-screen">Create Request</h3>
       </div> */}
 
-        <h1 className="cr-heading">Create Request</h1>
+        {/* <h1 className="cr-heading">Create Request</h1> */}
+        <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+          Create Request
+        </span>
 
         <div className="ticket-entry-section">
           <div className="ticket-type-section">

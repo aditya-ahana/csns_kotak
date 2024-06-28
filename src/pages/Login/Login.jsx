@@ -52,17 +52,17 @@ export default function Login() {
         <div className="main" style={{ height: "100vh" }}>
           <div
             className="logoHeader d-flex align-items-center justify-content-start"
-            style={{ height: "10vh" }}
+            style={{ height: "15vh" }}
           >
-            <div className="p-4">
-              <img src={logo} alt="Kotak Logo" style={{ width: "18vh" }} />
+            <div className="p-5">
+              <img src={logo} alt="Kotak Logo" style={{ width: "21vh" }} />
             </div>
           </div>
 
-          <div className="center" style={{ height: "81vh" }}>
+          <div className="center" style={{ height: "72vh" }}>
             <div
               className="p-4 bg-white rounded"
-              style={{ width: "66vh", boxShadow: "0px 0px 13px -6px gray" }}
+              style={{ width: "70vh", boxShadow: "0px 0px 13px -6px gray" }}
             >
               <div className="d-flex flex-column justify-content-start">
                 <h3 className="logoRedColor" style={{ fontWeight: "600" }}>
@@ -156,7 +156,7 @@ export default function Login() {
                     />
                   </FormControl> */}
 
-                  <div className="p-2"></div>
+                  <div className="p-1"></div>
 
                   <div className="d-flex justify-content-start">
                     <div>
@@ -180,6 +180,11 @@ export default function Login() {
                     className="rounded height3rem"
                     onClick={(e) => {
                       signInHandle();
+                    }}
+                    style={{
+                      width: "100%",
+                      fontWeight: "bold",
+                      fontSize: "large",
                     }}
                   >
                     Sign In

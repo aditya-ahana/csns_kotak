@@ -19,12 +19,19 @@
 
 .ant-menu-item {
   /* background-color: blueviolet; */
-  padding: 2%;
+  padding: 5%;
   height: auto !important;
   margin-bottom: 7% !important;
   display: flex !important;
   align-items: center;
   color: gray !important;
+  /* font-size: initial; */
+  font-size: larger;
+}
+.ant-menu-title-content {
+  line-height: initial;
+  /* padding: 6%; */
+  /* margin: 0%; */
 }
 .ant-menu-item-icon {
   font-size: x-large !important;
@@ -329,7 +336,7 @@ input {
 }
 
 .page {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   background-color: #f5f8fa;
   overflow: auto;
   display: flex;
@@ -340,6 +347,7 @@ input {
 }
 
 .create-request-screen {
+  width: -webkit-fill-available;
   /* margin-left: 3.6vw; */
   /* margin-top: 8.75vh; */
   /* margin-left: 10vw; */
@@ -347,7 +355,7 @@ input {
   /* max-height: auto; */
   border-radius: 8px;
   /* justify-content: center; */
-  /* margin-bottom: auto;
+  /* margin-bottom: auto; */
 }
 
 .route-header {
@@ -1761,5 +1769,5 @@ input {
   width: 14.5vw;
 }
 
-.retry-button {
-}
+/* .retry-button {
+} */

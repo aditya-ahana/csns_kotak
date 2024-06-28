@@ -187,8 +187,11 @@ export default function ViewRequest() {
         <h3 className="current-screen">View Request</h3> */}
         </div>
 
-        <h1 className="vr-heading">View request</h1>
+        {/* <h1 className="vr-heading">View request</h1> */}
 
+        <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+          View request
+        </span>
         <div className="view-request-container">
           <div className="view-request-header">
             <div className="request-searchbar">

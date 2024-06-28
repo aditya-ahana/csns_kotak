@@ -1,6 +1,9 @@
 import { RiDashboardFill } from "react-icons/ri";
-import { IoCreateOutline } from "react-icons/io5";
-import { FaList } from "react-icons/fa6";
+// import { IoCreateOutline } from "react-icons/io5";
+// import { FaList } from "react-icons/fa6";
+
+import { FiEdit } from "react-icons/fi";
+import { MdOutlinePostAdd } from "react-icons/md";
 
 export const sidebarData = [
   {
@@ -10,12 +13,12 @@ export const sidebarData = [
   },
   {
     key: "/CreateRequest",
-    icon: <IoCreateOutline />,
+    icon: <FiEdit />,
     label: "Create Request",
   },
   {
     key: "/ViewUpdate",
-    icon: <FaList />,
+    icon: <MdOutlinePostAdd />,
     label: "View/Update Request",
   },
 ];
