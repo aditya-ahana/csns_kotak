@@ -9,8 +9,10 @@ import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
 // import Sidenavsample from "../../../static/sidenavsample";
 import { useNavigate } from "react-router-dom";
+import MailDraft from "../../components/Modals/MailDraft";
 
 export default function ViewRequest() {
+  const [mailDraftModal, setMailDraftModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [searchMode, setSearchMode] = useState(false);
@@ -171,6 +173,9 @@ export default function ViewRequest() {
                 : "rgba(96, 96, 96, 1)",
             borderColor: "rgba(161, 161, 161, 1)",
           }}
+          onClick={(e) => {
+            setMailDraftModal(true);
+          }}
         >
           Mail Draft
         </button>
@@ -200,60 +205,67 @@ export default function ViewRequest() {
   }, [searchInput]);
 
   return (
-    <div className="page">
-      {/* <Elements />   
+    <>
+      <div className="page">
+        {/* <Elements />   
 
       <div>
       <Sidenavsample />
       </div> */}
 
-      <div className="view-request-screen">
-        <div className="route-header">
-          {/* <h3 className="prev-screen">Home</h3>
+        <div className="view-request-screen">
+          <div className="route-header">
+            {/* <h3 className="prev-screen">Home</h3>
         <IoIosArrowForward className="router-icon" size='1.2vw' />
         <h3 className="current-screen">View Request</h3> */}
-        </div>
-
-        {/* <h1 className="vr-heading">View request</h1> */}
-
-        <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
-          View request
-        </span>
-        <div className="view-request-container">
-          <div className="view-request-header">
-            <div className="request-searchbar">
-              <IoMdSearch className="request-search-icon" size="2.4vw" />
-              <input
-                type="search"
-                inputMode="text"
-                placeholder="Search by Ticket Id/Requester"
-                className="request-search-input"
-                onChange={(e) => handleSearchQuery(e)}
-              ></input>
-            </div>
-
-            <div className="request-filter-section">
-              <MdOutlineFilterAlt
-                className="filter-icon"
-                color="#606060"
-                size="30px"
-              />
-              <p className="filter-heading">Filter</p>
-            </div>
           </div>
 
-          <div className="request-ticket-section">
-            <div className="view-request-table">
-              <TableSimple
-                data={searchMode === true ? searchResult : ticketDetails}
-                columns="ticketid.requests.status.createdDate.requester.void"
-                headers={viewRequestTableHeaders}
-                className="ticket-table"
-              />
+          {/* <h1 className="vr-heading">View request</h1> */}
+
+          <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+            View request
+          </span>
+          <div className="view-request-container">
+            <div className="view-request-header">
+              <div className="request-searchbar">
+                <IoMdSearch className="request-search-icon" size="2.4vw" />
+                <input
+                  type="search"
+                  inputMode="text"
+                  placeholder="Search by Ticket Id/Requester"
+                  className="request-search-input"
+                  onChange={(e) => handleSearchQuery(e)}
+                ></input>
+              </div>
+
+              <div className="request-filter-section">
+                <MdOutlineFilterAlt
+                  className="filter-icon"
+                  color="#606060"
+                  size="30px"
+                />
+                <p className="filter-heading">Filter</p>
+              </div>
+            </div>
+
+            <div className="request-ticket-section">
+              <div className="view-request-table">
+                <TableSimple
+                  data={searchMode === true ? searchResult : ticketDetails}
+                  columns="ticketid.requests.status.createdDate.requester.void"
+                  headers={viewRequestTableHeaders}
+                  className="ticket-table"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <MailDraft
+        setMailDraftModal={setMailDraftModal}
+        mailDraftModal={mailDraftModal}
+      />
+    </>
   );
 }
