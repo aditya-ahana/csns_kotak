@@ -16,31 +16,16 @@ export default function ViewRequest() {
   const [searchMode, setSearchMode] = useState(false);
   const route_to = useNavigate();
 
-  const current_date = new Date();
-  const modified_date = current_date.toISOString().split("T")[0];
   const viewRequestTableHeaders = [
     "Ticket Id",
     "Requests",
     "Status",
     "Created Date",
-    "Created by",
+    "Requester",
     "Action",
   ];
 
   const requestDetails = [
-    {
-      ticketId: "1248",
-      requests: [
-        { value: "Statement in PDF/Excel" },
-        { value: "Beneficiary Details of IMPS Txns" },
-        { value: "Beneficiary Details of UPI Txns" },
-        { value: "IP Logs" },
-        { value: "Device Details" },
-      ],
-      status: "In-progress",
-      createdDateTime: modified_date,
-      createdBy: "System",
-    },
     {
       ticketId: "1300",
       requests: [
@@ -50,19 +35,61 @@ export default function ViewRequest() {
         { value: "IP Logs" },
         { value: "Device Details" },
       ],
+      status: "In-progress",
+      createdDate: "13-01-2024",
+      createdBy: "System",
+    },
+    {
+      ticketId: "1299",
+      requests: [
+        { value: "Statement in PDF/Excel" },
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "Beneficiary Details of UPI Txns" },
+        { value: "IP Logs" },
+        { value: "Device Details" },
+      ],
       status: "Completed",
-      createdDateTime: modified_date,
+      createdDate: "08-12-2023",
       createdBy: "User",
     },
     {
-      ticketId: "1413",
+      ticketId: "1298",
       requests: [
         { value: "Statement in PDF/Excel" },
         { value: "Beneficiary Details of IMPS Txns" },
         { value: "Device Details" },
       ],
       status: "Failed",
-      createdDateTime: modified_date,
+      createdDate: "21-04-2023",
+      createdBy: "Admin",
+    },
+    {
+      ticketId: "1297",
+      requests: [
+        { value: "Statement in PDF/Excel" },
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "IP Logs" },
+      ],
+      status: "In-progress",
+      createdDate: "02-03-2023",
+      createdBy: "System",
+    },
+    {
+      ticketId: "1296",
+      requests: [
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "Beneficiary Details of UPI Txns" },
+        { value: "IP Logs" },
+      ],
+      status: "Failed",
+      createdDate: "14-02-2023",
+      createdBy: "Banker",
+    },
+    {
+      ticketId: "1295",
+      requests: [{ value: "IP Logs" }, { value: "Device Details" }],
+      status: "In-progress",
+      createdDate: "30-01-2023",
       createdBy: "Admin",
     },
   ];
@@ -115,8 +142,8 @@ export default function ViewRequest() {
         <p style={{}}>{request.status}</p>
       </div>
     ),
-    createddatetime: request.createdDateTime,
-    createdby: request.createdBy,
+    createdDate: request.createdDate,
+    requester: request.createdBy,
     void: (
       <div className="detail-buttons">
         <button
@@ -158,8 +185,8 @@ export default function ViewRequest() {
     setSearchInput(searched);
     const queried_data = ticketDetails.filter(
       (ticket) =>
-        ticket.createdby.toLowerCase().includes(searched) ||
-        ticket.createddatetime.toLowerCase().includes(searched) ||
+        ticket.requester.toLowerCase().includes(searched) ||
+        ticket.createdDate.toLowerCase().includes(searched) ||
         ticket.ticketid.toLowerCase().includes(searched)
     );
     setSearchResult(queried_data);
@@ -197,8 +224,9 @@ export default function ViewRequest() {
             <div className="request-searchbar">
               <IoMdSearch className="request-search-icon" size="2.4vw" />
               <input
-                type="text"
-                placeholder="Search by Ticket Id/Created by"
+                type="search"
+                inputMode="text"
+                placeholder="Search by Ticket Id/Requester"
                 className="request-search-input"
                 onChange={(e) => handleSearchQuery(e)}
               ></input>
@@ -217,12 +245,8 @@ export default function ViewRequest() {
           <div className="request-ticket-section">
             <div className="view-request-table">
               <TableSimple
-                data={
-                  searchMode === true && searchInput.length >= 3
-                    ? searchResult
-                    : ticketDetails
-                }
-                columns="ticketid.requests.status.createddatetime.createdby.void"
+                data={searchMode === true ? searchResult : ticketDetails}
+                columns="ticketid.requests.status.createdDate.requester.void"
                 headers={viewRequestTableHeaders}
                 className="ticket-table"
               />

@@ -16,7 +16,6 @@ export default function ViewRequestDetails() {
   const location = useLocation();
   //  const { ticketDetails } = location.state;
   const current_date = new Date();
-  const modified_date = current_date.toISOString().split("T")[0];
   const viewRequestTableHeaders = [
     "Ticket Id",
     "Requests",
@@ -28,38 +27,38 @@ export default function ViewRequestDetails() {
 
   const requestDetails = [
     {
-      ticketId: "1248",
+      ticketId: "1300",
       requests: [{ value: "Statement in PDF/Excel" }],
       status: "In-progress",
-      createdDateTime: modified_date,
+      createdDateTime: "28-06-2024",
       createdBy: "User",
     },
     {
-      ticketId: "1248",
+      ticketId: "1300",
       requests: [{ value: "Beneficiary Details of IMPS Txns" }],
       status: "Completed",
-      createdDateTime: modified_date,
+      createdDateTime: "28-06-2024",
       createdBy: "User",
     },
     {
-      ticketId: "1248",
+      ticketId: "1300",
       requests: [{ value: "Beneficiary Details of UPI Txns" }],
       status: "Failed",
-      createdDateTime: modified_date,
+      createdDateTime: "28-06-2024",
       createdBy: "User",
     },
     {
-      ticketId: "1248",
+      ticketId: "1300",
       requests: [{ value: "IP Logs" }],
       status: "In-progress",
-      createdDateTime: modified_date,
+      createdDateTime: "28-06-2024",
       createdBy: "User",
     },
     {
-      ticketId: "1248",
+      ticketId: "1300",
       requests: [{ value: "Device Details" }],
       status: "In-progress",
-      createdDateTime: modified_date,
+      createdDateTime: "28-06-2024",
       createdBy: "User",
     },
   ];
@@ -110,7 +109,7 @@ export default function ViewRequestDetails() {
         <p style={{}}>{request.status}</p>
       </div>
     ),
-    createddatetime: request.createdDateTime,
+    createdDate: request.createdDateTime,
     createdby: request.createdBy,
     void: (
       <div className="detail-buttons">
@@ -173,13 +172,20 @@ export default function ViewRequestDetails() {
             <p className="retry-text">Retry</p>
           </button>
         ) : (
-          <IoMdArrowDropdown size="1.95vw" color="rgba(95, 99, 104, 1)" />
+          <button className="expand-button">
+            <IoMdArrowDropdown
+              size="1.95vw"
+              color="rgba(95, 99, 104, 1)"
+              className="expand-icon"
+            />
+          </button>
         )}
       </div>
     ),
   }));
 
   console.log("Request with Action", requestActions);
+
   return (
     <div className="page">
       {/* <Elements />
@@ -191,21 +197,93 @@ export default function ViewRequestDetails() {
       <div className="view-request-details-screen">
         <div className="route-header">
           {/* <h3 className="prev-screen">Home</h3>
-        <IoIosArrowForward className="router-icon" size='1.2vw' />
-        <h3 className="current-screen">View details</h3> */}
+<IoIosArrowForward className="router-icon" size='1.2vw' />
+<h3 className="current-screen">View details</h3> */}
         </div>
 
-        <h1 className="vr-heading">View request details</h1>
+        <h1 className="vr-heading">View Details</h1>
 
         <div className="view-details-container">
-          <div className="view-request-table">
-            <TableSimple
-              data={requestActions}
-              columns="ticketid.requests.status.createddatetime.action"
-              headers={viewRequestTableHeaders}
-              className="details-table"
-            />
-          </div>
+          <table className="details-table">
+            <thead>
+              <tr>
+                {viewRequestTableHeaders.map((header, index) => (
+                  <th key={index}>{header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {requestDetails.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.ticketId}</td>
+                  <td>
+                    <div style={{ alignSelf: "center" }}>
+                      {row.requests.map((req, reqIndex) => (
+                        <p key={reqIndex} style={{ lineHeight: "1.5vh" }}>
+                          {req.value}
+                        </p>
+                      ))}
+                    </div>
+                  </td>
+                  <td>
+                    <div
+                      style={{
+                        width: "auto",
+                        padding: "8px 15px",
+                        backgroundColor:
+                          row.status === "In-progress"
+                            ? "rgba(255, 238, 207, 1)"
+                            : row.status === "Completed"
+                              ? "rgba(205, 252, 229, 1)"
+                              : row.status === "Failed"
+                                ? "rgba(255, 220, 222, 1)"
+                                : "",
+                        height: "auto",
+                        borderRadius: "30px",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        textAlign: "center",
+                        color:
+                          row.status === "In-progress"
+                            ? "rgba(232, 125, 0, 1)"
+                            : row.status === "Completed"
+                              ? "rgba(21, 122, 73, 1)"
+                              : row.status === "Failed"
+                                ? "rgba(210, 26, 26, 1)"
+                                : "",
+                        fontWeight: "400",
+                        fontSize: "14px",
+                      }}
+                      className="status-tab"
+                    >
+                      <p>{row.status}</p>
+                    </div>
+                  </td>
+                  <td>{row.createdDateTime}</td>
+                  <td>
+                    <div>
+                      {row.status === "Failed" ? (
+                        <button className="retry-button">
+                          <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
+                          <p className="retry-text">Retry</p>
+                        </button>
+                      ) : (
+                        <button className="expand-button">
+                          <IoMdArrowDropdown
+                            size="1.95vw"
+                            color="rgba(95, 99, 104, 1)"
+                            className="expand-icon"
+                          />
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
