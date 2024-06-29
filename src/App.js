@@ -3,20 +3,34 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 
-import Login from "./components/Login/Login";
+import Login from "./pages/login/Login";
 
-import Dashboard from "./components/Pages/Dashboard/Dashboard";
-import CreateRequest from "./components/Pages/CreateRequest/CreateRequest";
-import ViewUpdate from "./components/Pages/ViewUpdate/ViewUpdate";
+import Dashboard from "./pages/dashboard/Dashboard";
+import CreateRequest from "./pages/createRequest/CreateRequest";
+import ViewUpdate from "./pages/viewUpdate/ViewUpdate";
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import WithNav from "./Layout/WithNav";
+import ViewRequestDetails from "./pages/viewUpdate/ViewRequestDetails";
+
 export default function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route element={<Login />} path="/" />
-          <Route element={<Dashboard />} path="/Dashboard" />
-          <Route element={<CreateRequest />} path="/CreateRequest" />
-          <Route element={<ViewUpdate />} path="/ViewUpdate" />
+
+          <Route element={<WithNav />}>
+            <Route element={<Sidebar />} />
+            <Route element={<Header />} />
+            <Route element={<Dashboard />} path="/Dashboard" />
+            <Route element={<CreateRequest />} path="/CreateRequest" />
+            <Route element={<ViewUpdate />} path="/ViewUpdate" />
+            <Route
+              element={<ViewRequestDetails />}
+              path="/viewRequestDetails"
+            />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>
