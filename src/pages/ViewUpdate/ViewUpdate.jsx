@@ -174,7 +174,9 @@ export default function ViewRequest() {
             borderColor: "rgba(161, 161, 161, 1)",
           }}
           onClick={(e) => {
+            if(request.status === 'Completed'){
             setMailDraftModal(true);
+            }
           }}
         >
           Mail Draft
@@ -222,8 +224,8 @@ export default function ViewRequest() {
 
           {/* <h1 className="vr-heading">View request</h1> */}
 
-          <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
-            View request
+          <span style={{ fontWeight: "420", fontSize: "x-large" }}>
+            View Request
           </span>
           <div className="view-request-container">
             <div className="view-request-header">
@@ -266,6 +268,7 @@ export default function ViewRequest() {
         setMailDraftModal={setMailDraftModal}
         mailDraftModal={mailDraftModal}
       />
+
     </>
   );
 }

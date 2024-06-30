@@ -344,7 +344,7 @@ export default function ViewRequestDetails() {
                   {viewDetailsAction === index ? (
                     <div
                       className="d-flex flex-column align-items-center"
-                      style={{ background: "rgba(245, 248, 250, 1)" }}
+                      style={{ background: "#f5f8fa",maxWidth : '73vw' }}
                     >
                       {row.subData?.map((subDetails) => (
                         <>
@@ -360,6 +360,8 @@ export default function ViewRequestDetails() {
                             <span
                               style={{
                                 width: "21vw",
+                                fontWeight : '400',
+                                color:'rgba(96, 96, 96, 1)'
                               }}
                             >
                               Acc No:- {subDetails.accNo}
@@ -379,7 +381,7 @@ export default function ViewRequestDetails() {
                                 width: "14.5vw",
                               }}
                             >
-                              <Button>Download</Button>
+                              <Button style={{ backgroundColor : 'rgba(0, 56, 116, 1)', marginLeft:'4.25vw',fontWeight : 420}}>Download</Button>
                             </span>
                           </div>
                         </>

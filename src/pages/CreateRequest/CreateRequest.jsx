@@ -41,7 +41,7 @@ const CustomReportListRenderer = ({ checked, option, onClick, disabled }) => {
 
 const customParamRenderer = ({ checked, option, onClick, disabled }) => {
   return (
-    <div style={{ gap: 0 }}>
+    <div style={{ gap: 0 , borderTopWidth : '0px'}}>
       <div className="param-items-container">
         <div style={{ borderTopWidth: "0px" }}>
           <label className="param-container">
@@ -76,13 +76,11 @@ export default function CreateRequest() {
 
   const handleReportSelection = (reports) => {
     setSelectedReports(reports);
-    autoScrollUp(100);
   };
 
   useEffect(() => {
     if (selectedReports.length > 1) {
-      autoScrollDown(200);
-      autoScrollUp(null, 160);
+      document.querySelector('#selected-reports-section').scrollIntoView();
     }
   }, [selectedReports.length]);
 
@@ -191,41 +189,40 @@ export default function CreateRequest() {
     { value: "2", label: "Excel" },
   ];
 
-  //   const autoScrollDown = (reportIndex,details) => {
-  //     // console.log('details',reportIndex,details);
-  //     var height = 0;
-  //     var scrollStep = 200;
-  //         if (height <= document.body.scrollHeight) {
-  //             window.scrollBy(0, scrollStep);
-  //         }
-  //         height += scrollStep;
+  // const autoScrollDown = (scrollingSpace) => {
+  //   var height = 0;
+  //   var scrollStep = 200;
+  //   var selectedReportsSection = document.querySelector('.selected-reports-section');
+    
+  //   if (selectedReportsSection) {
+  //       var sectionHeight = selectedReportsSection.scrollHeight;
+  //       var windowHeight = window.innerHeight;
+
+  //       if (sectionHeight > windowHeight) {
+  //           var scrollInterval = setInterval(() => {
+  //               if (height <= sectionHeight - windowHeight) {
+  //                   window.scrollBy(0, scrollStep);
+  //                   height += scrollStep;
+  //               } else {
+  //                   clearInterval(scrollInterval);
+  //               }
+  //           }, 100); // Adjust the interval time as needed
+  //       }
+  //   }
   // };
 
-  const autoScrollDown = (scrollingSpace) => {
-    let scrollEvent;
-    let bottomMargin = 0;
-    scrollEvent = setInterval(function () {
-      if (bottomMargin <= document.body.scrollHeight) {
-        window.scrollBy(bottomMargin, scrollingSpace);
-      } else {
-        clearInterval(scrollEvent);
-      }
-      bottomMargin += scrollingSpace;
-    }, 0);
-  };
-
-  const autoScrollUp = (detailIndex, scrollingSpace2) => {
-    let height = document.body.scrollHeight;
-    let scrollingSpace1 = 48;
-    if (detailIndex > 3 && height > 0) {
-      window.scrollBy(0, -scrollingSpace1);
-      height -= scrollingSpace1;
-    }
-    if (detailIndex < 4) {
-      window.scrollBy(0, -scrollingSpace2);
-      height -= scrollingSpace2;
-    }
-  };
+  // const autoScrollUp = (detailIndex, scrollingSpace2) => {
+  //   let height = document.body.scrollHeight;
+  //   let scrollingSpace1 = 48;
+  //   if (detailIndex > 3 && height > 0) {
+  //     window.scrollBy(0, -scrollingSpace1);
+  //     height -= scrollingSpace1;
+  //   }
+  //   if (detailIndex < 4) {
+  //     window.scrollBy(0, -scrollingSpace2);
+  //     height -= scrollingSpace2;
+  //   }
+  // };
 
   const displaySelectedReports = selectedReports
     .map((request) => request.label)
@@ -405,9 +402,9 @@ export default function CreateRequest() {
         });
       }
 
-      if (selectedReports.length < 2) {
-        autoScrollDown(200);
-      }
+
+        document.querySelector('#selected-reports-section').scrollIntoView();
+
       // console.log('New State',newState);
       return newState;
     });
@@ -417,7 +414,7 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][details].splice(detailIndex, 1);
-      autoScrollUp(detailIndex, 140);
+      document.querySelector('#selected-reports-section').scrollIntoView();
       return newState;
     });
   };
@@ -480,10 +477,7 @@ export default function CreateRequest() {
                   : {},
         ];
       }
-
-      if (selectedReports.length < 2) {
-        autoScrollDown(100);
-      }
+      document.querySelector('#selected-reports-section').scrollIntoView();
       return newState;
     });
   };
@@ -670,10 +664,9 @@ export default function CreateRequest() {
     }),
     Container: {
       marginTop: "1vh",
-      borderWidth: "1.5px",
+      borderWidth: "0px",
       borderStyle: "solid",
-      borderColor: "rgba(76, 76, 76, 1)",
-      height: "5.62vh",
+      borderColor: "rgba(128, 128, 128, 0.48)",
       borderRadius: "6px",
       minWidth: "6.5vw",
       maxWidth: "6.5vw",
@@ -1210,6 +1203,7 @@ export default function CreateRequest() {
   };
 
   return (
+  
     <div className="page">
       {/* <Elements />
 
@@ -1225,7 +1219,7 @@ export default function CreateRequest() {
       </div> */}
 
         {/* <h1 className="cr-heading">Create Request</h1> */}
-        <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+        <span style={{ fontWeight: '420', fontSize: "x-large" }}>
           Create Request
         </span>
 
@@ -1263,6 +1257,7 @@ export default function CreateRequest() {
                 type="text"
                 inputMode="text"
                 id="ticketdesc"
+                disabled={ticketNumber === 0 || ticketNumber.length === 0}
                 value={ticketDescription}
                 placeholder="Enter description"
                 onChange={(e) => setTicketDescription(e.target.value)}
@@ -1275,7 +1270,7 @@ export default function CreateRequest() {
             value={selectedReports}
             disableSearch={true}
             disabled={
-              ticketNumber === 0 || ticketDescription === "" ? true : false
+              ticketNumber === 0 && ticketDescription === "" ? true : false
             }
             hasSelectAll={false}
             overrideStrings={{
@@ -1304,7 +1299,7 @@ export default function CreateRequest() {
         </div>
 
         {selectedReports.length > 0 && (
-          <div className="selected-reports-section">
+          <div className="selected-reports-section" id="selected-reports-section">
             <h2 className="selected-reports-heading">Selected request</h2>
 
             <div>
@@ -1469,6 +1464,8 @@ export default function CreateRequest() {
                   onRequestClose={() => setViewPreview(false)}
                   className="preview-modal"
                   contentLabel="Preview Modal"
+                  // shouldCloseOnOverlayClick={true}    
+                  // shouldCloseOnEsc={true}         
                 >
                   <div className="preview-box">
                     <div className="preview-header">

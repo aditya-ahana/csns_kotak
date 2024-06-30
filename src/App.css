@@ -70,20 +70,23 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
 .page {
-  background-color: #f5f8fa;
+  margin-left: 0vw;
+  background-color: rgba(245, 248, 250, 1);
   display: flex;
   flex-direction: row;
   position: relative;
   z-index: 0;
-  overflow: visible;
+  max-width: 100vw;
+  overflow: auto;
   gap: 17.5vw;
+  scroll-behavior: smooth;
 }
 
 .create-request-screen {
   margin-left: 0vw;
   margin-top: 0vh;
   /* margin-left: 10vw; */
-  min-height: 100vh;
+  min-height: 75.25vh;
   max-height: auto;
   border-radius: 8px;
   justify-content: center;
@@ -94,9 +97,10 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 .view-request-details-screen {
   margin-left: 0vw;
   margin-top: 0vh;
+  min-height: 70vh;
+  max-height: auto;
   /* margin-left: 10vw; */
   border-radius: 8px;
-  overflow: visible;
   justify-content: center;
   margin-bottom: auto;
 }
@@ -144,7 +148,7 @@ input::-webkit-inner-spin-button {
   background-color: white;
   margin-top: -1vh;
   padding-bottom: 1.1vh;
-  width: 56.5vw;
+  width: 53vw;
   outline: none;
 }
 
@@ -261,9 +265,9 @@ input::-webkit-inner-spin-button {
 .reports-dropdown .dropdown-container {
   display: flex !important;
   background-color: white !important;
-  width: 59vw !important;
+  width: 55.575vw !important;
   outline: none !important;
-  padding: 0.25vh 0.25vw 0vh 0.25vw !important;
+  padding: 0vh 0.25vw 0vh 0.25vw !important;
   border-radius: 4px !important;
   align-items: center !important;
   justify-content: center !important;
@@ -317,7 +321,7 @@ input::-webkit-inner-spin-button {
 .reports-dropdown-after .dropdown-container {
   display: flex !important;
   background-color: white !important;
-  width: 59vw !important;
+  width: 55.575vw !important;
   font-weight: 500 !important;
   outline: none !important;
   padding: 0.25vh 0.25vw 0vh 0.25vw !important;
@@ -361,7 +365,7 @@ input::-webkit-inner-spin-button {
   margin-top: -2.5vh;
   margin-left: -1.2vw;
   padding-bottom: 1vh;
-  width: 56.5vw;
+  width: 19.85vw;
 }
 
 .param-container {
@@ -473,13 +477,13 @@ input::-webkit-inner-spin-button {
   max-height: 20vh !important;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .params-dropdown .dropdown-container {
   display: flex !important;
   background-color: white !important;
-  width: 20.85vw !important;
+  width: 20vw !important;
   outline: none !important;
   padding: 0vh 0.25vw 0vh 0.25vw !important;
   align-items: center !important;
@@ -495,9 +499,9 @@ input::-webkit-inner-spin-button {
 }
 
 .params-dropdown .dropdown-content {
-  margin-left: -0.34vw !important;
+  margin-left: -0.35vw !important;
   margin-top: -0.6vh !important;
-  width: 20.85vw !important;
+  width: 20.025vw !important;
   border-top-left-radius: 0px !important;
   border-width: 0px 1px 1px 1px !important;
   border-style: solid !important;
@@ -526,13 +530,13 @@ input::-webkit-inner-spin-button {
   max-height: 20vh !important;
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .params-dropdown-after .dropdown-container {
   display: flex !important;
   background-color: white !important;
-  width: 20.85vw !important;
+  width: 20vw !important;
   outline: none !important;
   padding: 0vh 0.25vw 0vh 0.25vw !important;
   align-items: center !important;
@@ -548,9 +552,9 @@ input::-webkit-inner-spin-button {
 }
 
 .params-dropdown-after .dropdown-content {
-  margin-left: -0.34vw !important;
+  margin-left: -0.38vw !important;
   margin-top: -0.6vh !important;
-  width: 20.85vw !important;
+  width: 20vw !important;
   border-top-left-radius: 0px !important;
   border-width: 0px 1px 1px 1px !important;
   border-style: solid !important;
@@ -615,7 +619,6 @@ input::-webkit-inner-spin-button {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 10vw;
   border-radius: 5px;
   border-style: solid;
   padding: 0vh 0.75vw 0vh 0.5vw;
@@ -670,9 +673,9 @@ input::-webkit-inner-spin-button {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  width: 10vw !important;
-  gap: 2vw !important;
+  justify-content: space-around !important;
+  width: 9.5vw !important;
+  gap: 1vw !important;
   height: 5.5vh !important;
   border-radius: 5px !important;
   border-style: solid !important;
@@ -689,7 +692,7 @@ input::-webkit-inner-spin-button {
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
-  width: 10vw !important;
+  width: 9.5vw !important;
   gap: 2vw !important;
   height: 5.5vh !important;
   border-radius: 5px !important;
@@ -707,7 +710,7 @@ input::-webkit-inner-spin-button {
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
-  width: 10vw !important;
+  width: 9.5vw !important;
   gap: 2vw !important;
   height: 5.5vh !important;
   border-radius: 5px !important;
@@ -867,127 +870,6 @@ input::-webkit-inner-spin-button {
 
 /* ////////////////////CLOSE/////////////////// */
 
-.Components {
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  z-index: 0;
-  background-color: rgba(0, 15, 17, 0);
-  width: 100vw;
-}
-
-.menu:hover {
-  color: rgb(0, 255, 234);
-  transition: ease-in 0.35s;
-}
-
-.nav-logo {
-  height: 15vh;
-  width: 13vw;
-}
-
-.Active {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  width: 19.3vw;
-  max-height: 100vh;
-  z-index: 2;
-  background-color: rgb(255, 255, 255);
-  transition: ease-in 0.2s;
-  box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1);
-  animation: forwards;
-  overflow: hidden;
-  scroll-behavior: unset;
-}
-
-/* .Imports {
-    z-index: 2;
-  } */
-
-.Component-Nav {
-  margin-top: 0vh;
-  margin-left: -2vw;
-  min-height: 85vh;
-}
-
-.Component-Nav.Nav-Items {
-  list-style-type: none;
-  text-decoration: none;
-}
-
-.Component-Nav.Nav-Items.item {
-  text-decoration: none;
-}
-
-.item {
-  margin-left: 1vw;
-  display: flex;
-  flex-direction: row;
-  font-family: Roboto;
-  font-weight: 500;
-  font-size: 1vw;
-  letter-spacing: 0.5px;
-  color: #737373;
-  text-decoration: none;
-}
-
-.item:hover {
-  color: #737373;
-}
-
-.Component-Nav.ul-item.Linear {
-  display: flex;
-  flex-direction: row;
-  cursor: context-menu;
-}
-
-.Component-Nav.ul-item.Linear:hover {
-  background-color: rgb(255, 255, 255);
-  color: rgb(14, 2, 2);
-}
-
-.Closed {
-  color: rgba(255, 255, 255, 0);
-}
-
-.Linear {
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  height: 8vh;
-  align-items: center;
-}
-
-.Linear:hover {
-  background-color: rgb(229, 229, 229);
-  border-radius: 0px;
-  transition: ease-in 0.3s;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  box-sizing: border-box;
-  height: 7vh;
-  width: 100vw;
-  position: fixed;
-  z-index: 1;
-  border-radius: 0px;
-  background-color: rgb(255, 255, 255);
-  box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1);
-}
-
-/* HEADER */
-
-/* .org-logo{
-    margin-top: 1.25%;
-    margin-left: 1.25%;
-    height: 60%;
-    width: 160px;
-    border-radius: 6px;
-   } */
-
 .header-title-section {
   display: flex;
   vertical-align: middle;
@@ -1046,7 +928,7 @@ input::-webkit-inner-spin-button {
 .ticket-entry-section {
   margin-top: 2vh;
   height: 24.85vh;
-  width: 77.4vw;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
   padding-left: 1.75vw;
@@ -1065,7 +947,7 @@ input::-webkit-inner-spin-button {
 }
 
 .ticket-container {
-  margin-top: 3vh;
+  margin-top: 2.5vh;
 }
 
 .ticket-number-heading,
@@ -1085,12 +967,12 @@ input::-webkit-inner-spin-button {
 .ticket-description-input {
   z-index: 0;
   height: 6.5vh;
-  width: 28.25vw;
+  width: 26.5vw;
   padding-left: 0.95vw;
   padding-right: 0.95vw;
   border-radius: 4px;
-  border-width: 1.25px;
-  border-color: rgba(128, 128, 128, 0.74);
+  border-width: 1px;
+  border-color: rgba(128, 128, 128, 0.48);
   border-style: solid;
 }
 
@@ -1098,7 +980,7 @@ input::-webkit-inner-spin-button {
 .ticket-description-input-after {
   z-index: 0;
   height: 6.5vh;
-  width: 28.25vw;
+  width: 26.5vw;
   font-weight: 500;
   padding-left: 0.95vw;
   padding-right: 0.95vw;
@@ -1160,7 +1042,7 @@ input::-webkit-inner-spin-button {
   margin-top: 3vh;
   min-height: 13vh;
   max-height: auto;
-  width: 77.4vw;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
   padding: 3vh 2vw 3vh 1.85vw;
@@ -1185,7 +1067,7 @@ input::-webkit-inner-spin-button {
   border-width: 1.5px;
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
-  width: 59vw;
+  width: 55.575vw !important;
   margin-bottom: 3vh;
 }
 
@@ -1208,7 +1090,7 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-report-details {
-  padding: 2.5vh 1.5vw 0vh 1.5vw;
+  padding: 2.5vh 1.25vw 0vh 1.25vw;
   min-height: 1vh;
   max-height: auto;
   border-bottom-left-radius: 5px;
@@ -1252,7 +1134,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: left;
   justify-content: left;
-  width: 21vw;
+  width: 20vw;
   border-radius: 5px;
   border-style: solid;
   padding: 0vh 0.75vw 0vh 0.75vw;
@@ -1267,7 +1149,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: left;
   justify-content: left;
-  width: 21vw;
+  width: 20vw;
   border-radius: 5px;
   border-style: solid;
   padding: 0vh 0.75vw 0vh 0.75vw;
@@ -1282,7 +1164,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: left;
   justify-content: left;
-  width: 11vw;
+  width: 10.05vw;
   border-radius: 5px;
   border-style: solid;
   height: 5.5vh;
@@ -1325,10 +1207,10 @@ input::-webkit-inner-spin-button {
 
 .type-container {
   border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
+  border-style: none;
+  border-width: 2px;
   background-color: white;
-  border-color: rgba(25, 23, 23, 0.48);
+  border-color: rgba(128, 128, 128, 0.48);
 }
 
 .type-dropdown {
@@ -1424,7 +1306,7 @@ input::-webkit-inner-spin-button {
   width: 100vw;
   align-items: center;
   justify-content: center;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .preview-box {
@@ -1455,7 +1337,7 @@ input::-webkit-inner-spin-button {
 }
 
 .preview-scroll {
-  overflow: scroll;
+  overflow: auto;
 }
 
 .preview-report {
@@ -1546,15 +1428,15 @@ input::-webkit-inner-spin-button {
 .view-details-container {
   display: flex;
   margin-top: 2vh;
-  min-height: 78.5vh;
+  min-height: 75.25vh;
   max-height: auto;
-  width: 77.4vw;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
   border-width: 0;
   box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1);
   align-items: center;
-  padding: 4vh 0vw 0vh 0vw;
+  padding: 4vh 1.75vw 0vh 0.75vw;
   border-radius: 4px;
 }
 
@@ -1567,8 +1449,7 @@ input::-webkit-inner-spin-button {
   flex-direction: row;
   gap: 2.25vw;
   height: 5.5vh;
-  justify-content: right;
-  width: 73.9vw;
+  align-self: flex-end;
 }
 
 .request-searchbar {
@@ -1623,8 +1504,10 @@ input::-webkit-inner-spin-button {
 
 .request-ticket-section {
   margin-top: 3vh;
-  margin-left: 0vw;
   border-radius: 10px;
+  display: flex;
+  align-self:center;
+  max-width: 72vw ;
 }
 
 .view-request-table {
@@ -1685,7 +1568,7 @@ input::-webkit-inner-spin-button {
   text-align: center;
   justify-content: center;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20.5vw;
   padding-left: 1vw;
 }
 
@@ -1716,7 +1599,7 @@ input::-webkit-inner-spin-button {
   justify-content: centre;
   border-top-right-radius: 4px;
   border-width: 1px 1px 0px 0px;
-  width: 12vw;
+  width: 11.5vw;
 }
 
 .ticket-table tr td {
@@ -1733,7 +1616,7 @@ input::-webkit-inner-spin-button {
   border-bottom-width: 0px;
   padding: 16px;
   border-style: solid;
-  min-height: 23vh;
+  min-height: 22vh;
   max-height: auto;
   padding: 1.4vh 0.5vw 1.4vh 0.5vw;
 }
@@ -1747,10 +1630,10 @@ input::-webkit-inner-spin-button {
 .ticket-table tr td:nth-child(2) {
   display: flex;
   text-align: left;
-  padding: 3vh 1vw 1vh 1vw;
+  padding: 2vh 1vw 0vh 1vw;
   justify-content: left;
   border-width: 1px 1px 1px 0px;
-  width: 21vw;
+  width: 20.5vw;
 }
 
 .ticket-table tr td:nth-child(3) {
@@ -1779,7 +1662,7 @@ input::-webkit-inner-spin-button {
   justify-content: centre;
   border-width: 1px 1px 1px 1px;
   border-bottom-right-radius: 0px;
-  width: 12vw;
+  width: 11.5vw;
 }
 
 .detail-buttons {
@@ -1876,7 +1759,7 @@ input::-webkit-inner-spin-button {
   justify-content: left;
   border-top-left-radius: 4px;
   border-width: 1px 1px 0px 1px;
-  width: 10vw;
+  width: 10.5vw;
   padding-left: 1.4vw;
 }
 
@@ -1884,16 +1767,22 @@ input::-webkit-inner-spin-button {
   text-align: center;
   justify-content: center;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20vw;
   padding-left: 1vw;
 }
 
-.details-table tr th:nth-child(3),
+.details-table tr th:nth-child(3){
+  text-align: centre;
+  justify-content: centre;
+  border-width: 1px 1px 0px 0px;
+  width: 13vw;
+}
+
 .details-table tr th:nth-child(4) {
   text-align: centre;
   justify-content: centre;
   border-width: 1px 1px 0px 0px;
-  width: 14.5vw;
+  width: 15vw;
 }
 
 .details-table tr th:nth-child(5) {
@@ -1927,7 +1816,7 @@ input::-webkit-inner-spin-button {
 .details-table tr td:nth-child(1) {
   justify-content: left;
   border-width: 1px 1px 0px 1px;
-  width: 10vw;
+  width: 10.5vw;
   padding-left: 1.4vw;
 }
 
@@ -1935,16 +1824,22 @@ input::-webkit-inner-spin-button {
   align-items: center;
   justify-content: left;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20vw;
   padding: 3vh 1vw 1vh 1vw;
 }
 
-.details-table tr td:nth-child(3),
+.details-table tr td:nth-child(3){
+  text-align: centre;
+  justify-content: centre;
+  border-width: 1px 1px 0px 0px;
+  width: 13vw;
+}
+
 .details-table tr td:nth-child(4) {
   text-align: centre;
   justify-content: centre;
   border-width: 1px 1px 0px 0px;
-  width: 14.5vw;
+  width: 15vw;
 }
 
 .details-table tr td:nth-child(5) {
@@ -1981,8 +1876,8 @@ input::-webkit-inner-spin-button {
 .mail-draft-button:hover,
 .retry-button:hover,
 .expand-icon:hover {
-  box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.48);
-  transition: all 0.4s;
+  box-shadow: 1px 2px 12px 0px rgba(89, 89, 89, 0.48);
+  transition: all 0s;
 }
 
 .expand-button {
@@ -1990,7 +1885,7 @@ input::-webkit-inner-spin-button {
   background-color: transparent;
 }
 .submit-button:hover {
-  box-shadow: 1px 2px 12px 5px rgba(0, 0, 0, 0.48);
+  box-shadow: 1px 2px 12px 5px rgba(94, 94, 94, 0.48);
   transition: all 0.4s;
 }
 
