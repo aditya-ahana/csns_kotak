@@ -20,6 +20,7 @@ const CustomReportListRenderer = ({ checked, option, onClick, disabled }) => {
         <div>
           <label className="container">
             <input
+              autoComplete="off"
               type="checkbox"
               onChange={onClick}
               checked={checked}
@@ -45,6 +46,7 @@ const customParamRenderer = ({ checked, option, onClick, disabled }) => {
         <div style={{ borderTopWidth: "0px" }}>
           <label className="param-container">
             <input
+              autoComplete="off"
               type="checkbox"
               onChange={onClick}
               checked={checked}
@@ -74,6 +76,7 @@ export default function CreateRequest() {
 
   const handleReportSelection = (reports) => {
     setSelectedReports(reports);
+    autoScrollUp(100);
   };
 
   useEffect(() => {
@@ -83,21 +86,49 @@ export default function CreateRequest() {
     }
   }, [selectedReports.length]);
 
+  // useEffect(() => {
+  //   const initialReports = selectedReports.map((report) => ({
+  //     selectedReport : report.label,
+  //     selectedParams: [],
+  //     accountNumberDetails: [],
+  //     PANdetails : [],
+  //     CRNdetails : [],
+  //     RRNdetails : [],
+  //     aadharDetails : [],
+  //     emailDetails : [],
+  //     creditCardDetails : [],
+  //     debitCardDetails : [],
+  //     mobileNoDetails : []
+  //   }));
+  //   setReportsState(initialReports);
+  // }, [ selectedReports ])
+
   useEffect(() => {
-    const initialReports = selectedReports.map((report) => ({
-      selectedReport: report.label,
-      selectedParams: [],
-      accountNumberDetails: [],
-      PANdetails: [],
-      CRNdetails: [],
-      RRNdetails: [],
-      aadharDetails: [],
-      emailDetails: [],
-      creditCardDetails: [],
-      debitCardDetails: [],
-      mobileNoDetails: [],
-    }));
-    setReportsState(initialReports);
+    setReportsState((prevReportsState) => {
+      const updatedReportState = selectedReports.map((report) => {
+        const existingReport = prevReportsState.find(
+          (existing) => existing.selectedReport === report.label
+        );
+
+        return (
+          existingReport || {
+            selectedReport: report.label,
+            selectedParams: [],
+            accountNumberDetails: [],
+            PANdetails: [],
+            CRNdetails: [],
+            RRNdetails: [],
+            aadharDetails: [],
+            emailDetails: [],
+            creditCardDetails: [],
+            debitCardDetails: [],
+            mobileNoDetails: [],
+          }
+        );
+      });
+
+      return updatedReportState;
+    });
   }, [selectedReports]);
 
   // console.log('Selected REPORTS : ',selectedReports);
@@ -225,14 +256,12 @@ export default function CreateRequest() {
         reportName === "IP Logs" &&
         params.some((param) => param.label === "Mobile No.")
       ) {
-        // Check if 'CRN' is already present in the params
         const isCRNPresent = params.some((param) => param.label === "CRN");
         const isMobileNoPresent = params.some(
           (param) => param.label === "Mobile No."
         );
 
         if (!isCRNPresent || !isMobileNoPresent) {
-          // Create a new params array without duplicates
           const newParams = [...params];
 
           if (!isMobileNoPresent) {
@@ -261,6 +290,7 @@ export default function CreateRequest() {
           type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
         });
       }
+
       if (
         params.some((param) => param.label === "PAN") &&
         report.PANdetails.length === 0
@@ -397,10 +427,6 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      const StatementSelected = selectedReports.some(
-        (report) => report.label === "Statement in PDF/Excel"
-      );
-
       if (reportName === "Statement in PDF/Excel") {
         newState[reportIndex][detailName] = [
           ...newState[reportIndex][detailName],
@@ -418,13 +444,14 @@ export default function CreateRequest() {
               ? { name: name, value: "", from: "From", to: "To", type: "Type" }
               : detailName === "PANdetails" ||
                   detailName === "mobileNoDetails" ||
-                  detailName === "emailDetails" ||
-                  detailName === "creditCardDetails" ||
-                  detailName === "debitCardDetails" ||
-                  detailName === "aadharDetails" ||
-                  detailName === "CRNdetails"
+                  detailName === "CRNdetails" ||
+                  detailName === "emailDetails"
                 ? { name: name, value: "", type: "Type" }
-                : {},
+                : detailName === "creditCardDetails" ||
+                    detailName === "debitCardDetails" ||
+                    detailName === "aadharDetails"
+                  ? { name: name, value: "", type: "Type" }
+                  : {},
         ];
       } else {
         newState[reportIndex][detailName] = [
@@ -443,13 +470,14 @@ export default function CreateRequest() {
               ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
               : detailName === "PANdetails" ||
                   detailName === "mobileNoDetails" ||
-                  detailName === "emailDetails" ||
-                  detailName === "creditCardDetails" ||
-                  detailName === "debitCardDetails" ||
-                  detailName === "aadharDetails" ||
-                  detailName === "CRNdetails"
+                  detailName === "CRNdetails" ||
+                  detailName === "emailDetails"
                 ? { name: name, value: "", type: "Excel" }
-                : {},
+                : detailName === "creditCardDetails" ||
+                    detailName === "debitCardDetails" ||
+                    detailName === "aadharDetails"
+                  ? { name: name, value: "", type: "Excel" }
+                  : {},
         ];
       }
 
@@ -460,10 +488,24 @@ export default function CreateRequest() {
     });
   };
 
-  const handleInputValue = (value, reportIndex, detailIndex, detail) => {
+  const handleInputValue = (value, reportIndex, detailIndex, detailName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].value = value;
+      newState[reportIndex][detailName][detailIndex].value =
+        detailName === "creditCardDetails" ||
+        detailName === "aadharDetails" ||
+        detailName === "debitCardDetails" ||
+        detailName === "RRNdetails"
+          ? parseInt(value, 10)
+          : value;
+      return newState;
+    });
+  };
+
+  const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      newState[reportIndex][detail][detailIndex].amount = parseInt(value, 10);
       return newState;
     });
   };
@@ -476,7 +518,7 @@ export default function CreateRequest() {
     });
   };
 
-  const handleFromDate = (date, reportIndex, detailIndex, detail) => {
+  const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -511,14 +553,23 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      newState[reportIndex][detail][detailIndex].from = formatted_date;
+      if (
+        formatted_date > to ||
+        (formatted_date > to &&
+          new Date(formatted_date).getMonth() > new Date(to).getMonth() &&
+          new Date(formatted_date).getFullYear() > new Date(to).getFullYear())
+      ) {
+        newState[reportIndex][detail][detailIndex].from = "Invalid !";
+      } else {
+        newState[reportIndex][detail][detailIndex].from = formatted_date;
+      }
 
       console.log("time4", date);
       return newState;
     });
   };
 
-  const handleToDate = (date, reportIndex, detailIndex, detail) => {
+  const handleToDate = (date, reportIndex, detailIndex, detail, from) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -553,22 +604,27 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      newState[reportIndex][detail][detailIndex].to = formatted_date;
+      if (
+        formatted_date < from ||
+        (formatted_date < from &&
+          new Date(formatted_date).getMonth() < new Date(from).getMonth() &&
+          new Date(formatted_date).getFullYear() < new Date(from).getFullYear())
+      ) {
+        newState[reportIndex][detail][detailIndex].to = "Invalid !";
+      } else {
+        newState[reportIndex][detail][detailIndex].to = formatted_date;
+      }
 
       console.log("time4", date);
       return newState;
     });
   };
 
-  const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
-    setReportsState((prevState) => {
-      const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].amount = value;
-      return newState;
-    });
-  };
-
-  const handleDate = (date, reportIndex, detailIndex, detail) => {
+  const handleDate = (date, reportIndex, detailIndex, detailName) => {
+    console.log("RRN date", date);
+    console.log("RRN reportIndex", reportIndex);
+    console.log("RRN detailIndex", detailIndex);
+    console.log("RRN Detail", detailName);
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -588,22 +644,7 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      if (!newState[reportIndex]) {
-        console.error("Report is undefined for index:", reportIndex);
-        console.log("time1");
-        return prevState;
-      }
-      if (!newState[reportIndex][detail]) {
-        console.log("time2");
-        newState[reportIndex][detail] = [];
-      }
-      if (!newState[reportIndex][detail][detailIndex]) {
-        console.error("Detail is undefined for detail index:", detailIndex);
-        console.log("time3");
-        return prevState;
-      }
-
-      newState[reportIndex][detail][detailIndex].date = formatted_date;
+      newState[reportIndex][detailName][detailIndex].date = formatted_date;
 
       console.log("time4", date);
       return newState;
@@ -629,23 +670,26 @@ export default function CreateRequest() {
     }),
     Container: {
       marginTop: "1vh",
-      borderWidth: "1.36px",
+      borderWidth: "1.5px",
       borderStyle: "solid",
-      borderColor: "rgba(128, 128, 128, 0.3)",
-      height: "5.5vh",
+      borderColor: "rgba(76, 76, 76, 1)",
+      height: "5.62vh",
       borderRadius: "6px",
+      minWidth: "6.5vw",
+      maxWidth: "6.5vw",
+      marginLeft: "-0.5vw",
     },
     previewFont: {
       fontFamily: "Roboto",
       fontWeight: 400,
     },
+    reportDates: {},
   };
 
   const updateDetailed = () => {
     setDetailed(true);
   };
-
-  // console.log('ULTIMATE REPORTS ARRAY : ',reportsState);
+  console.log("ULTIMATE REPORTS ARRAY : ", reportsState);
 
   const displayRequestedReports = (
     detailsArray,
@@ -657,18 +701,94 @@ export default function CreateRequest() {
     detailsArray.map((detail, detailIndex) => (
       <div className="selected-param-details" key={detailIndex}>
         {console.log(detailsArray, reportIndex, detailName, param, reportName)}
-        <div>
+        <div className="input-1">
           <h6 className="ticket-number-heading">{detail.name}</h6>
           <input
-            className={
-              detail.value !== ""
-                ? "selected-param-box-after"
-                : "selected-param-box"
+            autoComplete="off"
+            className="selected-param-box"
+            style={{
+              borderStyle: "solid",
+              borderColor:
+                detail.value === 0 || detail.value.length === 0
+                  ? "rgba(128, 128, 128, 0.48)"
+                  : "rgba(76, 76, 76, 1)",
+              borderWidth: "1.5px",
+            }}
+            type={
+              detail.name === "Account number"
+                ? "text"
+                : detail.name === "CRN"
+                  ? "text"
+                  : detail.name === "Email ID"
+                    ? "email"
+                    : detail.name === "PAN"
+                      ? "text"
+                      : detail.name === "Mobile No."
+                        ? "tel"
+                        : detail.name === "Credit Card"
+                          ? "number"
+                          : detail.name === "Aadhar"
+                            ? "number"
+                            : detail.name === "Debit Card"
+                              ? "number"
+                              : detail.name === "RRN"
+                                ? "number"
+                                : "text"
             }
-            type="text"
+            maxLength={
+              detail.name === "Account number"
+                ? 10 || 16
+                : detail.name === "Email ID"
+                  ? 320
+                  : detail.name === "PAN"
+                    ? 10
+                    : detail.name === "Credit Card"
+                      ? 16
+                      : detail.name === "Aadhar"
+                        ? 12
+                        : detail.name === "Debit Card"
+                          ? 16
+                          : detail.name === "Mobile No."
+                            ? 14
+                            : detail.name === "RRN"
+                              ? 12
+                              : detail.name === "CRN"
+                                ? 10
+                                : 0
+            }
+            onInput={(e) => {
+              if (
+                detail.name === "Credit Card" ||
+                detail.name === "Aadhar" ||
+                detail.name === "Debit Card" ||
+                detail.name === "RRN"
+              ) {
+                e.target.value = e.target.value.slice(
+                  0,
+                  detail.name === "Credit Card"
+                    ? 16
+                    : detail.name === "Aadhar"
+                      ? 12
+                      : detail.name === "Debit Card"
+                        ? 16
+                        : detail.name === "RRN"
+                          ? 12
+                          : "text"
+                );
+              }
+            }}
             id="paramvalue"
             placeholder={detail.name}
-            value={detail.value}
+            // value={detail.value === '' ? null : detail.value}
+
+            value={
+              detail.name === "Credit Card" ||
+              detail.name === "Aadhar" ||
+              detail.name === "Debit Card" ||
+              detail.name === "RRN"
+                ? parseInt(detail.value, 10)
+                : detail.value
+            }
             onChange={(e) =>
               handleInputValue(
                 e.target.value,
@@ -680,22 +800,167 @@ export default function CreateRequest() {
           ></input>
         </div>
 
+        {(detailName === "accountNumberDetails" ||
+          (detailName === "CRNdetails" && reportName === "IP Logs")) && (
+          <div className="report-dates">
+            <DatePicker
+              selected={new Date()}
+              popperProps={{
+                positionFixed: true,
+              }}
+              popperContainer={({ children }) => <div>{children}</div>}
+              wrapperClassName={
+                detail.from === "From"
+                  ? "no-date"
+                  : detail.from === "Invalid !"
+                    ? "date-invalid"
+                    : "date-exists"
+              }
+              onChange={(date) =>
+                handleFromDate(
+                  date,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  detail.to
+                )
+              }
+              className="calendar"
+              disabled={detail.value === "" ? true : false}
+              maxDate={new Date()}
+              customInput={
+                <div
+                  className="date-box"
+                  style={{
+                    borderColor:
+                      detail.from === "To" || detail.to === "Invalid !"
+                        ? "rgba(115, 115, 115, 1)"
+                        : "black",
+                  }}
+                >
+                  <p
+                    className="date-text"
+                    style={{
+                      color: detail.from === "From" ? "#A5A5A5" : "black",
+                    }}
+                  >
+                    {detail.from}
+                  </p>
+                  <FaRegCalendarAlt
+                    className="calendar-icon"
+                    size="1.4vw"
+                    color={
+                      detail.from === "From"
+                        ? "rgba(115, 115, 115, 1)"
+                        : detail.from === "Invalid !"
+                          ? "red"
+                          : "transparent"
+                    }
+                  />
+                </div>
+              }
+              dateFormat="DD/MM/YYYY"
+              value={detail.from}
+              onCalendarOpen={() => setViewFromDateCalendar(true)}
+              onCalendarClose={() => setViewFromDateCalendar(false)}
+            />
+            <DatePicker
+              selected={new Date()}
+              onChange={(date) =>
+                handleToDate(
+                  date,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  detail.from
+                )
+              }
+              className="calendar"
+              wrapperClassName={
+                detail.to === "To"
+                  ? "no-date"
+                  : detail.to === "Invalid !"
+                    ? "date-invalid"
+                    : "date-exists"
+              }
+              maxDate={new Date()}
+              popperProps={{
+                positionFixed: true,
+              }}
+              popperContainer={({ children }) => <div>{children}</div>}
+              disabled={detail.from === "From" ? true : false}
+              customInput={
+                <div
+                  className="date-box"
+                  style={{
+                    borderColor:
+                      detail.to === "To" || detail.to === "Invalid !"
+                        ? "rgba(115, 115, 115, 1)"
+                        : "transparent",
+                  }}
+                >
+                  <p
+                    className="date-text"
+                    style={{
+                      color:
+                        detail.to === "To"
+                          ? "#A5A5A5"
+                          : detail.to === "Invalid !"
+                            ? "red"
+                            : "black",
+                    }}
+                  >
+                    {detail.to}
+                  </p>
+                  <FaRegCalendarAlt
+                    className="calendar-icon"
+                    size="1.4vw"
+                    color={
+                      detail.to === "To"
+                        ? "rgba(115, 115, 115, 1)"
+                        : detail.to === "Invalid !"
+                          ? "red"
+                          : "transparent"
+                    }
+                  />
+                </div>
+              }
+              dateFormat="DD/MM/YYYY"
+              value={detail.to}
+              onCalendarOpen={() => setViewToDateCalendar(true)}
+              onCalendarClose={() => setViewToDateCalendar(false)}
+            />
+          </div>
+        )}
+
         {detailName === "RRNdetails" && (
-          <div
-            className="report-dates"
-            style={{ gap: viewFromDateCalendar ? "0.5vw" : "1vw" }}
-          >
+          <div className="report-dates">
             <input
+              autoComplete="off"
               className={
                 reportName === "Statement in PDF/Excel"
                   ? "selected-param-box-2"
                   : "selected-param-box-3"
               }
-              type="text"
-              disabled={detail.value === "" ? true : false}
-              id="paramvalue"
+              type="number"
+              style={{
+                borderStyle: "solid",
+                borderColor:
+                  detail.amount === 0 || detail.amount.length === 0
+                    ? "rgba(128, 128, 128, 0.48)"
+                    : "rgba(76, 76, 76, 1)",
+                borderWidth: "1.5px",
+              }}
+              inputMode="numeric"
+              width={reportName === "Statement in PDF/Excel" ? "11vw" : "18vw"}
+              onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
+              maxLength={6}
+              disabled={
+                detail.value === 0 || detail.value.length === 0 ? true : false
+              }
+              id="amountvalue"
               placeholder={detail.name2}
-              value={detail.amount}
+              value={detail.amount === 0 ? null : parseInt(detail.amount, 10)}
               onChange={(e) =>
                 handleAmountValue(
                   e.target.value,
@@ -709,10 +974,18 @@ export default function CreateRequest() {
             <DatePicker
               selected={new Date()}
               onChange={(date) =>
-                handleDate(date, detailIndex, reportIndex, detailName)
+                handleDate(date, reportIndex, detailIndex, detailName)
               }
               className="calendar"
               disabled={detail.amount === 0 ? true : false}
+              maxDate={new Date()}
+              wrapperClassName={
+                detail.date === "Date" ? "no-date" : "date-exists"
+              }
+              popperProps={{
+                positionFixed: true,
+              }}
+              popperContainer={({ children }) => <div>{children}</div>}
               customInput={
                 <div className="date-box">
                   <p
@@ -723,10 +996,18 @@ export default function CreateRequest() {
                   >
                     {detail.date}
                   </p>
-                  <FaRegCalendarAlt className="calendar-icon" size="1.4vw" />
+                  <FaRegCalendarAlt
+                    className="calendar-icon"
+                    size="1.4vw"
+                    color={
+                      detail.date === "Date" || detail.from === "Invalid !"
+                        ? "rgba(115, 115, 115, 1)"
+                        : "transparent"
+                    }
+                  />
                 </div>
               }
-              dateFormat="dd-mm-yyyy"
+              dateFormat="DD/MM/YYYY"
               onCalendarOpen={() => setViewToDateCalendar(true)}
               onCalendarClose={() => setViewToDateCalendar(false)}
               value={detail.date}
@@ -734,65 +1015,8 @@ export default function CreateRequest() {
           </div>
         )}
 
-        {(detailName === "accountNumberDetails" ||
-          (detailName === "CRNdetails" && reportName === "IP Logs")) && (
-          <div
-            className="report-dates"
-            style={{ gap: viewFromDateCalendar ? "0.5vw" : "1vw" }}
-          >
-            <DatePicker
-              selected={new Date()}
-              onChange={(date) =>
-                handleFromDate(date, reportIndex, detailIndex, detailName)
-              }
-              className="calendar"
-              disabled={detail.value === "" ? true : false}
-              customInput={
-                <div className="date-box">
-                  <p
-                    className="date-text"
-                    style={{
-                      color: detail.from === "From" ? "#A5A5A5" : "black",
-                    }}
-                  >
-                    {detail.from}
-                  </p>
-                  <FaRegCalendarAlt className="calendar-icon" size="1.4vw" />
-                </div>
-              }
-              dateFormat="dd-mm-yyyy"
-              value={detail.from}
-              onCalendarOpen={() => setViewFromDateCalendar(true)}
-              onCalendarClose={() => setViewFromDateCalendar(false)}
-            />
-            <DatePicker
-              selected={new Date()}
-              onChange={(date) =>
-                handleToDate(date, reportIndex, detailIndex, detailName)
-              }
-              className="calendar"
-              disabled={detail.from === "From" ? true : false}
-              customInput={
-                <div className="date-box">
-                  <p
-                    className="date-text"
-                    style={{ color: detail.to === "To" ? "#A5A5A5" : "black" }}
-                  >
-                    {detail.to}
-                  </p>
-                  <FaRegCalendarAlt className="calendar-icon" size="1.4vw" />
-                </div>
-              }
-              dateFormat="dd-mm-yyyy"
-              value={detail.to}
-              onCalendarOpen={() => setViewToDateCalendar(true)}
-              onCalendarClose={() => setViewToDateCalendar(false)}
-            />
-          </div>
-        )}
-
         {reportName === "Statement in PDF/Excel" && (
-          <div style={customStyles.Container}>
+          <div className="type-container" style={customStyles.Container}>
             <Select
               options={availableReportTypes}
               onChange={(value) =>
@@ -808,9 +1032,12 @@ export default function CreateRequest() {
               isSearchable={false}
               isDisabled={
                 detail.value === "" ||
+                detail.value === 0 ||
                 detail.amount === "" ||
                 detail.from === "From" ||
+                detail.from === "Invalid !" ||
                 detail.to === "To" ||
+                detail.to === "Invalid !" ||
                 detail.date === "Date"
                   ? true
                   : false
@@ -846,6 +1073,19 @@ export default function CreateRequest() {
         reportsState[reportIndex][detailName].length === 1 ? (
           <button
             className="add-remove-button"
+            disabled={
+              detail.value === "" ||
+              detail.value === 0 ||
+              detail.amount === 0 ||
+              detail.amount === 0 ||
+              detail.from === "From" ||
+              detail.from === "Invalid !" ||
+              detail.to === "Invalid !" ||
+              detail.to === "To" ||
+              detail.type === "Type"
+                ? true
+                : false
+            }
             onClick={() =>
               addDetail(reportIndex, detailName, param, reportName)
             }
@@ -994,14 +1234,17 @@ export default function CreateRequest() {
             <div className="ticket-container">
               <h6 className="ticket-number-heading">Ticket number</h6>
               <input
+                autoComplete="off"
                 className={
-                  ticketNumber === 0
+                  ticketNumber === 0 || ticketNumber.length === 0
                     ? "ticket-number-input"
                     : "ticket-number-input-after"
                 }
                 type="number"
                 id="ticketnum"
                 inputMode="numeric"
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
+                maxLength={10}
                 name="Ticket Number"
                 value={ticketNumber === 0 ? "" : ticketNumber}
                 placeholder="Enter ticket number"
@@ -1011,13 +1254,15 @@ export default function CreateRequest() {
             <div className="ticket-container">
               <h6 className="ticket-description-heading">Ticket Description</h6>
               <input
+                autoComplete="off"
                 className={
                   ticketDescription.length === 0
                     ? "ticket-description-input"
                     : "ticket-description-input-after"
                 }
                 type="text"
-                id="ticketnum"
+                inputMode="text"
+                id="ticketdesc"
                 value={ticketDescription}
                 placeholder="Enter description"
                 onChange={(e) => setTicketDescription(e.target.value)}
@@ -1030,7 +1275,7 @@ export default function CreateRequest() {
             value={selectedReports}
             disableSearch={true}
             disabled={
-              ticketNumber === 0 && ticketDescription === "" ? true : false
+              ticketNumber === 0 || ticketDescription === "" ? true : false
             }
             hasSelectAll={false}
             overrideStrings={{
@@ -1047,7 +1292,11 @@ export default function CreateRequest() {
             ItemRenderer={CustomReportListRenderer}
             // valueRenderer={customValue}
             ArrowRenderer={arrowRenderer}
-            className="reports-dropdown"
+            className={
+              selectedReports.length === 0
+                ? "reports-dropdown"
+                : "reports-dropdown-after"
+            }
             ClearSelectedIcon={null}
             onChange={(reports) => handleReportSelection(reports)}
             labelledBy="Select"
@@ -1088,7 +1337,12 @@ export default function CreateRequest() {
                               }}
                               ArrowRenderer={arrowRenderer}
                               ItemRenderer={customParamRenderer}
-                              className="params-dropdown"
+                              className={
+                                reportsState[reportIndex]?.selectedParams
+                                  .length === 0
+                                  ? "params-dropdown"
+                                  : "params-dropdown-after"
+                              }
                               ClearSelectedIcon={null}
                               onChange={(params) =>
                                 handleParamSelection(
@@ -1227,89 +1481,91 @@ export default function CreateRequest() {
                       />
                     </div>
 
-                    {selectedReports.length > 0 &&
-                      selectedReports.map((request, reportIndex) => (
-                        <div className="preview-report" key={reportIndex}>
-                          <div className="preview-report-header">
-                            <FaRegCheckSquare
-                              className="check-icon"
-                              size="1.4vw"
-                            />
-                            <h3 className="preview-title">{request.label}</h3>
-                          </div>
+                    <div className="preview-scroll">
+                      {selectedReports.length > 0 &&
+                        selectedReports.map((request, reportIndex) => (
+                          <div className="preview-report" key={reportIndex}>
+                            <div className="preview-report-header">
+                              <FaRegCheckSquare
+                                className="check-icon"
+                                size="1.4vw"
+                              />
+                              <h3 className="preview-title">{request.label}</h3>
+                            </div>
 
-                          <div className="preview-report-details">
-                            {reportsState[reportIndex] && (
-                              <>
-                                {showPreview(
-                                  reportsState[reportIndex]
-                                    .accountNumberDetails,
-                                  reportIndex,
-                                  "accountNumberDetails",
-                                  "Account number",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].PANdetails,
-                                  reportIndex,
-                                  "PANdetails",
-                                  "PAN",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].CRNdetails,
-                                  reportIndex,
-                                  "CRNdetails",
-                                  "CRN",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].RRNdetails,
-                                  reportIndex,
-                                  "RRNdetails",
-                                  "RRN",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].aadharDetails,
-                                  reportIndex,
-                                  "aadharDetails",
-                                  "Aadhar",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].emailDetails,
-                                  reportIndex,
-                                  "emailDetails",
-                                  "Email ID",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].creditCardDetails,
-                                  reportIndex,
-                                  "creditCardDetails",
-                                  "Credit Card",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].debitCardDetails,
-                                  reportIndex,
-                                  "debitCardDetails",
-                                  "Debit Card",
-                                  request.label
-                                )}
-                                {showPreview(
-                                  reportsState[reportIndex].mobileNoDetails,
-                                  reportIndex,
-                                  "mobileNoDetails",
-                                  "Mobile No.",
-                                  request.label
-                                )}
-                              </>
-                            )}
+                            <div className="preview-report-details">
+                              {reportsState[reportIndex] && (
+                                <>
+                                  {showPreview(
+                                    reportsState[reportIndex]
+                                      .accountNumberDetails,
+                                    reportIndex,
+                                    "accountNumberDetails",
+                                    "Account number",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].PANdetails,
+                                    reportIndex,
+                                    "PANdetails",
+                                    "PAN",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].CRNdetails,
+                                    reportIndex,
+                                    "CRNdetails",
+                                    "CRN",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].RRNdetails,
+                                    reportIndex,
+                                    "RRNdetails",
+                                    "RRN",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].aadharDetails,
+                                    reportIndex,
+                                    "aadharDetails",
+                                    "Aadhar",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].emailDetails,
+                                    reportIndex,
+                                    "emailDetails",
+                                    "Email ID",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].creditCardDetails,
+                                    reportIndex,
+                                    "creditCardDetails",
+                                    "Credit Card",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].debitCardDetails,
+                                    reportIndex,
+                                    "debitCardDetails",
+                                    "Debit Card",
+                                    request.label
+                                  )}
+                                  {showPreview(
+                                    reportsState[reportIndex].mobileNoDetails,
+                                    reportIndex,
+                                    "mobileNoDetails",
+                                    "Mobile No.",
+                                    request.label
+                                  )}
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                    </div>
                   </div>
                 </Modal>
               </div>

@@ -3,15 +3,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
 
-import Login from "./pages/login/Login";
+import Login from "./pages/Login/Login";
 
-import Dashboard from "./pages/dashboard/Dashboard";
-import CreateRequest from "./pages/createRequest/CreateRequest";
-import ViewUpdate from "./pages/viewUpdate/ViewUpdate";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import CreateRequest from "./pages/CreateRequest/CreateRequest";
+import ViewUpdate from "./pages/ViewUpdate/ViewUpdate";
+import ViewRequestDetails from "./pages/ViewUpdate/ViewRequestDetails";
+
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import WithNav from "./Layout/WithNav";
-import ViewRequestDetails from "./pages/viewUpdate/ViewRequestDetails";
 
 export default function App() {
   return (

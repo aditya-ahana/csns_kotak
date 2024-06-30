@@ -9,38 +9,25 @@ import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
 // import Sidenavsample from "../../../static/sidenavsample";
 import { useNavigate } from "react-router-dom";
+import MailDraft from "../../components/Modals/MailDraft";
 
 export default function ViewRequest() {
+  const [mailDraftModal, setMailDraftModal] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [searchMode, setSearchMode] = useState(false);
   const route_to = useNavigate();
 
-  const current_date = new Date();
-  const modified_date = current_date.toISOString().split("T")[0];
   const viewRequestTableHeaders = [
     "Ticket Id",
     "Requests",
     "Status",
     "Created Date",
-    "Created by",
+    "Requester",
     "Action",
   ];
 
   const requestDetails = [
-    {
-      ticketId: "1248",
-      requests: [
-        { value: "Statement in PDF/Excel" },
-        { value: "Beneficiary Details of IMPS Txns" },
-        { value: "Beneficiary Details of UPI Txns" },
-        { value: "IP Logs" },
-        { value: "Device Details" },
-      ],
-      status: "In-progress",
-      createdDateTime: modified_date,
-      createdBy: "System",
-    },
     {
       ticketId: "1300",
       requests: [
@@ -50,19 +37,61 @@ export default function ViewRequest() {
         { value: "IP Logs" },
         { value: "Device Details" },
       ],
+      status: "In-progress",
+      createdDate: "13-01-2024",
+      createdBy: "System",
+    },
+    {
+      ticketId: "1299",
+      requests: [
+        { value: "Statement in PDF/Excel" },
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "Beneficiary Details of UPI Txns" },
+        { value: "IP Logs" },
+        { value: "Device Details" },
+      ],
       status: "Completed",
-      createdDateTime: modified_date,
+      createdDate: "08-12-2023",
       createdBy: "User",
     },
     {
-      ticketId: "1413",
+      ticketId: "1298",
       requests: [
         { value: "Statement in PDF/Excel" },
         { value: "Beneficiary Details of IMPS Txns" },
         { value: "Device Details" },
       ],
       status: "Failed",
-      createdDateTime: modified_date,
+      createdDate: "21-04-2023",
+      createdBy: "Admin",
+    },
+    {
+      ticketId: "1297",
+      requests: [
+        { value: "Statement in PDF/Excel" },
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "IP Logs" },
+      ],
+      status: "In-progress",
+      createdDate: "02-03-2023",
+      createdBy: "System",
+    },
+    {
+      ticketId: "1296",
+      requests: [
+        { value: "Beneficiary Details of IMPS Txns" },
+        { value: "Beneficiary Details of UPI Txns" },
+        { value: "IP Logs" },
+      ],
+      status: "Failed",
+      createdDate: "14-02-2023",
+      createdBy: "Banker",
+    },
+    {
+      ticketId: "1295",
+      requests: [{ value: "IP Logs" }, { value: "Device Details" }],
+      status: "In-progress",
+      createdDate: "30-01-2023",
       createdBy: "Admin",
     },
   ];
@@ -115,8 +144,8 @@ export default function ViewRequest() {
         <p style={{}}>{request.status}</p>
       </div>
     ),
-    createddatetime: request.createdDateTime,
-    createdby: request.createdBy,
+    createdDate: request.createdDate,
+    requester: request.createdBy,
     void: (
       <div className="detail-buttons">
         <button
@@ -144,6 +173,9 @@ export default function ViewRequest() {
                 : "rgba(96, 96, 96, 1)",
             borderColor: "rgba(161, 161, 161, 1)",
           }}
+          onClick={(e) => {
+            setMailDraftModal(true);
+          }}
         >
           Mail Draft
         </button>
@@ -158,8 +190,8 @@ export default function ViewRequest() {
     setSearchInput(searched);
     const queried_data = ticketDetails.filter(
       (ticket) =>
-        ticket.createdby.toLowerCase().includes(searched) ||
-        ticket.createddatetime.toLowerCase().includes(searched) ||
+        ticket.requester.toLowerCase().includes(searched) ||
+        ticket.createdDate.toLowerCase().includes(searched) ||
         ticket.ticketid.toLowerCase().includes(searched)
     );
     setSearchResult(queried_data);
@@ -173,63 +205,67 @@ export default function ViewRequest() {
   }, [searchInput]);
 
   return (
-    <div className="page">
-      {/* <Elements />   
+    <>
+      <div className="page">
+        {/* <Elements />   
 
       <div>
       <Sidenavsample />
       </div> */}
 
-      <div className="view-request-screen">
-        <div className="route-header">
-          {/* <h3 className="prev-screen">Home</h3>
+        <div className="view-request-screen">
+          <div className="route-header">
+            {/* <h3 className="prev-screen">Home</h3>
         <IoIosArrowForward className="router-icon" size='1.2vw' />
         <h3 className="current-screen">View Request</h3> */}
-        </div>
-
-        {/* <h1 className="vr-heading">View request</h1> */}
-
-        <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
-          View request
-        </span>
-        <div className="view-request-container">
-          <div className="view-request-header">
-            <div className="request-searchbar">
-              <IoMdSearch className="request-search-icon" size="2.4vw" />
-              <input
-                type="text"
-                placeholder="Search by Ticket Id/Created by"
-                className="request-search-input"
-                onChange={(e) => handleSearchQuery(e)}
-              ></input>
-            </div>
-
-            <div className="request-filter-section">
-              <MdOutlineFilterAlt
-                className="filter-icon"
-                color="#606060"
-                size="30px"
-              />
-              <p className="filter-heading">Filter</p>
-            </div>
           </div>
 
-          <div className="request-ticket-section">
-            <div className="view-request-table">
-              <TableSimple
-                data={
-                  searchMode === true && searchInput.length >= 3
-                    ? searchResult
-                    : ticketDetails
-                }
-                columns="ticketid.requests.status.createddatetime.createdby.void"
-                headers={viewRequestTableHeaders}
-                className="ticket-table"
-              />
+          {/* <h1 className="vr-heading">View request</h1> */}
+
+          <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
+            View request
+          </span>
+          <div className="view-request-container">
+            <div className="view-request-header">
+              <div className="request-searchbar">
+                <IoMdSearch className="request-search-icon" size="2.4vw" />
+                <input
+                  type="search"
+                  inputMode="text"
+                  placeholder="Search by Ticket Id/Requester"
+                  className="request-search-input"
+                  onChange={(e) => handleSearchQuery(e)}
+                ></input>
+              </div>
+
+              <div className="request-filter-section">
+                <MdOutlineFilterAlt
+                  className="filter-icon"
+                  color="#606060"
+                  size="30px"
+                />
+                <p className="filter-heading">Filter</p>
+              </div>
+            </div>
+
+            <div className="request-ticket-section">
+              <div className="view-request-table">
+                <TableSimple
+                  data={searchMode === true ? searchResult : ticketDetails}
+                  columns="ticketid.requests.status.createdDate.requester.void"
+                  headers={viewRequestTableHeaders}
+                  className="ticket-table"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <MailDraft
+        setMailDraftModal={setMailDraftModal}
+        mailDraftModal={mailDraftModal}
+      />
+    </>
   );
 }
