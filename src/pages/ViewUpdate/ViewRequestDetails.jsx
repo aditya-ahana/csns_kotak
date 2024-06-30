@@ -342,7 +342,10 @@ export default function ViewRequestDetails() {
                   </tr>
 
                   {viewDetailsAction === index ? (
-                    <div className="d-flex flex-column align-items-center">
+                    <div
+                      className="d-flex flex-column align-items-center"
+                      style={{ background: "rgba(245, 248, 250, 1)" }}
+                    >
                       {row.subData?.map((subDetails) => (
                         <>
                           <div
