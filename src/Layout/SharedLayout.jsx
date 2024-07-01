@@ -14,7 +14,7 @@ function SharedLayout() {
         >
           <div
             className="sidebar-child"
-            style={{ width: "25.5%", background: "white" }}
+            style={{ width: "18%", background: "white" }}
           >
             <Sidebar />
           </div>

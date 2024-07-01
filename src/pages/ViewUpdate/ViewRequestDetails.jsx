@@ -39,15 +39,21 @@ export default function ViewRequestDetails() {
       subData: [
         {
           accNo: "123456789",
-          action: "Download",
         },
         {
           accNo: "98765432",
-          action: "Download",
         },
         {
           accNo: "34568656",
-          action: "Download",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
+        },
+        {
+          accNo: "976565",
         },
       ],
     },
@@ -60,15 +66,24 @@ export default function ViewRequestDetails() {
       subData: [
         {
           accNo: "456565",
-          action: "Download",
         },
         {
           accNo: "2423576",
-          action: "Download",
         },
         {
           accNo: "9757642",
-          action: "Download",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
         },
       ],
     },
@@ -80,16 +95,28 @@ export default function ViewRequestDetails() {
       createdBy: "User",
       subData: [
         {
-          accNo: "6234264",
-          action: "Download",
+          accNo: "9754",
         },
         {
-          accNo: "365346346",
-          action: "Download",
+          accNo: "4545",
         },
         {
-          accNo: "762563",
-          action: "Download",
+          accNo: "98475",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "9757642",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
         },
       ],
     },
@@ -99,6 +126,32 @@ export default function ViewRequestDetails() {
       status: "In-progress",
       createdDateTime: "28-06-2024",
       createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+        {
+          accNo: "7642",
+        },
+        {
+          accNo: "98343",
+        },
+        {
+          accNo: "2335",
+        },
+        {
+          accNo: "8923",
+        },
+        {
+          accNo: "56342",
+        },
+        {
+          accNo: "24562",
+        },
+        {
+          accNo: "745656",
+        },
+      ],
     },
     {
       ticketId: "1300",
@@ -106,6 +159,25 @@ export default function ViewRequestDetails() {
       status: "In-progress",
       createdDateTime: "28-06-2024",
       createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+
+        {
+          accNo: "456",
+        },
+        {
+          accNo: "2345",
+        },
+
+        {
+          accNo: "2345634",
+        },
+        {
+          accNo: "45634",
+        },
+      ],
     },
   ];
 
@@ -310,78 +382,163 @@ export default function ViewRequestDetails() {
                     </td>
                     <td>{row.createdDateTime}</td>
                     <td>
-                      <div>
-                        {row.status === "Failed" ? (
-                          <button className="retry-button">
-                            <TbReload
-                              size="1.4vw"
-                              color="rgba(237, 28, 36, 1)"
-                            />
-                            <p className="retry-text">Retry</p>
-                          </button>
-                        ) : (
-                          <button
-                            className="expand-button"
-                            onClick={(e) => {
-                              if (viewDetailsAction === index) {
-                                setViewDetailsAction();
-                              } else {
-                                setViewDetailsAction(index);
-                              }
-                            }}
-                          >
-                            <IoMdArrowDropdown
-                              size="1.95vw"
-                              color="rgba(95, 99, 104, 1)"
-                              className="expand-icon"
-                            />
-                          </button>
-                        )}
-                      </div>
+                      <button
+                        className="expand-button"
+                        onClick={(e) => {
+                          if (viewDetailsAction === index) {
+                            setViewDetailsAction();
+                          } else {
+                            setViewDetailsAction(index);
+                          }
+                        }}
+                      >
+                        <IoMdArrowDropdown
+                          size="1.95vw"
+                          color="rgba(95, 99, 104, 1)"
+                          className="expand-icon"
+                        />
+                      </button>
                     </td>
                   </tr>
 
                   {viewDetailsAction === index ? (
                     <div
-                      className="d-flex flex-column align-items-center"
-                      style={{ background: "#f5f8fa",maxWidth : '73vw' }}
+                      className="d-flex flex-column align-items-center p-3"
+                      style={{
+                        background: "#f5f8fa",
+                        maxWidth: "73vw",
+                      }}
                     >
                       {row.subData?.map((subDetails) => (
                         <>
                           <div
-                            className="d-flex flex-row p-3"
+                            className="d-flex flex-row p-1"
                             style={{ width: "100%" }}
                           >
                             <span
                               style={{
-                                width: "10vw",
+                                width: "9.25vw",
                               }}
                             ></span>
                             <span
+                              className="ps-3"
                               style={{
                                 width: "21vw",
-                                fontWeight : '400',
-                                color:'rgba(96, 96, 96, 1)'
+                                fontWeight: "400",
+                                color: "rgba(96, 96, 96, 1)",
+                                alignSelf: "center",
                               }}
                             >
                               Acc No:- {subDetails.accNo}
                             </span>
                             <span
                               style={{
-                                width: "14.5vw",
-                              }}
-                            ></span>
-                            <span
-                              style={{
-                                width: "14.5vw",
-                              }}
-                            ></span>
-                            <span
-                              style={{
-                                width: "14.5vw",
+                                width: "14vw",
+                                display: "flex",
+                                // alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
-                              <Button style={{ backgroundColor : 'rgba(0, 56, 116, 1)', marginLeft:'4.25vw',fontWeight : 420}}>Download</Button>
+                              <span
+                                style={{
+                                  marginLeft: "13%",
+                                  width: "auto",
+                                  padding: "8px 15px",
+                                  backgroundColor:
+                                    row.status === "In-progress"
+                                      ? "rgba(255, 238, 207, 1)"
+                                      : row.status === "Completed"
+                                        ? "rgba(205, 252, 229, 1)"
+                                        : row.status === "Failed"
+                                          ? "rgba(255, 220, 222, 1)"
+                                          : "",
+                                  height: "auto",
+                                  borderRadius: "30px",
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  textAlign: "center",
+                                  color:
+                                    row.status === "In-progress"
+                                      ? "rgba(232, 125, 0, 1)"
+                                      : row.status === "Completed"
+                                        ? "rgba(21, 122, 73, 1)"
+                                        : row.status === "Failed"
+                                          ? "rgba(210, 26, 26, 1)"
+                                          : "",
+                                  fontWeight: "400",
+                                  fontSize: "14px",
+                                }}
+                                className="status-tab"
+                              >
+                                <p>{row.status}</p>
+                              </span>
+                            </span>
+                            <span
+                              style={{
+                                width: "18vw",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignSelf: "center",
+                              }}
+                            >
+                              {row.createdDateTime}
+                            </span>
+                            <span
+                              style={{
+                                width: "13vw",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              {/* <Button
+                                style={{
+                                  backgroundColor: "rgba(0, 56, 116, 1)",
+                                  marginLeft: "4.25vw",
+                                  fontWeight: 420,
+                                }}
+                              >
+                                Download
+                              </Button> */}
+
+                              <div>
+                                {row.status === "Failed" ? (
+                                  <Button
+                                    className="retry-button border-0"
+                                    variant="danger"
+                                    style={{
+                                      // backgroundColor: "rgba(0, 56, 116, 1)",
+                                      // marginLeft: "4.25vw",
+                                      fontWeight: 420,
+                                    }}
+                                  >
+                                    <p className="retry-text">Retry</p>
+                                  </Button>
+                                ) : // <button className="retry-button">
+                                //   <TbReload
+                                //     size="1.4vw"
+                                //     color="rgba(237, 28, 36, 1)"
+                                //   />
+                                //   <p className="retry-text">Retry</p>
+                                // </button>
+                                row.status === "In-progress" ? (
+                                  ""
+                                ) : (
+                                  <Button
+                                    className="completed-button border-0"
+                                    variant="primary"
+                                    style={{
+                                      // backgroundColor: "rgba(0, 56, 116, 1)",
+                                      // marginLeft: "4.25vw",
+                                      fontWeight: 420,
+                                    }}
+                                  >
+                                    Download
+                                  </Button>
+                                )}
+                              </div>
                             </span>
                           </div>
                         </>
