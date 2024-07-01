@@ -21,8 +21,8 @@ export default function Dashboard() {
           </span>
           <Button
             type="primary"
-            danger
-            className="rounded"
+            // danger
+            className="logoColorBtn rounded"
             onClick={(e) => {
               createRequestNav();
             }}
