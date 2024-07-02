@@ -103,6 +103,7 @@ export default function MailDraft(props) {
             // label="Multiline"
             multiline
             rows={12}
+            className="maildraftMessage"
             style={{ width: "100%", border: "none" }}
             defaultValue={mailDraftData.message}
             name="message"

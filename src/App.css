@@ -70,6 +70,12 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 .widthAuto {
   width: auto !important;
 }
+
+.maildraftMessage
+  fieldset.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border: none;
+}
+
 /* 
 .boxHover:hover {
   box-shadow: 0px 0px 12px 0px gray !important;
