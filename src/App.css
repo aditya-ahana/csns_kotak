@@ -76,6 +76,30 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
   border: none;
 }
 
+/* scroll bar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.75vw;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 5px grey; */
+  /* border-radius: 10px; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(192, 192, 192);
+  border-radius: 12px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(168, 168, 168);
+}
+
 /* 
 .boxHover:hover {
   box-shadow: 0px 0px 12px 0px gray !important;
