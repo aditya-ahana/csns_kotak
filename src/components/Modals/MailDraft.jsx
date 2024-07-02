@@ -54,6 +54,7 @@ export default function MailDraft(props) {
         show={props.mailDraftModal}
         onHide={() => handleClose()}
         size="lg"
+        // xl
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
@@ -102,7 +103,7 @@ export default function MailDraft(props) {
             id="outlined-multiline-static"
             // label="Multiline"
             multiline
-            rows={12}
+            rows={14}
             className="maildraftMessage"
             style={{ width: "100%", border: "none" }}
             defaultValue={mailDraftData.message}
