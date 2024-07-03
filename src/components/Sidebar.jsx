@@ -1,18 +1,5 @@
-// const { createRoot } = ReactDOM;
-// const { useState } = React;
-// const {
-//   AppstoreOutlined,
-//   ContainerOutlined,
-//   DesktopOutlined,
-//   MailOutlined,
-//   MenuFoldOutlined,
-//   MenuUnfoldOutlined,
-//   PieChartOutlined,
-// } =  icons;
-// const { Button, Menu } = antd;
-
+import React, { useEffect, useState } from "react";
 import { Button, Menu } from "antd";
-import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { sidebarData } from "./data/SidebarData";
 
@@ -46,13 +33,17 @@ export default function Sidebar() {
       style={{ height: "100%" }}
     >
       <div
-        className="sidenavLogoContainer d-flex align-items-end justify-content-center"
-        style={{ height: "11.5vh" }}
+        className="sidenavLogoContainer d-flex align-items-center justify-content-start"
+        style={{ height: "9vh" }}
       >
-        <img src={logo} alt="Kotak Logo" style={{ width: "21vh" }} />
+        <img
+          src={logo}
+          alt="Kotak Logo"
+          style={{ width: "15vh", marginLeft: "9%" }}
+        />
       </div>
 
-      <div className="p-2"></div>
+      <div className="p-3"></div>
       <div className="p-1">
         <Menu
           onClick={({ key }) => {
@@ -63,7 +54,10 @@ export default function Sidebar() {
           // theme="dark"
           // inlineCollapsed={true}
           items={sidebarItems}
-          style={{ border: "none", height: "80vh", padding: "6%" }}
+          style={{
+            border: "none",
+            //  height: "80vh", padding: "6%"
+          }}
         />
       </div>
     </div>

@@ -7,17 +7,14 @@ import Sidebar from "../components/Sidebar";
 function SharedLayout() {
   return (
     <>
-      <div
-        className="parent"
-        style={{ height: "100vh", backgroundColor: "rgba(245, 248, 250, 1)" }}
-      >
+      <div className="parent" style={{ height: "100vh" }}>
         <div
           className="main d-flex flex-row"
           style={{ height: "-webkit-fill-available" }}
         >
           <div
             className="sidebar-child"
-            style={{ width: "25.5%", background: "white" }}
+            style={{ width: "18%", background: "white" }}
           >
             <Sidebar />
           </div>

@@ -14,9 +14,13 @@ import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
 import WithNav from "./Layout/WithNav";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function App() {
   return (
     <>
+      <ToastContainer autoClose={3000} />
       <BrowserRouter>
         <Routes>
           <Route element={<Login />} path="/" />
