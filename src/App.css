@@ -109,6 +109,19 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
 
+/* .page {
+  margin-left: 0vw;
+  background-color: rgba(245, 248, 250, 1);
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+  max-width: 100vw;
+  overflow: auto;
+  gap: 17.5vw;
+  scroll-behavior: smooth;
+} */
+
 .page {
   margin-left: 0vw;
   background-color: rgba(245, 248, 250, 1);
@@ -131,7 +144,6 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
   border-radius: 8px;
   justify-content: center;
   margin-bottom: auto;
-  width: -webkit-fill-available;
 }
 
 .view-request-screen,
@@ -168,6 +180,8 @@ input::-webkit-inner-spin-button {
 .route-header > *,
 .request-filter-section > *,
 .status-tab > *,
+.view-details-button > *,
+.mail-draft-button > *,
 .retry-button > * {
   margin: 0;
   padding: 0;
@@ -299,7 +313,7 @@ input::-webkit-inner-spin-button {
 .reports-dropdown .options {
   padding: 2.5vh 0.5vw 1.5vh 0.5vw !important;
   min-height: 36vh !important;
-  max-height: 100vh !important;
+  max-height: 38.75vh !important;
   box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -315,7 +329,7 @@ input::-webkit-inner-spin-button {
   border-width: 1.25px !important;
   border-color: rgba(128, 128, 128, 1) !important;
   border-style: solid !important;
-  height: 6.5vh !important;
+  height: 6.15vh !important;
 }
 
 .reports-dropdown .searchinput {
@@ -324,7 +338,7 @@ input::-webkit-inner-spin-button {
 
 .reports-dropdown .dropdown-content {
   margin-left: 0vw !important;
-  margin-top: 0.35vh !important;
+  margin-top: -1.1vh !important;
   padding-top: 0vh !important;
   border-top-left-radius: 0px !important;
 }
@@ -354,8 +368,8 @@ input::-webkit-inner-spin-button {
 .reports-dropdown-after .options {
   padding: 2.5vh 0.5vw 1.5vh 0.5vw !important;
   min-height: 36vh !important;
+  max-height: 38.75vh !important;
   font-weight: 400 !important;
-  max-height: 100vh !important;
   box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -372,7 +386,7 @@ input::-webkit-inner-spin-button {
   border-width: 1.5px !important;
   border-color: rgba(76, 76, 76, 1) !important;
   border-style: solid !important;
-  height: 6.5vh !important;
+  height: 6.15vh !important;
 }
 
 .reports-dropdown-after .searchinput {
@@ -381,7 +395,7 @@ input::-webkit-inner-spin-button {
 
 .reports-dropdown-after .dropdown-content {
   margin-left: 0vw !important;
-  margin-top: 0.35vh !important;
+  margin-top: -1.1vh !important;
   padding-top: 0vh !important;
   border-top-left-radius: 0px !important;
 }
@@ -529,7 +543,7 @@ input::-webkit-inner-spin-button {
   padding: 0vh 0.25vw 0vh 0.25vw !important;
   align-items: center !important;
   justify-content: space-between !important;
-  height: 6vh !important;
+  height: 5.49vh !important;
   border-width: 1px !important;
   border-style: solid !important;
   border-color: #a1a1a1 !important;
@@ -582,7 +596,7 @@ input::-webkit-inner-spin-button {
   padding: 0vh 0.25vw 0vh 0.25vw !important;
   align-items: center !important;
   justify-content: space-between !important;
-  height: 6vh !important;
+  height: 5.49vh !important;
   border-style: solid !important;
   border-width: 1.5px !important;
   border-color: rgba(76, 76, 76, 1) !important;
@@ -968,9 +982,8 @@ input::-webkit-inner-spin-button {
 
 .ticket-entry-section {
   margin-top: 2vh;
-  height: 24.85vh;
-  /* width: 76.25vw; */
-  width: -webkit-fill-available;
+  height: 22vh;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
   padding-left: 1.75vw;
@@ -984,12 +997,12 @@ input::-webkit-inner-spin-button {
 .ticket-type-section {
   display: flex;
   flex-direction: row;
-  height: 15vh;
+  height: 12.75vh;
   gap: 2.5vw;
 }
 
 .ticket-container {
-  margin-top: 2.5vh;
+  margin-top: 2.15vh;
 }
 
 .ticket-number-heading,
@@ -1008,7 +1021,7 @@ input::-webkit-inner-spin-button {
 .ticket-number-input,
 .ticket-description-input {
   z-index: 0;
-  height: 6.5vh;
+  height: 6.15vh;
   width: 26.5vw;
   padding-left: 0.95vw;
   padding-right: 0.95vw;
@@ -1021,9 +1034,9 @@ input::-webkit-inner-spin-button {
 .ticket-number-input-after,
 .ticket-description-input-after {
   z-index: 0;
-  height: 6.5vh;
+  height: 6.15vh;
   width: 26.5vw;
-  font-weight: 500;
+  font-weight: 420;
   padding-left: 0.95vw;
   padding-right: 0.95vw;
   border-radius: 4px;
@@ -1084,11 +1097,10 @@ input::-webkit-inner-spin-button {
   margin-top: 3vh;
   min-height: 13vh;
   max-height: auto;
-  /* width: 76.25vw; */
-  width: -webkit-fill-available;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
-  padding: 3vh 2vw 3vh 1.85vw;
+  padding: 2.65vh 2vw 3vh 1.85vw;
   border-radius: 4px;
   align-items: left;
   box-shadow: 1px 2px 12px 0px rgba(0, 0, 0, 0.1);
@@ -1104,7 +1116,7 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-report-view {
-  min-height: 20vh;
+  /* min-height: 20vh; */
   max-height: auto;
   border-radius: 5px;
   border-width: 1.5px;
@@ -1118,7 +1130,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   height: 6vh;
   align-items: center;
-  justify-content: left;
+  justify-content: space-between;
   padding: 0vh 1.25vw 0vh 1.25vw;
   border-width: 0px 0px 1.5px 0px;
   border-color: rgba(128, 128, 128, 0.48);
@@ -1134,13 +1146,12 @@ input::-webkit-inner-spin-button {
 
 .selected-report-details {
   padding: 2.5vh 1.25vw 0vh 1.25vw;
-  min-height: 1vh;
   max-height: auto;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-width: 1px;
   border-color: grey;
-  margin-bottom: 3vh;
+  margin-bottom: 3.69vh;
 }
 
 .param-dropdown-box {
@@ -1165,8 +1176,12 @@ input::-webkit-inner-spin-button {
   font-weight: 400;
 }
 
+.details-subsection {
+  margin-top: -1vh;
+}
+
 .selected-param-details {
-  margin-top: 3.2vh;
+  margin-top: 3vh;
   display: flex;
   gap: 1.1vw;
   flex-direction: row;
@@ -1178,6 +1193,21 @@ input::-webkit-inner-spin-button {
   align-items: left;
   justify-content: left;
   width: 20vw;
+  border-radius: 5px;
+  border-style: solid;
+  padding: 0vh 0.75vw 0vh 0.75vw;
+  border-width: 1.5px;
+  background-color: white;
+  border-color: rgba(128, 128, 128, 0.48);
+  text-align: left;
+  height: 5.5vh;
+}
+
+.number-box {
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  width: 12.35vw;
   border-radius: 5px;
   border-style: solid;
   padding: 0vh 0.75vw 0vh 0.75vw;
@@ -1222,7 +1252,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: left;
   justify-content: left;
-  width: 18vw;
+  width: 17.05vw;
   border-radius: 5px;
   border-style: solid;
   padding: 0vh 1.1vw 0vh 1.1vw;
@@ -1235,7 +1265,8 @@ input::-webkit-inner-spin-button {
 
 .selected-param-box::placeholder,
 .selected-param-box-3::placeholder,
-.selected-param-box-2::placeholder {
+.selected-param-box-2::placeholder,
+.number-box::placeholder {
   color: #a5a5a5;
 }
 
@@ -1290,13 +1321,15 @@ input::-webkit-inner-spin-button {
 .add-remove-button {
   display: flex;
   /* align-items: center; */
-  width: 3vw;
+  width: 2.5vw;
+  align-self: center;
+  margin-top: 2.15vh;
+  vertical-align: middle;
   background-color: white;
   border-style: solid;
   border-color: #de1f1f;
   border-radius: 40px;
-  margin-top: 1vh;
-  height: 5.5vh;
+  height: 4.75vh;
 }
 
 .add-icon,
@@ -1318,7 +1351,7 @@ input::-webkit-inner-spin-button {
 .preview-button {
   width: 10vw;
   border-width: 0;
-  height: 5.5vh;
+  height: 4.8vh;
   font-weight: 600;
   border-radius: 5px;
 }
@@ -1473,8 +1506,7 @@ input::-webkit-inner-spin-button {
   margin-top: 2vh;
   min-height: 75.25vh;
   max-height: auto;
-  /* width: 76.25vw; */
-  width: -webkit-fill-available;
+  width: 76.25vw;
   flex-direction: column;
   background-color: white;
   border-width: 0;
@@ -1492,7 +1524,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: row;
   gap: 2.25vw;
-  height: 5.5vh;
+  height: 4.8vh;
   align-self: flex-end;
 }
 
@@ -1588,18 +1620,17 @@ input::-webkit-inner-spin-button {
 .ticket-table tr th {
   display: flex;
   flex-direction: row;
-
   text-align: center;
   align-items: center;
   justify-content: center;
   color: rgb(96, 96, 96);
-  font-weight: 500;
+  font-weight: 448;
   background-color: #edf1f5;
   font-family: Roboto;
   border-color: #e1e1e1;
   border-bottom-width: 0px;
   border-style: solid;
-  height: 8.5vh;
+  height: 6.5vh;
 }
 
 .ticket-table tr th:nth-child(1) {
@@ -1717,12 +1748,15 @@ input::-webkit-inner-spin-button {
 
 .view-details-button,
 .mail-draft-button {
+  display: flex;
   width: 8vw;
   height: 6vh;
   flex-direction: row;
   border-radius: 4px;
   border-width: 1.5px;
   align-items: center;
+  justify-content: center;
+  gap: 0.49vw;
   background-color: transparent;
   font-family: Roboto;
   border-style: solid;
@@ -1732,6 +1766,7 @@ input::-webkit-inner-spin-button {
 .view-details-button {
   color: rgba(63, 136, 215, 1);
   border-color: rgba(63, 136, 215, 1);
+  /* color:rgb(0, 0, 177); */
 }
 
 .retry-button {
@@ -1755,13 +1790,6 @@ input::-webkit-inner-spin-button {
   font-family: Roboto;
   font-weight: 500;
   font-size: 16px;
-}
-
-.completed-button {
-  background-color: rgba(0, 56, 116, 1);
-}
-.completed-button:hover {
-  background-color: rgb(69 133 201);
 }
 
 .details-table {
@@ -1803,7 +1831,7 @@ input::-webkit-inner-spin-button {
   border-color: #e1e1e1;
   border-bottom-width: 0px;
   border-style: solid;
-  height: 7.5vh;
+  height: 6.5vh;
 }
 
 .details-table tr th:nth-child(1) {
@@ -1917,7 +1945,6 @@ input::-webkit-inner-spin-button {
 .ticket-description-input:hover,
 .close-preview:hover,
 .selected-param-box:hover,
-.calendar-icon:hover,
 .add-remove-button:hover,
 .selected-param-box-2:hover,
 .selected-param-box-3:hover,
@@ -1925,14 +1952,30 @@ input::-webkit-inner-spin-button {
 .request-searchbar:hover,
 .view-details-button:hover,
 .mail-draft-button:hover,
-.retry-button:hover,
-.expand-icon:hover {
-  /* box-shadow: 1px 2px 12px 0px rgba(89, 89, 89, 0.48);
-  transition: all 0s; */
+.retry-button:hover {
+  box-shadow: 1px 2px 12px 0px rgba(89, 89, 89, 0.48);
+  transition: all 0.4s;
 }
-
 .retry-button:hover {
   background-color: rgb(255 231 232);
+}
+
+.expand-button {
+  border-width: 0px;
+  background-color: transparent;
+}
+.submit-button:hover {
+  box-shadow: 1px 2px 12px 5px rgba(94, 94, 94, 0.48);
+  transition: all 0.4s;
+}
+
+.reports-type-dropdownicon:hover,
+.calendar-icon:hover,
+.view-icon:hover,
+.expand-icon:hover {
+  box-shadow: 1px 2px 12px 0px rgba(89, 89, 89, 0.48);
+  transition: all 0.4s;
+  border-radius: 40px;
 }
 
 .expand-button {

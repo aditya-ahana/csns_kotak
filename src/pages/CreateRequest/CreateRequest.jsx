@@ -3,12 +3,14 @@ import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdOutlineAdd } from "react-icons/md";
-// import Elements from "../../Elements/Elements";
 import { useNavigate } from "react-router-dom";
 import { FaRegCheckSquare } from "react-icons/fa";
 import { MultiSelect } from "react-multi-select-component";
 import Modal from "react-modal";
-// import Sidenavsample from "../../../static/sidenavsample";
+import { TbWindowMinimize } from "react-icons/tb";
+import { MdHideImage } from "react-icons/md";
+import { FiMinimize2 } from "react-icons/fi";
+import { BiShow, BiHide } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
@@ -73,9 +75,21 @@ export default function CreateRequest() {
   const [ticketDescription, setTicketDescription] = useState("");
   const [detailed, setDetailed] = useState(false);
   const [selectedReports, setSelectedReports] = useState([]);
+  const [ minimizedView , setMinimizedView ] = useState(false);
 
   const handleReportSelection = (reports) => {
     setSelectedReports(reports);
+
+    // if(reports.some(report => report === 'Beneficiary details for Single IMPS transactions' || report === 'Beneficiary details for Single UPI transactions')){
+     
+    //   setReportsState(prevState => {
+    //     const newState = [...prevState];
+        
+
+
+    //   })
+    //   // reports.selectedParams.push([{ value: "3", label: "RRN" }]);
+    // };
   };
 
   useEffect(() => {
@@ -108,6 +122,24 @@ export default function CreateRequest() {
           (existing) => existing.selectedReport === report.label
         );
 
+        if(report.label === 'Beneficiary details for Single IMPS transactions' || report.label === 'Beneficiary details for Single UPI transactions'){
+
+          return( 
+            existingReport || {
+            selectedReport: report.label,
+            selectedParams: [{ value: "3", label: "RRN" }],
+            accountNumberDetails: [],
+            PANdetails: [],
+            CRNdetails: [],
+            RRNdetails: [{ name: "RRN", value: "", date: "Date", name2: "Amount", amount: "", type: "Excel" }],
+            aadharDetails: [],
+            emailDetails: [],
+            creditCardDetails: [],
+            debitCardDetails: [],
+            mobileNoDetails: [],
+            viewState : 'Expanded'
+          })
+        } else {
         return (
           existingReport || {
             selectedReport: report.label,
@@ -121,8 +153,11 @@ export default function CreateRequest() {
             creditCardDetails: [],
             debitCardDetails: [],
             mobileNoDetails: [],
+            viewState : 'Expanded'
           }
         );
+      }
+       
       });
 
       return updatedReportState;
@@ -132,6 +167,8 @@ export default function CreateRequest() {
   // console.log('Selected REPORTS : ',selectedReports);
 
   const [reportsState, setReportsState] = useState([]);
+
+
 
   // useEffect(() => {
   //   console.log("Initial reportsState:", reportsState);
@@ -165,10 +202,12 @@ export default function CreateRequest() {
 
   const requiredReportsData = [
     { value: "1.", label: "Statement in PDF/Excel" },
-    { value: "2.", label: "Beneficiary details for IMPS transactions" },
-    { value: "3.", label: "Beneficiary details for UPI transactions" },
-    { value: "4.", label: "IP Logs" },
-    { value: "5.", label: "Device details" },
+    { value: "2.", label: "Beneficiary details for Single IMPS transactions" },
+    { value: "3.", label: "Beneficiary details for Bulk IMPS transactions" },
+    { value: "4.", label: "Beneficiary details for Single UPI transactions" },
+    { value: "5.", label: "Beneficiary details for Bulk UPI transactions" },
+    { value: "6.", label: "IP Logs" },
+    { value: "7.", label: "Device details" },
   ];
 
   const [selectedParams, setSelectedParams] = useState(
@@ -230,6 +269,25 @@ export default function CreateRequest() {
 
   // console.log('Final Selected',selectedParams);
 
+
+  const handleMinimizedView = (reportIndex) => {
+    setReportsState(prevState => {
+      const newState = [...prevState];
+      newState[reportIndex].viewState = 'Minimized';
+      return newState;
+    })
+  };
+
+  const handleExpandedView = (reportIndex) => {
+    setReportsState(prevState => {
+      const newState = [...prevState];
+      newState[reportIndex].viewState = 'Expanded';
+      return newState;
+    })
+  };
+
+
+
   const handleParamSelection = (params, reportIndex, reportName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -249,29 +307,29 @@ export default function CreateRequest() {
       //   report.selectedParams = params;
       // };
 
-      if (
-        reportName === "IP Logs" &&
-        params.some((param) => param.label === "Mobile No.")
-      ) {
-        const isCRNPresent = params.some((param) => param.label === "CRN");
-        const isMobileNoPresent = params.some(
-          (param) => param.label === "Mobile No."
-        );
+      // if (
+      //   reportName === "IP Logs" &&
+      //   params.some((param) => param.label === "Mobile No.")
+      // ) {
+      //   const isCRNPresent = params.some((param) => param.label === "CRN");
+      //   const isMobileNoPresent = params.some(
+      //     (param) => param.label === "Mobile No."
+      //   );
 
-        if (!isCRNPresent || !isMobileNoPresent) {
-          const newParams = [...params];
+      //   if (!isCRNPresent || !isMobileNoPresent) {
+      //     const newParams = [...params];
 
-          if (!isMobileNoPresent) {
-            newParams.push({ value: "6", label: "Mobile No." });
-          }
+      //     if (!isMobileNoPresent) {
+      //       newParams.push({ value: "6", label: "Mobile No." });
+      //     }
 
-          if (!isCRNPresent) {
-            newParams.push({ value: "2", label: "CRN" });
-          }
+      //     if (!isCRNPresent) {
+      //       newParams.push({ value: "2", label: "CRN" });
+      //     }
 
-          report.selectedParams = newParams;
-        }
-      }
+      //     report.selectedParams = newParams;
+      //   }
+      // }
 
       console.log("PARAMS?", report.selectedParams);
 
@@ -279,6 +337,13 @@ export default function CreateRequest() {
         params.some((param) => param.label === "Account number") &&
         report.accountNumberDetails.length === 0
       ) {
+        if(reportName === "Device details"){
+          report.accountNumberDetails.push({
+            name: "Account number",
+            value: "",
+            type: "Excel",
+          });
+        } else {
         report.accountNumberDetails.push({
           name: "Account number",
           value: "",
@@ -286,17 +351,28 @@ export default function CreateRequest() {
           to: "To",
           type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
         });
+       }
       }
 
       if (
         params.some((param) => param.label === "PAN") &&
         report.PANdetails.length === 0
       ) {
+        if(reportName === 'Statement in PDF/Excel'){
+          report.PANdetails.push({
+            name: "PAN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+          });
+        } else {
         report.PANdetails.push({
           name: "PAN",
           value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+          type: "Excel",
         });
+      }
       }
 
       if (
@@ -304,103 +380,143 @@ export default function CreateRequest() {
         report.CRNdetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.CRNdetails.push({ name: "CRN", value: "", type: "Type" });
+          report.CRNdetails.push({ name: "CRN", value: "", from: "From",
+            to: "To", type: "Type" });
         }
-        if (
-          reportName !== "Statement in PDF/Excel" &&
-          reportName !== "IP Logs"
-        ) {
+        else if (reportName === 'IP Logs') {
+          report.CRNdetails.push({ name: "CRN", value: "",from: "From",to: "To",name2: "Mobile No.",mobileno: "", type: "Excel" });
+        } else {
           report.CRNdetails.push({ name: "CRN", value: "", type: "Excel" });
         }
       }
 
-      if (
-        params.some((param) => param.label === "RRN") &&
-        report.RRNdetails.length === 0
-      ) {
-        report.RRNdetails.push({
-          name: "RRN",
-          value: "",
-          date: "Date",
-          name2: "Amount",
-          amount: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
+      if (params.some((param) => param.label === "RRN") &&
+        report.RRNdetails.length === 0) {
+          if (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") {
+            report.RRNdetails.push({ name: "RRN", value: "", from: "From",
+              to: "To", type: "Type" });
+          } else {
+            report.RRNdetails.push({
+              name: "RRN",
+              value: "",
+              date: "Date",
+              name2: "Amount",
+              amount: "",
+              type: "Excel",
+            });
+          }
       }
+      
       if (
         params.some((param) => param.label === "Aadhar") &&
         report.aadharDetails.length === 0
       ) {
+        if (reportName === "Statement in PDF/Excel") {
+          report.aadharDetails.push({ name: "Aadhar", value: "", from: "From",
+            to: "To", type: "Type" });
+        } else {
         report.aadharDetails.push({
           name: "Aadhar",
           value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+          type: "Excel",
         });
+        }
       }
+
+
       if (
         params.some((param) => param.label === "Email ID") &&
         report.emailDetails.length === 0
       ) {
-        report.emailDetails.push({
-          name: "Email ID",
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
+        if (reportName === "Statement in PDF/Excel") {
+          report.emailDetails.push({ name: "Email ID", value: "", from: "From",
+            to: "To", type: "Type" });
+        } else {
+          report.emailDetails.push({
+            name: "Email ID",
+            value: "",
+            type: "Excel",
+          });
+        }
       }
+
+
+
       if (
         params.some((param) => param.label === "Credit Card") &&
         report.creditCardDetails.length === 0
       ) {
-        report.creditCardDetails.push({
-          name: "Credit Card",
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
+        if (reportName === "Statement in PDF/Excel") {
+          report.creditCardDetails.push({ name: "Credit Card", value: "", from: "From",
+            to: "To", type: "Type" });
+        } else {
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            value: "",
+            type: "Excel",
+          });
+        }
       }
+
       if (
         params.some((param) => param.label === "Debit Card") &&
         report.debitCardDetails.length === 0
       ) {
-        report.debitCardDetails.push({
-          name: "Debit Card",
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
-      }
-      if (
-        params.some((param) => param.label === "Mobile No.") &&
-        report.mobileNoDetails.length === 0 &&
-        reportName !== "IP Logs"
-      ) {
-        report.mobileNoDetails.push({
-          name: "Mobile No.",
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
+        if (reportName === "Statement in PDF/Excel") {
+          report.debitCardDetails.push({ name: "Debit Card", value: "", from: "From",
+            to: "To", type: "Type" });
+        } else {
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            value: "",
+            type: "Excel",
+          });
+        }
       }
 
       if (
-        reportName === "IP Logs" &&
-        params.some(
-          (param) =>
-            param.label === "Mobile No." &&
-            report.mobileNoDetails.length === 0 &&
-            report.CRNdetails.length === 0
-        )
+        params.some((param) => param.label === "Mobile No.") &&
+        report.mobileNoDetails.length === 0
       ) {
-        report.CRNdetails.push({
-          name: "CRN",
+        if(reportName === "Statement in PDF/Excel" || reportName === 'IP Logs'){
+        report.mobileNoDetails.push({
+          name: "Mobile No.",
+          from : "From",
+          to : 'To',
           value: "",
-          from: "From",
-          to: "To",
-          type: "Excel",
+          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
         });
+      } else {
         report.mobileNoDetails.push({
           name: "Mobile No.",
           value: "",
           type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
         });
       }
+      } 
+
+      // if (
+      //   reportName === "IP Logs" &&
+      //   params.some(
+      //     (param) =>
+      //       param.label === "Mobile No." &&
+      //       report.mobileNoDetails.length === 0 &&
+      //       report.CRNdetails.length === 0
+      //   )
+      // ) {
+      //   // report.CRNdetails.push({
+      //   //   name: "CRN",
+      //   //   value: "",
+      //   //   from: "From",
+      //   //   to: "To",
+      //   //   type: "Excel",
+      //   // });
+      //   report.mobileNoDetails.push({
+      //     name: "Mobile No.",
+      //     value: "",
+      //     type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+      //   });
+      // }
 
 
         document.querySelector('#selected-reports-section').scrollIntoView();
@@ -436,8 +552,20 @@ export default function CreateRequest() {
                 amount: "",
                 type: "Type",
               }
-            : detailName === "accountNumberDetails" ||
-                (detailName === "CRNdetails" && reportName === "IP Logs")
+            : detailName === "accountNumberDetails" && reportName === 'Device details' ? 
+            { name: name, value: "",type: "Excel" }
+            : ((detailName === "accountNumberDetails" && reportName === "Statement in PDF/Excel") || 
+               (detailName === "PANdetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "RRNdetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
+               (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions") ||         
+               (detailName === "CRNdetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "creditCardDetails" && reportName === "Statement in PDF/Excel") || 
+               (detailName === "debitCardDetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "mobileNoDetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "emailDetails" && reportName === "Statement in PDF/Excel") ||
+               (detailName === "aadharDetails" && reportName === "Statement in PDF/Excel") ||
+                (detailName === "CRNdetails" && reportName === "IP Logs"))
               ? { name: name, value: "", from: "From", to: "To", type: "Type" }
               : detailName === "PANdetails" ||
                   detailName === "mobileNoDetails" ||
@@ -463,8 +591,10 @@ export default function CreateRequest() {
                 type: "Excel",
               }
             : detailName === "accountNumberDetails" ||
-                (detailName === "CRNdetails" && reportName === "IP Logs")
+                (detailName === "mobileNoDetails" && reportName === 'IP Logs')
               ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+              : detailName === "CRNdetails" && reportName === "IP Logs" ? 
+              { name: "CRN", value: "",from: "From",to: "To",name2: "Mobile No.",mobileno: "", type: "Excel" }
               : detailName === "PANdetails" ||
                   detailName === "mobileNoDetails" ||
                   detailName === "CRNdetails" ||
@@ -482,7 +612,7 @@ export default function CreateRequest() {
     });
   };
 
-  const handleInputValue = (value, reportIndex, detailIndex, detailName) => {
+  const handleInputValue = (value, reportIndex, detailIndex, detailName,reportName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][detailName][detailIndex].value =
@@ -492,6 +622,14 @@ export default function CreateRequest() {
         detailName === "RRNdetails"
           ? parseInt(value, 10)
           : value;
+      return newState;
+    });
+  };
+
+  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      newState[reportIndex][detail][detailIndex].mobileno = value;
       return newState;
     });
   };
@@ -512,6 +650,18 @@ export default function CreateRequest() {
     });
   };
 
+  const dateValidation = (date1, date2) => {
+    // Parse the date strings
+    const [day1, month1, year1] = date1.split('/').map(Number);
+    const [day2, month2, year2] = date2.split('/').map(Number);
+
+    // Create Date objects
+    const firstDate = new Date(year1, month1 - 1, day1);
+    const secondDate = new Date(year2, month2 - 1, day2);
+
+    return secondDate < firstDate;
+};
+
   const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
@@ -524,7 +674,7 @@ export default function CreateRequest() {
       })
       .split("/")
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
-      .join("/");
+      .join("-");
 
     console.log(formatted_date);
     // console.log('Detail Index',detailIndex);
@@ -547,12 +697,7 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (
-        formatted_date > to ||
-        (formatted_date > to &&
-          new Date(formatted_date).getMonth() > new Date(to).getMonth() &&
-          new Date(formatted_date).getFullYear() > new Date(to).getFullYear())
-      ) {
+      if (dateValidation(formatted_date,to)){
         newState[reportIndex][detail][detailIndex].from = "Invalid !";
       } else {
         newState[reportIndex][detail][detailIndex].from = formatted_date;
@@ -575,7 +720,7 @@ export default function CreateRequest() {
       })
       .split("/")
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
-      .join("/");
+      .join("-");
 
     // console.log(formatted_date);
     // console.log('Detail Index',detailIndex);
@@ -598,21 +743,22 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (
-        formatted_date < from ||
-        (formatted_date < from &&
-          new Date(formatted_date).getMonth() < new Date(from).getMonth() &&
-          new Date(formatted_date).getFullYear() < new Date(from).getFullYear())
-      ) {
+      if (dateValidation(from,formatted_date)) {
         newState[reportIndex][detail][detailIndex].to = "Invalid !";
       } else {
         newState[reportIndex][detail][detailIndex].to = formatted_date;
       }
 
-      console.log("time4", date);
+      console.log("from date", from);
+      console.log("to date",formatted_date)
+      // console.log("from month", new Date(from).getMonth());
+      // console.log("to month",new Date(formatted_date).getMonth())
+      // console.log("from year", new Date(from).getFullYear());
+      // console.log("to year",new Date(formatted_date).getFullYear())
       return newState;
     });
   };
+
 
   const handleDate = (date, reportIndex, detailIndex, detailName) => {
     console.log("RRN date", date);
@@ -630,7 +776,7 @@ export default function CreateRequest() {
       })
       .split("/")
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
-      .join("/");
+      .join("-");
 
     // console.log(formatted_date);
     // console.log('Detail Index',detailIndex);
@@ -644,6 +790,8 @@ export default function CreateRequest() {
       return newState;
     });
   };
+
+  
 
   const customStyles = {
     option: (provided, state) => ({
@@ -706,6 +854,7 @@ export default function CreateRequest() {
                   ? "rgba(128, 128, 128, 0.48)"
                   : "rgba(76, 76, 76, 1)",
               borderWidth: "1.5px",
+              width:detailName === "CRNdetails" && reportName === "IP Logs" ? '14.25vw' : "20vw"
             }}
             type={
               detail.name === "Account number"
@@ -787,14 +936,25 @@ export default function CreateRequest() {
                 e.target.value,
                 reportIndex,
                 detailIndex,
-                detailName
+                detailName,
+                reportName
               )
             }
           ></input>
         </div>
 
-        {(detailName === "accountNumberDetails" ||
-          (detailName === "CRNdetails" && reportName === "IP Logs")) && (
+        {((detailName === "accountNumberDetails" && reportName !== "Device details") ||
+          (detailName === "CRNdetails" && reportName === "IP Logs") || (detailName === "mobileNoDetails" && reportName === "IP Logs") || (detailName === "accountNumberDetails" && reportName === "Statement in PDF/Excel") || 
+          (detailName === "PANdetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "RRNdetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
+          (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions") ||
+          (detailName === "CRNdetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "creditCardDetails" && reportName === "Statement in PDF/Excel") || 
+          (detailName === "debitCardDetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "mobileNoDetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "aadharDetails" && reportName === "Statement in PDF/Excel") ||
+          (detailName === "emailDetails" && reportName === "Statement in PDF/Excel")) && (
           <div className="report-dates">
             <DatePicker
               selected={new Date()}
@@ -923,11 +1083,44 @@ export default function CreateRequest() {
               onCalendarOpen={() => setViewToDateCalendar(true)}
               onCalendarClose={() => setViewToDateCalendar(false)}
             />
+
+            { detailName === "CRNdetails" && reportName === "IP Logs" && (
+             <div style={{  marginTop: '-1vh'}}>
+              <h6 className="ticket-number-heading">{detail.name2}</h6>
+              <input
+              autoComplete="off"
+              className="number-box"
+              style={{
+                borderStyle: "solid",
+                borderColor:
+                  detail.mobileno.length === 0
+                    ? "rgba(128, 128, 128, 0.48)"
+                    : "rgba(76, 76, 76, 1)",
+                borderWidth: "1.5px",
+              }}
+              type='tel'
+              maxLength={14}
+              id="mobileno.value"
+              placeholder={detail.name2}
+              value={detail.mobileno.length === 0 ? '' : detail.mobileno}
+              onChange={(e) =>
+                handleMobileNoValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  reportName
+                )
+              }
+            ></input>
+            </div>
+            )}
           </div>
         )}
 
-        {detailName === "RRNdetails" && (
+        { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
           <div className="report-dates">
+            
             <input
               autoComplete="off"
               className={
@@ -1025,13 +1218,16 @@ export default function CreateRequest() {
               isSearchable={false}
               isDisabled={
                 detail.value === "" ||
-                detail.value === 0 ||
-                detail.amount === "" ||
-                detail.from === "From" ||
-                detail.from === "Invalid !" ||
-                detail.to === "To" ||
-                detail.to === "Invalid !" ||
-                detail.date === "Date"
+                detail.value === 0 
+                // ||
+                // detail.amount.length === 0 ||
+                // detail.date === "Date" ||
+                // detail.amount === 0 
+                // ||
+                // detail.from === "From" ||
+                // detail.from === "Invalid !" ||
+                // detail.to === "To" ||
+                // detail.to === "Invalid !" ||
                   ? true
                   : false
               }
@@ -1069,12 +1265,12 @@ export default function CreateRequest() {
             disabled={
               detail.value === "" ||
               detail.value === 0 ||
-              detail.amount === 0 ||
-              detail.amount === 0 ||
-              detail.from === "From" ||
-              detail.from === "Invalid !" ||
-              detail.to === "Invalid !" ||
-              detail.to === "To" ||
+              // detail.amount === 0 ||
+              // detail.amount === 0 ||
+              // detail.from === "From" ||
+              // detail.from === "Invalid !" ||
+              // detail.to === "Invalid !" ||
+              // detail.to === "To" ||
               detail.type === "Type"
                 ? true
                 : false
@@ -1083,14 +1279,14 @@ export default function CreateRequest() {
               addDetail(reportIndex, detailName, param, reportName)
             }
           >
-            <MdOutlineAdd className="add-icon" size="2.5vw" />
+            <MdOutlineAdd className="add-icon" size="2.25vw" />
           </button>
         ) : (
           <button
             className="add-remove-button"
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
-            <GrSubtract className="remove-icon" size="2.5vw" />
+            <GrSubtract className="remove-icon" size="2.25vw" />
           </button>
         )}
       </div>
@@ -1265,6 +1461,8 @@ export default function CreateRequest() {
             </div>
           </div>
 
+
+         <div>
           <MultiSelect
             options={requiredReports}
             value={selectedReports}
@@ -1296,32 +1494,44 @@ export default function CreateRequest() {
             onChange={(reports) => handleReportSelection(reports)}
             labelledBy="Select"
           />
+          </div>
+
         </div>
 
         {selectedReports.length > 0 && (
           <div className="selected-reports-section" id="selected-reports-section">
-            <h2 className="selected-reports-heading">Selected request</h2>
+            <h2 className="selected-reports-heading">Selected Requests</h2>
 
             <div>
               {selectedReports.length > 0 &&
                 selectedReports.map((request, reportIndex) => (
                   <div key={reportIndex}>
+                    
                     <div className="selected-report-view">
                       <div className="selected-report-header">
                         <p className="selected-report-heading">
                           {request.label}
                         </p>
+ 
+                       { reportsState[reportIndex]?.viewState === 'Expanded' ? ( 
+                       <BiHide size='1.75vw' color='rgba(95, 99, 104, 1)' onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
+                      ) : (                
+                        <BiShow size='1.75vw' color='rgba(95, 99, 104, 1)' onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
+                      )}
+
                       </div>
-                      <div className="selected-report-details">
+
+                      <div className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
                         {reportsState[reportIndex] && (
                           <>
+                           <div hidden={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}>
                             <MultiSelect
                               options={availableParameters}
-                              value={
-                                reportsState[reportIndex]?.selectedParams || []
-                              }
+                              value={reportsState[reportIndex]?.selectedParams || []}
+                              disabled={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}
                               disableSearch={true}
                               hasSelectAll={false}
+
                               overrideStrings={{
                                 selectSomeItems: "Select Input",
                                 allItemsAreSelected: reportsState[
@@ -1348,7 +1558,9 @@ export default function CreateRequest() {
                               }
                               labelledBy="Select"
                             />
+                        </div>
 
+                  <div className="details-subsection">
                             {reportsState[reportIndex].selectedParams.some(
                               (param) => param.label === "Account number"
                             ) &&
@@ -1439,6 +1651,7 @@ export default function CreateRequest() {
                                 "Mobile No.",
                                 request.label
                               )}
+                            </div>
                           </>
                         )}
                       </div>

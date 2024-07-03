@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
-import { MdOutlineFilterAlt } from "react-icons/md";
-// import Elements from "../../Elements/Elements";
+import { MdOutlineFilterAlt , MdViewCarousel } from "react-icons/md";
 import Modal from "react-modal";
 import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
-// import Sidenavsample from "../../../static/sidenavsample";
+import { HiMail } from "react-icons/hi";
+import { FaClipboardList } from "react-icons/fa";
+import { IoIosListBox } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import MailDraft from "../../components/Modals/MailDraft";
+
 
 export default function ViewRequest() {
   const [mailDraftModal, setMailDraftModal] = useState(false);
@@ -158,7 +160,8 @@ export default function ViewRequest() {
             })
           }
         >
-          View Details
+          <IoIosListBox size='1.6vw' color="rgb(0, 0, 177)" opacity='0.8' />
+          <p>Details</p>
         </button>
         <button
           className="mail-draft-button"
@@ -179,7 +182,8 @@ export default function ViewRequest() {
             }
           }}
         >
-          Mail Draft
+          <HiMail size='1.6vw' color={request.status === 'Completed' ? "rgba(96, 96, 96, 1)" : "rgba(161, 161, 161, 0.6)"} />
+          <p>E-Draft</p>
         </button>
       </div>
     ),

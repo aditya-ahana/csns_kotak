@@ -284,25 +284,32 @@ export default function ViewRequestDetails() {
     //  )
     action: (
       <div>
-        {detail.status_text === "Failed" ? (
+        {/* {detail.status_text === "Failed" ? (
           <button className="retry-button">
             <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
             <p className="retry-text">Retry</p>
           </button>
-        ) : (
-          <button className="expand-button">
-            <IoMdArrowDropdown
-              size="1.95vw"
-              color="rgba(95, 99, 104, 1)"
-              className="expand-icon"
-            />
-          </button>
-        )}
+        ) : ( */}
+        <button className="expand-button">
+          <IoMdArrowDropdown
+            size="1.95vw"
+            color="rgba(95, 99, 104, 1)"
+            className="expand-icon"
+          />
+        </button>
+        {/* )} */}
       </div>
     ),
   }));
 
   console.log("Request with Action", requestActions);
+
+  //   {detail.status_text === "Failed" && (
+  //   <button className="retry-button">
+  //   <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
+  //   <p className="retry-text">Retry</p>
+  // </button>
+  // )}
 
   return (
     <div className="page">
@@ -382,22 +389,34 @@ export default function ViewRequestDetails() {
                     </td>
                     <td>{row.createdDateTime}</td>
                     <td>
-                      <button
-                        className="expand-button"
-                        onClick={(e) => {
-                          if (viewDetailsAction === index) {
-                            setViewDetailsAction();
-                          } else {
-                            setViewDetailsAction(index);
-                          }
-                        }}
-                      >
-                        <IoMdArrowDropdown
-                          size="1.95vw"
-                          color="rgba(95, 99, 104, 1)"
-                          className="expand-icon"
-                        />
-                      </button>
+                      <div>
+                        {/* {row.status === "Failed" ? (
+                          <button className="retry-button">
+                            <TbReload
+                              size="1.4vw"
+                              color="rgba(237, 28, 36, 1)"
+                            />
+                            <p className="retry-text">Retry</p>
+                          </button>
+                        ) : ( */}
+                        <button
+                          className="expand-button"
+                          onClick={(e) => {
+                            if (viewDetailsAction === index) {
+                              setViewDetailsAction();
+                            } else {
+                              setViewDetailsAction(index);
+                            }
+                          }}
+                        >
+                          <IoMdArrowDropdown
+                            size="1.95vw"
+                            color="rgba(95, 99, 104, 1)"
+                            className="expand-icon"
+                          />
+                        </button>
+                        {/* )} */}
+                      </div>
                     </td>
                   </tr>
 
@@ -547,6 +566,64 @@ export default function ViewRequestDetails() {
                   ) : (
                     ""
                   )}
+
+                  {/* {viewDetailsAction === index ? (
+                    <div
+                      className="d-flex flex-column align-items-center"
+                      style={{ background: "#f5f8fa", maxWidth: "73vw" }}
+                    >
+                      {row.subData?.map((subDetails) => (
+                        <>
+                          <div
+                            className="d-flex flex-row p-3"
+                            style={{ width: "100%" }}
+                          >
+                            <span
+                              style={{
+                                width: "10vw",
+                              }}
+                            ></span>
+                            <span
+                              style={{
+                                width: "21vw",
+                                fontWeight: "400",
+                                color: "rgba(96, 96, 96, 1)",
+                              }}
+                            >
+                              Acc No:- {subDetails.accNo}
+                            </span>
+                            <span
+                              style={{
+                                width: "14.5vw",
+                              }}
+                            ></span>
+                            <span
+                              style={{
+                                width: "14.5vw",
+                              }}
+                            ></span>
+                            <span
+                              style={{
+                                width: "14.5vw",
+                              }}
+                            >
+                              <Button
+                                style={{
+                                  backgroundColor: "rgba(0, 56, 116, 1)",
+                                  marginLeft: "4.25vw",
+                                  fontWeight: 420,
+                                }}
+                              >
+                                Download
+                              </Button>
+                            </span>
+                          </div>
+                        </>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )} */}
                 </>
               ))}
             </tbody>
