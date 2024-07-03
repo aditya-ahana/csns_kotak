@@ -86,8 +86,8 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 
 /* Track */
 /* ::-webkit-scrollbar-track { */
-  /* box-shadow: inset 0 0 5px grey; */
-  /* border-radius: 10px; */
+/* box-shadow: inset 0 0 5px grey; */
+/* border-radius: 10px; */
 /* } */
 
 /* Handle */
@@ -315,7 +315,9 @@ input::-webkit-inner-spin-button {
 .rmsc .dropdown-content .panel-content {
   border-width: 0px !important;
   border-style: none !important;
-  box-shadow:0 0 0 0px #00000000,0 0px 0px #00000000 !important;
+  box-shadow:
+    0 0 0 0px #00000000,
+    0 0px 0px #00000000 !important;
 }
 
 .reports-dropdown .options {
@@ -619,7 +621,7 @@ input::-webkit-inner-spin-button {
   border-top-left-radius: 0px !important;
   border-width: 0px 1px 1px 1px !important;
   border-style: solid !important;
-  border-color: rgba(128, 128, 128, 0.74);;
+  border-color: rgba(128, 128, 128, 0.74);
 }
 
 .params-dropdown-after .item-renderer {
@@ -1654,7 +1656,7 @@ input::-webkit-inner-spin-button {
   text-align: center;
   justify-content: center;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20.5vw;
   padding-left: 1vw;
 }
 
@@ -1719,7 +1721,7 @@ input::-webkit-inner-spin-button {
   padding: 2vh 1vw 0vh 1vw;
   justify-content: left;
   border-width: 1px 1px 1px 0px;
-  width: 21vw;
+  width: 20.5vw;
 }
 
 .ticket-table tr td:nth-child(3) {
@@ -1857,7 +1859,7 @@ input::-webkit-inner-spin-button {
   text-align: center;
   justify-content: center;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20vw;
   padding-left: 1vw;
 }
 
@@ -1914,7 +1916,7 @@ input::-webkit-inner-spin-button {
   align-items: center;
   justify-content: left;
   border-width: 1px 1px 0px 0px;
-  width: 21vw;
+  width: 20vw;
   padding: 3vh 1vw 1vh 1vw;
 }
 
@@ -1974,6 +1976,7 @@ input::-webkit-inner-spin-button {
 .retry-button:hover {
   box-shadow: 1px 2px 12px 0px rgba(56, 50, 121, 0.48);
   transition: all 0.4s;
+  border-radius: 40px;
 }
 .retry-button:hover {
   background-color: rgb(255 231 232);
