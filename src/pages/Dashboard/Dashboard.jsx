@@ -21,14 +21,14 @@ export default function Dashboard() {
           </span>
           <Button
             type="primary"
-            danger
-            className="rounded"
+            // danger
+            className="logoColorBtn rounded"
             onClick={(e) => {
               createRequestNav();
             }}
-            style={{ width: "30vh", height: "6.5vh" }}
+            style={{ width: "24vh", height: "6vh" }}
           >
-            <span style={{ fontWeight: "bold", fontSize: "large" }}>
+            <span style={{ fontWeight: "bold", fontSize: "medium" }}>
               + Create Request
             </span>
           </Button>

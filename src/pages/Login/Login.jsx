@@ -48,7 +48,10 @@ export default function Login() {
 
   return (
     <>
-      <div className="parent" style={{ backgroundColor: "rgb(235 235 235)" }}>
+      <div
+        className="parent"
+        // style={{ backgroundColor: "rgba(245, 248, 250, 1)" }}
+      >
         <div className="main" style={{ height: "100vh" }}>
           <div
             className="logoHeader d-flex align-items-center justify-content-start"
@@ -176,8 +179,8 @@ export default function Login() {
                   {/* login button */}
                   <Button
                     type="primary"
-                    danger
-                    className="rounded height3rem"
+                    // danger
+                    className=" logoColorBtn rounded height3rem"
                     onClick={(e) => {
                       signInHandle();
                     }}
