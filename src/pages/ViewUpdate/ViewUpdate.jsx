@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
-import { MdOutlineFilterAlt , MdViewCarousel } from "react-icons/md";
+import { MdOutlineFilterAlt, MdViewCarousel } from "react-icons/md";
 import Modal from "react-modal";
 import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
@@ -11,7 +11,6 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoIosListBox } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import MailDraft from "../../components/Modals/MailDraft";
-
 
 export default function ViewRequest() {
   const [mailDraftModal, setMailDraftModal] = useState(false);
@@ -160,7 +159,7 @@ export default function ViewRequest() {
             })
           }
         >
-          <IoIosListBox size='1.6vw' color="rgb(0, 0, 177)" opacity='0.8' />
+          <IoIosListBox size="1.6vw" color="darkblue" opacity="0.8" />
           <p>Details</p>
         </button>
         <button
@@ -177,12 +176,19 @@ export default function ViewRequest() {
             borderColor: "rgba(161, 161, 161, 1)",
           }}
           onClick={(e) => {
-            if(request.status === 'Completed'){
-            setMailDraftModal(true);
+            if (request.status === "Completed") {
+              setMailDraftModal(true);
             }
           }}
         >
-          <HiMail size='1.6vw' color={request.status === 'Completed' ? "rgba(96, 96, 96, 1)" : "rgba(161, 161, 161, 0.6)"} />
+          <HiMail
+            size="1.6vw"
+            color={
+              request.status === "Completed"
+                ? "rgba(96, 96, 96, 1)"
+                : "rgba(161, 161, 161, 0.6)"
+            }
+          />
           <p>E-Draft</p>
         </button>
       </div>
@@ -234,7 +240,7 @@ export default function ViewRequest() {
           <div className="view-request-container">
             <div className="view-request-header">
               <div className="request-searchbar">
-                <IoMdSearch className="request-search-icon" size="2.4vw" />
+                <IoMdSearch className="request-search-icon" size="2vw" />
                 <input
                   type="search"
                   inputMode="text"
@@ -248,7 +254,7 @@ export default function ViewRequest() {
                 <MdOutlineFilterAlt
                   className="filter-icon"
                   color="#606060"
-                  size="30px"
+                  size="1.45vw"
                 />
                 <p className="filter-heading">Filter</p>
               </div>
@@ -272,7 +278,6 @@ export default function ViewRequest() {
         setMailDraftModal={setMailDraftModal}
         mailDraftModal={mailDraftModal}
       />
-
     </>
   );
 }

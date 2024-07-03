@@ -13,11 +13,13 @@ import { FiMinimize2 } from "react-icons/fi";
 import { BiShow, BiHide } from "react-icons/bi";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
+import { IoEyeSharp } from "react-icons/io5";
+import { PiEyeSlashFill } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 
 const CustomReportListRenderer = ({ checked, option, onClick, disabled }) => {
   return (
-    <div style={{ gap: 0 }}>
+    <div style={{ gap: 0, borderWidth: "0px" }}>
       <div className="dropdown-items-container">
         <div>
           <label className="container">
@@ -43,7 +45,7 @@ const CustomReportListRenderer = ({ checked, option, onClick, disabled }) => {
 
 const customParamRenderer = ({ checked, option, onClick, disabled }) => {
   return (
-    <div style={{ gap: 0 , borderTopWidth : '0px'}}>
+    <div style={{ gap: 0, borderTopWidth: "0px" }}>
       <div className="param-items-container">
         <div style={{ borderTopWidth: "0px" }}>
           <label className="param-container">
@@ -75,17 +77,15 @@ export default function CreateRequest() {
   const [ticketDescription, setTicketDescription] = useState("");
   const [detailed, setDetailed] = useState(false);
   const [selectedReports, setSelectedReports] = useState([]);
-  const [ minimizedView , setMinimizedView ] = useState(false);
+  const [minimizedView, setMinimizedView] = useState(false);
 
   const handleReportSelection = (reports) => {
     setSelectedReports(reports);
 
     // if(reports.some(report => report === 'Beneficiary details for Single IMPS transactions' || report === 'Beneficiary details for Single UPI transactions')){
-     
+
     //   setReportsState(prevState => {
     //     const newState = [...prevState];
-        
-
 
     //   })
     //   // reports.selectedParams.push([{ value: "3", label: "RRN" }]);
@@ -94,7 +94,7 @@ export default function CreateRequest() {
 
   useEffect(() => {
     if (selectedReports.length > 1) {
-      document.querySelector('#selected-reports-section').scrollIntoView();
+      document.querySelector("#selected-reports-section").scrollIntoView();
     }
   }, [selectedReports.length]);
 
@@ -122,42 +122,53 @@ export default function CreateRequest() {
           (existing) => existing.selectedReport === report.label
         );
 
-        if(report.label === 'Beneficiary details for Single IMPS transactions' || report.label === 'Beneficiary details for Single UPI transactions'){
-
-          return( 
+        if (
+          report.label === "Beneficiary details for Single IMPS transactions" ||
+          report.label === "Beneficiary details for Single UPI transactions"
+        ) {
+          return (
             existingReport || {
-            selectedReport: report.label,
-            selectedParams: [{ value: "3", label: "RRN" }],
-            accountNumberDetails: [],
-            PANdetails: [],
-            CRNdetails: [],
-            RRNdetails: [{ name: "RRN", value: "", date: "Date", name2: "Amount", amount: "", type: "Excel" }],
-            aadharDetails: [],
-            emailDetails: [],
-            creditCardDetails: [],
-            debitCardDetails: [],
-            mobileNoDetails: [],
-            viewState : 'Expanded'
-          })
+              selectedReport: report.label,
+              selectedParams: [{ value: "3", label: "RRN" }],
+              accountNumberDetails: [],
+              PANdetails: [],
+              CRNdetails: [],
+              RRNdetails: [
+                {
+                  name: "RRN",
+                  value: "",
+                  date: "Date",
+                  name2: "Amount",
+                  amount: "",
+                  type: "Excel",
+                },
+              ],
+              aadharDetails: [],
+              emailDetails: [],
+              creditCardDetails: [],
+              debitCardDetails: [],
+              mobileNoDetails: [],
+              viewState: "Expanded",
+            }
+          );
         } else {
-        return (
-          existingReport || {
-            selectedReport: report.label,
-            selectedParams: [],
-            accountNumberDetails: [],
-            PANdetails: [],
-            CRNdetails: [],
-            RRNdetails: [],
-            aadharDetails: [],
-            emailDetails: [],
-            creditCardDetails: [],
-            debitCardDetails: [],
-            mobileNoDetails: [],
-            viewState : 'Expanded'
-          }
-        );
-      }
-       
+          return (
+            existingReport || {
+              selectedReport: report.label,
+              selectedParams: [],
+              accountNumberDetails: [],
+              PANdetails: [],
+              CRNdetails: [],
+              RRNdetails: [],
+              aadharDetails: [],
+              emailDetails: [],
+              creditCardDetails: [],
+              debitCardDetails: [],
+              mobileNoDetails: [],
+              viewState: "Expanded",
+            }
+          );
+        }
       });
 
       return updatedReportState;
@@ -167,8 +178,6 @@ export default function CreateRequest() {
   // console.log('Selected REPORTS : ',selectedReports);
 
   const [reportsState, setReportsState] = useState([]);
-
-
 
   // useEffect(() => {
   //   console.log("Initial reportsState:", reportsState);
@@ -232,7 +241,7 @@ export default function CreateRequest() {
   //   var height = 0;
   //   var scrollStep = 200;
   //   var selectedReportsSection = document.querySelector('.selected-reports-section');
-    
+
   //   if (selectedReportsSection) {
   //       var sectionHeight = selectedReportsSection.scrollHeight;
   //       var windowHeight = window.innerHeight;
@@ -269,24 +278,21 @@ export default function CreateRequest() {
 
   // console.log('Final Selected',selectedParams);
 
-
   const handleMinimizedView = (reportIndex) => {
-    setReportsState(prevState => {
+    setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex].viewState = 'Minimized';
+      newState[reportIndex].viewState = "Minimized";
       return newState;
-    })
+    });
   };
 
   const handleExpandedView = (reportIndex) => {
-    setReportsState(prevState => {
+    setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex].viewState = 'Expanded';
+      newState[reportIndex].viewState = "Expanded";
       return newState;
-    })
+    });
   };
-
-
 
   const handleParamSelection = (params, reportIndex, reportName) => {
     setReportsState((prevState) => {
@@ -337,28 +343,46 @@ export default function CreateRequest() {
         params.some((param) => param.label === "Account number") &&
         report.accountNumberDetails.length === 0
       ) {
-        if(reportName === "Device details"){
+        if (reportName === "Device details") {
           report.accountNumberDetails.push({
             name: "Account number",
             value: "",
             type: "Excel",
           });
+        } else if (reportName === "IP Logs") {
+          report.accountNumberDetails.push({
+            name: "Account number",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (reportName === "Statement in PDF/Excel") {
+          report.accountNumberDetails.push({
+            name: "Account number",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
         } else {
-        report.accountNumberDetails.push({
-          name: "Account number",
-          value: "",
-          from: "From",
-          to: "To",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
-       }
+          report.accountNumberDetails.push({
+            name: "Account number",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        }
       }
 
       if (
         params.some((param) => param.label === "PAN") &&
         report.PANdetails.length === 0
       ) {
-        if(reportName === 'Statement in PDF/Excel'){
+        if (reportName === "Statement in PDF/Excel") {
           report.PANdetails.push({
             name: "PAN",
             value: "",
@@ -366,13 +390,34 @@ export default function CreateRequest() {
             to: "To",
             type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
           });
+        } else if (reportName === "IP Logs") {
+          report.PANdetails.push({
+            name: "PAN",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.PANdetails.push({
+            name: "PAN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
-        report.PANdetails.push({
-          name: "PAN",
-          value: "",
-          type: "Excel",
-        });
-      }
+          report.PANdetails.push({
+            name: "PAN",
+            value: "",
+            type: "Excel",
+          });
+        }
       }
 
       if (
@@ -380,57 +425,163 @@ export default function CreateRequest() {
         report.CRNdetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.CRNdetails.push({ name: "CRN", value: "", from: "From",
-            to: "To", type: "Type" });
-        }
-        else if (reportName === 'IP Logs') {
-          report.CRNdetails.push({ name: "CRN", value: "",from: "From",to: "To",name2: "Mobile No.",mobileno: "", type: "Excel" });
+          report.CRNdetails.push({
+            name: "CRN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.CRNdetails.push({
+            name: "CRN",
+            value: "",
+            from: "From",
+            to: "To",
+            name2: "Mobile No.",
+            mobileno: "",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.CRNdetails.push({
+            name: "CRN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
           report.CRNdetails.push({ name: "CRN", value: "", type: "Excel" });
         }
       }
 
-      if (params.some((param) => param.label === "RRN") &&
-        report.RRNdetails.length === 0) {
-          if (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") {
-            report.RRNdetails.push({ name: "RRN", value: "", from: "From",
-              to: "To", type: "Type" });
-          } else {
-            report.RRNdetails.push({
-              name: "RRN",
-              value: "",
-              date: "Date",
-              name2: "Amount",
-              amount: "",
-              type: "Excel",
-            });
-          }
+      if (
+        params.some((param) => param.label === "RRN") &&
+        report.RRNdetails.length === 0
+      ) {
+        if (
+          reportName === "Statement in PDF/Excel" ||
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.RRNdetails.push({
+            name: "RRN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.RRNdetails.push({
+            name: "RRN",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.RRNdetails.push({
+            name: "RRN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else {
+          report.RRNdetails.push({
+            name: "RRN",
+            value: "",
+            date: "Date",
+            name2: "Amount",
+            amount: "",
+            type: "Excel",
+          });
+        }
       }
-      
+
       if (
         params.some((param) => param.label === "Aadhar") &&
         report.aadharDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.aadharDetails.push({ name: "Aadhar", value: "", from: "From",
-            to: "To", type: "Type" });
+          report.aadharDetails.push({
+            name: "Aadhar",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.aadharDetails.push({
+            name: "Aadhar",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.aadharDetails.push({
+            name: "Aadhar",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
-        report.aadharDetails.push({
-          name: "Aadhar",
-          value: "",
-          type: "Excel",
-        });
+          report.aadharDetails.push({
+            name: "Aadhar",
+            value: "",
+            type: "Excel",
+          });
         }
       }
-
 
       if (
         params.some((param) => param.label === "Email ID") &&
         report.emailDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.emailDetails.push({ name: "Email ID", value: "", from: "From",
-            to: "To", type: "Type" });
+          report.emailDetails.push({
+            name: "Email ID",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.emailDetails.push({
+            name: "Email ID",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.emailDetails.push({
+            name: "Email ID",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
           report.emailDetails.push({
             name: "Email ID",
@@ -440,15 +591,39 @@ export default function CreateRequest() {
         }
       }
 
-
-
       if (
         params.some((param) => param.label === "Credit Card") &&
         report.creditCardDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.creditCardDetails.push({ name: "Credit Card", value: "", from: "From",
-            to: "To", type: "Type" });
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
           report.creditCardDetails.push({
             name: "Credit Card",
@@ -463,8 +638,34 @@ export default function CreateRequest() {
         report.debitCardDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
-          report.debitCardDetails.push({ name: "Debit Card", value: "", from: "From",
-            to: "To", type: "Type" });
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Type",
+          });
+        } else if (reportName === "IP Logs") {
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            value: "",
+            name2: "Mobile No.",
+            mobileno: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.debitCardDetails.push({
+            name: "PAN",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
         } else {
           report.debitCardDetails.push({
             name: "Debit Card",
@@ -478,22 +679,36 @@ export default function CreateRequest() {
         params.some((param) => param.label === "Mobile No.") &&
         report.mobileNoDetails.length === 0
       ) {
-        if(reportName === "Statement in PDF/Excel" || reportName === 'IP Logs'){
-        report.mobileNoDetails.push({
-          name: "Mobile No.",
-          from : "From",
-          to : 'To',
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
-      } else {
-        report.mobileNoDetails.push({
-          name: "Mobile No.",
-          value: "",
-          type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
-        });
+        if (
+          reportName === "Statement in PDF/Excel" ||
+          reportName === "IP Logs"
+        ) {
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            from: "From",
+            to: "To",
+            value: "",
+            type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+          });
+        } else if (
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions"
+        ) {
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            value: "",
+            from: "From",
+            to: "To",
+            type: "Excel",
+          });
+        } else {
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            value: "",
+            type: reportName === "Statement in PDF/Excel" ? "Type" : "Excel",
+          });
+        }
       }
-      } 
 
       // if (
       //   reportName === "IP Logs" &&
@@ -518,8 +733,7 @@ export default function CreateRequest() {
       //   });
       // }
 
-
-        document.querySelector('#selected-reports-section').scrollIntoView();
+      document.querySelector("#selected-reports-section").scrollIntoView();
 
       // console.log('New State',newState);
       return newState;
@@ -530,7 +744,7 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][details].splice(detailIndex, 1);
-      document.querySelector('#selected-reports-section').scrollIntoView();
+      document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
     });
   };
@@ -540,43 +754,72 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      if (reportName === "Statement in PDF/Excel") {
+      if (
+        reportName === "Statement in PDF/Excel" ||
+        reportName === "Beneficiary details for Bulk IMPS transactions" ||
+        reportName === "Beneficiary details for UPI IMPS transactions"
+      ) {
+        newState[reportIndex][detailName] = [
+          ...newState[reportIndex][detailName],
+          detailName === "accountNumberDetails" ||
+          detailName === "PANdetails" ||
+          detailName === "RRNdetails" ||
+          detailName === "CRNdetails" ||
+          detailName === "creditCardDetails" ||
+          detailName === "debitCardDetails" ||
+          detailName === "mobileNoDetails" ||
+          detailName === "emailDetails" ||
+          detailName === "aadharDetails"
+            ? { name: name, value: "", from: "From", to: "To", type: "Type" }
+            : {},
+        ];
+      } else if (reportName === "IP Logs") {
+        newState[reportIndex][detailName] = [
+          ...newState[reportIndex][detailName],
+          detailName === "CRNdetails" ||
+          detailName === "mobileNoDetails" ||
+          detailName === "accountNumberDetails" ||
+          detailName === "PANdetails" ||
+          detailName === "mobileNoDetails" ||
+          detailName === "emailDetails" ||
+          detailName === "creditCardDetails" ||
+          detailName === "debitCardDetails" ||
+          detailName === "aadharDetails"
+            ? {
+                name: name,
+                value: "",
+                from: "From",
+                to: "To",
+                name2: "Mobile No.",
+                mobileno: "",
+                type: "Excel",
+              }
+            : {},
+        ];
+      } else if (
+        reportName === "Beneficiary details for Bulk IMPS transactions"
+      ) {
         newState[reportIndex][detailName] = [
           ...newState[reportIndex][detailName],
           detailName === "RRNdetails"
-            ? {
-                name: "RRN",
-                value: "",
-                date: "Date",
-                name2: "Amount",
-                amount: "",
-                type: "Type",
-              }
-            : detailName === "accountNumberDetails" && reportName === 'Device details' ? 
-            { name: name, value: "",type: "Excel" }
-            : ((detailName === "accountNumberDetails" && reportName === "Statement in PDF/Excel") || 
-               (detailName === "PANdetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "RRNdetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
-               (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions") ||         
-               (detailName === "CRNdetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "creditCardDetails" && reportName === "Statement in PDF/Excel") || 
-               (detailName === "debitCardDetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "mobileNoDetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "emailDetails" && reportName === "Statement in PDF/Excel") ||
-               (detailName === "aadharDetails" && reportName === "Statement in PDF/Excel") ||
-                (detailName === "CRNdetails" && reportName === "IP Logs"))
-              ? { name: name, value: "", from: "From", to: "To", type: "Type" }
-              : detailName === "PANdetails" ||
-                  detailName === "mobileNoDetails" ||
-                  detailName === "CRNdetails" ||
-                  detailName === "emailDetails"
-                ? { name: name, value: "", type: "Type" }
-                : detailName === "creditCardDetails" ||
-                    detailName === "debitCardDetails" ||
-                    detailName === "aadharDetails"
-                  ? { name: name, value: "", type: "Type" }
-                  : {},
+            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+            : {},
+        ];
+      } else if (
+        reportName === "Beneficiary details for Bulk UPI transactions"
+      ) {
+        newState[reportIndex][detailName] = [
+          ...newState[reportIndex][detailName],
+          detailName === "RRNdetails"
+            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+            : {},
+        ];
+      } else if (reportName === "Device details") {
+        newState[reportIndex][detailName] = [
+          ...newState[reportIndex][detailName],
+          detailName === "accountNumberDetails"
+            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+            : {},
         ];
       } else {
         newState[reportIndex][detailName] = [
@@ -590,29 +833,41 @@ export default function CreateRequest() {
                 amount: "",
                 type: "Excel",
               }
-            : detailName === "accountNumberDetails" ||
-                (detailName === "mobileNoDetails" && reportName === 'IP Logs')
+            : detailName === "accountNumberDetails"
               ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
-              : detailName === "CRNdetails" && reportName === "IP Logs" ? 
-              { name: "CRN", value: "",from: "From",to: "To",name2: "Mobile No.",mobileno: "", type: "Excel" }
-              : detailName === "PANdetails" ||
-                  detailName === "mobileNoDetails" ||
-                  detailName === "CRNdetails" ||
-                  detailName === "emailDetails"
-                ? { name: name, value: "", type: "Excel" }
-                : detailName === "creditCardDetails" ||
+              : detailName === "CRNdetails" && reportName === "IP Logs"
+                ? {
+                    name: "CRN",
+                    value: "",
+                    from: "From",
+                    to: "To",
+                    name2: "Mobile No.",
+                    mobileno: "",
+                    type: "Excel",
+                  }
+                : detailName === "PANdetails" ||
+                    detailName === "mobileNoDetails" ||
+                    detailName === "CRNdetails" ||
+                    detailName === "emailDetails" ||
+                    detailName === "creditCardDetails" ||
                     detailName === "debitCardDetails" ||
                     detailName === "aadharDetails"
                   ? { name: name, value: "", type: "Excel" }
                   : {},
         ];
       }
-      document.querySelector('#selected-reports-section').scrollIntoView();
+      document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
     });
   };
 
-  const handleInputValue = (value, reportIndex, detailIndex, detailName,reportName) => {
+  const handleInputValue = (
+    value,
+    reportIndex,
+    detailIndex,
+    detailName,
+    reportName
+  ) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][detailName][detailIndex].value =
@@ -652,15 +907,15 @@ export default function CreateRequest() {
 
   const dateValidation = (date1, date2) => {
     // Parse the date strings
-    const [day1, month1, year1] = date1.split('/').map(Number);
-    const [day2, month2, year2] = date2.split('/').map(Number);
+    const [day1, month1, year1] = date1.split("/").map(Number);
+    const [day2, month2, year2] = date2.split("/").map(Number);
 
     // Create Date objects
     const firstDate = new Date(year1, month1 - 1, day1);
     const secondDate = new Date(year2, month2 - 1, day2);
 
     return secondDate < firstDate;
-};
+  };
 
   const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
     const selected_date = new Date(date);
@@ -697,7 +952,7 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (dateValidation(formatted_date,to)){
+      if (dateValidation(formatted_date, to)) {
         newState[reportIndex][detail][detailIndex].from = "Invalid !";
       } else {
         newState[reportIndex][detail][detailIndex].from = formatted_date;
@@ -743,14 +998,14 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (dateValidation(from,formatted_date)) {
+      if (dateValidation(from, formatted_date)) {
         newState[reportIndex][detail][detailIndex].to = "Invalid !";
       } else {
         newState[reportIndex][detail][detailIndex].to = formatted_date;
       }
 
       console.log("from date", from);
-      console.log("to date",formatted_date)
+      console.log("to date", formatted_date);
       // console.log("from month", new Date(from).getMonth());
       // console.log("to month",new Date(formatted_date).getMonth())
       // console.log("from year", new Date(from).getFullYear());
@@ -758,7 +1013,6 @@ export default function CreateRequest() {
       return newState;
     });
   };
-
 
   const handleDate = (date, reportIndex, detailIndex, detailName) => {
     console.log("RRN date", date);
@@ -790,8 +1044,6 @@ export default function CreateRequest() {
       return newState;
     });
   };
-
-  
 
   const customStyles = {
     option: (provided, state) => ({
@@ -850,11 +1102,11 @@ export default function CreateRequest() {
             style={{
               borderStyle: "solid",
               borderColor:
-                detail.value === 0 || detail.value.length === 0
-                  ? "rgba(128, 128, 128, 0.48)"
-                  : "rgba(76, 76, 76, 1)",
+                detail.value === 0 || detail.value === ""
+                  ? "rgba(128, 128, 128, 0.36)"
+                  : "rgba(128, 128, 128, 0.74)",
               borderWidth: "1.5px",
-              width:detailName === "CRNdetails" && reportName === "IP Logs" ? '14.25vw' : "20vw"
+              width: reportName === "IP Logs" ? "14.25vw" : "20vw",
             }}
             type={
               detail.name === "Account number"
@@ -943,18 +1195,18 @@ export default function CreateRequest() {
           ></input>
         </div>
 
-        {((detailName === "accountNumberDetails" && reportName !== "Device details") ||
-          (detailName === "CRNdetails" && reportName === "IP Logs") || (detailName === "mobileNoDetails" && reportName === "IP Logs") || (detailName === "accountNumberDetails" && reportName === "Statement in PDF/Excel") || 
-          (detailName === "PANdetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "RRNdetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
-          (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions") ||
-          (detailName === "CRNdetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "creditCardDetails" && reportName === "Statement in PDF/Excel") || 
-          (detailName === "debitCardDetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "mobileNoDetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "aadharDetails" && reportName === "Statement in PDF/Excel") ||
-          (detailName === "emailDetails" && reportName === "Statement in PDF/Excel")) && (
+        {((detailName === "accountNumberDetails" &&
+          reportName !== "Device details") ||
+          (detailName === "CRNdetails" && reportName === "IP Logs") ||
+          reportName === "IP Logs" ||
+          reportName === "Statement in PDF/Excel" ||
+          reportName === "Beneficiary details for Bulk IMPS transactions" ||
+          reportName === "Beneficiary details for Bulk UPI transactions" ||
+          (detailName === "RRNdetails" &&
+            reportName === "Beneficiary details for Bulk IMPS transactions") ||
+          (detailName === "RRNdetails" &&
+            reportName ===
+              "Beneficiary details for Bulk UPI transactions")) && (
           <div className="report-dates">
             <DatePicker
               selected={new Date()}
@@ -1084,25 +1336,59 @@ export default function CreateRequest() {
               onCalendarClose={() => setViewToDateCalendar(false)}
             />
 
-            { detailName === "CRNdetails" && reportName === "IP Logs" && (
-             <div style={{  marginTop: '-1vh'}}>
-              <h6 className="ticket-number-heading">{detail.name2}</h6>
-              <input
+            {detailName === "CRNdetails" && reportName === "IP Logs" && (
+              <div style={{ marginTop: "-1vh" }}>
+                <h6 className="ticket-number-heading">{detail.name2}</h6>
+                <input
+                  autoComplete="off"
+                  className="number-box"
+                  style={{
+                    borderStyle: "solid",
+                    borderColor:
+                      detail.mobileno.length === 0
+                        ? "rgba(128, 128, 128, 0.48)"
+                        : "rgba(76, 76, 76, 1)",
+                    borderWidth: "1.5px",
+                  }}
+                  type="tel"
+                  maxLength={14}
+                  id="mobileno.value"
+                  placeholder={detail.name2}
+                  value={detail.mobileno.length === 0 ? "" : detail.mobileno}
+                  onChange={(e) =>
+                    handleMobileNoValue(
+                      e.target.value,
+                      reportIndex,
+                      detailIndex,
+                      detailName,
+                      reportName
+                    )
+                  }
+                ></input>
+              </div>
+            )}
+          </div>
+        )}
+
+        {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+          <div style={{ marginTop: "0vh" }}>
+            <h6 className="ticket-number-heading">{detail.name2}</h6>
+            <input
               autoComplete="off"
               className="number-box"
               style={{
                 borderStyle: "solid",
                 borderColor:
-                  detail.mobileno.length === 0
-                    ? "rgba(128, 128, 128, 0.48)"
-                    : "rgba(76, 76, 76, 1)",
+                  detail.mobileno === ""
+                    ? "rgba(128, 128, 128, 0.36)"
+                    : "rgba(128, 128, 128, 0.74)",
                 borderWidth: "1.5px",
               }}
-              type='tel'
+              type="tel"
               maxLength={14}
-              id="mobileno.value"
+              id="mobilenovalue"
               placeholder={detail.name2}
-              value={detail.mobileno.length === 0 ? '' : detail.mobileno}
+              value={detail.mobileno === "" ? "" : detail.mobileno}
               onChange={(e) =>
                 handleMobileNoValue(
                   e.target.value,
@@ -1113,93 +1399,95 @@ export default function CreateRequest() {
                 )
               }
             ></input>
+          </div>
+        )}
+
+        {detailName === "RRNdetails" &&
+          (reportName === "Beneficiary details for Single IMPS transactions" ||
+            reportName ===
+              "Beneficiary details for Single UPI transactions") && (
+            <div className="report-dates">
+              <input
+                autoComplete="off"
+                className={
+                  reportName === "Statement in PDF/Excel"
+                    ? "selected-param-box-2"
+                    : "selected-param-box-3"
+                }
+                type="number"
+                style={{
+                  borderStyle: "solid",
+                  borderColor:
+                    detail.amount === 0 || detail.amount.length === 0
+                      ? "rgba(128, 128, 128, 0.36)"
+                      : "rgba(128, 128, 128, 0.74)",
+                  borderWidth: "1.5px",
+                }}
+                inputMode="numeric"
+                width={
+                  reportName === "Statement in PDF/Excel" ? "11vw" : "18vw"
+                }
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
+                maxLength={6}
+                disabled={
+                  detail.value === 0 || detail.value.length === 0 ? true : false
+                }
+                id="amountvalue"
+                placeholder={detail.name2}
+                value={detail.amount === 0 ? null : parseInt(detail.amount, 10)}
+                onChange={(e) =>
+                  handleAmountValue(
+                    e.target.value,
+                    reportIndex,
+                    detailIndex,
+                    detailName
+                  )
+                }
+              ></input>
+
+              <DatePicker
+                selected={new Date()}
+                onChange={(date) =>
+                  handleDate(date, reportIndex, detailIndex, detailName)
+                }
+                className="calendar"
+                disabled={detail.amount === 0 ? true : false}
+                maxDate={new Date()}
+                wrapperClassName={
+                  detail.date === "Date" ? "no-date" : "date-exists"
+                }
+                popperProps={{
+                  positionFixed: true,
+                }}
+                popperContainer={({ children }) => <div>{children}</div>}
+                customInput={
+                  <div className="date-box">
+                    <p
+                      className="date-text"
+                      style={{
+                        color: detail.date === "Date" ? "#A5A5A5" : "black",
+                      }}
+                    >
+                      {detail.date}
+                    </p>
+                    <FaRegCalendarAlt
+                      className="calendar-icon"
+                      size="1.4vw"
+                      color={
+                        detail.date === "Date" || detail.from === "Invalid !"
+                          ? "rgba(115, 115, 115, 1)"
+                          : "transparent"
+                      }
+                    />
+                  </div>
+                }
+                dateFormat="DD/MM/YYYY"
+                onCalendarOpen={() => setViewToDateCalendar(true)}
+                onCalendarClose={() => setViewToDateCalendar(false)}
+                value={detail.date}
+              />
             </div>
-            )}
-          </div>
-        )}
-
-        { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
-          <div className="report-dates">
-            
-            <input
-              autoComplete="off"
-              className={
-                reportName === "Statement in PDF/Excel"
-                  ? "selected-param-box-2"
-                  : "selected-param-box-3"
-              }
-              type="number"
-              style={{
-                borderStyle: "solid",
-                borderColor:
-                  detail.amount === 0 || detail.amount.length === 0
-                    ? "rgba(128, 128, 128, 0.48)"
-                    : "rgba(76, 76, 76, 1)",
-                borderWidth: "1.5px",
-              }}
-              inputMode="numeric"
-              width={reportName === "Statement in PDF/Excel" ? "11vw" : "18vw"}
-              onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
-              maxLength={6}
-              disabled={
-                detail.value === 0 || detail.value.length === 0 ? true : false
-              }
-              id="amountvalue"
-              placeholder={detail.name2}
-              value={detail.amount === 0 ? null : parseInt(detail.amount, 10)}
-              onChange={(e) =>
-                handleAmountValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName
-                )
-              }
-            ></input>
-
-            <DatePicker
-              selected={new Date()}
-              onChange={(date) =>
-                handleDate(date, reportIndex, detailIndex, detailName)
-              }
-              className="calendar"
-              disabled={detail.amount === 0 ? true : false}
-              maxDate={new Date()}
-              wrapperClassName={
-                detail.date === "Date" ? "no-date" : "date-exists"
-              }
-              popperProps={{
-                positionFixed: true,
-              }}
-              popperContainer={({ children }) => <div>{children}</div>}
-              customInput={
-                <div className="date-box">
-                  <p
-                    className="date-text"
-                    style={{
-                      color: detail.date === "Date" ? "#A5A5A5" : "black",
-                    }}
-                  >
-                    {detail.date}
-                  </p>
-                  <FaRegCalendarAlt
-                    className="calendar-icon"
-                    size="1.4vw"
-                    color={
-                      detail.date === "Date" || detail.from === "Invalid !"
-                        ? "rgba(115, 115, 115, 1)"
-                        : "transparent"
-                    }
-                  />
-                </div>
-              }
-              dateFormat="DD/MM/YYYY"
-              onCalendarOpen={() => setViewToDateCalendar(true)}
-              onCalendarClose={() => setViewToDateCalendar(false)}
-              value={detail.date}
-            />
-          </div>
-        )}
+          )}
 
         {reportName === "Statement in PDF/Excel" && (
           <div className="type-container" style={customStyles.Container}>
@@ -1217,18 +1505,17 @@ export default function CreateRequest() {
               isMulti={false}
               isSearchable={false}
               isDisabled={
-                detail.value === "" ||
-                detail.value === 0 
-                // ||
-                // detail.amount.length === 0 ||
-                // detail.date === "Date" ||
-                // detail.amount === 0 
-                // ||
-                // detail.from === "From" ||
-                // detail.from === "Invalid !" ||
-                // detail.to === "To" ||
-                // detail.to === "Invalid !" ||
-                  ? true
+                detail.value === "" || detail.value === 0
+                  ? // ||
+                    // detail.amount.length === 0 ||
+                    // detail.date === "Date" ||
+                    // detail.amount === 0
+                    // ||
+                    // detail.from === "From" ||
+                    // detail.from === "Invalid !" ||
+                    // detail.to === "To" ||
+                    // detail.to === "Invalid !" ||
+                    true
                   : false
               }
               styles={customStyles}
@@ -1361,8 +1648,19 @@ export default function CreateRequest() {
             <p>{detail.value}</p>
           </div>
 
-          {(detailName === "accountNumberDetails" ||
-            (detailName === "CRNdetails" && reportName === "IP Logs")) && (
+          {((detailName === "accountNumberDetails" &&
+            reportName !== "Device details") ||
+            (detailName === "CRNdetails" && reportName === "IP Logs") ||
+            reportName === "IP Logs" ||
+            reportName === "Statement in PDF/Excel" ||
+            reportName === "Beneficiary details for Bulk IMPS transactions" ||
+            reportName === "Beneficiary details for Bulk UPI transactions" ||
+            (detailName === "RRNdetails" &&
+              reportName ===
+                "Beneficiary details for Bulk IMPS transactions") ||
+            (detailName === "RRNdetails" &&
+              reportName ===
+                "Beneficiary details for Bulk UPI transactions")) && (
             <div className="detail-range">
               <p>Date</p>
               <p>:</p>
@@ -1372,14 +1670,26 @@ export default function CreateRequest() {
             </div>
           )}
 
-          {detailName === "RRNdetails" && (
-            <div className="detail-range">
-              <p>Amount</p>
+          {detailName === "RRNdetails" &&
+            (reportName ===
+              "Beneficiary details for Single IMPS transactions" ||
+              reportName ===
+                "Beneficiary details for Single UPI transactions") && (
+              <div className="detail-range">
+                <p>Amount</p>
+                <p>:</p>
+                <p>{detail.amount}</p>
+                <p style={{ marginLeft: "3vw" }}>Date</p>
+                <p>:</p>
+                <p>{detail.date}</p>
+              </div>
+            )}
+
+          {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+            <div>
+              <p style={{ marginLeft: "3vw" }}>Mobile No.</p>
               <p>:</p>
-              <p>{detail.amount}</p>
-              <p style={{ marginLeft: "3vw" }}>Date</p>
-              <p>:</p>
-              <p>{detail.date}</p>
+              <p>{detail.mobileno}</p>
             </div>
           )}
         </div>
@@ -1399,7 +1709,6 @@ export default function CreateRequest() {
   };
 
   return (
-  
     <div className="page">
       {/* <Elements />
 
@@ -1415,7 +1724,7 @@ export default function CreateRequest() {
       </div> */}
 
         {/* <h1 className="cr-heading">Create Request</h1> */}
-        <span style={{ fontWeight: '420', fontSize: "x-large" }}>
+        <span style={{ fontWeight: "420", fontSize: "x-large" }}>
           Create Request
         </span>
 
@@ -1461,196 +1770,250 @@ export default function CreateRequest() {
             </div>
           </div>
 
-
-         <div>
-          <MultiSelect
-            options={requiredReports}
-            value={selectedReports}
-            disableSearch={true}
-            disabled={
-              ticketNumber === 0 && ticketDescription === "" ? true : false
-            }
-            hasSelectAll={false}
-            overrideStrings={{
-              selectSomeItems: "Select statements/reports you require",
-              allItemsAreSelected: displaySelectedReports,
-              // clearSearch:  "",
-              // clearSelected:  "",
-              // noOptions: "",
-              // search: "",
-              // selectAll: "",
-              // selectAllFiltered: "",
-              // create: ""
-            }}
-            ItemRenderer={CustomReportListRenderer}
-            // valueRenderer={customValue}
-            ArrowRenderer={arrowRenderer}
-            className={
-              selectedReports.length === 0
-                ? "reports-dropdown"
-                : "reports-dropdown-after"
-            }
-            ClearSelectedIcon={null}
-            onChange={(reports) => handleReportSelection(reports)}
-            labelledBy="Select"
-          />
+          <div>
+            <MultiSelect
+              options={requiredReports}
+              value={selectedReports}
+              disableSearch={true}
+              disabled={
+                ticketNumber === 0 && ticketDescription === "" ? true : false
+              }
+              hasSelectAll={false}
+              overrideStrings={{
+                selectSomeItems: "Select statements/reports you require",
+                allItemsAreSelected: displaySelectedReports,
+                // clearSearch:  "",
+                // clearSelected:  "",
+                // noOptions: "",
+                // search: "",
+                // selectAll: "",
+                // selectAllFiltered: "",
+                // create: ""
+              }}
+              ItemRenderer={CustomReportListRenderer}
+              // valueRenderer={customValue}
+              ArrowRenderer={arrowRenderer}
+              className={
+                selectedReports.length === 0
+                  ? "reports-dropdown"
+                  : "reports-dropdown-after"
+              }
+              ClearSelectedIcon={null}
+              onChange={(reports) => handleReportSelection(reports)}
+              labelledBy="Select"
+            />
           </div>
-
         </div>
 
         {selectedReports.length > 0 && (
-          <div className="selected-reports-section" id="selected-reports-section">
+          <div
+            className="selected-reports-section"
+            id="selected-reports-section"
+          >
             <h2 className="selected-reports-heading">Selected Requests</h2>
 
             <div>
               {selectedReports.length > 0 &&
                 selectedReports.map((request, reportIndex) => (
                   <div key={reportIndex}>
-                    
                     <div className="selected-report-view">
-                      <div className="selected-report-header">
+                      <div
+                        className="selected-report-header"
+                        style={{
+                          borderBottomWidth:
+                            reportsState[reportIndex]?.viewState === "Minimized"
+                              ? "0px"
+                              : "1.5px",
+                        }}
+                      >
                         <p className="selected-report-heading">
                           {request.label}
                         </p>
- 
-                       { reportsState[reportIndex]?.viewState === 'Expanded' ? ( 
-                       <BiHide size='1.75vw' color='rgba(95, 99, 104, 1)' onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
-                      ) : (                
-                        <BiShow size='1.75vw' color='rgba(95, 99, 104, 1)' onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
-                      )}
 
+                        {reportsState[reportIndex]?.viewState === "Expanded" ? (
+                          <PiEyeSlashFill
+                            size="1.75vw"
+                            color="purple"
+                            onClick={() => handleMinimizedView(reportIndex)}
+                            className="view-icon"
+                          />
+                        ) : (
+                          <IoEyeSharp
+                            size="1.75vw"
+                            color="purple"
+                            onClick={() => handleExpandedView(reportIndex)}
+                            className="view-icon"
+                          />
+                        )}
                       </div>
 
-                      <div className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
+                      <div
+                        className={"selected-report-details"}
+                        hidden={
+                          reportsState[reportIndex]?.viewState === "Minimized"
+                            ? true
+                            : false
+                        }
+                      >
                         {reportsState[reportIndex] && (
                           <>
-                           <div hidden={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}>
-                            <MultiSelect
-                              options={availableParameters}
-                              value={reportsState[reportIndex]?.selectedParams || []}
-                              disabled={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}
-                              disableSearch={true}
-                              hasSelectAll={false}
+                            <div
+                              hidden={
+                                request.label ===
+                                  "Beneficiary details for Single IMPS transactions" ||
+                                request.label ===
+                                  "Beneficiary details for Single UPI transactions"
+                                  ? true
+                                  : false
+                              }
+                            >
+                              <MultiSelect
+                                options={availableParameters}
+                                value={
+                                  reportsState[reportIndex]?.selectedParams ||
+                                  []
+                                }
+                                disabled={
+                                  request.label ===
+                                    "Beneficiary details for Single IMPS transactions" ||
+                                  request.label ===
+                                    "Beneficiary details for Single UPI transactions"
+                                    ? true
+                                    : false
+                                }
+                                disableSearch={true}
+                                hasSelectAll={false}
+                                overrideStrings={{
+                                  selectSomeItems: "Select Detail",
+                                  allItemsAreSelected: reportsState[
+                                    reportIndex
+                                  ]?.selectedParams
+                                    ?.map((param) => param.label)
+                                    .join(" , "),
+                                }}
+                                ArrowRenderer={arrowRenderer}
+                                ItemRenderer={customParamRenderer}
+                                className={
+                                  reportsState[reportIndex]?.selectedParams
+                                    .length === 0
+                                    ? "params-dropdown"
+                                    : "params-dropdown-after"
+                                }
+                                ClearSelectedIcon={null}
+                                onChange={(params) =>
+                                  handleParamSelection(
+                                    params,
+                                    reportIndex,
+                                    request.label
+                                  )
+                                }
+                                labelledBy="Select"
+                              />
+                            </div>
 
-                              overrideStrings={{
-                                selectSomeItems: "Select Input",
-                                allItemsAreSelected: reportsState[
-                                  reportIndex
-                                ]?.selectedParams
-                                  ?.map((param) => param.label)
-                                  .join(" , "),
+                            <div
+                              className="details-subsection"
+                              style={{
+                                marginTop:
+                                  request.label ===
+                                    "Beneficiary details for Single IMPS transactions" ||
+                                  request.label ===
+                                    "Beneficiary details for Single UPI transactions"
+                                    ? "-4vh"
+                                    : "-1vh",
                               }}
-                              ArrowRenderer={arrowRenderer}
-                              ItemRenderer={customParamRenderer}
-                              className={
-                                reportsState[reportIndex]?.selectedParams
-                                  .length === 0
-                                  ? "params-dropdown"
-                                  : "params-dropdown-after"
-                              }
-                              ClearSelectedIcon={null}
-                              onChange={(params) =>
-                                handleParamSelection(
-                                  params,
+                            >
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Account number"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex]
+                                    .accountNumberDetails,
                                   reportIndex,
+                                  "accountNumberDetails",
+                                  "Account number",
                                   request.label
-                                )
-                              }
-                              labelledBy="Select"
-                            />
-                        </div>
-
-                  <div className="details-subsection">
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Account number"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].accountNumberDetails,
-                                reportIndex,
-                                "accountNumberDetails",
-                                "Account number",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "PAN"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].PANdetails,
-                                reportIndex,
-                                "PANdetails",
-                                "PAN",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "CRN"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].CRNdetails,
-                                reportIndex,
-                                "CRNdetails",
-                                "CRN",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "RRN"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].RRNdetails,
-                                reportIndex,
-                                "RRNdetails",
-                                "RRN",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Aadhar"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].aadharDetails,
-                                reportIndex,
-                                "aadharDetails",
-                                "Aadhar",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Email ID"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].emailDetails,
-                                reportIndex,
-                                "emailDetails",
-                                "Email ID",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Credit Card"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].creditCardDetails,
-                                reportIndex,
-                                "creditCardDetails",
-                                "Credit Card",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Debit Card"
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].debitCardDetails,
-                                reportIndex,
-                                "debitCardDetails",
-                                "Debit Card",
-                                request.label
-                              )}
-                            {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Mobile No."
-                            ) &&
-                              displayRequestedReports(
-                                reportsState[reportIndex].mobileNoDetails,
-                                reportIndex,
-                                "mobileNoDetails",
-                                "Mobile No.",
-                                request.label
-                              )}
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "PAN"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].PANdetails,
+                                  reportIndex,
+                                  "PANdetails",
+                                  "PAN",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "CRN"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].CRNdetails,
+                                  reportIndex,
+                                  "CRNdetails",
+                                  "CRN",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "RRN"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].RRNdetails,
+                                  reportIndex,
+                                  "RRNdetails",
+                                  "RRN",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Aadhar"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].aadharDetails,
+                                  reportIndex,
+                                  "aadharDetails",
+                                  "Aadhar",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Email ID"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].emailDetails,
+                                  reportIndex,
+                                  "emailDetails",
+                                  "Email ID",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Credit Card"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].creditCardDetails,
+                                  reportIndex,
+                                  "creditCardDetails",
+                                  "Credit Card",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Debit Card"
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].debitCardDetails,
+                                  reportIndex,
+                                  "debitCardDetails",
+                                  "Debit Card",
+                                  request.label
+                                )}
+                              {reportsState[reportIndex].selectedParams.some(
+                                (param) => param.label === "Mobile No."
+                              ) &&
+                                displayRequestedReports(
+                                  reportsState[reportIndex].mobileNoDetails,
+                                  reportIndex,
+                                  "mobileNoDetails",
+                                  "Mobile No.",
+                                  request.label
+                                )}
                             </div>
                           </>
                         )}
@@ -1677,14 +2040,15 @@ export default function CreateRequest() {
                   onRequestClose={() => setViewPreview(false)}
                   className="preview-modal"
                   contentLabel="Preview Modal"
-                  // shouldCloseOnOverlayClick={true}    
-                  // shouldCloseOnEsc={true}         
+                  // shouldCloseOnOverlayClick={true}
+                  // shouldCloseOnEsc={true}
                 >
                   <div className="preview-box">
                     <div className="preview-header">
                       <h2 className="preview-heading">Preview</h2>
                       <IoMdClose
                         name="close-preview"
+                        className="close-preview-button"
                         size="2.5vw"
                         onClick={() => setViewPreview(false)}
                         color="gray"
