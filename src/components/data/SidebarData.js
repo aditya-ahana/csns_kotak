@@ -7,17 +7,17 @@ import { MdOutlinePostAdd } from "react-icons/md";
 
 export const sidebarData = [
   {
-    key: "/Dashboard",
+    linkKey: "/Dashboard",
     icon: <RiDashboardFill />,
     label: "Dashboard",
   },
   {
-    key: "/CreateRequest",
+    linkKey: "/CreateRequest",
     icon: <FiEdit />,
     label: "Create Request",
   },
   {
-    key: "/ViewUpdate",
+    linkKey: "/ViewUpdate",
     icon: <MdOutlinePostAdd />,
     label: "View/Update Request",
   },
