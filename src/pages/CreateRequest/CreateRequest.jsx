@@ -1,73 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
-import { GrSubtract } from "react-icons/gr";
-import { FaRegCalendarAlt } from "react-icons/fa";
-import { MdOutlineAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { FaRegCheckSquare } from "react-icons/fa";
-import { MultiSelect } from "react-multi-select-component";
-import Modal from "react-modal";
-import { TbWindowMinimize } from "react-icons/tb";
-import { MdHideImage } from "react-icons/md";
-import { FiMinimize2 } from "react-icons/fi";
-import { BiShow, BiHide } from "react-icons/bi";
-import "react-datepicker/dist/react-datepicker.css";
-import Select from "react-select";
-import { IoEyeSharp } from "react-icons/io5";
-import { PiEyeSlashFill } from "react-icons/pi";
-import DatePicker from "react-datepicker";
+import { TextField,InputAdornment, createTheme, Input, ThemeProvider } from '@mui/material';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import ListItemText from '@mui/material/ListItemText';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import Select from '@mui/material/Select';
+import { Button } from '@mui/base/Button';
+import { Modal } from '@mui/material';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Checkbox , { checkboxClasses } from '@mui/material/Checkbox';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import Box from '@mui/material/Box';
+import dayjs, { Dayjs } from "dayjs";
 
-const CustomReportListRenderer = ({ checked, option, onClick, disabled }) => {
-  return (
-    <div style={{ gap: 0, borderWidth :'0px'}}>
-      <div className="dropdown-items-container">
-        <div>
-          <label className="container">
-            <input
-              autoComplete="off"
-              type="checkbox"
-              onChange={onClick}
-              checked={checked}
-              tabIndex={-1}
-              disabled={disabled}
-            />
-            <span class="checkmark" />
-          </label>
-        </div>
-
-        <div className="dropdown-labels">
-          <span>{option.label}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const customParamRenderer = ({ checked, option, onClick, disabled }) => {
-  return (
-    <div style={{ gap: 0 , borderTopWidth : '0px'}}>
-      <div className="param-items-container">
-        <div style={{ borderTopWidth: "0px" }}>
-          <label className="param-container">
-            <input
-              autoComplete="off"
-              type="checkbox"
-              onChange={onClick}
-              checked={checked}
-              tabIndex={-1}
-              disabled={disabled}
-            />
-            <span class="checkmark" />
-          </label>
-        </div>
-
-        <div className="param-dropdown-labels">
-          <span>{option.label}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
@@ -75,61 +29,39 @@ export default function CreateRequest() {
   const route_to = useNavigate();
   const [ticketNumber, setTicketNumber] = useState(0);
   const [ticketDescription, setTicketDescription] = useState("");
-  const [detailed, setDetailed] = useState(false);
+  const [ descriptionFocused , setDescriptionFocused ] = useState(false);
   const [selectedReports, setSelectedReports] = useState([]);
-  const [ minimizedView , setMinimizedView ] = useState(false);
+  const [viewPreview, setViewPreview] = useState(false);
+  const [availableParameters, setAvailableParameters] = useState(["Account number", "CRN","RRN","PAN","Aadhar" ,"Mobile No.","Debit Card" ,"Credit Card" ,"Email ID"]);
 
-  const handleReportSelection = (reports) => {
-    setSelectedReports(reports);
+  const new_date = new Date();
+  new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
 
-    // if(reports.some(report => report === 'Beneficiary details for Single IMPS transactions' || report === 'Beneficiary details for Single UPI transactions')){
-     
-    //   setReportsState(prevState => {
-    //     const newState = [...prevState];
-        
+  const currentDay = new Date(new_date)
+    .toLocaleDateString("en-Us", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+    .split("/")
+    .map((part, index, array) => (index < 2 ? array[1 - index] : part))
+    .join("-");
 
-
-    //   })
-    //   // reports.selectedParams.push([{ value: "3", label: "RRN" }]);
-    // };
-  };
-
-  useEffect(() => {
-    if (selectedReports.length > 1) {
-      document.querySelector('#selected-reports-section').scrollIntoView();
-    }
-  }, [selectedReports.length]);
-
-  // useEffect(() => {
-  //   const initialReports = selectedReports.map((report) => ({
-  //     selectedReport : report.label,
-  //     selectedParams: [],
-  //     accountNumberDetails: [],
-  //     PANdetails : [],
-  //     CRNdetails : [],
-  //     RRNdetails : [],
-  //     aadharDetails : [],
-  //     emailDetails : [],
-  //     creditCardDetails : [],
-  //     debitCardDetails : [],
-  //     mobileNoDetails : []
-  //   }));
-  //   setReportsState(initialReports);
-  // }, [ selectedReports ])
+    console.log('currentDay',currentDay);
 
   useEffect(() => {
     setReportsState((prevReportsState) => {
       const updatedReportState = selectedReports.map((report) => {
         const existingReport = prevReportsState.find(
-          (existing) => existing.selectedReport === report.label
+          (existing) => existing.selectedReport === report
         );
 
-        if(report.label === 'Beneficiary details for Single IMPS transactions' || report.label === 'Beneficiary details for Single UPI transactions'){
+        if(report === 'Beneficiary details for Single IMPS transactions' || report === 'Beneficiary details for Single UPI transactions'){
 
           return( 
             existingReport || {
-            selectedReport: report.label,
-            selectedParams: [{ value: "3", label: "RRN" }],
+            selectedReport: report,
+            selectedParams: ["RRN"],
             accountNumberDetails: [],
             PANdetails: [],
             CRNdetails: [],
@@ -144,7 +76,7 @@ export default function CreateRequest() {
         } else {
         return (
           existingReport || {
-            selectedReport: report.label,
+            selectedReport: report,
             selectedParams: [],
             accountNumberDetails: [],
             PANdetails: [],
@@ -158,10 +90,8 @@ export default function CreateRequest() {
             viewState : 'Expanded'
           }
         );
-      }
-       
+      }      
       });
-
       return updatedReportState;
     });
   }, [selectedReports]);
@@ -170,65 +100,15 @@ export default function CreateRequest() {
 
   const [reportsState, setReportsState] = useState([]);
 
-
-
-  // useEffect(() => {
-  //   console.log("Initial reportsState:", reportsState);
-  // });
-
-  const [createdDate, setCreatedDate] = useState("");
-  const [viewFromDateCalendar, setViewFromDateCalendar] = useState(false);
-  const [viewToDateCalendar, setViewToDateCalendar] = useState(false);
-  const [viewDateCalendar, setViewDateCalendar] = useState(false);
-
-  const [viewPreview, setViewPreview] = useState(false);
-  const [viewReportsDropdown, setViewReportsDropdown] = useState(false);
-  const [statementDetailCount, setStatementDetailCount] = useState(1);
-  const [availableParameters, setAvailableParameters] = useState([
-    { value: "1", label: "Account number" },
-    { value: "2", label: "CRN" },
-    { value: "3", label: "RRN" },
-    { value: "4", label: "PAN" },
-    { value: "5", label: "Aadhar" },
-    { value: "6", label: "Mobile No." },
-    { value: "7", label: "Debit Card" },
-    { value: "8", label: "Credit Card" },
-    { value: "9", label: "Email ID" },
-  ]);
-
-  // const StatementInPDForExcel = [{ report_type : 'Statement in PDF/Excel' , report_details : accountNumberDetails }];
-
-  // const allDetails = [...accountNumberDetails,...PANdetails,...CRNdetails,...RRNdetails];
-
-  const finalSelectedReports = selectedReports.map((request) => request.label);
-
-  const requiredReportsData = [
-    { value: "1.", label: "Statement in PDF/Excel" },
-    { value: "2.", label: "Beneficiary details for Single IMPS transactions" },
-    { value: "3.", label: "Beneficiary details for Bulk IMPS transactions" },
-    { value: "4.", label: "Beneficiary details for Single UPI transactions" },
-    { value: "5.", label: "Beneficiary details for Bulk UPI transactions" },
-    { value: "6.", label: "IP Logs" },
-    { value: "7.", label: "Device details" },
-  ];
+  const requiredReportsData = ["Statement in PDF/Excel", "Beneficiary details for Single IMPS transactions", "Beneficiary details for Bulk IMPS transactions" ,"Beneficiary details for Single UPI transactions" , "Beneficiary details for Bulk UPI transactions" ,'IP Logs', "Device details" ];
 
   const [selectedParams, setSelectedParams] = useState(
     Array.from({ length: selectedReports.length }, () => [])
   );
 
-  const requiredReports = requiredReportsData.map((request, index) => ({
-    value: request.value,
-    label: request.label,
-  }));
-
   // console.log('selected reports : ',selectedReports);
 
-  const finalSelectedParams = selectedParams.map((param) => param.label);
-
-  const availableReportTypes = [
-    { value: "1", label: "PDF" },
-    { value: "2", label: "Excel" },
-  ];
+  const availableReportTypes = [ "PDF","Excel" ];
 
   // const autoScrollDown = (scrollingSpace) => {
   //   var height = 0;
@@ -265,10 +145,6 @@ export default function CreateRequest() {
   //   }
   // };
 
-  const displaySelectedReports = selectedReports
-    .map((request) => request.label)
-    .join(", ");
-
   // console.log('Final Selected',selectedParams);
 
 
@@ -288,10 +164,27 @@ export default function CreateRequest() {
     })
   };
 
+  const handleReportSelection = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedReports(
+      typeof value === 'string' ? value.split(',') : value,
+    );
+  };
 
+  useEffect(() => {
+    if (selectedReports.length > 1) {
+      document.querySelector('#selected-reports-section').scrollIntoView();
+    }
+  }, [selectedReports.length]);
 
-  const handleParamSelection = (params, reportIndex, reportName) => {
+  const handleParamSelection = (event, reportIndex, reportName) => {
     setReportsState((prevState) => {
+      const {
+        target: { value },
+      } = event;
+
       const newState = [...prevState];
       const report = newState[reportIndex];
 
@@ -301,21 +194,22 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      report.selectedParams = params;
-      console.log("Part", params);
+      report.selectedParams = (typeof value === 'string' ? value.split(',') : value)
 
-      // if(reportName === 'IP Logs' && params.some(param => param.label === 'Mobile No.')){
+      console.log("Part", value);
+
+      // if(reportName === 'IP Logs' && params.some(param => param === 'Mobile No.')){
       //   params = [...params,{value : '6',label : 'Mobile No.'},{ value : '2',label : 'CRN' }]
       //   report.selectedParams = params;
       // };
 
       // if (
       //   reportName === "IP Logs" &&
-      //   params.some((param) => param.label === "Mobile No.")
+      //   params.some((param) => param === "Mobile No.")
       // ) {
-      //   const isCRNPresent = params.some((param) => param.label === "CRN");
+      //   const isCRNPresent = params.some((param) => param === "CRN");
       //   const isMobileNoPresent = params.some(
-      //     (param) => param.label === "Mobile No."
+      //     (param) => param === "Mobile No."
       //   );
 
       //   if (!isCRNPresent || !isMobileNoPresent) {
@@ -336,7 +230,7 @@ export default function CreateRequest() {
       console.log("PARAMS?", report.selectedParams);
 
       if (
-        params.some((param) => param.label === "Account number") &&
+        value.some((param) => param === "Account number") &&
         report.accountNumberDetails.length === 0
       ) {
         if(reportName === "Device details"){
@@ -375,7 +269,7 @@ export default function CreateRequest() {
       };
 
       if (
-        params.some((param) => param.label === "PAN") &&
+        value.some((param) => param === "PAN") &&
         report.PANdetails.length === 0
       ) {
         if(reportName === 'Statement in PDF/Excel'){
@@ -414,7 +308,7 @@ export default function CreateRequest() {
       }
 
       if (
-        params.some((param) => param.label === "CRN") &&
+        value.some((param) => param === "CRN") &&
         report.CRNdetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
@@ -440,7 +334,7 @@ export default function CreateRequest() {
         }
       }
 
-      if (params.some((param) => param.label === "RRN") &&
+      if (value.some((param) => param === "RRN") &&
         report.RRNdetails.length === 0) {
           if (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") {
             report.RRNdetails.push({ name: "RRN", value: "", from: "From",
@@ -455,18 +349,7 @@ export default function CreateRequest() {
               to: "To",
               type: "Excel",
             });
-          } 
-          
-          else if (reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") {
-            report.RRNdetails.push({
-              name: "RRN",
-              value: "",
-              from: "From",
-              to: "To",
-              type: "Excel",
-            });      
-          }
-          
+          }        
           else {
             report.RRNdetails.push({
               name: "RRN",
@@ -480,7 +363,7 @@ export default function CreateRequest() {
       }
       
       if (
-        params.some((param) => param.label === "Aadhar") &&
+        value.some((param) => param === "Aadhar") &&
         report.aadharDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
@@ -519,7 +402,7 @@ export default function CreateRequest() {
 
 
       if (
-        params.some((param) => param.label === "Email ID") &&
+        value.some((param) => param === "Email ID") &&
         report.emailDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
@@ -559,7 +442,7 @@ export default function CreateRequest() {
 
 
       if (
-        params.some((param) => param.label === "Credit Card") &&
+        value.some((param) => param === "Credit Card") &&
         report.creditCardDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
@@ -597,7 +480,7 @@ export default function CreateRequest() {
       }
 
       if (
-        params.some((param) => param.label === "Debit Card") &&
+        value.some((param) => param === "Debit Card") &&
         report.debitCardDetails.length === 0
       ) {
         if (reportName === "Statement in PDF/Excel") {
@@ -635,7 +518,7 @@ export default function CreateRequest() {
       }
 
       if (
-        params.some((param) => param.label === "Mobile No.") &&
+        value.some((param) => param === "Mobile No.") &&
         report.mobileNoDetails.length === 0
       ) {
         if(reportName === "Statement in PDF/Excel" || reportName === 'IP Logs'){
@@ -669,9 +552,9 @@ export default function CreateRequest() {
 
       // if (
       //   reportName === "IP Logs" &&
-      //   params.some(
+      //   value.some(
       //     (param) =>
-      //       param.label === "Mobile No." &&
+      //       param === "Mobile No." &&
       //       report.mobileNoDetails.length === 0 &&
       //       report.CRNdetails.length === 0
       //   )
@@ -830,16 +713,25 @@ export default function CreateRequest() {
     });
   };
 
-  const dateValidation = (date1, date2) => {
-    // Parse the date strings
-    const [day1, month1, year1] = date1.split('/').map(Number);
-    const [day2, month2, year2] = date2.split('/').map(Number);
+//   const dateValidation = (date1, date2) => {
+//     // Parse the dates using dayjs
+//     const firstDate = dayjs(date1, 'DD-MM-YYYY');
+//     const secondDate = dayjs(date2, 'DD-MM-YYYY');
 
-    // Create Date objects
-    const firstDate = new Date(year1, month1 - 1, day1);
-    const secondDate = new Date(year2, month2 - 1, day2);
+//     console.log('from',date1);
+//     console.log('to',date2);
 
-    return secondDate < firstDate;
+//     if(secondDate.isBefore(firstDate)){
+//       return 'Wrong Date'
+//     } else if(secondDate.isAfter(firstDate)){
+//       return 'Right Date'
+//     } else {
+//       return 'Bad Date'
+//     }
+// };
+
+const disableInvalidDates = (day, to) => {
+  return dayjs(day).isAfter(dayjs(to, 'DD-MM-YYYY'), 'day');
 };
 
   const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
@@ -877,13 +769,7 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (dateValidation(formatted_date,to)){
-        newState[reportIndex][detail][detailIndex].from = "Invalid !";
-      } else {
-        newState[reportIndex][detail][detailIndex].from = formatted_date;
-      }
-
-      console.log("time4", date);
+      newState[reportIndex][detail][detailIndex].from = formatted_date;
       return newState;
     });
   };
@@ -923,22 +809,10 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (dateValidation(from,formatted_date)) {
-        newState[reportIndex][detail][detailIndex].to = "Invalid !";
-      } else {
-        newState[reportIndex][detail][detailIndex].to = formatted_date;
-      }
-
-      console.log("from date", from);
-      console.log("to date",formatted_date)
-      // console.log("from month", new Date(from).getMonth());
-      // console.log("to month",new Date(formatted_date).getMonth())
-      // console.log("from year", new Date(from).getFullYear());
-      // console.log("to year",new Date(formatted_date).getFullYear())
+      newState[reportIndex][detail][detailIndex].to = formatted_date;
       return newState;
     });
   };
-
 
   const handleDate = (date, reportIndex, detailIndex, detailName) => {
     console.log("RRN date", date);
@@ -971,46 +845,35 @@ export default function CreateRequest() {
     });
   };
 
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: '40.5vh',
+        marginTop : "-1vh",
+        // backgroundColor : "red"
+      },
+    },
+  };
+
+  const ParamProps = {
+    PaperProps: {
+      style: {
+        maxHeight: '23vh',
+        marginTop : "-1vh",
+        // backgroundColor : "red"
+      },
+    },
+  };
+
+  const SingleSelectProps = {
+    PaperProps: {
+      style: {
+        marginTop : "-1vh",
+        // backgroundColor : "red"
+      },
+    },
+  };
   
-
-  const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor:
-        state.isSelected || state.isClicked
-          ? "#F5F8FA"
-          : provided.backgroundColor,
-      color: state.isSelected ? "black" : provided.color,
-    }),
-    control: (provided) => ({
-      ...provided,
-      height: "5.25vh",
-    }),
-    dropdownIndicator: (provided) => ({
-      ...provided,
-      padding: "0px",
-    }),
-    Container: {
-      marginTop: "1vh",
-      borderWidth: "0px",
-      borderStyle: "solid",
-      borderColor: "rgba(128, 128, 128, 0.48)",
-      borderRadius: "6px",
-      minWidth: "6.5vw",
-      maxWidth: "6.5vw",
-      marginLeft: "-0.5vw",
-    },
-    previewFont: {
-      fontFamily: "Roboto",
-      fontWeight: 400,
-    },
-    reportDates: {},
-  };
-
-  const updateDetailed = () => {
-    setDetailed(true);
-  };
-  console.log("ULTIMATE REPORTS ARRAY : ", reportsState);
 
   const displayRequestedReports = (
     detailsArray,
@@ -1020,46 +883,27 @@ export default function CreateRequest() {
     reportName
   ) =>
     detailsArray.map((detail, detailIndex) => (
-      <div className="selected-param-details" key={detailIndex}>
-        {console.log(detailsArray, reportIndex, detailName, param, reportName)}
-        <div className="input-1">
-          <h6 className="ticket-number-heading">{detail.name}</h6>
-          <input
-            autoComplete="off"
-            className="selected-param-box"
-            style={{
-              borderStyle: "solid",
-              borderColor:
-                detail.value === 0 || detail.value === ''
-                  ? "rgba(128, 128, 128, 0.36)"
-                  : "rgba(128, 128, 128, 0.74)",
-              borderWidth: "1.5px",
-              width: reportName === "IP Logs" ? '14.25vw' : "20vw"
-            }}
-            type={
-              detail.name === "Account number"
-                ? "text"
-                : detail.name === "CRN"
-                  ? "text"
-                  : detail.name === "Email ID"
-                    ? "email"
-                    : detail.name === "PAN"
-                      ? "text"
-                      : detail.name === "Mobile No."
-                        ? "tel"
-                        : detail.name === "Credit Card"
-                          ? "number"
-                          : detail.name === "Aadhar"
-                            ? "number"
-                            : detail.name === "Debit Card"
-                              ? "number"
-                              : detail.name === "RRN"
-                                ? "number"
-                                : "text"
-            }
-            maxLength={
-              detail.name === "Account number"
-                ? 10 || 16
+      <Box className="selected-param-details" key={detailIndex}>
+        {/* {console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
+        <FormControl variant='outlined' margin='none'>
+             <InputLabel color='success' htmlFor='selected-param-box' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name}</InputLabel>
+              <OutlinedInput       
+                className="selected-param-box"
+                value={
+                  detail.name === "Credit Card" ||
+                  detail.name === "Aadhar" ||
+                  detail.name === "Debit Card" ||
+                  detail.name === "RRN"
+                    ? parseInt(detail.value, 10)
+                    : detail.value
+                }
+                id="paramvalue"
+                placeholder={`Enter ${detail.name}`}
+                onInput={(e) => {
+                    e.target.value = e.target.value.slice(
+                      0,
+                      detail.name === "Account number"
+                ? 16
                 : detail.name === "Email ID"
                   ? 320
                   : detail.name === "PAN"
@@ -1077,362 +921,278 @@ export default function CreateRequest() {
                               : detail.name === "CRN"
                                 ? 10
                                 : 0
-            }
-            onInput={(e) => {
-              if (
-                detail.name === "Credit Card" ||
-                detail.name === "Aadhar" ||
-                detail.name === "Debit Card" ||
-                detail.name === "RRN"
-              ) {
-                e.target.value = e.target.value.slice(
-                  0,
-                  detail.name === "Credit Card"
-                    ? 16
-                    : detail.name === "Aadhar"
-                      ? 12
-                      : detail.name === "Debit Card"
-                        ? 16
-                        : detail.name === "RRN"
-                          ? 12
-                          : "text"
-                );
-              }
-            }}
-            id="paramvalue"
-            placeholder={detail.name}
-            // value={detail.value === '' ? null : detail.value}
-
-            value={
-              detail.name === "Credit Card" ||
-              detail.name === "Aadhar" ||
-              detail.name === "Debit Card" ||
-              detail.name === "RRN"
-                ? parseInt(detail.value, 10)
-                : detail.value
-            }
-            onChange={(e) =>
-              handleInputValue(
-                e.target.value,
-                reportIndex,
-                detailIndex,
-                detailName,
-                reportName
-              )
-            }
-          ></input>
-        </div>
+                    );
+                  
+                }}
+                autoComplete="off"
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw',width: reportName === "IP Logs" ? '14.25vw' : "20vw"}}
+                label={detail.name}
+                margin='none'
+                onChange={(e) =>
+                  handleInputValue(
+                    e.target.value,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    reportName
+                  )
+                }
+                type={
+                  detail.name === "Account number"
+                    ? "text"
+                    : detail.name === "CRN"
+                      ? "text"
+                      : detail.name === "Email ID"
+                        ? "email"
+                        : detail.name === "PAN"
+                          ? "text"
+                          : detail.name === "Mobile No."
+                            ? "tel"
+                            : detail.name === "Credit Card"
+                              ? "number"
+                              : detail.name === "Aadhar"
+                                ? "number"
+                                : detail.name === "Debit Card"
+                                  ? "number"
+                                  : detail.name === "RRN"
+                                    ? "number"
+                                    : "text"
+                }
+                inputMode='numeric'
+                InputAdornment={detail.name === "Mobile No." ? '+91' : ''}
+                 color='success'
+               />
+              </FormControl>
 
         {((detailName === "accountNumberDetails" && reportName !== "Device details") ||
           (detailName === "CRNdetails" && reportName === "IP Logs") || (reportName === "IP Logs") || (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions")) && (
-          <div className="report-dates">
-            <DatePicker
-              selected={new Date()}
-              popperProps={{
-                positionFixed: true,
-              }}
-              popperContainer={({ children }) => <div>{children}</div>}
-              wrapperClassName={
-                detail.from === "From"
-                  ? "no-date"
-                  : detail.from === "Invalid !"
-                    ? "date-invalid"
-                    : "date-exists"
-              }
-              onChange={(date) =>
-                handleFromDate(
-                  date,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  detail.to
-                )
-              }
-              className="calendar"
-              disabled={detail.value === "" ? true : false}
-              maxDate={new Date()}
-              customInput={
-                <div
-                  className="date-box"
-                  style={{
-                    borderColor:
-                      detail.from === "To" || detail.to === "Invalid !"
-                        ? "rgba(115, 115, 115, 1)"
-                        : "black",
-                  }}
-                >
-                  <p
-                    className="date-text"
-                    style={{
-                      color: detail.from === "From" ? "#A5A5A5" : "black",
-                    }}
-                  >
-                    {detail.from}
-                  </p>
-                  <FaRegCalendarAlt
-                    className="calendar-icon"
-                    size="1.4vw"
-                    color={
-                      detail.from === "From"
-                        ? "rgba(115, 115, 115, 1)"
-                        : detail.from === "Invalid !"
-                          ? "red"
-                          : "transparent"
-                    }
-                  />
-                </div>
-              }
-              dateFormat="DD/MM/YYYY"
-              value={detail.from}
-              onCalendarOpen={() => setViewFromDateCalendar(true)}
-              onCalendarClose={() => setViewFromDateCalendar(false)}
-            />
-            <DatePicker
-              selected={new Date()}
-              onChange={(date) =>
-                handleToDate(
-                  date,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  detail.from
-                )
-              }
-              className="calendar"
-              wrapperClassName={
-                detail.to === "To"
-                  ? "no-date"
-                  : detail.to === "Invalid !"
-                    ? "date-invalid"
-                    : "date-exists"
-              }
-              maxDate={new Date()}
-              popperProps={{
-                positionFixed: true,
-              }}
-              popperContainer={({ children }) => <div>{children}</div>}
-              disabled={detail.from === "From" ? true : false}
-              customInput={
-                <div
-                  className="date-box"
-                  style={{
-                    borderColor:
-                      detail.to === "To" || detail.to === "Invalid !"
-                        ? "rgba(115, 115, 115, 1)"
-                        : "transparent",
-                  }}
-                >
-                  <p
-                    className="date-text"
-                    style={{
-                      color:
-                        detail.to === "To"
-                          ? "#A5A5A5"
-                          : detail.to === "Invalid !"
-                            ? "red"
-                            : "black",
-                    }}
-                  >
-                    {detail.to}
-                  </p>
-                  <FaRegCalendarAlt
-                    className="calendar-icon"
-                    size="1.4vw"
-                    color={
-                      detail.to === "To"
-                        ? "rgba(115, 115, 115, 1)"
-                        : detail.to === "Invalid !"
-                          ? "red"
-                          : "transparent"
-                    }
-                  />
-                </div>
-              }
-              dateFormat="DD/MM/YYYY"
-              value={detail.to}
-              onCalendarOpen={() => setViewToDateCalendar(true)}
-              onCalendarClose={() => setViewToDateCalendar(false)}
-            />
-          </div>
+          <Box className="report-dates">
+     <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker 
+        format="DD-MM-YYYY"
+        shouldDisableDate={(day) => disableInvalidDates(day,detail.to, detail.to)}
+        label='From'
+        value={detail.from === 'From' ? null : dayjs(detail.from,'DD-MM-YYYY')}
+        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')}
+        defaultValue={dayjs.Dayjs}     
+        slotProps={{
+          popper: {
+            sx: {
+              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              '&.MuiPickersPopper-root': { padding:0},
+              ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'gray',color : "white" }},
+            },
+          },
+        field : {
+          readOnly : true,
+        },
+        textField : {
+          color:'success',
+          size:'small',
+          "aria-readonly":true,
+          sx:{
+            "& .MuiInputBase-input": {
+             height:'3.25vh',
+             width : '6vw',
+             fontSize:"0.95vw"
+            },
+          }
+        }
+        }}
+        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        onChange={(date) => handleFromDate(date, reportIndex, detailIndex, detailName,detail.to)}
+      />
+    </LocalizationProvider>
+
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker 
+        format="DD-MM-YYYY"
+        label='To'
+        value={detail.to === 'To' ? null : dayjs(detail.to,'DD-MM-YYYY')}
+        defaultValue={dayjs.Dayjs}   
+        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')}  
+        shouldDisableDate={(day) => dayjs(day).isBefore(dayjs(detail.from, 'DD-MM-YYYY'), 'day')}
+        slotProps={{      
+          popper: {
+            sx: {
+              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              '&.MuiPickersPopper-root': { padding:0},
+              ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'gray',color : "white" }},
+            },
+          },
+        field : {
+          readOnly : true,
+        },
+        textField : {
+          color:'success',
+          size:'small',
+          "aria-readonly":true,
+          sx:{
+            "& .MuiInputBase-input": {
+             height:'3.25vh',
+             width : '6vw',
+             fontSize:"0.95vw"
+            },
+          }
+        }
+        }}
+        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        onChange={(date) => handleToDate(date, reportIndex, detailIndex, detailName,detail.from)}
+      />
+    </LocalizationProvider>
+            
+          </Box>
         )}
 
 { reportName === "IP Logs" && detailName !== 'mobileNoDetails' && (
-             <div style={{  marginTop: '0vh'}}>
-              <h6 className="ticket-number-heading">{detail.name2}</h6>
-              <input
-              autoComplete="off"
-              className="number-box"
-              style={{
-                borderStyle: "solid",
-                borderColor:
-                  detail.mobileno === ''
-                    ? "rgba(128, 128, 128, 0.36)"
-                    : "rgba(128, 128, 128, 0.74)",
-                borderWidth: "1.5px",
-              }}
-              type='tel'
-              maxLength={14}
-              id="mobilenovalue"
-              placeholder={detail.name2}
-              value={detail.mobileno === '' ? '' : detail.mobileno}
-              onChange={(e) =>
-                handleMobileNoValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  reportName
-                )
-              }
-            ></input>
-            </div>
+             <Box>
+            <FormControl variant='outlined' margin='none'>
+             <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
+              <OutlinedInput
+                placeholder={`Enter ${detail.name2}`}       
+                 className="number-box"
+                value={detail.mobileno}              
+                autoComplete="off"
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw' }}
+                label={detail.name2}
+                margin='none'
+                onChange={(e) =>
+                  handleMobileNoValue(
+                    e.target.value,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    reportName
+                  )
+                }
+                // sx={{ borderStyle: "solid",
+                //   borderColor:
+                //     detail.mobileno === ''
+                //       ? "rgba(128, 128, 128, 0.36)"
+                //       : "rgba(128, 128, 128, 0.74)",
+                //   borderWidth: "1px"}}
+                type='tel'
+                inputMode='tel'
+                InputAdornment={'+91'}
+                color='success'
+               />
+              </FormControl>
+            </Box>
             )}
 
         { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
-          <div className="report-dates">
-            
-            <input
-              autoComplete="off"
-              className={
-                reportName === "Statement in PDF/Excel"
-                  ? "selected-param-box-2"
-                  : "selected-param-box-3"
-              }
-              type="number"
-              style={{
-                borderStyle: "solid",
-                borderColor:
-                  detail.amount === 0 || detail.amount.length === 0
-                    ? "rgba(128, 128, 128, 0.36)"
-                    : "rgba(128, 128, 128, 0.74)",
-                borderWidth: "1.5px",
-              }}
-              inputMode="numeric"
-              width={reportName === "Statement in PDF/Excel" ? "11vw" : "18vw"}
-              onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
-              maxLength={6}
-              disabled={
-                detail.value === 0 || detail.value.length === 0 ? true : false
-              }
-              id="amountvalue"
-              placeholder={detail.name2}
-              value={detail.amount === 0 ? null : parseInt(detail.amount, 10)}
-              onChange={(e) =>
-                handleAmountValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName
-                )
-              }
-            ></input>
+          <Box className="report-dates">
 
-            <DatePicker
-              selected={new Date()}
-              onChange={(date) =>
-                handleDate(date, reportIndex, detailIndex, detailName)
-              }
-              className="calendar"
-              disabled={detail.amount === 0 ? true : false}
-              maxDate={new Date()}
-              wrapperClassName={
-                detail.date === "Date" ? "no-date" : "date-exists"
-              }
-              popperProps={{
-                positionFixed: true,
-              }}
-              popperContainer={({ children }) => <div>{children}</div>}
-              customInput={
-                <div className="date-box">
-                  <p
-                    className="date-text"
-                    style={{
-                      color: detail.date === "Date" ? "#A5A5A5" : "black",
-                    }}
-                  >
-                    {detail.date}
-                  </p>
-                  <FaRegCalendarAlt
-                    className="calendar-icon"
-                    size="1.4vw"
-                    color={
-                      detail.date === "Date" || detail.from === "Invalid !"
-                        ? "rgba(115, 115, 115, 1)"
-                        : "transparent"
-                    }
-                  />
-                </div>
-              }
-              dateFormat="DD/MM/YYYY"
-              onCalendarOpen={() => setViewToDateCalendar(true)}
-              onCalendarClose={() => setViewToDateCalendar(false)}
-              value={detail.date}
-            />
-          </div>
+        <FormControl variant='outlined' margin='none'>
+             <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
+              <OutlinedInput
+                placeholder={`Enter ${detail.name2}`}       
+                className="selected-param-box-3"
+                value={detail.amount}              
+                autoComplete="off"
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw'}}
+                label={detail.name2}
+                margin='none'
+                onChange={(e) =>
+                  handleAmountValue(
+                    e.target.value,
+                    reportIndex, 
+                    detailIndex,
+                    detailName
+                  )
+                }
+                type='number'
+                inputMode='numeric'
+                color='success'
+               />
+              </FormControl>
+
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker 
+        format="DD-MM-YYYY"
+        label='Date'
+        value={detail.date === 'Date' ? null : dayjs(detail.date,'DD-MM-YYYY')}
+        defaultValue={dayjs.Dayjs}    
+        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
+        slotProps={{
+          popper: {
+            sx: {
+              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              '&.MuiPickersPopper-root': { padding:0},
+              ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
+            },
+          },
+        field : {
+          readOnly : true
+        },
+        textField : {
+          size:'small',
+          "aria-readonly":true,
+          sx:{
+            "& .MuiInputBase-input": {
+             height:'3.25vh',
+             width : '6vw',
+             fontSize:"0.95vw"
+            },
+          }
+        }
+        }}
+        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        onChange={(date) => handleDate(date, reportIndex, detailIndex, detailName)}
+      />
+    </LocalizationProvider>
+          </Box>
         )}
 
         {reportName === "Statement in PDF/Excel" && (
-          <div className="type-container" style={customStyles.Container}>
-            <Select
-              options={availableReportTypes}
-              onChange={(value) =>
-                handleReportType(
-                  value.label,
-                  reportIndex,
-                  detailIndex,
-                  detailName
-                )
-              }
-              placeholder={detail.type}
-              isMulti={false}
-              isSearchable={false}
-              isDisabled={
-                detail.value === "" ||
-                detail.value === 0 
-                // ||
-                // detail.amount.length === 0 ||
-                // detail.date === "Date" ||
-                // detail.amount === 0 
-                // ||
-                // detail.from === "From" ||
-                // detail.from === "Invalid !" ||
-                // detail.to === "To" ||
-                // detail.to === "Invalid !" ||
-                  ? true
-                  : false
-              }
-              styles={customStyles}
-              components={{
-                DropdownIndicator: () => (
-                  <div style={{ paddingRight: "0.6vw" }}>
-                    <IoIosArrowDown
-                      className="reports-type-dropdownicon"
-                      size="1.2vw"
-                      color="rgba(115, 115, 115, 1)"
-                    />
-                  </div>
-                ),
-                Input: () => (
-                  <div className="type-dropdown">
-                    <p className="report-type-text">{detail.type}</p>
-                    <IoIosArrowDown
-                      className="reports-type-dropdownicon"
-                      size="1.4vw"
-                      color="black"
-                    />
-                  </div>
-                ),
-                IndicatorSeparator: () => <></>,
-              }}
-            />
-          </div>
+          <Box className="type-container">
+
+<FormControl variant="standard">
+<Select
+          id="report-type-dropdown"
+          value={detail.type}
+          displayEmpty
+          onChange={(e) =>
+            handleReportType(
+              e.target.value,
+              reportIndex,
+              detailIndex,
+              detailName
+            )
+          }
+          variant='standard'
+          input={<OutlinedInput fullWidth={false} />}
+          IconComponent={props => (
+          <KeyboardArrowDownOutlinedIcon
+            className="reports-type-dropdownicon"
+            sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
+            {...props}
+          />
+        )}
+            renderValue={type => type}
+          MenuProps={SingleSelectProps}
+          inputProps={{ 'aria-label': 'Without label' }}
+          autoWidth={false}
+          sx={{ padding : '0vh 0vw 0vh 0vw'}}
+          style={{ display:'flex',alignItems:'center', width : '6vw',height : '5.5vh',fontSize : "1vw",marginTop : "0vh"}}
+          placeholder="Type"
+        >
+          {availableReportTypes.map((type) => (
+            <MenuItem key={type} value={type} style={{ display:'flex', border : "0px solid #cdcdcd", width : '6vw', margin:'0vh 0vw 0vh 0vw',height:'4vh',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent"}}>
+              <ListItemText primary={type} style={{ padding : "0vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
+            </MenuItem>
+          ))}
+        </Select>
+        </FormControl>
+          </Box>
         )}
 
         {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
         reportsState[reportIndex][detailName].length === 1 ? (
-          <button
+          <Button
             className="add-remove-button"
             disabled={
               detail.value === "" ||
@@ -1451,70 +1211,18 @@ export default function CreateRequest() {
               addDetail(reportIndex, detailName, param, reportName)
             }
           >
-            <MdOutlineAdd className="add-icon" size="2.25vw" />
-          </button>
+            <AddIcon sx={{ color : 'red', alignSelf : "center",justifySelf : "center",fontSize:'1.45vw'}} />
+          </Button>
         ) : (
-          <button
+          <Button
             className="add-remove-button"
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
-            <GrSubtract className="remove-icon" size="2.25vw" />
-          </button>
+            <RemoveIcon sx={{ color : 'red', alignSelf : "center",justifySelf : "center",fontSize:'1.45vw'}} />
+          </Button>
         )}
-      </div>
+      </Box>
     ));
-
-  // const showPreview = (detailsArray,reportIndex,detailName,detail,reportName) => (detailsArray.map((detail, detailIndex) => (
-  //     <div>
-  //       {/* { updateDetailed() } */}
-
-  //         {( detailName === 'accountNumberDetails' || (detailName === 'CRNdetails' && reportName === 'IP Logs')) && (
-  //           <div className="preview-data">
-
-  //           <div className="detail-input">
-  //            <p>{detail.name}</p>
-  //            <p>:</p>
-  //            <p>{detail.value}</p>
-  //           </div>
-
-  //            <div className="detail-range">
-  //             <p>Date</p>
-  //             <p>:</p>
-  //             <p>{detail.from}</p>
-  //             <p>-</p>
-  //             <p>{detail.to}</p>
-  //            </div>
-  //          </div>
-  //           )}
-
-  //           { detailName === 'RRNdetails' && (
-  //              <div className="preview-data">
-
-  //              <div className="detail-input">
-  //               <p>{detail.name}</p>
-  //               <p>:</p>
-  //               <p>{detail.value}</p>
-  //              </div>
-
-  //              <div className="detail-input">
-  //               <p>{detail.name2}</p>
-  //               <p>:</p>
-  //               <p>{detail.amount}</p>
-  //              </div>
-
-  //               <div className="detail-range">
-  //                <p>Date</p>
-  //                <p>:</p>
-  //                <p>{detail.date}</p>
-  //               </div>
-  //             </div>
-  //           )}
-
-  //           { detailName === 'PANdetails' || detailName === 'mobileNoDetails' || detailName === 'emailDetails' || detailName === 'creditCardDetails' || detailName === 'debitCardDetails' || detailName === 'aadharDetails' || detailName === 'CRNdetails'}
-
-  //   </div>
-  // ))
-  // );
 
   const showPreview = (
     detailsArray,
@@ -1524,370 +1232,393 @@ export default function CreateRequest() {
     reportName
   ) =>
     detailsArray.map((detail, detailIndex) => (
-      <div>
+      <Box>
         {/* { updateDetailed() } */}
-        <div className="preview-data">
-          <div className="detail-input">
-            <p className="preview-text">{detail.name}</p>
-            <p>:</p>
-            <p>{detail.value}</p>
-          </div>
+        <Box className="preview-data">
+          <Box className="detail-input">
+            <span className="preview-text">{detail.name}</span>
+            <span>:</span>
+            <span>{detail.value}</span>
+          </Box>
 
           {((detailName === "accountNumberDetails" && reportName !== "Device details") ||
           (detailName === "CRNdetails" && reportName === "IP Logs") || (reportName === "IP Logs") || (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions")) && (
-            <div className="detail-range">
-              <p>Date</p>
-              <p>:</p>
-              <p>{detail.from}</p>
-              <p>-</p>
-              <p>{detail.to}</p>
-            </div>
+            <Box className="detail-range">
+              <span>Date</span>
+              <span>:</span>
+              <span>{detail.from}</span>
+              <span>-</span>
+              <span>{detail.to}</span>
+            </Box>
           )}
 
           { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
-            <div className="detail-range">
-              <p>Amount</p>
-              <p>:</p>
-              <p>{detail.amount}</p>
-              <p style={{ marginLeft: "3vw" }}>Date</p>
-              <p>:</p>
-              <p>{detail.date}</p>
-            </div>
+            <Box className="detail-range">
+              <span>Amount</span>
+              <span>:</span>
+              <span>{detail.amount}</span>
+              <span style={{ marginLeft: "3vw" }}>Date</span>
+              <span>:</span>
+              <span>{detail.date}</span>
+            </Box>
           )}
 
       { reportName === "IP Logs" && detailName !== 'mobileNoDetails' && (
-             <div>
-              <p style={{ marginLeft: "3vw" }}>Mobile No.</p>
-              <p>:</p>
-              <p>{detail.mobileno}</p>
-             </div>
+             <Box>
+              <span style={{ marginLeft: "3vw" }}>Mobile No.</span>
+              <span>:</span>
+              <span>{detail.mobileno}</span>
+             </Box>
       )}
 
-        </div>
-      </div>
+        </Box>
+      </Box>
     ));
 
-  console.log("ticket number length", ticketNumber.length);
-
-  const arrowRenderer = () => {
-    return (
-      <IoIosArrowDown
-        className="reports-type-dropdownicon"
-        size="1.2vw"
-        color="rgba(115, 115, 115, 1)"
-      />
-    );
-  };
+  console.log("ticket number length", ticketNumber);
 
   return (
   
-    <div className="page">
-      {/* <Elements />
-
-      <div>
-        <Sidenavsample />
-      </div> */}
-
-      <div className="create-request-screen">
-        {/* <div className="route-header">
-        <h3 className="prev-screen">Home</h3>
-        <IoIosArrowForward className="router-icon" size='1.2vw' />
-        <h3 className="current-screen">Create Request</h3>
-      </div> */}
-
-        {/* <h1 className="cr-heading">Create Request</h1> */}
+    <Box className="page">
+      <Box className="create-request-screen">
         <span style={{ fontWeight: '420', fontSize: "x-large" }}>
           Create Request
         </span>
 
-        <div className="ticket-entry-section">
-          <div className="ticket-type-section">
-            <div className="ticket-container">
-              <h6 className="ticket-number-heading">Ticket number</h6>
-              <input
-                autoComplete="off"
-                className={
-                  ticketNumber === 0 || ticketNumber.length === 0
-                    ? "ticket-number-input"
-                    : "ticket-number-input-after"
-                }
-                type="number"
-                id="ticketnum"
-                inputMode="numeric"
-                onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
-                maxLength={10}
-                name="Ticket Number"
+        <Box className="ticket-entry-section">
+          <Box className="ticket-type-section">
+            <Box className="ticket-container">
+            <FormControl variant='outlined' margin='none'>
+             <InputLabel color='success' htmlFor='ticket-number-input' style={{ marginTop : '-0.55vh',fontSize : "1vw"}}>Ticket Number</InputLabel>
+              <OutlinedInput
+                placeholder="Enter ticket number"         
+                className="ticket-number-input"
                 value={ticketNumber === 0 ? "" : ticketNumber}
-                placeholder="Enter ticket number"
-                onChange={(e) => setTicketNumber(e.target.value)}
-              ></input>
-            </div>
-            <div className="ticket-container">
-              <h6 className="ticket-description-heading">Ticket Description</h6>
-              <input
                 autoComplete="off"
-                className={
-                  ticketDescription.length === 0
-                    ? "ticket-description-input"
-                    : "ticket-description-input-after"
-                }
-                type="text"
-                inputMode="text"
-                id="ticketdesc"
-                disabled={ticketNumber === 0 || ticketNumber.length === 0}
+                size="small"
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.6vh',fontSize : '1vw'}}
+                label='Ticket Number'
+                margin='dense'
+                onChange={(e) => setTicketNumber(e.target.value)}
+                type='number'
+                inputMode='numeric'
+                color='success'
+               />
+              </FormControl>
+
+            </Box>
+            <Box className="ticket-container">
+<FormControl variant='outlined' margin='none'>
+<InputLabel color='success' htmlFor="ticket-description-input" shrink={(descriptionFocused === true || ((descriptionFocused === true || descriptionFocused === false) && ticketDescription.length > 1 ? true : false))} style={{ marginTop : descriptionFocused === true || ticketDescription.length > 1 ? '-1vh' : "-0.4vh",fontSize : "1vw"}}>Ticket Description</InputLabel>
+<TextField
+                placeholder={descriptionFocused === true ? "Enter description" : ''}
+                variant='outlined'
+                maxRows={0}
+                onFocus={() => setDescriptionFocused(true)}
+                onBlur={() => setDescriptionFocused(false)}
+                // label='Ticket Description'
+                multiline={true}
+                minRows={0}
+                className="ticket-description-input"
+                autoComplete="off"
+                size='small'
+                inputProps={{
+                  style:{
+                    minHeight : '3.25vh',
+                    fontSize : '1vw',
+                    // maxHeight : 'auto',
+                    // display:'flex',
+                    // alignItems:'center',
+                    // justifyContent:'center',
+                   margin : '0.25vh 0vw 0vh 0vw',
+                    // maxHeight : 100
+                  }
+                }}
+                style={{ margin : '0vh 0vw 0vh 0vw',backgroundColor : 'white'}}
+                margin='normal'
+                type='text'
+                inputMode='text'
+                disabled={ticketNumber === 0 || ticketNumber.length === 0 ? true : false}
+                color='success'
                 value={ticketDescription}
-                placeholder="Enter description"
                 onChange={(e) => setTicketDescription(e.target.value)}
-              ></input>
-            </div>
-          </div>
+               />
+      
+               </FormControl>
+            </Box>
+          </Box>
 
 
-         <div>
-          <MultiSelect
-            options={requiredReports}
-            value={selectedReports}
-            disableSearch={true}
-            disabled={
-              ticketNumber === 0 && ticketDescription === "" ? true : false
-            }
-            hasSelectAll={false}
-            overrideStrings={{
-              selectSomeItems: "Select statements/reports you require",
-              allItemsAreSelected: displaySelectedReports,
-              // clearSearch:  "",
-              // clearSelected:  "",
-              // noOptions: "",
-              // search: "",
-              // selectAll: "",
-              // selectAllFiltered: "",
-              // create: ""
-            }}
-            ItemRenderer={CustomReportListRenderer}
-            // valueRenderer={customValue}
-            ArrowRenderer={arrowRenderer}
-            className={
-              selectedReports.length === 0
-                ? "reports-dropdown"
-                : "reports-dropdown-after"
-            }
-            ClearSelectedIcon={null}
-            onChange={(reports) => handleReportSelection(reports)}
-            labelledBy="Select"
+         <Box className="multiple-reports-selection">
+ <FormControl variant="standard">
+<Select
+          labelId="reports-selection-dropdown-label"
+          id="reports-selection-dropdown"
+          multiple={true}
+          value={selectedReports}
+          displayEmpty
+          disabled={
+            ticketNumber === 0 || ticketDescription === "" ? true : false
+          }
+          onChange={handleReportSelection}
+          variant='standard'
+          input={<OutlinedInput fullWidth={false} />}
+          IconComponent={props => (
+          <KeyboardArrowDownOutlinedIcon
+            className="reports-type-dropdownicon"
+            sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
+            {...props}
           />
-          </div>
+        )}
+            renderValue={(reports) => {
+              if (reports.length === 0) {
+                return <span style={{ opacity : 0.45 }}>Select statements/reports you require</span>;
+              } 
+              return reports.join(', ');         
+            }}
+          MenuProps={MenuProps}
+          inputProps={{ 'aria-label': 'Without label' }}
+          autoWidth={false}
+          style={{ display:'flex',alignItems:'center', width : '58.5vw',height : '5.6vh',fontSize : "1vw",marginTop : '0vh'}}
+          placeholder="Select statements/reports you require"
+        >
+          {requiredReportsData.map((report) => (
+            <MenuItem key={report} value={report} style={{ display:'flex', border : "1px solid #cdcdcd", width : '95%', margin:'2vh 1vw 1.5vh 1.4vw',height:'5.5vh',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent",fontSize : "2px"}}>
+              <Checkbox checked={selectedReports.indexOf(report) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} checkedIcon={<FaRegCheckSquare
+                                className="check-icon"
+                                size="1.4vw"
+                              />} />
+              <ListItemText primary={report} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
+            </MenuItem>
+          ))}
+        </Select>
+        </FormControl>
 
-        </div>
+
+          </Box>
+
+        </Box>
 
         {selectedReports.length > 0 && (
-          <div className="selected-reports-section" id="selected-reports-section">
+          <Box className="selected-reports-section" id="selected-reports-section">
             <h2 className="selected-reports-heading">Selected Requests</h2>
 
-            <div>
+            <Box>
               {selectedReports.length > 0 &&
                 selectedReports.map((request, reportIndex) => (
-                  <div key={reportIndex}>
+                  <Box key={reportIndex}>
                     
-                    <div className="selected-report-view">
-                      <div className="selected-report-header" style={{ borderBottomWidth : reportsState[reportIndex]?.viewState === 'Minimized' ? '0px' : '1.5px'}}>
-                        <p className="selected-report-heading">
-                          {request.label}
-                        </p>
+                    <Box className="selected-report-view">
+                      <Box className="selected-report-header" style={{ borderBottomWidth : reportsState[reportIndex]?.viewState === 'Minimized' ? '0px' : '1.5px'}}>
+                        <span className="selected-report-heading">
+                          {request}
+                        </span>
  
                        { reportsState[reportIndex]?.viewState === 'Expanded' ? ( 
-                       <PiEyeSlashFill size='1.75vw' color='purple' onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
+                       <VisibilityOffRoundedIcon sx={{ color : "purple", fontSize : "1.56vw"}} onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
                       ) : (                
-                        <IoEyeSharp size='1.75vw' color='purple' onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
+                        <VisibilityRoundedIcon size='1' sx={{ color : "purple", fontSize : "1.56vw"}} onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
                       )}
 
-                      </div>
+                      </Box>
 
-                      <div className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
+                      <Box className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
                         {reportsState[reportIndex] && (
                           <>
-                           <div hidden={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}>
-                            <MultiSelect
-                              options={availableParameters}
-                              value={reportsState[reportIndex]?.selectedParams || []}
-                              disabled={request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? true : false}
-                              disableSearch={true}
-                              hasSelectAll={false}
+                           <Box hidden={request === 'Beneficiary details for Single IMPS transactions' || request === 'Beneficiary details for Single UPI transactions' ? true : false}>
 
-                              overrideStrings={{
-                                selectSomeItems: "Select Detail",
-                                allItemsAreSelected: reportsState[
-                                  reportIndex
-                                ]?.selectedParams
-                                  ?.map((param) => param.label)
-                                  .join(" , "),
-                              }}
-                              ArrowRenderer={arrowRenderer}
-                              ItemRenderer={customParamRenderer}
-                              className={
-                                reportsState[reportIndex]?.selectedParams
-                                  .length === 0
-                                  ? "params-dropdown"
-                                  : "params-dropdown-after"
-                              }
-                              ClearSelectedIcon={null}
-                              onChange={(params) =>
-                                handleParamSelection(
-                                  params,
-                                  reportIndex,
-                                  request.label
-                                )
-                              }
-                              labelledBy="Select"
-                            />
-                        </div>
+<FormControl variant="standard">
+<Select
+          labelId="param-selection-dropdown"
+          id="param-selection-dropdown"
+          multiple={true}
+          value={reportsState[reportIndex].selectedParams || []}
+          displayEmpty
+          onChange={(event) => handleParamSelection(event, reportIndex, request)}
+          variant='standard'
+          input={<OutlinedInput fullWidth={false} sx={{alignItems : 'center', justifyContent : 'space-around',justifyItems:'left'}} />}
+          sx={{
+            '& .reports-type-dropdownicon': {
+              paddingRight: '2vw' // Adjust the margin as needed
+            }
+          }}
+          IconComponent={props => (
+          <KeyboardArrowDownOutlinedIcon
+            className="reports-type-dropdownicon"
+            sx={{ fontSize : "1.56vw", color:"rgba(115, 115, 115, 1)"}}
+            {...props}
+          />
+        )}
+            renderValue={(params) => {
+              if (params.length === 0) {
+                return <span style={{ opacity : 0.45 }}>Select Detail</span>;
+              } 
+              return params.join(', ');         
+            }}
+          MenuProps={ParamProps}
+          inputProps={{ 'aria-label': 'Without label' }}
+          autoWidth={false}
+          style={{ display:'flex',alignItems:'center', width : '20vw',height : '5.6vh',fontSize : "1vw",marginTop : "0vh"}}
+          placeholder="Select Detail"
+        >
+          {availableParameters.map(param => (
+            <MenuItem key={param} value={param} style={{ display:'flex',borderStyle:'solid',borderColor : 'grey',borderBottomWidth : "1px", width : '20vw', margin:'0vh 0vw 0vh 0vw',height:'5.5vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
+              <Checkbox checked={reportsState[reportIndex].selectedParams.indexOf(param) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} checkedIcon={<FaRegCheckSquare
+                                className="check-icon"
+                                size="1.4vw"
+                              />} />
+              <ListItemText primary={param} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
+            </MenuItem>
+          ))}
+        </Select>
+        </FormControl>
+                        </Box>
 
-                  <div className="details-subsection" style={{ marginTop : request.label === 'Beneficiary details for Single IMPS transactions' || request.label === 'Beneficiary details for Single UPI transactions' ? '-4vh' : '-1vh' }}>
+                  <Box className="details-subsection" style={{ marginTop : request === 'Beneficiary details for Single IMPS transactions' || request === 'Beneficiary details for Single UPI transactions' ? '-1vh' : '3vh' }}>
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Account number"
+                              (param) => param === "Account number"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].accountNumberDetails,
                                 reportIndex,
                                 "accountNumberDetails",
                                 "Account number",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "PAN"
+                              (param) => param === "PAN"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].PANdetails,
                                 reportIndex,
                                 "PANdetails",
                                 "PAN",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "CRN"
+                              (param) => param === "CRN"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].CRNdetails,
                                 reportIndex,
                                 "CRNdetails",
                                 "CRN",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "RRN"
+                              (param) => param === "RRN"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].RRNdetails,
                                 reportIndex,
                                 "RRNdetails",
                                 "RRN",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Aadhar"
+                              (param) => param === "Aadhar"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].aadharDetails,
                                 reportIndex,
                                 "aadharDetails",
                                 "Aadhar",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Email ID"
+                              (param) => param === "Email ID"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].emailDetails,
                                 reportIndex,
                                 "emailDetails",
                                 "Email ID",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Credit Card"
+                              (param) => param === "Credit Card"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].creditCardDetails,
                                 reportIndex,
                                 "creditCardDetails",
                                 "Credit Card",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Debit Card"
+                              (param) => param === "Debit Card"
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].debitCardDetails,
                                 reportIndex,
                                 "debitCardDetails",
                                 "Debit Card",
-                                request.label
+                                request
                               )}
                             {reportsState[reportIndex].selectedParams.some(
-                              (param) => param.label === "Mobile No."
+                              (param) => param === "Mobile No."
                             ) &&
                               displayRequestedReports(
                                 reportsState[reportIndex].mobileNoDetails,
                                 reportIndex,
                                 "mobileNoDetails",
                                 "Mobile No.",
-                                request.label
+                                request
                               )}
-                            </div>
+                            </Box>
                           </>
                         )}
-                      </div>
-                    </div>
-                  </div>
+                      </Box>
+                    </Box>
+                  </Box>
                 ))}
 
-              {/* <div className="selected-report-view"></div> */}
+              {/* <Box className="selected-report-view"></Box> */}
 
-              <div className="action-buttons">
-                <button className="submit-button">Submit</button>
-                <button
+              <Box className="action-buttons">
+                <Button className="submit-button" title="Submit">Submit</Button>
+                {/* <button className="submit-button">Submit</button> */}
+                <Button
                   className="preview-button"
                   onClick={() => setViewPreview(true)}
                 >
                   Preview
-                </button>
-              </div>
+                </Button>
+              </Box>
 
-              <div>
+              <Box>
                 <Modal
-                  isOpen={viewPreview === true}
-                  onRequestClose={() => setViewPreview(false)}
+                  open={viewPreview === true}
+                  onClose={() => setViewPreview(false)}
                   className="preview-modal"
-                  contentLabel="Preview Modal"
-                  // shouldCloseOnOverlayClick={true}    
-                  // shouldCloseOnEsc={true}         
+                  contentLabel="Preview Modal"      
                 >
-                  <div className="preview-box">
-                    <div className="preview-header">
+                  <Box className="preview-box">
+                    <Box className="preview-header">
                       <h2 className="preview-heading">Preview</h2>
-                      <IoMdClose
+                      <CloseOutlinedIcon
                         name="close-preview"
                         className="close-preview-button"
-                        size="2.5vw"
+                        sx={{ fontSize : "2.5vw", color : "gray" }}
                         onClick={() => setViewPreview(false)}
-                        color="gray"
                       />
-                    </div>
+                    </Box>
 
-                    <div className="preview-scroll">
+                    <Box className="preview-scroll">
                       {selectedReports.length > 0 &&
                         selectedReports.map((request, reportIndex) => (
-                          <div className="preview-report" key={reportIndex}>
-                            <div className="preview-report-header">
+                          <Box className="preview-report" key={reportIndex}>
+                            <Box className="preview-report-header">
                               <FaRegCheckSquare
                                 className="check-icon"
                                 size="1.4vw"
                               />
-                              <h3 className="preview-title">{request.label}</h3>
-                            </div>
+                              <h3 className="preview-title">{request}</h3>
+                            </Box>
 
-                            <div className="preview-report-details">
+                            <Box className="preview-report-details">
                               {reportsState[reportIndex] && (
                                 <>
                                   {showPreview(
@@ -1896,77 +1627,77 @@ export default function CreateRequest() {
                                     reportIndex,
                                     "accountNumberDetails",
                                     "Account number",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].PANdetails,
                                     reportIndex,
                                     "PANdetails",
                                     "PAN",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].CRNdetails,
                                     reportIndex,
                                     "CRNdetails",
                                     "CRN",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].RRNdetails,
                                     reportIndex,
                                     "RRNdetails",
                                     "RRN",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].aadharDetails,
                                     reportIndex,
                                     "aadharDetails",
                                     "Aadhar",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].emailDetails,
                                     reportIndex,
                                     "emailDetails",
                                     "Email ID",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].creditCardDetails,
                                     reportIndex,
                                     "creditCardDetails",
                                     "Credit Card",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].debitCardDetails,
                                     reportIndex,
                                     "debitCardDetails",
                                     "Debit Card",
-                                    request.label
+                                    request
                                   )}
                                   {showPreview(
                                     reportsState[reportIndex].mobileNoDetails,
                                     reportIndex,
                                     "mobileNoDetails",
                                     "Mobile No.",
-                                    request.label
+                                    request
                                   )}
                                 </>
                               )}
-                            </div>
-                          </div>
+                            </Box>
+                          </Box>
                         ))}
-                    </div>
-                  </div>
+                    </Box>
+                  </Box>
                 </Modal>
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

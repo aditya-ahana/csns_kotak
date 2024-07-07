@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 import Login from "./pages/Login/Login";
 
@@ -20,6 +22,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function App() {
   return (
     <>
+     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ToastContainer autoClose={3000} />
       <BrowserRouter>
         <Routes>
@@ -38,6 +41,7 @@ export default function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      </LocalizationProvider>
     </>
   );
 }
