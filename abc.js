@@ -7,97 +7,15 @@ import { MdOutlineFilterAlt } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TbReload } from "react-icons/tb";
 import Modal from "react-modal";
+import { TablePagination, TableSimple } from "react-pagination-table";
 import { RiFilter2Line } from "react-icons/ri";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 // import Sidenavsample from "../../../static/sidenavsample";
 import { useLocation, useNavigate } from "react-router-dom";
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-// import { Button } from '@mui/base/Button';
 import { Button } from "react-bootstrap";
 
 // Button
 export default function ViewRequestDetails() {
   const [viewDetailsAction, setViewDetailsAction] = useState();
-
-  const styles = {
-    pageHeader : { 
-      fontWeight: "500", 
-      fontSize: "x-large" 
-    },
-    tableContainer : { 
-      marginBottom : '4vh' , 
-      borderBottomWidth : "0px",
-      alignSelf : 'center'
-    },
-    tableHeader : {
-      textAlign : 'center',
-      borderRightWidth :'1px',
-      borderStyle : "solid",
-      padding : '1.6vh 0vh 1.6vh 0vh',
-      borderColor : "rgba(225, 225, 225, 1)"
-    },
-    tableDataRow : {
-      borderRightWidth :'1px',
-      borderStyle : "solid",
-      borderColor : "rgba(225, 225, 225, 1)",
-      textAlign:'center'
-    },
-    requestDataRow : { 
-      borderRightWidth :'1px',
-      borderStyle : "solid",
-      textAlign : "left",
-      alignItems : "center",
-      justifyContent : 'center',
-      borderColor : "rgba(225, 225, 225, 1)"
-    },
-    lastTableDataRow : { 
-      borderRightWidth :'1px',
-      borderStyle : "solid",
-      borderColor : "rgba(225, 225, 225, 1)",
-      textAlign:'center',
-      alignItems:'center',
-      justifyContent:'center',
-      alignContent : "center",
-      justifyItems:'center'
-    },
-    statusButtonRow : { 
-      alignItems : "center",
-      justifyItems:'center',
-      borderWidth : '1px',
-      borderStyle : "solid",
-      borderColor : "rgba(225, 225, 225, 1)",
-      alignContent : "center",
-      alignTracks : "center",
-      justifyContent : "center",
-      justifySelf : 'center' 
-    },
-    statusButtons : {
-      alignSelf : "center",
-      width: 'max-content',
-      padding: "0.85vh 1vw 0.85vh 1vw",
-      height: "auto",
-      borderRadius: "30px",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      fontWeight: "400",
-      fontSize: "0.92vw",
-    },
-    tableBody : { 
-      borderBottomWidth : '0px',
-      borderRightWidth :'1px',
-      borderStyle : "solid",
-      borderColor : "rgba(225, 225, 225, 1)"    
-    }
-  };
 
   const location = useLocation();
   //  const { ticketDetails } = location.state;
@@ -114,7 +32,7 @@ export default function ViewRequestDetails() {
   const requestDetails = [
     {
       ticketId: "1300",
-      request: "Statement in PDF/Excel",
+      requests: [{ value: "Statement in PDF/Excel" }],
       status: "In-progress",
       createdDateTime: "28-06-2024",
       createdBy: "User",
@@ -141,7 +59,7 @@ export default function ViewRequestDetails() {
     },
     {
       ticketId: "1300",
-      request: "Beneficiary Details of IMPS Txns",
+      requests: [{ value: "Beneficiary Details of IMPS Txns" }],
       status: "Completed",
       createdDateTime: "28-06-2024",
       createdBy: "User",
@@ -171,7 +89,7 @@ export default function ViewRequestDetails() {
     },
     {
       ticketId: "1300",
-      request:  "Beneficiary Details of UPI Txns",
+      requests: [{ value: "Beneficiary Details of UPI Txns" }],
       status: "Failed",
       createdDateTime: "28-06-2024",
       createdBy: "User",
@@ -204,7 +122,7 @@ export default function ViewRequestDetails() {
     },
     {
       ticketId: "1300",
-      request: "IP Logs",
+      requests: [{ value: "IP Logs" }],
       status: "In-progress",
       createdDateTime: "28-06-2024",
       createdBy: "User",
@@ -237,7 +155,7 @@ export default function ViewRequestDetails() {
     },
     {
       ticketId: "1300",
-      request: "Device Details",
+      requests: [{ value: "Device Details" }],
       status: "In-progress",
       createdDateTime: "28-06-2024",
       createdBy: "User",
@@ -265,97 +183,221 @@ export default function ViewRequestDetails() {
 
   const ticketDetails = requestDetails.map((request, index) => ({
     ticketid: request.ticketId,
-    request: (
-      <Box style={{ alignSelf: "center" }}>
-          <p style={{ lineHeight: "1.5vh" }}>{`${request.request}`}</p>
-      </Box>
+    requests: (
+      <div style={{ alignSelf: "center" }}>
+        {request.requests.map((req, index) => (
+          <p style={{ lineHeight: "1.5vh" }}>{`${req.value}`}</p>
+        ))}
+      </div>
     ),
-    status: request.status,
+    status_text: request.status,
+    status: (
+      <div
+        style={{
+          width: "auto",
+          padding: "8px 15px 8px 15px",
+          backgroundColor:
+            request.status === "In-progress"
+              ? "rgba(255, 238, 207, 1)"
+              : request.status === "Completed"
+                ? "rgba(205, 252, 229, 1)"
+                : request.status === "Failed"
+                  ? "rgba(255, 220, 222, 1)"
+                  : "",
+          height: "auto",
+          borderRadius: "30px",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          color:
+            request.status === "In-progress"
+              ? "rgba(232, 125, 0, 1)"
+              : request.status === "Completed"
+                ? "rgba(21, 122, 73, 1)"
+                : request.status === "Failed"
+                  ? "rgba(210, 26, 26, 1)"
+                  : "",
+          fontWeight: "400",
+          fontSize: "14px",
+        }}
+        className="status-tab"
+      >
+        <p style={{}}>{request.status}</p>
+      </div>
+    ),
     createdDate: request.createdDateTime,
     createdby: request.createdBy,
+    void: (
+      <div className="detail-buttons">
+        <button
+          className="view-details-button"
+          onClick={() =>
+            route_to("/viewRequestDetails", {
+              state: {
+                //  ticketDetails : ticketDetails
+              },
+            })
+          }
+        >
+          View Details
+        </button>
+        <button
+          className="mail-draft-button"
+          style={{
+            backgroundColor:
+              request.status === "In-progress" || request.status === "Failed"
+                ? "rgb(236, 236, 236)"
+                : "transparent",
+            color:
+              request.status === "In-progress" || request.status === "Failed"
+                ? "rgba(165, 165, 165, 1)"
+                : "rgba(96, 96, 96, 1)",
+            borderColor: "rgba(161, 161, 161, 1)",
+          }}
+        >
+          Mail Draft
+        </button>
+      </div>
+    ),
   }));
 
   const requestActions = ticketDetails.map((detail, index) => ({
     ...detail,
+    //  action : (
+    // <div>
+    //   <div>
+    //   { detail.status === 'Failed' && (
+    //     <button style={{ backgroundColor : "black"}}>
+    //        Failed
+    //     </button>
+    //   )}
+    //   </div>
+
+    //   <div>
+    // { detail.status === 'Completed' && (
+    //     <div></div>
+    // )}
+    //   </div>
+    // </div>
+    //  )
+    action: (
+      <div>
+        {/* {detail.status_text === "Failed" ? (
+          <button className="retry-button">
+            <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
+            <p className="retry-text">Retry</p>
+          </button>
+        ) : ( */}
+        <Button className="expand-button">
+          <IoMdArrowDropdown
+            size="1.95vw"
+            color="rgba(95, 99, 104, 1)"
+            className="expand-icon"
+          />
+        </Button>
+        {/* )} */}
+      </div>
+    ),
   }));
 
   console.log("Request with Action", requestActions);
 
   //   {detail.status_text === "Failed" && (
-  //   <Button className="retry-button">
+  //   <button className="retry-button">
   //   <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
   //   <p className="retry-text">Retry</p>
-  // </Button>
+  // </button>
   // )}
 
   return (
-    <Box className="page">
-      <Box className="view-request-details-screen">
+    <div className="page">
+      {/* <Elements />
 
-        <span style={styles.pageHeader}>View Details</span>
+     <div>
+      <Sidenavsample />
+      </div> */}
 
-        <Box className="view-details-container">
-        <TableContainer component={Paper} sx={styles.tableContainer}>
-<Table className="details-table">
-  <TableHead sx={styles.tableHeader}>
-    <TableRow sx={{ backgroundColor : "rgb(243, 242, 248)" }}>
-      { viewRequestTableHeaders.map(header => (
-          <TableCell sx={[ styles.tableHeader , { width : header === 'Ticket Id' ? '5vw' : header === 'Requests' ? '15vw' : header === 'Status' ? '9vw' : header === 'Created Date' || header === 'Action' ? '9vw' : '0vw'}]}>{header}</TableCell>
-      ))}
-    </TableRow>
-  </TableHead>
-  <TableBody sx={styles.tableBody}>
+      <div className="view-request-details-screen">
+        <div className="route-header">
+          {/* <h3 className="prev-screen">Home</h3>
+<IoIosArrowForward className="router-icon" size='1.2vw' />
+<h3 className="current-screen">View details</h3> */}
+        </div>
+
+        <h1 className="vr-heading">View Details</h1>
+
+        <div className="view-details-container">
+          <table className="details-table">
+            <thead>
+              <tr>
+                {viewRequestTableHeaders.map((header, index) => (
+                  <th key={index}>{header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
               {requestDetails.map((row, index) => (
                 <>
-                  <TableRow key={index}>
-                    <TableCell sx={styles.tableDataRow} height='2px'>{row.ticketId}</TableCell>
-                    <TableCell sx={styles.requestDataRow}>
-                      <Box style={{ alignSelf: "center" }}>
-                   
-                          <span key={index} style={{ lineHeight: "1.5vh" }}>
-                            {row.request}
-                          </span>
-                      
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={styles.tableDataRow} align='center'>
-                    <Box sx={{ display:'flex',alignItems : "center",justifyContent : "center"}}>
-                      <Box
-                       alignSelf={'center'}
-                        sx={[ styles.statusButtons , { 
+                  <tr key={index}>
+                    <td>{row.ticketId}</td>
+                    <td>
+                      <div style={{ alignSelf: "center" }}>
+                        {row.requests.map((req, reqIndex) => (
+                          <p key={reqIndex} style={{ lineHeight: "1.5vh" }}>
+                            {req.value}
+                          </p>
+                        ))}
+                      </div>
+                    </td>
+                    <td>
+                      <div
+                        style={{
+                          width: "auto",
+                          padding: "8px 15px",
                           backgroundColor:
-                          row.status === "In-progress"
+                            row.status === "In-progress"
                               ? "rgba(255, 238, 207, 1)"
                               : row.status === "Completed"
                                 ? "rgba(205, 252, 229, 1)"
                                 : row.status === "Failed"
                                   ? "rgba(255, 220, 222, 1)"
                                   : "",
+                          height: "auto",
+                          borderRadius: "30px",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
                           color:
-                          row.status === "In-progress"
+                            row.status === "In-progress"
                               ? "rgba(232, 125, 0, 1)"
                               : row.status === "Completed"
                                 ? "rgba(21, 122, 73, 1)"
                                 : row.status === "Failed"
                                   ? "rgba(210, 26, 26, 1)"
-                                  : ""}]}
-                          className="status-tab"
+                                  : "",
+                          fontWeight: "400",
+                          fontSize: "14px",
+                        }}
+                        className="status-tab"
                       >
-                        <span>{row.status}</span>
-                      </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell sx={styles.tableDataRow}>{row.createdDateTime}</TableCell>
-                    <TableCell sx={styles.lastTableDataRow}>
-                      <Box>
+                        <p>{row.status}</p>
+                      </div>
+                    </td>
+                    <td>{row.createdDateTime}</td>
+                    <td>
+                      <div>
                         {/* {row.status === "Failed" ? (
-                          <Button className="retry-button">
+                          <button className="retry-button">
                             <TbReload
                               size="1.4vw"
                               color="rgba(237, 28, 36, 1)"
                             />
                             <p className="retry-text">Retry</p>
-                          </Button>
+                          </button>
                         ) : ( */}
                         <Button
                           className="expand-button"
@@ -374,22 +416,21 @@ export default function ViewRequestDetails() {
                           />
                         </Button>
                         {/* )} */}
-                      </Box>
-                    </TableCell>
-                  </TableRow>
+                      </div>
+                    </td>
+                  </tr>
 
                   {viewDetailsAction === index ? (
-                    <Box
+                    <div
                       className="d-flex flex-column align-items-center p-3"
                       style={{
                         background: "#f5f8fa",
-                        maxWidth: "77.5vw",
-
+                        maxWidth: "73vw",
                       }}
                     >
                       {row.subData?.map((subDetails) => (
                         <>
-                          <Box
+                          <div
                             className="d-flex flex-row p-1"
                             style={{ width: "100%" }}
                           >
@@ -481,7 +522,7 @@ export default function ViewRequestDetails() {
                                 Download
                               </Button> */}
 
-                              <Box>
+                              <div>
                                 {row.status === "Failed" ? (
                                   <Button
                                     className="retry-button border-0"
@@ -494,13 +535,13 @@ export default function ViewRequestDetails() {
                                   >
                                     <p className="retry-text">Retry</p>
                                   </Button>
-                                ) : // <Button className="retry-button">
+                                ) : // <button className="retry-button">
                                 //   <TbReload
                                 //     size="1.4vw"
                                 //     color="rgba(237, 28, 36, 1)"
                                 //   />
                                 //   <p className="retry-text">Retry</p>
-                                // </Button>
+                                // </button>
                                 row.status === "In-progress" ? (
                                   ""
                                 ) : (
@@ -516,25 +557,24 @@ export default function ViewRequestDetails() {
                                     Download
                                   </Button>
                                 )}
-                              </Box>
+                              </div>
                             </span>
-                          </Box>
+                          </div>
                         </>
                       ))}
-                    </Box>
+                    </div>
                   ) : (
                     ""
                   )}
-                   
 
                   {/* {viewDetailsAction === index ? (
-                    <Box
+                    <div
                       className="d-flex flex-column align-items-center"
                       style={{ background: "#f5f8fa", maxWidth: "73vw" }}
                     >
                       {row.subData?.map((subDetails) => (
                         <>
-                          <Box
+                          <div
                             className="d-flex flex-row p-3"
                             style={{ width: "100%" }}
                           >
@@ -577,20 +617,19 @@ export default function ViewRequestDetails() {
                                 Download
                               </Button>
                             </span>
-                          </Box>
+                          </div>
                         </>
                       ))}
-                    </Box>
+                    </div>
                   ) : (
                     ""
                   )} */}
                 </>
               ))}
-            </TableBody>
-          </Table>
-          </TableContainer>
-        </Box>
-      </Box>
-    </Box>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }
