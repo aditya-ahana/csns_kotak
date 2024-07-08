@@ -253,7 +253,7 @@ export default function ViewRequestDetails() {
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell className="view-table-data-row">
+                      <TableCell align='center' className="view-table-data-row">
                         {row.ticketId}
                       </TableCell>
                       <TableCell className="view-table-data-row">
