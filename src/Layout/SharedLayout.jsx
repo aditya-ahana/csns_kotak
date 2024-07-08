@@ -1,13 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import BreadCrumb from "../components/BreadCrumb";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 
 function SharedLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <>
-      <div className="parent" style={{ height: "100vh" }}>
+      <div className="parent">
+        <div className="content">
+          <div className="child d-flex flex-column" style={{ height: "100vh" }}>
+            <div
+              className="headerContainer content-child boxContainer"
+              style={{ height: "9vh" }}
+            >
+              <Header />
+            </div>
+            <div
+              className="contentContainer content-child d-flex flex-row"
+              style={{ height: "91vh" }}
+            >
+              <div
+                className="sidebar-child boxContainer"
+                onMouseEnter={() => {
+                  setSidebarOpen(true);
+                }}
+                onMouseLeave={() => {
+                  setSidebarOpen(false);
+                }}
+                style={{ height: "-webkit-fill-available" }}
+              >
+                <Sidebar
+                  sidebarOpen={sidebarOpen}
+                  setSidebarOpen={setSidebarOpen}
+                />
+              </div>
+
+              <div
+                className="main p-3"
+                style={{ width: "-webkit-fill-available" }}
+              >
+                <BreadCrumb />
+                <Outlet />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="parent" style={{ height: "100vh" }}>
         <div
           className="main d-flex flex-row"
           style={{ height: "-webkit-fill-available" }}
@@ -51,7 +92,7 @@ function SharedLayout() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
