@@ -6,7 +6,6 @@ import { MdOutlineFilterAlt } from "react-icons/md";
 // import Elements from "../../Elements/Elements";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TbReload } from "react-icons/tb";
-import Modal from "react-modal";
 import { RiFilter2Line } from "react-icons/ri";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,80 +24,6 @@ import { RiRepeat2Line } from "react-icons/ri";
 
 export default function ViewRequestDetails() {
   const [viewDetailsAction, setViewDetailsAction] = useState();
-
-  const styles = {
-    pageHeader: {
-      fontWeight: "500",
-      fontSize: "x-large",
-    },
-    tableContainer: {
-      marginBottom: "4vh",
-      borderBottomWidth: "0px",
-      alignSelf: "center",
-    },
-    tableHeader: {
-      textAlign: "center",
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      padding: "1.6vh 0vh 1.6vh 0vh",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-    tableDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      textAlign: "center",
-    },
-    requestDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      textAlign: "left",
-      alignItems: "center",
-      justifyContent: "center",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-    lastTableDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      textAlign: "center",
-      alignItems: "center",
-      justifyContent: "center",
-      alignContent: "center",
-      justifyItems: "center",
-    },
-    statusButtonRow: {
-      alignItems: "center",
-      justifyItems: "center",
-      borderWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      alignContent: "center",
-      alignTracks: "center",
-      justifyContent: "center",
-      justifySelf: "center",
-    },
-    statusButtons: {
-      alignSelf: "center",
-      width: "max-content",
-      padding: "0.85vh 1vw 0.85vh 1vw",
-      height: "auto",
-      borderRadius: "30px",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      fontWeight: "400",
-      fontSize: "0.92vw",
-    },
-    tableBody: {
-      borderBottomWidth: "0px",
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-  };
 
   const location = useLocation();
   //  const { ticketDetails } = location.state;
@@ -292,18 +217,19 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <span style={styles.pageHeader}>View Details</span>
+        <span className="view-ticket-header">View Details</span>
 
         <Box className="view-details-container">
-          <TableContainer component={Paper} sx={styles.tableContainer}>
+          <TableContainer component={Paper} className="view-table-container">
             <Table className="details-table">
-              <TableHead sx={styles.tableHeader}>
+              <TableHead>
                 <TableRow sx={{ backgroundColor: "rgb(243, 242, 248)" }}>
                   {viewRequestTableHeaders.map((header) => (
                     <TableCell
-                      sx={[
-                        styles.tableHeader,
+                      align="center"
+                      sx={
                         {
+                          border : "1px solid rgba(225, 225, 225, 1)",
                           width:
                             header === "Ticket Id"
                               ? "5vw"
@@ -315,29 +241,29 @@ export default function ViewRequestDetails() {
                                       header === "Action"
                                     ? "9vw"
                                     : "0vw",
-                        },
-                      ]}
+                        }
+                      }
                     >
                       {header}
                     </TableCell>
                   ))}
                 </TableRow>
               </TableHead>
-              <TableBody sx={styles.tableBody}>
+              <TableBody className="view-table-body">
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell sx={styles.tableDataRow} height="2px">
+                      <TableCell className="view-table-data-row">
                         {row.ticketId}
                       </TableCell>
-                      <TableCell sx={styles.requestDataRow}>
+                      <TableCell className="view-table-data-row">
                         <Box style={{ alignSelf: "center" }}>
                           <span key={index} style={{ lineHeight: "1.5vh" }}>
                             {row.request}
                           </span>
                         </Box>
                       </TableCell>
-                      <TableCell sx={styles.tableDataRow} align="center">
+                      <TableCell className="view-table-data-row" align="center">
                         <Box
                           sx={{
                             display: "flex",
@@ -347,8 +273,7 @@ export default function ViewRequestDetails() {
                         >
                           <Box
                             alignSelf={"center"}
-                            sx={[
-                              styles.statusButtons,
+                            sx={
                               {
                                 backgroundColor:
                                   row.status === "In-progress"
@@ -366,18 +291,21 @@ export default function ViewRequestDetails() {
                                       : row.status === "Failed"
                                         ? "rgba(210, 26, 26, 1)"
                                         : "",
-                              },
-                            ]}
-                            className="status-tab"
+                              }
+                            }
+                            className="view-table-status-buttons"
                           >
                             <span>{row.status}</span>
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell sx={styles.tableDataRow}>
+                      <TableCell 
+                      align='center' className="view-table-data-row">
                         {row.createdDateTime}
                       </TableCell>
-                      <TableCell sx={styles.lastTableDataRow}>
+                      <TableCell 
+                      align='center'
+                      className="view-table-data-row">
                         <Box>
                           {/* {row.status === "Failed" ? (
                           <Button className="retry-button">
@@ -421,14 +349,14 @@ export default function ViewRequestDetails() {
                               }}
                             >
                               <TableCell
-                                sx={styles.tableDataRow}
+                               
                                 // height="6vh"
                                 className="border-0 p-0"
                               >
                                 {/* {row.ticketId} */}
                               </TableCell>
                               <TableCell
-                                sx={styles.requestDataRow}
+                               
                                 className="border-0 p-0"
                               >
                                 <Box
@@ -444,14 +372,13 @@ export default function ViewRequestDetails() {
                                 </Box>
                               </TableCell>
                               <TableCell
-                                sx={styles.tableDataRow}
                                 className="border-0 p-0"
                               >
                                 <Box className="d-flex align-items-center justify-content-center">
                                   <Box
                                     // alignSelf={"center"}
-                                    sx={[
-                                      styles.statusButtons,
+                                    className='view-table-status-buttons'
+                                    sx={
                                       {
                                         backgroundColor:
                                           row.status === "In-progress"
@@ -469,16 +396,14 @@ export default function ViewRequestDetails() {
                                               : row.status === "Failed"
                                                 ? "rgba(210, 26, 26, 1)"
                                                 : "",
-                                      },
-                                    ]}
-                                    className="status-tab"
+                                      }
+                                    }
                                   >
                                     <span>{row.status}</span>
                                   </Box>
                                 </Box>
                               </TableCell>
                               <TableCell
-                                sx={styles.tableDataRow}
                                 className="border-0 p-0"
                               >
                                 <Box className="d-flex align-items-center justify-content-center">
@@ -486,7 +411,6 @@ export default function ViewRequestDetails() {
                                 </Box>
                               </TableCell>
                               <TableCell
-                                sx={styles.lastTableDataRow}
                                 className="border-0 p-0"
                               >
                                 <Box className="d-flex align-items-center justify-content-center">

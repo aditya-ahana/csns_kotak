@@ -27,73 +27,6 @@ export default function ViewRequest() {
   const [searchMode, setSearchMode] = useState(false);
   const route_to = useNavigate();
 
-  const styles = {
-    pageHeader: {
-      fontWeight: "500",
-      fontSize: "x-large",
-    },
-    tableContainer: {
-      marginBottom: "4vh",
-      borderBottomWidth: "0px",
-      alignSelf: "center",
-    },
-    tableHeader: {
-      textAlign: "center",
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      padding: "1.6vh 0vh 1.6vh 0vh",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-    tableDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      textAlign: "center",
-    },
-    requestDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-    lastTableDataRow: {
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      textAlign: "center",
-      alignItems: "center",
-      justifyContent: "center",
-      alignContent: "center",
-      justifyItems: "center",
-    },
-    statusButtonRow: {
-      alignItems: "center",
-      borderWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-      justifyContent: "center",
-    },
-    statusButtons: {
-      display: "flex",
-      alignSelf: "center",
-      width: "max-content",
-      padding: "0.85vh 1vw 0.85vh 1vw",
-      height: "auto",
-      borderRadius: "30px",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      fontWeight: "400",
-      fontSize: "0.92vw",
-    },
-    tableBody: {
-      borderBottomWidth: "0px",
-      borderRightWidth: "1px",
-      borderStyle: "solid",
-      borderColor: "rgba(225, 225, 225, 1)",
-    },
-  };
-
   const viewRequestTableHeaders = [
     "Ticket Id",
     "Requests",
@@ -210,12 +143,12 @@ export default function ViewRequest() {
     <>
       <Box className="page">
         <Box className="view-request-screen">
-          <span style={styles.pageHeader}>View Request</span>
+          <span className="view-ticket-header">View Request</span>
           <Box className="view-request-container">
             <Box className="view-request-header">
               <Box className="request-searchbar">
                 <SearchIcon className="request-search-icon" size="2vw" />
-                <FormControl>
+                <FormControl sx={{ width : "100%"}}>
                   <Input
                     disableUnderline={true}
                     type="search"
@@ -228,7 +161,7 @@ export default function ViewRequest() {
                 </FormControl>
               </Box>
 
-              <Box className="request-filter-section">
+              <Button className="request-filter-section">
                 {/* <MdOutlineFilterAlt
                   className="filter-icon"
                   color="#606060"
@@ -240,20 +173,22 @@ export default function ViewRequest() {
                   size="1.45vw"
                 />
                 <span className="filter-heading">Filter</span>
-              </Box>
+              </Button>
             </Box>
 
-            <Box className="request-ticket-section">
-              <Box className="view-request-table">
-                <TableContainer component={Paper} sx={styles.tableContainer}>
+            <Box className="request-ticket-section" alignSelf='center'>
+              <Box className="view-table">
+                <TableContainer component={Paper} className="view-table-container">
                   <Table aria-label="view-request-table">
                     <TableHead>
                       <TableRow sx={{ backgroundColor: "rgb(243, 242, 248)" }}>
                         {viewRequestTableHeaders.map((header) => (
                           <TableCell
-                            sx={[
-                              styles.tableHeader,
+                           align='center'
+                           className="view-table-header"
+                            sx={
                               {
+                                border : "1px solid rgba(225, 225, 225, 1)",
                                 width:
                                   header === "Ticket Id"
                                     ? "9.6vw"
@@ -266,8 +201,8 @@ export default function ViewRequest() {
                                             header === "Action"
                                           ? "12vw"
                                           : "0vw",
-                              },
-                            ]}
+                              }
+                            }
                           >
                             {header}
                           </TableCell>
@@ -275,13 +210,15 @@ export default function ViewRequest() {
                       </TableRow>
                     </TableHead>
 
-                    <TableBody sx={styles.tableBody}>
+                    <TableBody className="view-table-body">
                       {requestData.map((detail, i) => (
                         <TableRow key={i} sx={{ borderBottomWidth: "0px" }}>
-                          <TableCell sx={styles.tableDataRow}>
+                          <TableCell 
+                          className="view-table-data-row"
+                          align='center'>
                             {detail.ticketid}
                           </TableCell>
-                          <TableCell sx={styles.requestDataRow}>
+                          <TableCell className="view-table-data-row">
                             <Box style={{ alignSelf: "center" }}>
                               {detail.requests.map((req, index) => (
                                 <p
@@ -290,8 +227,9 @@ export default function ViewRequest() {
                               ))}
                             </Box>
                           </TableCell>
-                          <TableCell align="center" sx={styles.statusButtonRow}>
+                          <TableCell align="center" className="view-table-data-row">
                             <Box
+                              align='center'
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
@@ -300,8 +238,8 @@ export default function ViewRequest() {
                             >
                               <Box
                                 alignSelf="center"
-                                sx={[
-                                  styles.statusButtons,
+                                className='view-table-status-buttons'
+                                sx={
                                   {
                                     backgroundColor:
                                       detail.status === "In-progress"
@@ -319,21 +257,22 @@ export default function ViewRequest() {
                                           : detail.status === "Failed"
                                             ? "rgba(210, 26, 26, 1)"
                                             : "",
-                                  },
-                                ]}
-                                className="status-tab"
+                                  }
+                                }
                               >
                                 <span>{detail.status}</span>
                               </Box>
                             </Box>
                           </TableCell>
-                          <TableCell sx={styles.tableDataRow}>
+                          <TableCell 
+                           align='center' className="view-table-data-row">
                             {detail.createdDate}
                           </TableCell>
-                          <TableCell sx={styles.tableDataRow}>
+                          <TableCell 
+                          align='center' className="view-table-data-row">
                             {detail.requester}
                           </TableCell>
-                          <TableCell sx={styles.lastTableDataRow}>
+                          <TableCell className="view-table-data-row">
                             <Box className="detail-buttons">
                               <Button
                                 variant="outlined"
