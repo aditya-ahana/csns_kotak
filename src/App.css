@@ -18,6 +18,7 @@
 .parent {
   /* background-color: rgba(245, 248, 250, 1); */
   background-color: rgb(243, 242, 248);
+  height: 100vh;
   overflow: auto;
 }
 .center {
