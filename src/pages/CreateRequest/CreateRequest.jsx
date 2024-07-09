@@ -19,6 +19,8 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Checkbox , { checkboxClasses } from '@mui/material/Checkbox';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import Box from '@mui/material/Box';
 import dayjs, { Dayjs } from "dayjs";
 
@@ -845,11 +847,13 @@ const disableInvalidDates = (day, to) => {
     });
   };
 
-  const MenuProps = {
+  const ReportProps = {
     PaperProps: {
       style: {
         maxHeight: '40.5vh',
         marginTop : "-1vh",
+        width : "fit-content",
+        resize : 'horizontal'
         // backgroundColor : "red"
       },
     },
@@ -860,6 +864,8 @@ const disableInvalidDates = (day, to) => {
       style: {
         maxHeight: '23vh',
         marginTop : "-1vh",
+         width : "fit-content",
+        resize : 'horizontal'
         // backgroundColor : "red"
       },
     },
@@ -885,8 +891,8 @@ const disableInvalidDates = (day, to) => {
     detailsArray.map((detail, detailIndex) => (
       <Box className="selected-param-details" key={detailIndex}>
         {/* {console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
-        <FormControl variant='outlined' margin='none'>
-             <InputLabel color='success' htmlFor='selected-param-box' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name}</InputLabel>
+        <FormControl variant='outlined' margin='none' sx={{ width : reportName === 'IP Logs' ? '25%' : "34%"}}>
+             <InputLabel color='success' htmlFor='selected-param-box' style={{marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name}</InputLabel>
               <OutlinedInput       
                 className="selected-param-box"
                 value={
@@ -925,7 +931,7 @@ const disableInvalidDates = (day, to) => {
                   
                 }}
                 autoComplete="off"
-                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw',width: reportName === "IP Logs" ? '14.25vw' : "20vw"}}
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw'}}
                 label={detail.name}
                 margin='none'
                 onChange={(e) =>
@@ -968,7 +974,9 @@ const disableInvalidDates = (day, to) => {
           (detailName === "CRNdetails" && reportName === "IP Logs") || (reportName === "IP Logs") || (reportName === "Statement in PDF/Excel" || reportName === "Beneficiary details for Bulk IMPS transactions" || reportName === "Beneficiary details for Bulk UPI transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions")) && (
-          <Box className="report-dates">
+          <Box sx={{ display:"flex",flexDirection : "row",gap : '4.8%'}}>
+      
+      <Box sx={{ width : "auto"}}>
      <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker 
         format="DD-MM-YYYY"
@@ -980,7 +988,7 @@ const disableInvalidDates = (day, to) => {
         slotProps={{
           popper: {
             sx: {
-              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              ".MuiPaper-root": { height : '45vh',borderRadius : "10px",padding:0 },
               '&.MuiPickersPopper-root': { padding:0},
               ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'gray',color : "white" }},
             },
@@ -995,17 +1003,19 @@ const disableInvalidDates = (day, to) => {
           sx:{
             "& .MuiInputBase-input": {
              height:'3.25vh',
-             width : '6vw',
+             width : 'auto',
              fontSize:"0.95vw"
             },
           }
         }
         }}
-        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        sx={{height : "5.5vh",backgroundColor : 'transparent'}}
         onChange={(date) => handleFromDate(date, reportIndex, detailIndex, detailName,detail.to)}
       />
     </LocalizationProvider>
+    </Box>
 
+    <Box sx={{ width : "auto"}}>    
 <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker 
         format="DD-MM-YYYY"
@@ -1017,7 +1027,7 @@ const disableInvalidDates = (day, to) => {
         slotProps={{      
           popper: {
             sx: {
-              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              ".MuiPaper-root": { height : '45vh',borderRadius : "10px",padding:0 },
               '&.MuiPickersPopper-root': { padding:0},
               ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'gray',color : "white" }},
             },
@@ -1032,30 +1042,30 @@ const disableInvalidDates = (day, to) => {
           sx:{
             "& .MuiInputBase-input": {
              height:'3.25vh',
-             width : '6vw',
+             width:'auto',
              fontSize:"0.95vw"
             },
           }
         }
         }}
-        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        sx={{ height : "5.5vh",backgroundColor : 'transparent'}}
         onChange={(date) => handleToDate(date, reportIndex, detailIndex, detailName,detail.from)}
       />
     </LocalizationProvider>
+    </Box>
             
           </Box>
         )}
 
 { reportName === "IP Logs" && detailName !== 'mobileNoDetails' && (
-             <Box>
-            <FormControl variant='outlined' margin='none'>
+            <FormControl variant='outlined' margin='none' sx={{ width : "23%", marginLeft : "2%"}}>
              <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
               <OutlinedInput
                 placeholder={`Enter ${detail.name2}`}       
                  className="number-box"
                 value={detail.mobileno}              
                 autoComplete="off"
-                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw' }}
+                style={{ height : '5.5vh',fontSize : '1vw' }}
                 label={detail.name2}
                 margin='none'
                 onChange={(e) =>
@@ -1075,17 +1085,17 @@ const disableInvalidDates = (day, to) => {
                 //   borderWidth: "1px"}}
                 type='tel'
                 inputMode='tel'
+                sx={{ width : "100%"}}
                 InputAdornment={'+91'}
                 color='success'
                />
               </FormControl>
-            </Box>
             )}
 
         { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
-          <Box className="report-dates">
+          <Box className='rrn-fields'>
 
-        <FormControl variant='outlined' margin='none'>
+        <FormControl variant='outlined' margin='none' sx={{ width : '57%'}}>
              <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
               <OutlinedInput
                 placeholder={`Enter ${detail.name2}`}       
@@ -1095,6 +1105,7 @@ const disableInvalidDates = (day, to) => {
                 onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
                 style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw'}}
                 label={detail.name2}
+                sx={{ width : "100%"}}
                 margin='none'
                 onChange={(e) =>
                   handleAmountValue(
@@ -1110,6 +1121,7 @@ const disableInvalidDates = (day, to) => {
                />
               </FormControl>
 
+<Box sx={{ width : "40%"}}>
 <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker 
         format="DD-MM-YYYY"
@@ -1120,7 +1132,7 @@ const disableInvalidDates = (day, to) => {
         slotProps={{
           popper: {
             sx: {
-              ".MuiPaper-root": { height : '45vh',width:'22vw',borderRadius : "10px",padding:0 },
+              ".MuiPaper-root": { height : '45vh',borderRadius : "10px",padding:0 },
               '&.MuiPickersPopper-root': { padding:0},
               ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
             },
@@ -1134,23 +1146,21 @@ const disableInvalidDates = (day, to) => {
           sx:{
             "& .MuiInputBase-input": {
              height:'3.25vh',
-             width : '6vw',
              fontSize:"0.95vw"
             },
           }
         }
         }}
-        sx={{ width : '10.5vw',height : "5.5vh",backgroundColor : 'transparent'}}
+        sx={{ height : "5.5vh",backgroundColor : 'transparent'}}
         onChange={(date) => handleDate(date, reportIndex, detailIndex, detailName)}
       />
     </LocalizationProvider>
+  </Box>
           </Box>
         )}
 
         {reportName === "Statement in PDF/Excel" && (
-          <Box className="type-container">
-
-<FormControl variant="standard">
+<FormControl variant="standard" sx={{ width : '14%',marginLeft : '2%'}}>
 <Select
           id="report-type-dropdown"
           value={detail.type}
@@ -1177,7 +1187,7 @@ const disableInvalidDates = (day, to) => {
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
           sx={{ padding : '0vh 0vw 0vh 0vw'}}
-          style={{ display:'flex',alignItems:'center', width : '6vw',height : '5.5vh',fontSize : "1vw",marginTop : "0vh"}}
+          style={{ display:'flex',alignItems:'center',height : '5.5vh',fontSize : "1vw",marginTop : "0vh"}}
           placeholder="Type"
         >
           {availableReportTypes.map((type) => (
@@ -1187,13 +1197,13 @@ const disableInvalidDates = (day, to) => {
           ))}
         </Select>
         </FormControl>
-          </Box>
         )}
 
         {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
         reportsState[reportIndex][detailName].length === 1 ? (
           <Button
             className="add-remove-button"
+            style={{ marginLeft : reportName === "IP Logs" && detailName === "mobileNoDetails" ? '2%' : "0%"}}
             disabled={
               detail.value === "" ||
               detail.value === 0 ||
@@ -1216,6 +1226,7 @@ const disableInvalidDates = (day, to) => {
         ) : (
           <Button
             className="add-remove-button"
+            style={{ marginLeft : reportName === "IP Logs" && detailName === "mobileNoDetails" ? '2%' : "0%"}}
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
             <RemoveIcon sx={{ color : 'red', alignSelf : "center",justifySelf : "center",fontSize:'1.45vw'}} />
@@ -1236,9 +1247,8 @@ const disableInvalidDates = (day, to) => {
         {/* { updateDetailed() } */}
         <Box className="preview-data">
           <Box className="detail-input">
-            <span className="preview-text">{detail.name}</span>
-            <span>:</span>
-            <span>{detail.value}</span>
+            <span className="preview-text">{`${detail.name}  : ` }</span>
+            <span className="preview-text">{detail.value}</span>
           </Box>
 
           {((detailName === "accountNumberDetails" && reportName !== "Device details") ||
@@ -1246,30 +1256,25 @@ const disableInvalidDates = (day, to) => {
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk IMPS transactions") ||
           (detailName === "RRNdetails" && reportName === "Beneficiary details for Bulk UPI transactions")) && (
             <Box className="detail-range">
-              <span>Date</span>
-              <span>:</span>
-              <span>{detail.from}</span>
-              <span>-</span>
-              <span>{detail.to}</span>
+              <span className="preview-text">Date : </span>
+              <span className="preview-text">{`${detail.from} - `}</span>
+              <span className="preview-text">{detail.to}</span>
             </Box>
           )}
 
           { (detailName === "RRNdetails" && (reportName === "Beneficiary details for Single IMPS transactions" || reportName === "Beneficiary details for Single UPI transactions")) && (
             <Box className="detail-range">
-              <span>Amount</span>
-              <span>:</span>
+              <span className="preview-text">Amount : </span>
               <span>{detail.amount}</span>
-              <span style={{ marginLeft: "3vw" }}>Date</span>
-              <span>:</span>
-              <span>{detail.date}</span>
+              <span style={{ marginLeft: "3vw" }}>Date : </span>
+              <span className="preview-text">{detail.date}</span>
             </Box>
           )}
 
       { reportName === "IP Logs" && detailName !== 'mobileNoDetails' && (
              <Box>
-              <span style={{ marginLeft: "3vw" }}>Mobile No.</span>
-              <span>:</span>
-              <span>{detail.mobileno}</span>
+              <span style={{ marginLeft: "3vw" }}>Mobile No. : </span>
+              <span className="preview-text">{detail.mobileno}</span>
              </Box>
       )}
 
@@ -1289,8 +1294,9 @@ const disableInvalidDates = (day, to) => {
 
         <Box className="ticket-entry-section">
           <Box className="ticket-type-section">
-            <Box className="ticket-container">
-            <FormControl variant='outlined' margin='none'>
+
+
+            <FormControl variant='outlined' margin='none' className="ticket-container">
              <InputLabel color='success' htmlFor='ticket-number-input' style={{ marginTop : '-0.55vh',fontSize : "1vw"}}>Ticket Number</InputLabel>
               <OutlinedInput
                 placeholder="Enter ticket number"         
@@ -1298,6 +1304,7 @@ const disableInvalidDates = (day, to) => {
                 value={ticketNumber === 0 ? "" : ticketNumber}
                 autoComplete="off"
                 size="small"
+                sx={{ width : '100%'}}
                 style={{ margin : '0vh 0vw 0vh 0vw', height : '5.6vh',fontSize : '1vw'}}
                 label='Ticket Number'
                 margin='dense'
@@ -1308,9 +1315,8 @@ const disableInvalidDates = (day, to) => {
                />
               </FormControl>
 
-            </Box>
-            <Box className="ticket-container">
-<FormControl variant='outlined' margin='none'>
+     
+<FormControl variant='outlined' margin='none' className="ticket-container">
 <InputLabel color='success' htmlFor="ticket-description-input" shrink={(descriptionFocused === true || ((descriptionFocused === true || descriptionFocused === false) && ticketDescription.length > 1 ? true : false))} style={{ marginTop : descriptionFocused === true || ticketDescription.length > 1 ? '-1vh' : "-0.4vh",fontSize : "1vw"}}>Ticket Description</InputLabel>
 <TextField
                 placeholder={descriptionFocused === true ? "Enter description" : ''}
@@ -1321,6 +1327,7 @@ const disableInvalidDates = (day, to) => {
                 // label='Ticket Description'
                 multiline={true}
                 minRows={0}
+                sx={{ width : '100%'}}
                 className="ticket-description-input"
                 autoComplete="off"
                 size='small'
@@ -1347,12 +1354,9 @@ const disableInvalidDates = (day, to) => {
                />
       
                </FormControl>
-            </Box>
           </Box>
 
-
-         <Box className="multiple-reports-selection">
- <FormControl variant="standard">
+ <FormControl variant="standard" sx={{ width : '82.75%', textOverflow : "clip" }}>
 <Select
           labelId="reports-selection-dropdown-label"
           id="reports-selection-dropdown"
@@ -1364,7 +1368,7 @@ const disableInvalidDates = (day, to) => {
           }
           onChange={handleReportSelection}
           variant='standard'
-          input={<OutlinedInput fullWidth={false} />}
+          input={<OutlinedInput fullWidth={true}/>}
           IconComponent={props => (
           <KeyboardArrowDownOutlinedIcon
             className="reports-type-dropdownicon"
@@ -1376,28 +1380,22 @@ const disableInvalidDates = (day, to) => {
               if (reports.length === 0) {
                 return <span style={{ opacity : 0.45 }}>Select statements/reports you require</span>;
               } 
-              return reports.join(', ');         
+              return <Input contentEditable='false' sx={{ width : "99%" , fontSize : '95%',textOverflow : 'ellipsis',overflow : 'hidden'}} disableUnderline={true} value={reports.join(' , ')}></Input>;       
             }}
-          MenuProps={MenuProps}
+          MenuProps={ReportProps}
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
-          style={{ display:'flex',alignItems:'center', width : '58.5vw',height : '5.6vh',fontSize : "1vw",marginTop : '0vh'}}
+          style={{ display:'flex',alignItems:'center',height : '5.6vh',fontSize : "1vw",marginTop : '0vh'}}
           placeholder="Select statements/reports you require"
         >
           {requiredReportsData.map((report) => (
-            <MenuItem key={report} value={report} style={{ display:'flex', border : "1px solid #cdcdcd", width : '95%', margin:'2vh 1vw 1.5vh 1.4vw',height:'5.5vh',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent",fontSize : "2px"}}>
-              <Checkbox checked={selectedReports.indexOf(report) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} checkedIcon={<FaRegCheckSquare
-                                className="check-icon"
-                                size="1.4vw"
-                              />} />
+            <MenuItem key={report} value={report} style={{ display:'flex', border : "1px solid #cdcdcd", width : '96.25%', margin:'2vh 1vw 1.5vh 1.4vw',height:'5.5vh',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent",fontSize : "2px"}}>
+              <Checkbox size='medium' icon={<CheckBoxOutlineBlankIcon sx={{ fontSize : "1.6vw"}} />} checkedIcon={<CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} />} sx={{ containIntrinsicSize : "2px"}} checked={selectedReports.indexOf(report) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent",fontSize : "2px"}} />
               <ListItemText primary={report} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
             </MenuItem>
           ))}
         </Select>
         </FormControl>
-
-
-          </Box>
 
         </Box>
 
@@ -1427,9 +1425,9 @@ const disableInvalidDates = (day, to) => {
                       <Box className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
                         {reportsState[reportIndex] && (
                           <>
-                           <Box hidden={request === 'Beneficiary details for Single IMPS transactions' || request === 'Beneficiary details for Single UPI transactions' ? true : false}>
+                           <Box hidden={request === 'Beneficiary details for Single IMPS transactions' || request === 'Beneficiary details for Single UPI transactions' ? true : false} sx={{ width : "100%"}}>
 
-<FormControl variant="standard">
+<FormControl variant="standard" sx={{ width : "34%"}}>
 <Select
           labelId="param-selection-dropdown"
           id="param-selection-dropdown"
@@ -1438,7 +1436,7 @@ const disableInvalidDates = (day, to) => {
           displayEmpty
           onChange={(event) => handleParamSelection(event, reportIndex, request)}
           variant='standard'
-          input={<OutlinedInput fullWidth={false} sx={{alignItems : 'center', justifyContent : 'space-around',justifyItems:'left'}} />}
+          input={<OutlinedInput fullWidth={true} sx={{alignItems : 'center', justifyContent : 'space-around',justifyItems:'left'}} />}
           sx={{
             '& .reports-type-dropdownicon': {
               paddingRight: '2vw' // Adjust the margin as needed
@@ -1455,20 +1453,17 @@ const disableInvalidDates = (day, to) => {
               if (params.length === 0) {
                 return <span style={{ opacity : 0.45 }}>Select Detail</span>;
               } 
-              return params.join(', ');         
+              return <Input contentEditable='false' sx={{ width : "99%" , fontSize : '95%',textOverflow : 'ellipsis',overflow : 'hidden'}} disableUnderline={true} value={params.join(' , ')}></Input>;         
             }}
           MenuProps={ParamProps}
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
-          style={{ display:'flex',alignItems:'center', width : '20vw',height : '5.6vh',fontSize : "1vw",marginTop : "0vh"}}
+          style={{ display:'flex',alignItems:'center',height : '5.6vh',fontSize : "1vw",marginTop : "0vh"}}
           placeholder="Select Detail"
         >
           {availableParameters.map(param => (
-            <MenuItem key={param} value={param} style={{ display:'flex',borderStyle:'solid',borderColor : 'grey',borderBottomWidth : "1px", width : '20vw', margin:'0vh 0vw 0vh 0vw',height:'5.5vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
-              <Checkbox checked={reportsState[reportIndex].selectedParams.indexOf(param) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} checkedIcon={<FaRegCheckSquare
-                                className="check-icon"
-                                size="1.4vw"
-                              />} />
+            <MenuItem key={param} value={param} style={{ display:'flex',borderStyle:'solid',borderColor : 'grey',borderBottomWidth : "1px", margin:'0vh 0vw 0vh 0vw',height:'5.5vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
+              <Checkbox checked={reportsState[reportIndex].selectedParams.indexOf(param) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} icon={<CheckBoxOutlineBlankIcon sx={{ fontSize : "1.6vw"}} />} checkedIcon={<CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} />} />
               <ListItemText primary={param} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
             </MenuItem>
           ))}
@@ -1618,6 +1613,7 @@ const disableInvalidDates = (day, to) => {
                               <h3 className="preview-title">{request}</h3>
                             </Box>
 
+                         
                             <Box className="preview-report-details">
                               {reportsState[reportIndex] && (
                                 <>
