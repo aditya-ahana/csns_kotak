@@ -18,9 +18,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-
+import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
+import { Typography } from "antd";
 
 export default function ViewRequestDetails() {
   const [viewDetailsAction, setViewDetailsAction] = useState();
@@ -187,15 +188,309 @@ export default function ViewRequestDetails() {
         },
       ],
     },
+    {
+      ticketId: "1300",
+      request: "Statement in PDF/Excel",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "123456789",
+        },
+        {
+          accNo: "98765432",
+        },
+        {
+          accNo: "34568656",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
+        },
+        {
+          accNo: "976565",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Beneficiary Details of IMPS Txns",
+      status: "Completed",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "456565",
+        },
+        {
+          accNo: "2423576",
+        },
+        {
+          accNo: "9757642",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Beneficiary Details of UPI Txns",
+      status: "Failed",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "9754",
+        },
+        {
+          accNo: "4545",
+        },
+        {
+          accNo: "98475",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "9757642",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "IP Logs",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+        {
+          accNo: "7642",
+        },
+        {
+          accNo: "98343",
+        },
+        {
+          accNo: "2335",
+        },
+        {
+          accNo: "8923",
+        },
+        {
+          accNo: "56342",
+        },
+        {
+          accNo: "24562",
+        },
+        {
+          accNo: "745656",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Device Details",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+
+        {
+          accNo: "456",
+        },
+        {
+          accNo: "2345",
+        },
+
+        {
+          accNo: "2345634",
+        },
+        {
+          accNo: "45634",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Statement in PDF/Excel",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "123456789",
+        },
+        {
+          accNo: "98765432",
+        },
+        {
+          accNo: "34568656",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
+        },
+        {
+          accNo: "976565",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Beneficiary Details of IMPS Txns",
+      status: "Completed",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "456565",
+        },
+        {
+          accNo: "2423576",
+        },
+        {
+          accNo: "9757642",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
+        },
+        {
+          accNo: "2343",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Beneficiary Details of UPI Txns",
+      status: "Failed",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "9754",
+        },
+        {
+          accNo: "4545",
+        },
+        {
+          accNo: "98475",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "9757642",
+        },
+        {
+          accNo: "434",
+        },
+        {
+          accNo: "8767",
+        },
+        {
+          accNo: "745656",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "IP Logs",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+        {
+          accNo: "7642",
+        },
+        {
+          accNo: "98343",
+        },
+        {
+          accNo: "2335",
+        },
+        {
+          accNo: "8923",
+        },
+        {
+          accNo: "56342",
+        },
+        {
+          accNo: "24562",
+        },
+        {
+          accNo: "745656",
+        },
+      ],
+    },
+    {
+      ticketId: "1300",
+      request: "Device Details",
+      status: "In-progress",
+      createdDateTime: "28-06-2024",
+      createdBy: "User",
+      subData: [
+        {
+          accNo: "93487",
+        },
+
+        {
+          accNo: "456",
+        },
+        {
+          accNo: "2345",
+        },
+
+        {
+          accNo: "2345634",
+        },
+        {
+          accNo: "45634",
+        },
+      ],
+    },
   ];
 
   const ticketDetails = requestDetails.map((request, index) => ({
     ticketid: request.ticketId,
-    request: (
-      <Box style={{ alignSelf: "center" }}>
-        <p style={{ lineHeight: "1.5vh" }}>{`${request.request}`}</p>
-      </Box>
-    ),
+    request: request.request,
     status: request.status,
     createdDate: request.createdDateTime,
     createdby: request.createdBy,
@@ -220,16 +515,17 @@ export default function ViewRequestDetails() {
         <span className="view-ticket-header">View Details</span>
 
         <Box className="view-details-container">
-          <TableContainer component={Paper} className="view-table-container">
-            <Table className="details-table">
+          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70vh"}}>
+            <Table className="details-table" stickyHeader={true}>
               <TableHead>
-                <TableRow sx={{ backgroundColor: "rgb(243, 242, 248)" }}>
+                <TableRow>
                   {viewRequestTableHeaders.map((header) => (
                     <TableCell
                       align="center"
                       sx={
                         {
                           border : "1px solid rgba(225, 225, 225, 1)",
+                          backgroundColor: "rgb(243, 242, 248)",
                           width:
                             header === "Ticket Id"
                               ? "5vw"
@@ -253,15 +549,11 @@ export default function ViewRequestDetails() {
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell align='center' className="view-table-data-row">
+                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px"}}>
                         {row.ticketId}
                       </TableCell>
                       <TableCell className="view-table-data-row">
-                        <Box style={{ alignSelf: "center" }}>
-                          <span key={index} style={{ lineHeight: "1.5vh" }}>
                             {row.request}
-                          </span>
-                        </Box>
                       </TableCell>
                       <TableCell className="view-table-data-row" align="center">
                         <Box
@@ -269,6 +561,7 @@ export default function ViewRequestDetails() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
+                            maxHeight : '2vh'
                           }}
                         >
                           <Box
@@ -325,9 +618,10 @@ export default function ViewRequestDetails() {
                                 setViewDetailsAction(index);
                               }
                             }}
-                          >
-                            <IoMdArrowDropdown
+                          >                      
+                            <ExpandCircleDownOutlinedIcon
                               size="1.95vw"
+                              sx={{ color : 'rgba(95, 99, 104, 0.8)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
                               color="rgba(95, 99, 104, 1)"
                               className="expand-icon"
                             />
@@ -342,6 +636,7 @@ export default function ViewRequestDetails() {
                         {row.subData?.map((subDetails) => (
                           <>
                             <TableRow
+                              className="expanded-view"
                               key={index}
                               style={{
                                 backgroundColor: "rgb(243 243 243 / 79%)",

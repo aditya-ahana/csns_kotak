@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegCheckSquare } from "react-icons/fa";
-import { TextField,InputAdornment, createTheme, Input, ThemeProvider } from '@mui/material';
+import { TextField,InputAdornment, createTheme, Input, ThemeProvider, AccordionSummary, MenuList } from '@mui/material';
+import Fade from '@mui/material/Fade';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -21,14 +22,21 @@ import Checkbox , { checkboxClasses } from '@mui/material/Checkbox';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-import Box from '@mui/material/Box';
+import Box, { boxClasses } from '@mui/material/Box';
+import { Typography } from '@mui/material';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { setCreatedDate } from '../../Redux/reduxStore';
+import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import dayjs, { Dayjs } from "dayjs";
+import { Accordion } from "react-bootstrap";
 
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
   const route_to = useNavigate();
+  // const dispatch = useDispatch();
+
   const [ticketNumber, setTicketNumber] = useState(0);
   const [ticketDescription, setTicketDescription] = useState("");
   const [ descriptionFocused , setDescriptionFocused ] = useState(false);
@@ -36,20 +44,76 @@ export default function CreateRequest() {
   const [viewPreview, setViewPreview] = useState(false);
   const [availableParameters, setAvailableParameters] = useState(["Account number", "CRN","RRN","PAN","Aadhar" ,"Mobile No.","Debit Card" ,"Credit Card" ,"Email ID"]);
 
-  const new_date = new Date();
-  new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
+  // const new_date = new Date();
+  // new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
 
-  const currentDay = new Date(new_date)
-    .toLocaleDateString("en-Us", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-    .split("/")
-    .map((part, index, array) => (index < 2 ? array[1 - index] : part))
-    .join("-");
+  const currentDate = dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY');
 
-    console.log('currentDay',currentDay);
+  const inputControl = {
+    textfield : {
+    '& .MuiOutlinedInput-root': {
+     '& fieldset': {
+    border: '1.5px solid rgba(161, 161, 161, 0.6)', 
+    },
+    '&:hover fieldset': {
+     border : "1.5px solid rgba(161, 161, 161, 1)"
+   },
+   '&.Mui-focused fieldset': {
+    border: '2px solid rgb(131, 131, 210)',
+   },
+  }
+ },
+ inputProps : {  
+  style : {
+    fontSize : "1vw",
+    height : '1.3vh',
+    // backgroundColor : "blue"
+  }
+ },
+ inputLabelProps : {
+    // shrink : true,
+    size:'small',
+    sx : {
+      fontSize : "1vw",
+      alignSelf : "center",
+      display : 'flex',
+      alignItems:'center',
+      height : "58%",
+    }
+  },
+  textAreaProps : {  
+    style : {
+      fontSize : "1vw",
+      minHeight : "1.775vw",
+      maxHeight : "auto",
+      // backgroundColor : "blue"
+    }
+   },
+  textAreaLabelProps : {
+    // shrink : true,
+    size:'small',
+    sx : {
+      fontSize : "1vw",
+      paddingTop : '0.25vh',
+      alignSelf : "center",
+      display : 'flex',
+      alignItems:'center',
+      height : 'auto'
+    }
+  }
+};
+
+  // const currentDay = new Date(new_date)
+  //   .toLocaleDateString("en-Us", {
+  //     day: "2-digit",
+  //     month: "2-digit",
+  //     year: "numeric",
+  //   })
+  //   .split("/")
+  //   .map((part, index, array) => (index < 2 ? array[1 - index] : part))
+  //   .join("-");
+
+  //   console.log('currentDay',currentDay);
 
   useEffect(() => {
     setReportsState((prevReportsState) => {
@@ -736,6 +800,8 @@ const disableInvalidDates = (day, to) => {
   return dayjs(day).isAfter(dayjs(to, 'DD-MM-YYYY'), 'day');
 };
 
+console.log('ULTIMATE',reportsState);
+
   const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
@@ -847,38 +913,51 @@ const disableInvalidDates = (day, to) => {
     });
   };
 
-  const ReportProps = {
-    PaperProps: {
-      style: {
-        maxHeight: '40.5vh',
-        marginTop : "-1vh",
-        width : "fit-content",
-        resize : 'horizontal'
-        // backgroundColor : "red"
-      },
+  const SelectProps = {
+    REPORT_SELECT_PROPS : {
+      PaperProps: {
+        style: {
+          maxHeight: '40.5vh',
+          marginTop : "-1vh",
+          width : "fit-content",
+          resize : 'horizontal',
+          boxShadow : "1px 2px 12px 0px rgba(0, 0, 0, 0.1)"
+          // backgroundColor : "red"
+        }
+      }
     },
-  };
-
-  const ParamProps = {
-    PaperProps: {
-      style: {
-        maxHeight: '23vh',
-        marginTop : "-1vh",
-         width : "fit-content",
-        resize : 'horizontal'
-        // backgroundColor : "red"
+    PARAM_SELECT_PROPS : {
+      PaperProps: {
+        style: {
+          maxHeight: '19.25vh',
+          marginTop : "-0.49vh",
+          overflow : "auto",
+           width : "fit-content",
+          // backgroundColor : "red"
+        },
       },
-    },
-  };
-
-  const SingleSelectProps = {
-    PaperProps: {
-      style: {
-        marginTop : "-1vh",
-        // backgroundColor : "red"
+      MenuListProps : {
+        sx : {
+          border : '1.5px solid rgba(161, 161, 161, 1)',
+          margin : 0,
+          borderTopLeftRadius:'0px',
+          borderTopRightRadius:'0px',
+          borderBottomLeftRadius:'4px',
+          borderBottomRightRadius:'4px',
+          padding : 0
+        }
+      }
+    },  
+    TYPE_SELECT_PROPS : {
+      PaperProps: {
+        style: {
+          marginTop : "-1vh",
+          boxShadow : "1px 2px 12px 0px rgba(0, 0, 0, 0.1)"
+          // backgroundColor : "red"
+        },
       },
-    },
-  };
+    }
+  }
   
 
   const displayRequestedReports = (
@@ -892,8 +971,12 @@ const disableInvalidDates = (day, to) => {
       <Box className="selected-param-details" key={detailIndex}>
         {/* {console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
         <FormControl variant='outlined' margin='none' sx={{ width : reportName === 'IP Logs' ? '25%' : "34%"}}>
-             <InputLabel color='success' htmlFor='selected-param-box' style={{marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name}</InputLabel>
-              <OutlinedInput       
+             {/* <InputLabel color='success' htmlFor='selected-param-box' style={{marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name}</InputLabel> */}
+              <TextField       
+                sx={inputControl.textfield} 
+                InputLabelProps={inputControl.inputLabelProps}
+                required
+                inputProps={inputControl.inputProps}
                 className="selected-param-box"
                 value={
                   detail.name === "Credit Card" ||
@@ -966,7 +1049,7 @@ const disableInvalidDates = (day, to) => {
                 }
                 inputMode='numeric'
                 InputAdornment={detail.name === "Mobile No." ? '+91' : ''}
-                 color='success'
+                 color='primary'
                />
               </FormControl>
 
@@ -983,7 +1066,7 @@ const disableInvalidDates = (day, to) => {
         shouldDisableDate={(day) => disableInvalidDates(day,detail.to, detail.to)}
         label='From'
         value={detail.from === 'From' ? null : dayjs(detail.from,'DD-MM-YYYY')}
-        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')}
+        maxDate={currentDate}
         defaultValue={dayjs.Dayjs}     
         slotProps={{
           popper: {
@@ -1022,7 +1105,7 @@ const disableInvalidDates = (day, to) => {
         label='To'
         value={detail.to === 'To' ? null : dayjs(detail.to,'DD-MM-YYYY')}
         defaultValue={dayjs.Dayjs}   
-        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')}  
+        maxDate={currentDate}  
         shouldDisableDate={(day) => dayjs(day).isBefore(dayjs(detail.from, 'DD-MM-YYYY'), 'day')}
         slotProps={{      
           popper: {
@@ -1059,8 +1142,10 @@ const disableInvalidDates = (day, to) => {
 
 { reportName === "IP Logs" && detailName !== 'mobileNoDetails' && (
             <FormControl variant='outlined' margin='none' sx={{ width : "23%", marginLeft : "2%"}}>
-             <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
-              <OutlinedInput
+              <TextField
+              sx={inputControl.textfield} 
+              InputLabelProps={inputControl.inputLabelProps}
+              inputProps={inputControl.inputProps}
                 placeholder={`Enter ${detail.name2}`}       
                  className="number-box"
                 value={detail.mobileno}              
@@ -1085,9 +1170,8 @@ const disableInvalidDates = (day, to) => {
                 //   borderWidth: "1px"}}
                 type='tel'
                 inputMode='tel'
-                sx={{ width : "100%"}}
                 InputAdornment={'+91'}
-                color='success'
+                color='primary'
                />
               </FormControl>
             )}
@@ -1096,16 +1180,17 @@ const disableInvalidDates = (day, to) => {
           <Box className='rrn-fields'>
 
         <FormControl variant='outlined' margin='none' sx={{ width : '57%'}}>
-             <InputLabel color='success' htmlFor='selected-param-box-3' style={{ marginTop : '-0.4vh',fontSize : "1vw"}}>{detail.name2}</InputLabel>
-              <OutlinedInput
+              <TextField
+              sx={inputControl.textfield} 
+              InputLabelProps={inputControl.inputLabelProps}
+              inputProps={inputControl.inputProps}
                 placeholder={`Enter ${detail.name2}`}       
                 className="selected-param-box-3"
                 value={detail.amount}              
                 autoComplete="off"
                 onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
-                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw'}}
+                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.5vh',fontSize : '1vw',width : '100%'}}
                 label={detail.name2}
-                sx={{ width : "100%"}}
                 margin='none'
                 onChange={(e) =>
                   handleAmountValue(
@@ -1117,7 +1202,7 @@ const disableInvalidDates = (day, to) => {
                 }
                 type='number'
                 inputMode='numeric'
-                color='success'
+                color='primary'
                />
               </FormControl>
 
@@ -1128,7 +1213,7 @@ const disableInvalidDates = (day, to) => {
         label='Date'
         value={detail.date === 'Date' ? null : dayjs(detail.date,'DD-MM-YYYY')}
         defaultValue={dayjs.Dayjs}    
-        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
+        maxDate={currentDate} 
         slotProps={{
           popper: {
             sx: {
@@ -1174,7 +1259,7 @@ const disableInvalidDates = (day, to) => {
             )
           }
           variant='standard'
-          input={<OutlinedInput fullWidth={false} />}
+          input={<OutlinedInput fullWidth={true} />}
           IconComponent={props => (
           <KeyboardArrowDownOutlinedIcon
             className="reports-type-dropdownicon"
@@ -1183,7 +1268,7 @@ const disableInvalidDates = (day, to) => {
           />
         )}
             renderValue={type => type}
-          MenuProps={SingleSelectProps}
+          MenuProps={SelectProps.TYPE_SELECT_PROPS}
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
           sx={{ padding : '0vh 0vw 0vh 0vw'}}
@@ -1284,8 +1369,19 @@ const disableInvalidDates = (day, to) => {
 
   console.log("ticket number length", ticketNumber);
 
+  const handleSubmit = () => {
+    route_to('/ViewUpdate');
+    // dispatch(setCreatedDate(currentDate));
+  };
+
+  const responsePayload = {
+     ticketNumber : ticketNumber,
+     ticketDescription : ticketDescription,
+     requestData : reportsState,
+     createdDate : currentDate
+  };
+
   return (
-  
     <Box className="page">
       <Box className="create-request-screen">
         <span style={{ fontWeight: '420', fontSize: "x-large" }}>
@@ -1295,60 +1391,53 @@ const disableInvalidDates = (day, to) => {
         <Box className="ticket-entry-section">
           <Box className="ticket-type-section">
 
-
-            <FormControl variant='outlined' margin='none' className="ticket-container">
-             <InputLabel color='success' htmlFor='ticket-number-input' style={{ marginTop : '-0.55vh',fontSize : "1vw"}}>Ticket Number</InputLabel>
-              <OutlinedInput
+          <FormControl variant='outlined' margin='none' className="ticket-number-container">
+              <TextField
+                sx={inputControl.textfield} 
+                InputLabelProps={inputControl.inputLabelProps}
+                inputProps={inputControl.inputProps}
                 placeholder="Enter ticket number"         
                 className="ticket-number-input"
                 value={ticketNumber === 0 ? "" : ticketNumber}
                 autoComplete="off"
-                size="small"
-                sx={{ width : '100%'}}
-                style={{ margin : '0vh 0vw 0vh 0vw', height : '5.6vh',fontSize : '1vw'}}
+                size='medium'           
+                style={{ margin : '0vh 0vw 0vh 0vw', height : 'auto',fontSize : '1vw'}}
                 label='Ticket Number'
                 margin='dense'
                 onChange={(e) => setTicketNumber(e.target.value)}
                 type='number'
+                required
                 inputMode='numeric'
-                color='success'
+                fullWidth={true}
+                onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
+                color='primary'
                />
               </FormControl>
 
      
-<FormControl variant='outlined' margin='none' className="ticket-container">
-<InputLabel color='success' htmlFor="ticket-description-input" shrink={(descriptionFocused === true || ((descriptionFocused === true || descriptionFocused === false) && ticketDescription.length > 1 ? true : false))} style={{ marginTop : descriptionFocused === true || ticketDescription.length > 1 ? '-1vh' : "-0.4vh",fontSize : "1vw"}}>Ticket Description</InputLabel>
+<FormControl variant='outlined' margin='none' className="ticket-description-container">
 <TextField
                 placeholder={descriptionFocused === true ? "Enter description" : ''}
                 variant='outlined'
-                maxRows={0}
+                required
+                label='Ticket Description'
                 onFocus={() => setDescriptionFocused(true)}
                 onBlur={() => setDescriptionFocused(false)}
-                // label='Ticket Description'
+                minRows={1}
                 multiline={true}
-                minRows={0}
-                sx={{ width : '100%'}}
+                sx={inputControl.textfield}
                 className="ticket-description-input"
                 autoComplete="off"
                 size='small'
-                inputProps={{
-                  style:{
-                    minHeight : '3.25vh',
-                    fontSize : '1vw',
-                    // maxHeight : 'auto',
-                    // display:'flex',
-                    // alignItems:'center',
-                    // justifyContent:'center',
-                   margin : '0.25vh 0vw 0vh 0vw',
-                    // maxHeight : 100
-                  }
-                }}
-                style={{ margin : '0vh 0vw 0vh 0vw',backgroundColor : 'white'}}
+                fullWidth={true}
+                inputProps={inputControl.textAreaProps}
+                InputLabelProps={inputControl.textAreaLabelProps}
+                style={{ margin : '0vh 0vw 0vh 0vw',backgroundColor : 'white',height : 'auto'}}
                 margin='normal'
                 type='text'
                 inputMode='text'
                 disabled={ticketNumber === 0 || ticketNumber.length === 0 ? true : false}
-                color='success'
+                color='primary'
                 value={ticketDescription}
                 onChange={(e) => setTicketDescription(e.target.value)}
                />
@@ -1382,7 +1471,7 @@ const disableInvalidDates = (day, to) => {
               } 
               return <Input contentEditable='false' sx={{ width : "99%" , fontSize : '95%',textOverflow : 'ellipsis',overflow : 'hidden'}} disableUnderline={true} value={reports.join(' , ')}></Input>;       
             }}
-          MenuProps={ReportProps}
+          MenuProps={SelectProps.REPORT_SELECT_PROPS}
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
           style={{ display:'flex',alignItems:'center',height : '5.6vh',fontSize : "1vw",marginTop : '0vh'}}
@@ -1403,10 +1492,12 @@ const disableInvalidDates = (day, to) => {
           <Box className="selected-reports-section" id="selected-reports-section">
             <h2 className="selected-reports-heading">Selected Requests</h2>
 
-            <Box>
+            <Accordion slots={{ transition: Fade }} slotProps={{ transition: { timeout: 1200 } }}>
               {selectedReports.length > 0 &&
                 selectedReports.map((request, reportIndex) => (
-                  <Box key={reportIndex}>
+                  <Accordion slots={{ transition: Fade }}
+                  slotProps={{ transition: { timeout: 1200 } }}
+                  key={reportIndex}>
                     
                     <Box className="selected-report-view">
                       <Box className="selected-report-header" style={{ borderBottomWidth : reportsState[reportIndex]?.viewState === 'Minimized' ? '0px' : '1.5px'}}>
@@ -1415,14 +1506,14 @@ const disableInvalidDates = (day, to) => {
                         </span>
  
                        { reportsState[reportIndex]?.viewState === 'Expanded' ? ( 
-                       <VisibilityOffRoundedIcon sx={{ color : "purple", fontSize : "1.56vw"}} onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
+                       <ExpandCircleDownOutlinedIcon sx={{ color : "rgba(95, 99, 104, 0.75)", fontSize : "2vw",transform : 'rotate(180deg)'}} onClick={() => handleMinimizedView(reportIndex)} className="view-icon" />
                       ) : (                
-                        <VisibilityRoundedIcon size='1' sx={{ color : "purple", fontSize : "1.56vw"}} onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
+                        <ExpandCircleDownOutlinedIcon sx={{ color : "rgba(95, 99, 104, 0.75)", fontSize : "2vw"}} onClick={() => handleExpandedView(reportIndex)} className="view-icon" />
                       )}
 
                       </Box>
 
-                      <Box className={"selected-report-details"} hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
+                      <Box className="selected-report-details" hidden={reportsState[reportIndex]?.viewState === 'Minimized' ? true : false}>
                         {reportsState[reportIndex] && (
                           <>
                            <Box hidden={request === 'Beneficiary details for Single IMPS transactions' || request === 'Beneficiary details for Single UPI transactions' ? true : false} sx={{ width : "100%"}}>
@@ -1436,10 +1527,10 @@ const disableInvalidDates = (day, to) => {
           displayEmpty
           onChange={(event) => handleParamSelection(event, reportIndex, request)}
           variant='standard'
-          input={<OutlinedInput fullWidth={true} sx={{alignItems : 'center', justifyContent : 'space-around',justifyItems:'left'}} />}
+          input={<OutlinedInput fullWidth={false} sx={{alignItems : 'center', justifyContent : 'space-around',justifyItems:'left'}} />}
           sx={{
             '& .reports-type-dropdownicon': {
-              paddingRight: '2vw' // Adjust the margin as needed
+              paddingRight: '2vw' 
             }
           }}
           IconComponent={props => (
@@ -1455,18 +1546,20 @@ const disableInvalidDates = (day, to) => {
               } 
               return <Input contentEditable='false' sx={{ width : "99%" , fontSize : '95%',textOverflow : 'ellipsis',overflow : 'hidden'}} disableUnderline={true} value={params.join(' , ')}></Input>;         
             }}
-          MenuProps={ParamProps}
+          MenuProps={SelectProps.PARAM_SELECT_PROPS}
           inputProps={{ 'aria-label': 'Without label' }}
           autoWidth={false}
           style={{ display:'flex',alignItems:'center',height : '5.6vh',fontSize : "1vw",marginTop : "0vh"}}
           placeholder="Select Detail"
         >
+         
           {availableParameters.map(param => (
-            <MenuItem key={param} value={param} style={{ display:'flex',borderStyle:'solid',borderColor : 'grey',borderBottomWidth : "1px", margin:'0vh 0vw 0vh 0vw',height:'5.5vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
+            <MenuItem key={param} value={param} style={{ display:'flex',borderStyle:'solid',borderColor : 'rgba(232, 232, 232, 1)',borderBottomWidth : "1.75px", margin:'0vh 0vw 0vh 0vw',height:'4.8vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
               <Checkbox checked={reportsState[reportIndex].selectedParams.indexOf(param) > -1} color='success' style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} icon={<CheckBoxOutlineBlankIcon sx={{ fontSize : "1.6vw"}} />} checkedIcon={<CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} />} />
               <ListItemText primary={param} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
             </MenuItem>
           ))}
+         
         </Select>
         </FormControl>
                         </Box>
@@ -1567,13 +1660,13 @@ const disableInvalidDates = (day, to) => {
                         )}
                       </Box>
                     </Box>
-                  </Box>
+                  </Accordion>
                 ))}
 
               {/* <Box className="selected-report-view"></Box> */}
 
               <Box className="action-buttons">
-                <Button className="submit-button" title="Submit">Submit</Button>
+                <Button className="submit-button" title="Submit" onClick={handleSubmit}>Submit</Button>
                 {/* <button className="submit-button">Submit</button> */}
                 <Button
                   className="preview-button"
@@ -1690,7 +1783,7 @@ const disableInvalidDates = (day, to) => {
                   </Box>
                 </Modal>
               </Box>
-            </Box>
+            </Accordion>
           </Box>
         )}
       </Box>
