@@ -177,13 +177,12 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 .view-request-details-screen {
   margin-left: 0vw;
   margin-top: 0vh;
-  min-height: 70vh;
-  max-height: auto;
+  /* height: 100vh; */
+  overflow: hidden;
   width: 100%;
   /* margin-left: 10vw; */
   border-radius: 8px;
   justify-content: center;
-  margin-bottom: 4vh;
 }
 
 *,
@@ -236,7 +235,7 @@ input::-webkit-inner-spin-button {
 .ticket-entry-section {
   margin-top: 2vh;
   max-height: auto;
-  width: 100%;
+  /* width: 100%; */
   flex-direction: column;
   background-color: white;
   padding: 3vh 1.75vw 3vh 1.75vw;
@@ -248,36 +247,33 @@ input::-webkit-inner-spin-button {
 
 .ticket-type-section {
   display: flex;
-  width: 100%;
+  /* background-color: blue; */
   flex-direction: row;
   max-height: auto;
   padding-bottom: 3vh;
-  gap: 2.5vw;
+  gap: 2.5%;
+  width: auto;
+  resize: horizontal;
 }
 
-.ticket-container {
+.ticket-number-container {
   margin-top: 0vh;
   max-height: auto;
-  width: 40%;
+  width: 40.1%;
 }
 
-.ticket-number-heading,
-.ticket-description-heading {
-  font-family: Roboto;
-  font-weight: 400;
-  background-color: white;
-  margin-left: 1.5vw;
-  margin-bottom: -0.95vh;
-  color: rgba(96, 96, 96, 1);
-  font-size: 0.88vw;
-  width: fit-content;
-  position: relative;
+.ticket-description-container {
+  margin-top: 0vh;
+  max-height: auto;
+  width: 36vw;
+  /* background-color: gold; */
+
 }
 
 .ticket-number-input,
 .ticket-description-input {
   z-index: 0;
-  width: 28vw;
+  /* width: 100%; */
 
   /* border-radius: 40px; */
 
@@ -285,7 +281,7 @@ input::-webkit-inner-spin-button {
   border-style: solid; */
 }
 
-.ticket-number-input-after,
+/* .ticket-number-input-after,
 .ticket-description-input-after {
   z-index: 0;
   height: 5.75vh;
@@ -298,7 +294,7 @@ input::-webkit-inner-spin-button {
   border-width: 1.5px;
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
-}
+} */
 
 .ticket-number-input::placeholder,
 .ticket-description-input::placeholder {
@@ -389,7 +385,7 @@ input::-webkit-inner-spin-button {
 }
 
 .number-box {
-  width: 12.35vw;
+  width: 100%;
   height: 5.5vh;
 }
 
@@ -471,7 +467,7 @@ input::-webkit-inner-spin-button {
   color: red;
   border-radius: 5px;
   border-width: 1.5px;
-  border-color: rgba(128, 128, 128, 0.74);
+  border-color: red;
   border-style: solid;
 }
 
@@ -594,12 +590,112 @@ input::-webkit-inner-spin-button {
   gap: 0.4vw;
 }
 
+.preview-button:hover,
+.reports-type-dropdownicon:hover,
+.ticket-number-input:hover,
+.ticket-number-input-after:hover,
+.ticket-description-input-after:hover,
+.ticket-description-input:hover,
+.close-preview:hover,
+.selected-param-box:hover,
+.add-remove-button:hover,
+.selected-param-box-2:hover,
+.selected-param-box-3:hover,
+.request-filter-section:hover,
+.request-searchbar:hover,
+.view-details-button:hover,
+.mail-draft-button:hover,
+.number-box:hover,
+.retry-button:hover {
+  box-shadow: 0px 0px 12px 0px rgba(99, 99, 99, 0.234);
+  transition: all 0.4s;
+  border-width: 1px solid white;
+  /* border-radius: 40px; */
+}
+.retry-button:hover {
+  background-color: rgb(255 231 232);
+}
+
+.expand-button {
+  border-width: 0px;
+  background-color: transparent;
+}
+.submit-button:hover {
+  box-shadow: 1px 2px 12px 5px rgba(56, 50, 121, 0.48);
+  transition: all 0.4s;
+}
+
+.reports-type-dropdownicon:hover,
+.calendar-icon:hover,
+.view-icon:hover,
+.close-preview-button:hover,
+.expand-icon:hover {
+  box-shadow: 1px 2px 12px 0px rgba(56, 50, 121, 0.157);
+  transition: all 0.4s;
+  border-radius: 40px;
+}
+
+.MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-adornedStart.css-1eed5fa-MuiInputBase-root-MuiInput-root {
+  font-weight: 500;
+}
+
+/* fieldset.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border: none;
+} */
+
+.MuiSelect-standard {
+  background-color: rgb(255, 0, 0);
+}
+
+.MuiSelect-select {
+  background-color: red;
+}
+
+.MuiSelect-root {
+  background-color: red;
+}
+
+.MuiTextField-root {
+  border: 2px solid blue;
+}
+
+.MuiSelect-icon {
+  margin-right: 0.75vw;
+}
+/* .Mui-selected {
+  background-color: transparent;
+} */
+
+.MuiCheckbox-colorSecondary {
+  background-color: transparent;
+}
+
+/* .MuiCheckbox-colorError.Mui-checked {
+  color: red !important;
+  background-color: transparent !important;
+  } */
+
+.MuiListItemText-secondary {
+  color: black;
+  opacity: 1;
+}
+
+.table-page {
+  margin-left: 0vw;
+  background-color: transparent;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+  background-color: rgb(243, 242, 248);
+}
+
 .view-request-container,
 .view-details-container {
   display: flex;
   margin-top: 2vh;
-  min-height: 75.25vh;
-  max-height: auto;
   width: 100%;
   flex-direction: column;
   background-color: white;
@@ -679,6 +775,8 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-self: center;
   width: 100%;
+  height: auto;
+  overflow: scroll;
 }
 
 .detail-buttons {
@@ -691,7 +789,7 @@ input::-webkit-inner-spin-button {
 .view-details-button,
 .mail-draft-button {
   display: flex;
-  width: 8.4vw;
+  width: 75%;
   height: 6vh;
   flex-direction: row;
   border-radius: 4px;
@@ -734,95 +832,6 @@ input::-webkit-inner-spin-button {
   font-size: 16px;
 }
 
-.preview-button:hover,
-.reports-type-dropdownicon:hover,
-.ticket-number-input:hover,
-.ticket-number-input-after:hover,
-.ticket-description-input-after:hover,
-.ticket-description-input:hover,
-.close-preview:hover,
-.selected-param-box:hover,
-.add-remove-button:hover,
-.selected-param-box-2:hover,
-.selected-param-box-3:hover,
-.request-filter-section:hover,
-.request-searchbar:hover,
-.view-details-button:hover,
-.mail-draft-button:hover,
-.number-box:hover,
-.retry-button:hover {
-  box-shadow: 0px 0px 12px 0px rgba(56, 50, 121, 0.234);
-  transition: all 0.4s;
-  /* border-radius: 40px; */
-}
-.retry-button:hover {
-  background-color: rgb(255 231 232);
-}
-
-.expand-button {
-  border-width: 0px;
-  background-color: transparent;
-}
-.submit-button:hover {
-  box-shadow: 1px 2px 12px 5px rgba(56, 50, 121, 0.48);
-  transition: all 0.4s;
-}
-
-.reports-type-dropdownicon:hover,
-.calendar-icon:hover,
-.view-icon:hover,
-.close-preview-button:hover,
-.expand-icon:hover {
-  box-shadow: 1px 2px 12px 0px rgba(56, 50, 121, 0.157);
-  transition: all 0.4s;
-  border-radius: 40px;
-}
-
-.MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-adornedStart.css-1eed5fa-MuiInputBase-root-MuiInput-root {
-  font-weight: 500;
-}
-
-/* fieldset.MuiOutlinedInput-notchedOutline.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  border: none;
-} */
-
-.MuiSelect-standard {
-  background-color: rgb(255, 0, 0);
-}
-
-.MuiSelect-select {
-  background-color: red;
-}
-
-.MuiSelect-root {
-  background-color: red;
-}
-
-.MuiTextField-root {
-  border: 2px solid blue;
-}
-
-.MuiSelect-icon {
-  margin-right: 0.75vw;
-}
-/* .Mui-selected {
-  background-color: transparent;
-} */
-
-.MuiCheckbox-colorSecondary {
-  background-color: transparent;
-}
-
-/* .MuiCheckbox-colorError.Mui-checked {
-  color: red !important;
-  background-color: transparent !important;
-  } */
-
-.MuiListItemText-secondary {
-  color: black;
-  opacity: 1;
-}
-
 .view-table {
   border-radius: 11px;
   display: flex;
@@ -836,14 +845,18 @@ input::-webkit-inner-spin-button {
 }
 
 .view-table-container {
-  margin-bottom: 4vh;
+  margin-bottom: 2.5vh;
   border-bottom-width: 0px;
   align-self: center;
+  max-height: 58.5vh; 
+  overflow: scroll;
+}
+
+.view-table-header {
 }
 
 .view-table-body {
   border-bottom-width: 0px;
-  border-right-width: 1px;
   border-style: solid;
   border-color: rgba(225, 225, 225, 1);
 }
@@ -869,3 +882,75 @@ input::-webkit-inner-spin-button {
   font-weight: 400;
   font-size: 0.92vw;
 }
+
+.filter-menu-header {
+  height: 4vh;
+  padding-left : 0.75vw;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-style: solid;
+  border-color : rgba(232, 232, 232, 1);
+}
+
+.filter-menu-heading {
+color : rgba(96, 96, 96, 1);
+font-weight : 500;
+font-size: 0.2vw;
+}
+
+.date-filter-section {
+
+}
+
+.table-pagination {
+  height: auto;
+  width: 100%;
+}
+
+.MuiTablePagination-root {
+  display: flex;
+  align-items: center;
+}
+
+.MuiTablePagination-toolbar {
+}
+
+.MuiTablePagination-actions {
+
+}
+
+.MuiTablePagination-displayedRows {
+  display: flex;
+  align-self: center;
+  margin-top: 5%;
+}
+
+.MuiTablePagination-selectLabel {
+   align-self: center;
+}
+
+.MuiTablePagination-input {
+  width: 10%;
+}
+
+.MuiTablePagination-select {
+  background-color: blue;
+}
+
+.MuiTablePagination-menuItem {
+  background-color: blue;
+}
+
+.MuiTablePagination-selectIcon {
+  margin-top: -0.125vh;
+  opacity : 0.85
+}
+
+.MuiTableBody-root {
+  border-bottom-width: 0px;
+  box-shadow: none;
+}
+
+
