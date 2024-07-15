@@ -5,15 +5,17 @@ import Sidebar from "../components/Sidebar";
 import MainComponent from "../components/MainComponent";
 
 import Box from "@mui/material/Box";
-
 import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
+import { useTranslation } from "react-i18next";
 
 const primaryBG = "white";
 const secondaryBG = "gray";
 
-export default function ClippedDrawer() {
+export default function SharedLayout() {
+  const { t } = useTranslation();
+
   return (
     <Box sx={{ display: "flex", maxHeight: "100vh" }}>
       <CssBaseline />
@@ -40,6 +42,8 @@ export default function ClippedDrawer() {
         }}
       >
         <Toolbar />
+        <span>{t("greeting")}</span>
+
         <MainComponent />
       </Box>
     </Box>
