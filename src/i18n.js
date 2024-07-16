@@ -2,6 +2,8 @@ import i18n from "i18next";
 
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
+import { English } from "./locale/English";
+import { Hindi } from "./locale/Hindi";
 
 i18n
   .use(LanguageDetector)
@@ -11,14 +13,10 @@ i18n
     lng: "en",
     resources: {
       en: {
-        translation: {
-          greeting: "Hello, Welcome!",
-        },
+        translation: English,
       },
       hi: {
-        translation: {
-          greeting: "नमस्ते, स्वागत है!",
-        },
+        translation: Hindi,
       },
     },
   });
