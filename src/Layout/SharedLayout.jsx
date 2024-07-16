@@ -42,7 +42,6 @@ export default function SharedLayout() {
         }}
       >
         <Toolbar />
-        <span>{t("greeting")}</span>
 
         <MainComponent />
       </Box>

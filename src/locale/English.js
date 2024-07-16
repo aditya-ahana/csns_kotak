@@ -1,5 +1,5 @@
 export const English = {
-  greeting: "Hello, Welcome!",
+  // greeting: "Hello, Welcome!",
 
   // sidenav
   dashboard: "Dashboard",
@@ -56,4 +56,7 @@ export const English = {
   mailDraft: "Mail Draft",
   subject: "Subject",
   copyText: "Copy Text",
+
+  // view details
+  viewDetails: "View Details",
 };

@@ -1,5 +1,5 @@
 export const Hindi = {
-  greeting: "नमस्ते, स्वागत है!",
+  // greeting: "नमस्ते, स्वागत है!",
 
   // sidenav
   dashboard: "डैशबोर्ड",
@@ -31,9 +31,9 @@ export const Hindi = {
   type: "प्रकार",
   amount: "राशि",
   enterAmount: "राशि डालें",
-  date: "तारीख",
+  date: "दिनांक",
   submit: "जमा करना",
-  preview: "पूर्व दर्शन",
+  preview: "देखें",
 
   // view request
   viewRequest: "अनुरोध देखें",
@@ -56,4 +56,7 @@ export const Hindi = {
   mailDraft: "मेल ड्राफ्ट",
   subject: "विषय",
   copyText: "कॉपी करें",
+
+  // view details
+  viewDetails: "विवरण देखें",
 };

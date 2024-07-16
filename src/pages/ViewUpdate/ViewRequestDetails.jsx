@@ -18,12 +18,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
+import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
 import { Typography } from "antd";
+import { useTranslation } from "react-i18next";
 
 export default function ViewRequestDetails() {
+  const { t } = useTranslation();
+
   const [viewDetailsAction, setViewDetailsAction] = useState();
 
   const location = useLocation();
@@ -512,33 +515,35 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <span className="view-ticket-header">View Details</span>
+        <span className="view-ticket-header">{t("viewDetails")}</span>
 
         <Box className="view-details-container">
-          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70vh"}}>
+          <TableContainer
+            component={Paper}
+            className="view-table-container"
+            sx={{ boxShadow: "none", maxHeight: "70vh" }}
+          >
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
                 <TableRow>
                   {viewRequestTableHeaders.map((header) => (
                     <TableCell
                       align="center"
-                      sx={
-                        {
-                          border : "1px solid rgba(225, 225, 225, 1)",
-                          backgroundColor: "rgb(243, 242, 248)",
-                          width:
-                            header === "Ticket Id"
-                              ? "5vw"
-                              : header === "Requests"
-                                ? "15vw"
-                                : header === "Status"
+                      sx={{
+                        border: "1px solid rgba(225, 225, 225, 1)",
+                        backgroundColor: "rgb(243, 242, 248)",
+                        width:
+                          header === "Ticket Id"
+                            ? "5vw"
+                            : header === "Requests"
+                              ? "15vw"
+                              : header === "Status"
+                                ? "9vw"
+                                : header === "Created Date" ||
+                                    header === "Action"
                                   ? "9vw"
-                                  : header === "Created Date" ||
-                                      header === "Action"
-                                    ? "9vw"
-                                    : "0vw",
-                        }
-                      }
+                                  : "0vw",
+                      }}
                     >
                       {header}
                     </TableCell>
@@ -549,11 +554,15 @@ export default function ViewRequestDetails() {
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px"}}>
+                      <TableCell
+                        align="center"
+                        className="view-table-data-row"
+                        sx={{ borderLeftWidth: "1px" }}
+                      >
                         {row.ticketId}
                       </TableCell>
                       <TableCell className="view-table-data-row">
-                            {row.request}
+                        {row.request}
                       </TableCell>
                       <TableCell className="view-table-data-row" align="center">
                         <Box
@@ -561,44 +570,39 @@ export default function ViewRequestDetails() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            maxHeight : '2vh'
+                            maxHeight: "2vh",
                           }}
                         >
                           <Box
                             alignSelf={"center"}
-                            sx={
-                              {
-                                backgroundColor:
-                                  row.status === "In-progress"
-                                    ? "rgba(255, 238, 207, 1)"
-                                    : row.status === "Completed"
-                                      ? "rgba(205, 252, 229, 1)"
-                                      : row.status === "Failed"
-                                        ? "rgba(255, 220, 222, 1)"
-                                        : "",
-                                color:
-                                  row.status === "In-progress"
-                                    ? "rgba(232, 125, 0, 1)"
-                                    : row.status === "Completed"
-                                      ? "rgba(21, 122, 73, 1)"
-                                      : row.status === "Failed"
-                                        ? "rgba(210, 26, 26, 1)"
-                                        : "",
-                              }
-                            }
+                            sx={{
+                              backgroundColor:
+                                row.status === "In-progress"
+                                  ? "rgba(255, 238, 207, 1)"
+                                  : row.status === "Completed"
+                                    ? "rgba(205, 252, 229, 1)"
+                                    : row.status === "Failed"
+                                      ? "rgba(255, 220, 222, 1)"
+                                      : "",
+                              color:
+                                row.status === "In-progress"
+                                  ? "rgba(232, 125, 0, 1)"
+                                  : row.status === "Completed"
+                                    ? "rgba(21, 122, 73, 1)"
+                                    : row.status === "Failed"
+                                      ? "rgba(210, 26, 26, 1)"
+                                      : "",
+                            }}
                             className="view-table-status-buttons"
                           >
                             <span>{row.status}</span>
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell 
-                      align='center' className="view-table-data-row">
+                      <TableCell align="center" className="view-table-data-row">
                         {row.createdDateTime}
                       </TableCell>
-                      <TableCell 
-                      align='center'
-                      className="view-table-data-row">
+                      <TableCell align="center" className="view-table-data-row">
                         <Box>
                           {/* {row.status === "Failed" ? (
                           <Button className="retry-button">
@@ -618,10 +622,17 @@ export default function ViewRequestDetails() {
                                 setViewDetailsAction(index);
                               }
                             }}
-                          >                      
+                          >
                             <ExpandCircleDownOutlinedIcon
                               size="1.95vw"
-                              sx={{ color : 'rgba(95, 99, 104, 0.8)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
+                              sx={{
+                                color: "rgba(95, 99, 104, 0.8)",
+                                fontSize: "2.2vw",
+                                transform:
+                                  viewDetailsAction === index
+                                    ? "rotate(180deg)"
+                                    : "",
+                              }}
                               color="rgba(95, 99, 104, 1)"
                               className="expand-icon"
                             />
@@ -644,16 +655,12 @@ export default function ViewRequestDetails() {
                               }}
                             >
                               <TableCell
-                               
                                 // height="6vh"
                                 className="border-0 p-0"
                               >
                                 {/* {row.ticketId} */}
                               </TableCell>
-                              <TableCell
-                               
-                                className="border-0 p-0"
-                              >
+                              <TableCell className="border-0 p-0">
                                 <Box
                                   // style={{ alignSelf: "center" }}
                                   className="d-flex align-items-center justify-content-center"
@@ -666,48 +673,40 @@ export default function ViewRequestDetails() {
                                   </span>
                                 </Box>
                               </TableCell>
-                              <TableCell
-                                className="border-0 p-0"
-                              >
+                              <TableCell className="border-0 p-0">
                                 <Box className="d-flex align-items-center justify-content-center">
                                   <Box
                                     // alignSelf={"center"}
-                                    className='view-table-status-buttons'
-                                    sx={
-                                      {
-                                        backgroundColor:
-                                          row.status === "In-progress"
-                                            ? "rgba(255, 238, 207, 1)"
-                                            : row.status === "Completed"
-                                              ? "rgba(205, 252, 229, 1)"
-                                              : row.status === "Failed"
-                                                ? "rgba(255, 220, 222, 1)"
-                                                : "",
-                                        color:
-                                          row.status === "In-progress"
-                                            ? "rgba(232, 125, 0, 1)"
-                                            : row.status === "Completed"
-                                              ? "rgba(21, 122, 73, 1)"
-                                              : row.status === "Failed"
-                                                ? "rgba(210, 26, 26, 1)"
-                                                : "",
-                                      }
-                                    }
+                                    className="view-table-status-buttons"
+                                    sx={{
+                                      backgroundColor:
+                                        row.status === "In-progress"
+                                          ? "rgba(255, 238, 207, 1)"
+                                          : row.status === "Completed"
+                                            ? "rgba(205, 252, 229, 1)"
+                                            : row.status === "Failed"
+                                              ? "rgba(255, 220, 222, 1)"
+                                              : "",
+                                      color:
+                                        row.status === "In-progress"
+                                          ? "rgba(232, 125, 0, 1)"
+                                          : row.status === "Completed"
+                                            ? "rgba(21, 122, 73, 1)"
+                                            : row.status === "Failed"
+                                              ? "rgba(210, 26, 26, 1)"
+                                              : "",
+                                    }}
                                   >
                                     <span>{row.status}</span>
                                   </Box>
                                 </Box>
                               </TableCell>
-                              <TableCell
-                                className="border-0 p-0"
-                              >
+                              <TableCell className="border-0 p-0">
                                 <Box className="d-flex align-items-center justify-content-center">
                                   {row.createdDateTime}
                                 </Box>
                               </TableCell>
-                              <TableCell
-                                className="border-0 p-0"
-                              >
+                              <TableCell className="border-0 p-0">
                                 <Box className="d-flex align-items-center justify-content-center">
                                   {row.status === "Failed" ? (
                                     <Button
