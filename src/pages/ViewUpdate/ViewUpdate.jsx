@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineFilterAlt, MdViewCarousel } from "react-icons/md";
 import { HiMail } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { IoIosListBox } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,6 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
-import { CheckBoxOutlineBlankOutlined } from "@mui/icons-material";
 
 export default function ViewRequest() {
   const [ mailDraftModal, setMailDraftModal ] = useState(false);
@@ -131,6 +130,47 @@ export default function ViewRequest() {
     "Failed"
   ];
 
+  const datePickerControl =  {
+   slotProps : {
+      popper: {
+        sx: {
+          ".MuiPaper-root": { minheight : '44vh',maxHeight : "44vh",borderRadius : "10px" },
+          '&.MuiPickersPopper-root': { padding:0},
+          ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
+        },
+      },
+    openPickerIcon : {
+     sx : {
+       fontSize : "1.36vw"
+     }
+    },
+    field : {
+      readOnly : true,
+    },
+    textField : {
+      placeholder : "Date",
+      InputLabelProps : {
+        sx : {
+          fontSize : "1vw",
+          opacity : "0.6"
+        }
+      },
+      size:'small',
+      "aria-readonly":true,
+      sx:{
+        "& .MuiInputBase-input": {
+         height:'2.5vh',
+         fontSize:"0.85vw",
+          marginLeft : '-7%',
+        },
+      }
+     }
+    },
+    sx : { 
+      height : "5.5vh",backgroundColor : 'transparent'
+    }
+  }
+
   const requestDetails = [
     {
       ticketId: "1300",
@@ -142,7 +182,7 @@ export default function ViewRequest() {
         "Device Details" ,
       ],
       status: "In-progress",
-      createdDate: "12-05-2024",
+      createdDate: "31-05-2024",
       createdBy: "System",
     },
     {
@@ -379,19 +419,59 @@ export default function ViewRequest() {
     }
   }, [ selectedStatus , statusFilteredData ]);
 
-  const dateRangeFilteredData = statusFilteredData.filter((ticket) => {
-    const createdDate = new Date(ticket.createdDate);
-    const from = fromDate ? new Date(fromDate) : null;
-    const to = toDate ? new Date(toDate) : null;
+  const dateRangeFilteredData = ticketDetails.filter((ticket) => {
+    const createdDate = dayjs(ticket.createdDate,'DD-MM-YYYY');
+    const from = fromDate !== '' ? dayjs(fromDate,'DD-MM-YYYY') : null;
+    const to = toDate !== '' ? dayjs(toDate, 'DD-MM-YYYY') : null;
 
     if (from && to) {
-      return createdDate >= from && createdDate <= to;
+      return dayjs(createdDate,'DD-MM-YYYY').isAfter(dayjs(from, 'DD-MM-YYYY'), 'day') && dayjs(createdDate,'DD-MM-YYYY').isBefore(dayjs(to,'DD-MM-YYYY'));
+    }
+
+
+    return true;
+  });
+
+  const dateAndStatusRangeFilteredData = statusFilteredData.filter((ticket) => {
+    const createdDate = dayjs(ticket.createdDate,'DD-MM-YYYY');
+    const from = fromDate !== '' ? dayjs(fromDate,'DD-MM-YYYY') : null;
+    const to = toDate !== '' ? dayjs(toDate, 'DD-MM-YYYY') : null;
+
+    if (from && to) {
+      return dayjs(createdDate,'DD-MM-YYYY').isAfter(dayjs(from, 'DD-MM-YYYY'), 'day') && dayjs(createdDate,'DD-MM-YYYY').isBefore(dayjs(to,'DD-MM-YYYY'));
     }
 
     return true;
   });
 
-  const requestData = searchInput.length > 0 ? searchResult : selectedStatus !== '' ? filteredResult : fromDate !== '' && toDate !== '' ? dateRangeFilteredData : ticketDetails;
+  const status_filtered = selectedStatus.length > 0;
+  const not_status_filtered = selectedStatus.length === 0;
+
+  const date_ranged = fromDate !== '' && toDate !== '';
+  const not_date_ranged = fromDate === '' && toDate === '';
+
+  // const requestData = searchInput.length > 0 ? searchResult : selectedStatus !== '' ? dateRangeFilteredData : fromDate !== '' && toDate !== '' ? dateRangeFilteredData : ticketDetails;
+
+  const clearStatusFilter = () => {
+   if(status_filtered){    
+    setSelectedStatus('');
+   }
+};
+
+const clearDateRangeFilter = () => {
+   if(date_ranged){
+    setFromDate('');
+    setToDate('');
+   }
+};
+
+
+  const requestData = 
+  searchInput.length > 0 ? searchResult : 
+  (status_filtered && not_date_ranged) ? statusFilteredData : 
+  (status_filtered && date_ranged) ? dateAndStatusRangeFilteredData : 
+  (not_status_filtered && date_ranged) ? dateRangeFilteredData  :  
+  ticketDetails;
 
   console.log('Checked',checked);
   console.log('Selected status',selectedStatus);
@@ -432,12 +512,11 @@ export default function ViewRequest() {
                   size="1.45vw"
                 /> */}
 
-                <FilterAltIcon
+                <FilterAltOutlinedIcon
                   className="filter-icon"
-                  sx={{ color: "#606060" }}
-                  size="1.45vw"
+                  sx={{ color: "#606060",fontSize: '1.5vw' }}
                 />
-                <Typography className="filter-heading" sx={{ fontWeight : 500 }}>Filter</Typography>
+                <Typography className="filter-heading" sx={{ fontWeight : 500 , fontSize: '1.04vw' }}>Filter</Typography>
               </Button>
 
               <Menu
@@ -498,48 +577,13 @@ export default function ViewRequest() {
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker 
         format="DD-MM-YYYY"
-        // label='Date'
+        label='From'
         value={fromDate === '' ? null : dayjs(fromDate,'DD-MM-YYYY')}
         // defaultValue=''   
         maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
         defaultValue={null}
-        slotProps={{
-          popper: {
-            sx: {
-              ".MuiPaper-root": { height : '42vh',borderRadius : "10px" },
-              '&.MuiPickersPopper-root': { padding:0},
-              ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
-            },
-          },
-        openPickerIcon : {
-         sx : {
-           fontSize : "1.36vw"
-         }
-        },
-        field : {
-          readOnly : true,
-        },
-        textField : {
-          label : "From",
-          placeholder:'From',
-          InputLabelProps : {
-            sx : {
-              fontSize : "1vw",
-              opacity : "0.6"
-            }
-          },
-          size:'small',
-          "aria-readonly":true,
-          sx:{
-            "& .MuiInputBase-input": {
-             height:'2.5vh',
-             fontSize:"0.85vw",
-              marginLeft : '-7%',
-            },
-          }
-        }
-        }}
-        sx={{ height : "5.5vh",backgroundColor : 'transparent'}}
+        slotProps={datePickerControl.slotProps}
+        sx={datePickerControl.sx}
         onChange={(date) => handleFromDate(date)}
       />
     </LocalizationProvider>
@@ -553,56 +597,32 @@ export default function ViewRequest() {
    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker 
         format="DD-MM-YYYY"
+        label='To'
         value={toDate === '' ? null : dayjs(toDate,'DD-MM-YYYY')}
         // defaultValue=''   
         maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
         defaultValue={null}
-        slotProps={{
-          popper: {
-            sx: {
-              ".MuiPaper-root": { height : '42vh',borderRadius : "10px" },
-              '&.MuiPickersPopper-root': { padding:0},
-              ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
-            },
-          },
-        openPickerIcon : {
-         sx : {
-           fontSize : "1.36vw"
-         }
-        },
-        field : {
-          readOnly : true,
-        },
-        textField : {
-          label : "To",
-          placeholder:'To',
-          InputLabelProps : {
-            sx : {
-              fontSize : "1vw",
-              opacity : "0.6"
-            }
-          },
-          size:'small',
-          "aria-readonly":true,
-          sx:{
-            "& .MuiInputBase-input": {
-             height:'2.5vh',
-             fontSize:"0.85vw",
-              marginLeft : '-7%',
-            },
-          }
-        }
-        }}
-        sx={{ height : "5.5vh",backgroundColor : 'transparent'}}
+        slotProps={datePickerControl.slotProps}
+        sx={datePickerControl.sx}
         onChange={(date) => handleToDate(date)}
       />
     </LocalizationProvider>
   </Box>
-
-
-
-
   </Box>
+
+  {(status_filtered || date_ranged) && (
+   <Box sx={{display : "flex",padding : "1.8vh 0.8vw 0.15vh 0vw",alignItems : "center",justifyContent : "flex-end"}}>
+    <Button 
+    onClick={() => {
+      clearStatusFilter();
+      clearDateRangeFilter();
+      handleCloseFilterMenu();
+    }}
+    className='clear-button' style={{ backgroundColor : "rgba(237, 28, 36, 1)",borderRadius : "4px",border : 'none',width : "30%",height : '3.6vh',fontWeight : 600 , color : "white",fontSize : "0.92vw"}}>
+    Clear
+    </Button>
+   </Box>
+   )}
 
 
                  </Box>
@@ -614,19 +634,21 @@ export default function ViewRequest() {
               <Box className="view-table">
                 <TableContainer component={Paper} 
                 className="view-table-container" sx={{ boxShadow : "none"}}>
-                  <Table 
+                  <Table
                   stickyHeader={true}
                   aria-label="view-request-table">
                     <TableHead>
                       <TableRow>
-                        {viewRequestTableHeaders.map((header) => (
+                        {viewRequestTableHeaders.map((header,index) => (
                           <TableCell
                            align='center'
+                           key={index}
                            className="view-table-header"
                             sx={
                               {
                                 border : "1px solid rgba(225, 225, 225, 1)",
                                 backgroundColor :'rgba(245, 248, 250, 1)',
+                                fontSize: '1vw',
                                 borderLeftWidth:header === "Ticket Id" ? '1px' : '0px',
                                 width:
                                   header === "Ticket Id"
@@ -654,8 +676,9 @@ export default function ViewRequest() {
               .map((detail, i) => (
                         <TableRow key={i} className="table-body-row">
                           <TableCell 
+                           key={i}
                           className="view-table-data-row"
-                          sx={{ borderLeftWidth : "1px"}}
+                          sx={{ borderLeftWidth : "1px",fontSize: '1vw' }}
                           align='center'>
                             {detail.ticketid}
                           </TableCell>
@@ -663,6 +686,7 @@ export default function ViewRequest() {
                             <Box sx={{ alignSelf: "center",  }}>     
                               {detail.requests.map((req, index) => (
                                 <Typography
+                                 key={index}
                                  sx={{ fontSize : '1vw',lineHeight: "3.6vh"}}
                                 >{`${index + 1}. ${req}`}</Typography>
                               ))}
@@ -701,16 +725,16 @@ export default function ViewRequest() {
                                   }
                                 }
                               >
-                                <Typography variant='body2'>{detail.status}</Typography>
+                                <Typography variant='body2' sx={{ fontSize: '1vw' }}>{detail.status}</Typography>
                               </Box>
                             </Box>
                           </TableCell>
                           <TableCell 
-                           align='center' className="view-table-data-row">
+                           align='center' className="view-table-data-row" sx={{ fontSize: '1vw' }}>
                             {detail.createdDate}
                           </TableCell>
                           <TableCell 
-                          align='center' className="view-table-data-row">
+                          align='center' className="view-table-data-row" sx={{ fontSize: '1vw' }}>
                             {detail.requester}
                           </TableCell>
                           <TableCell className="view-table-data-row">
@@ -718,6 +742,7 @@ export default function ViewRequest() {
                               <Button
                                 variant="outlined"
                                 className="view-details-button"
+                                color='darkblue'
                                 style={{ alignSelf: "center" }}
                                 onClick={() =>
                                   route_to("/viewRequestDetails", {
@@ -728,9 +753,9 @@ export default function ViewRequest() {
                                 }
                               >
                                 <DescriptionOutlinedIcon
-                                  sx={{ fontSize: "1.6vw" }}
+                                  sx={{ fontSize: "1.75vw" }}
                                 />
-                                <Typography variant='body2' fontWeight={500}>Details</Typography>
+                                <Typography variant='body2' fontWeight={500} sx={{ fontSize: '1vw' }} color='rgb(0, 97, 201)'>Details</Typography>
                               </Button>
                               <Button
                                 variant="outlined"
@@ -764,7 +789,7 @@ export default function ViewRequest() {
                                         : "rgba(161, 161, 161, 0.6)",
                                   }}
                                 />
-                                <Typography variant="body2" fontWeight={500}>E-Draft</Typography>
+                                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '1vw' }}>E-Draft</Typography>
                               </Button>
                             </Box>
                           </TableCell>

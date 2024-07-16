@@ -1,7 +1,6 @@
 import React from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import Typography from "@mui/material/Typography";
-
 import logo from "../static/logo.png";
 
 export default function Header() {

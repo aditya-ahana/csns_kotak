@@ -5,8 +5,8 @@ import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAlt } from "react-icons/md";
 // import Elements from "../../Elements/Elements";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { TbReload } from "react-icons/tb";
-import { RiFilter2Line } from "react-icons/ri";
+// import { TbReload } from "react-icons/tb";
+// import { RiFilter2Line } from "react-icons/ri";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -526,6 +526,7 @@ export default function ViewRequestDetails() {
                         {
                           border : "1px solid rgba(225, 225, 225, 1)",
                           backgroundColor: "rgb(243, 242, 248)",
+                          fontSize : "1vw",
                           width:
                             header === "Ticket Id"
                               ? "5vw"
@@ -549,13 +550,13 @@ export default function ViewRequestDetails() {
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px"}}>
+                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px",fontSize : "1vw"}}>
                         {row.ticketId}
                       </TableCell>
-                      <TableCell className="view-table-data-row">
+                      <TableCell className="view-table-data-row" sx={{fontSize : "1vw"}}>
                             {row.request}
                       </TableCell>
-                      <TableCell className="view-table-data-row" align="center">
+                      <TableCell className="view-table-data-row" align="center" sx={{fontSize : "1vw"}}>
                         <Box
                           sx={{
                             display: "flex",
@@ -593,7 +594,7 @@ export default function ViewRequestDetails() {
                         </Box>
                       </TableCell>
                       <TableCell 
-                      align='center' className="view-table-data-row">
+                      align='center' className="view-table-data-row" sx={{fontSize : "1vw"}}>
                         {row.createdDateTime}
                       </TableCell>
                       <TableCell 
@@ -621,7 +622,7 @@ export default function ViewRequestDetails() {
                           >                      
                             <ExpandCircleDownOutlinedIcon
                               size="1.95vw"
-                              sx={{ color : 'rgba(95, 99, 104, 0.8)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
+                              sx={{ color : 'rgba(95, 99, 104, 0.87)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
                               color="rgba(95, 99, 104, 1)"
                               className="expand-icon"
                             />
