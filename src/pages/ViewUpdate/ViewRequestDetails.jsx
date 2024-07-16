@@ -3,17 +3,13 @@ import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAlt } from "react-icons/md";
-// import Elements from "../../Elements/Elements";
 import { IoMdArrowDropdown } from "react-icons/io";
-// import { TbReload } from "react-icons/tb";
-// import { RiFilter2Line } from "react-icons/ri";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-// import Sidenavsample from "../../../static/sidenavsample";
 import { useLocation, useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -21,7 +17,7 @@ import { Button } from "@mui/material";
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
-import { Typography } from "antd";
+import { Typography } from '@mui/material';
 
 export default function ViewRequestDetails() {
   const [viewDetailsAction, setViewDetailsAction] = useState();
@@ -512,10 +508,9 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <span className="view-ticket-header">View Details</span>
-
+      <Typography variant='h5' fontWeight={500} fontSize='1.499vw' className="view-ticket-header">View Details</Typography>
         <Box className="view-details-container">
-          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70vh"}}>
+          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70.5vh"}}>
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
                 <TableRow>

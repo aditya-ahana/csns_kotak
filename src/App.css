@@ -843,7 +843,7 @@ input::-webkit-inner-spin-button {
 
 .view-ticket-header {
   font-weight: 500;
-  font-size: x-large;
+  font-size: 1.499vw;
 }
 
 .view-table-container {
@@ -921,7 +921,7 @@ font-size: 0.2vw;
 }
 
 .MuiTablePagination-actions {
-
+  margin-top: 0.5vh;
 }
 
 .MuiTablePagination-displayedRows {
@@ -939,11 +939,11 @@ font-size: 0.2vw;
 }
 
 .MuiTablePagination-select {
-  background-color: blue;
+
 }
 
 .MuiTablePagination-menuItem {
-  background-color: blue;
+
 }
 
 .MuiTablePagination-selectIcon {
@@ -954,16 +954,6 @@ font-size: 0.2vw;
 .MuiTableBody-root {
   border-bottom-width: 0px;
   box-shadow: none;
-}
-
-.MuiInputAdornment-standard {
-  font-size: 0.2vw;
-  color: yellow;
-}
-
-.MuiInputAdornment-root {
-  font-size: 0.2vw;
-  color: yellow;
 }
 
 

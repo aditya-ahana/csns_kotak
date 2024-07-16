@@ -156,18 +156,6 @@ const datePickerControl = {
     }
   }
 
-  // const currentDay = new Date(new_date)
-  //   .toLocaleDateString("en-Us", {
-  //     day: "2-digit",
-  //     month: "2-digit",
-  //     year: "numeric",
-  //   })
-  //   .split("/")
-  //   .map((part, index, array) => (index < 2 ? array[1 - index] : part))
-  //   .join("-");
-
-  //   //console.log('currentDay',currentDay);
-
   useEffect(() => {
     setReportsState((prevReportsState) => {
       const updatedReportState = selectedReports.map((report) => {
@@ -219,12 +207,7 @@ const datePickerControl = {
 
   const [reportsState, setReportsState] = useState([]);
 
-  const requiredReportsData = ["Statement in PDF/Excel", "Beneficiary details for Single IMPS transactions", "Beneficiary details for Bulk IMPS transactions" ,"Beneficiary details for Single UPI transactions" , "Beneficiary details for Bulk UPI transactions" ,'IP Logs', "Device details" ];
-
-  const [selectedParams, setSelectedParams] = useState(
-    Array.from({ length: selectedReports.length }, () => [])
-  );
-
+  const requiredReportsData = [ "Statement in PDF/Excel", "Beneficiary details for Single IMPS transactions", "Beneficiary details for Bulk IMPS transactions" ,"Beneficiary details for Single UPI transactions" , "Beneficiary details for Bulk UPI transactions" ,'IP Logs', "Device details" ];
   // //console.log('selected reports : ',selectedReports);
 
   const availableReportTypes = [ "PDF","Excel" ];
@@ -1410,7 +1393,7 @@ const disableInvalidDates = (day, to) => {
   return (
     <Box className="page">
       <Box className="create-request-screen">
-        <span style={{ fontWeight: '420', fontSize: "x-large" }}>
+        <span style={{ fontWeight: '420', fontSize: "1.499vw" }}>
           Create Request
         </span>
 

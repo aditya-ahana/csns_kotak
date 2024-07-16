@@ -10,8 +10,10 @@ import MailDraft from "../../components/Modals/MailDraft";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
+import OutlinedInput from '@mui/material/OutlinedInput';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import TableContainer from "@mui/material/TableContainer";
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -43,12 +45,12 @@ export default function ViewRequest() {
   const [ fromDate , setFromDate ] = useState('');
   const [ toDate , setToDate ] = useState('');
   const [ searchMode, setSearchMode ] = useState(false);
-  const [ selectedStatus , setSelectedStatus ] = useState('');
+  const [ selectedStatus , setSelectedStatus ] = useState([]);
   const route_to = useNavigate();
   const viewFilterMenu = Boolean(filterAnchor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const rowOptions = [ 5, 10, 25, 100 ];
+  const rowOptions = [ 5, 10, 25, 40 ];
   const [ checkedStates , setCheckedStates ] = useState([
     { 'In-progress' : false },
     { 'Completed' : false },
@@ -72,11 +74,11 @@ export default function ViewRequest() {
   };
 
   const handleStatusCheck = (event,status) => {
-    setChecked(event.target.checked);
+    // setChecked(event.target.checked);
     if (event.target.checked) {
-      setSelectedStatus(status);
+      setSelectedStatus((selected) => [...selected,status]);
     } else {
-      setSelectedStatus('');
+      setSelectedStatus((selected) => selected.filter((s) => s !== status));
     }
   };
 
@@ -183,7 +185,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "31-05-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1299",
@@ -196,7 +198,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "08-04-2024",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1298",
@@ -207,7 +209,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "08-03-2024",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1297",
@@ -218,7 +220,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1296",
@@ -229,14 +231,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1295",
       requests: ["IP Logs" , "Device Details" ],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
 
 
@@ -253,7 +255,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1293",
@@ -266,7 +268,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "04-12-2023",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1292",
@@ -277,7 +279,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1291",
@@ -288,7 +290,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1290",
@@ -299,14 +301,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1289",
       requests: ["IP Logs" , "Device Details" ],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
 
 
@@ -321,7 +323,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "10-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1287",
@@ -334,7 +336,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "08-12-2023",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1286",
@@ -345,7 +347,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1285",
@@ -356,7 +358,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1284",
@@ -367,14 +369,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1283",
       requests: ["IP Logs" , "Device Details" ],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
   ];
 
@@ -386,7 +388,7 @@ export default function ViewRequest() {
     requests: request.requests,
     status: request.status,
     createdDate: request.createdDate,
-    requester: request.createdBy,
+    requester: request.requester,
   }));
 
   console.log("TICKET", ticketDetails);
@@ -395,10 +397,7 @@ export default function ViewRequest() {
     const searched = e.target.value.toLowerCase();
     setSearchInput(searched);
     const queried_data = ticketDetails.filter(
-      (ticket) =>
-        ticket.requester.toLowerCase().includes(searched) ||
-        ticket.createdDate.toLowerCase().includes(searched) ||
-        ticket.ticketid.toLowerCase().includes(searched)
+      ticket => ticket.requester.toLowerCase().includes(searched) || ticket.ticketid.toLowerCase().includes(searched)
     );
     setSearchResult(queried_data);
     setSearchMode(true);
@@ -410,8 +409,16 @@ export default function ViewRequest() {
     }
   }, [searchInput]);
 
-  const statusFilteredData = ticketDetails.filter((ticket) => ticket.status.toLowerCase().includes(selectedStatus.toLowerCase()));
-    console.log('statusFilteredData',statusFilteredData);
+  const queried_data = searchInput.length === 0 ? ticketDetails : searchResult;
+  const includedStatus = selectedStatus.map(status => status.toLowerCase());
+
+  const statusFilteredData = ticketDetails.filter(ticket =>
+    selectedStatus.some(status =>
+      ticket.status.toLowerCase().includes(status.toLowerCase())
+    )
+  );
+
+    console.log('includedStatus',includedStatus);
 
   useEffect(() => {
     if(selectedStatus.length > 0){
@@ -419,7 +426,7 @@ export default function ViewRequest() {
     }
   }, [ selectedStatus , statusFilteredData ]);
 
-  const dateRangeFilteredData = ticketDetails.filter((ticket) => {
+  const dateRangeFilteredData = queried_data.filter((ticket) => {
     const createdDate = dayjs(ticket.createdDate,'DD-MM-YYYY');
     const from = fromDate !== '' ? dayjs(fromDate,'DD-MM-YYYY') : null;
     const to = toDate !== '' ? dayjs(toDate, 'DD-MM-YYYY') : null;
@@ -427,8 +434,6 @@ export default function ViewRequest() {
     if (from && to) {
       return dayjs(createdDate,'DD-MM-YYYY').isAfter(dayjs(from, 'DD-MM-YYYY'), 'day') && dayjs(createdDate,'DD-MM-YYYY').isBefore(dayjs(to,'DD-MM-YYYY'));
     }
-
-
     return true;
   });
 
@@ -444,6 +449,9 @@ export default function ViewRequest() {
     return true;
   });
 
+  const searched = searchInput.length > 0;
+  const not_searched = searchInput.length === 0;
+
   const status_filtered = selectedStatus.length > 0;
   const not_status_filtered = selectedStatus.length === 0;
 
@@ -454,7 +462,7 @@ export default function ViewRequest() {
 
   const clearStatusFilter = () => {
    if(status_filtered){    
-    setSelectedStatus('');
+    setSelectedStatus([]);
    }
 };
 
@@ -467,21 +475,31 @@ const clearDateRangeFilter = () => {
 
 
   const requestData = 
-  searchInput.length > 0 ? searchResult : 
   (status_filtered && not_date_ranged) ? statusFilteredData : 
   (status_filtered && date_ranged) ? dateAndStatusRangeFilteredData : 
-  (not_status_filtered && date_ranged) ? dateRangeFilteredData  :  
+  (not_status_filtered && date_ranged) ? dateRangeFilteredData  :
+  (not_status_filtered && not_date_ranged && searched) ? searchResult :  
   ticketDetails;
 
   console.log('Checked',checked);
   console.log('Selected status',selectedStatus);
   console.log('Filtered Result',filteredResult);
 
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const rowCount = requestData.length;
+
+  const displayPaginationLabel = (from,to,count) => {
+    return (
+      <Typography sx={{ fontSize : "0.95vw",marginTop : "0.25vh"}}>{`${from} - ${to} of ${count}`}</Typography>
+    )
+  };
+
   return (
     <>
       <Box className="table-page">
         <Box className="view-request-screen">
-          <Typography variant='h5' fontWeight={500} className="view-ticket-header">View Request</Typography>
+          <Typography variant='h5' fontWeight={500} fontSize='1.499vw' className="view-ticket-header">View Request</Typography>
           <Box className="view-request-container">
             <Box className="view-request-header">
               <Box className="request-searchbar">
@@ -556,14 +574,25 @@ const clearDateRangeFilter = () => {
                 
                  <MenuList>
           { requestPhases.map((status,index) => (
-            <MenuItem key={index} value={status} style={{ display:'flex', margin:'0vh 0vw 0vh 0vw',height:'4vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
+            <MenuItem 
+             key={index} 
+             value={status} 
+             style={{ display:'flex', margin:'0vh 0vw 0vh 0vw',height:'4vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
           <Checkbox
-          checked={checked === true ? true : false} 
+          checked={selectedStatus.includes(status)} 
           onChange={(event) => handleStatusCheck(event, status)}
           style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} 
          icon={<CheckBoxOutlineBlank sx={{ fontSize : "1.6vw"}} />} 
-         checkedIcon={selectedStatus === status ? <CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} /> : <CheckBoxOutlineBlank sx={{ fontSize : "1.6vw", color : 'rgba(115, 115, 115, 1)'}} />} />
-         <ListItemText primary={status} style={{ padding : "0.3vh 0vw 0vh 0vw"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
+         checkedIcon={selectedStatus.includes(status) ? (
+         <CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} /> 
+         ) : (
+         <CheckBoxOutlineBlank sx={{ fontSize : "1.6vw", color : 'rgba(115, 115, 115, 1)'}} />
+          )} />
+         <ListItemText 
+          primary={status} 
+          color="black" inputMode='text' 
+          primaryTypographyProps={{ fontSize : '0.95vw'}}
+          style={{ padding : "0.3vh 0vw 0vh 0vw"}}   />
          </MenuItem>
           ))}
           </MenuList>
@@ -672,7 +701,7 @@ const clearDateRangeFilter = () => {
 
                   
                     <TableBody className="view-table-body">
-                      {requestData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      {requestData.slice(topRowIndex, nthRowIndex)
               .map((detail, i) => (
                         <TableRow key={i} className="table-body-row">
                           <TableCell 
@@ -804,6 +833,7 @@ const clearDateRangeFilter = () => {
 
             <Box className='table-pagination'>
             <TablePagination
+          labelDisplayedRows={() => displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)}
           rowsPerPageOptions={rowOptions}
           component='div'
           sx={{
@@ -812,27 +842,71 @@ const clearDateRangeFilter = () => {
             justifyContent:'flex-end',
             width : '100%',
             height : "2vh",
-            marginBottom : "2.5vh"
+            margin : "1vh 0vw 2.5vh 0vw",
+            overflow : "visible",
+              '& .MuiSvgIcon-root': {
+                color: 'rgba(0, 0, 0, 0.56)',
+                fontSize : "1.5vw"
+              },
+              '& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root' : {
+                opacity: 0.25
+              }
           }}
           count={requestData.length}
           slotProps={{
             select : {
-              MenuProps : {
-               sx : {
-                // marginTop : "-8vh"
-               }
-              },
+              renderValue : value => <Typography sx={{ fontSize : "0.95vw"}}>{value}</Typography>,
+              IconComponent : props =>  <KeyboardArrowDownOutlinedIcon
+              className="reports-type-dropdownicon"
+              sx={{ fontSize : '1.2vw', color:"rgba(115, 115, 115, 1)",marginTop : "0.05vh"}}
+              {...props}
+            />,
+              variant:'standard',
+              input : (
+              <OutlinedInput 
+              fullWidth={true} 
+              sx={{ border : "none",height : '3vh',fontSize : "0.2vw",            
+                  "& .MuiOutlinedInput-notchedOutline" : {
+                       border: 'none',
+                   },
+                  "&:hover > .MuiOutlinedInput-notchedOutline" : {
+                    border: 'none',
+                   },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    border: 'none',
+                  },
+              }} />
+              
+              ),
+              // IconComponent : props => (
+              //   <KeyboardArrowDownOutlinedIcon
+              //     className="reports-type-dropdownicon"
+              //     sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
+              //     {...props}
+              //   />
+              // ),
               sx : { 
                 width : "auto",
                 padding:"10px",
                 marginTop : "0.4vh",
-                marginLeft : "-3.5%"
-              }        
+                marginLeft : "-3.5%",
+              },
+              MenuProps : {
+                sx : {
+                  // marginTop : "-8vh"
+                  fontSize : "0.2vw"
+                },
+               MenuListProps : {      
+                sx : {
+                
+                }
+               },
+              },      
             }
           }}
           rowsPerPage={rowsPerPage}
           labelRowsPerPage={
-          <Box sx={{ display : "flex",flexDirection : "row", marginTop : "2vh",width : "100%",textAlign : 'center',alignItems : "center",justifyContent : "center",height : "4.5vh"}}>
+          <Box sx={{ display : "flex",flexDirection : "row", marginTop : "2.25vh",width : "100%",textAlign : 'center',alignItems : "center",justifyContent : "center",height : "4.5vh"}}>
           <Typography sx={{ alignSelf : "center",fontSize : "1vw",color : 'rgba(0, 0, 0, 0.6)'}}>Rows per page : </Typography>
           </Box>
         }
