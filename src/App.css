@@ -253,30 +253,18 @@ input::-webkit-inner-spin-button {
   padding-bottom: 3vh;
   gap: 2.5%;
   width: auto;
-  resize: horizontal;
 }
 
-.ticket-number-container {
+.ticket-number-container,.ticket-description-container {
   margin-top: 0vh;
-  max-height: auto;
-  width: 40.1%;
-}
-
-.ticket-description-container {
-  margin-top: 0vh;
-  max-height: auto;
-  width: 36vw;
-  /* background-color: gold; */
-
+  max-height: fit-content;
+  width: 40.125%;
 }
 
 .ticket-number-input,
 .ticket-description-input {
-  z-index: 0;
   /* width: 100%; */
-
   /* border-radius: 40px; */
-
   /* border-color: rgba(128, 128, 128, 0.48);
   border-style: solid; */
 }
@@ -334,14 +322,15 @@ input::-webkit-inner-spin-button {
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
   width: 83%;
-  margin-bottom: 3vh;
+  margin-bottom: 2.5vh;
 }
 
 .selected-report-header {
   display: flex;
-  height: 6vh;
+  height: 4vh;
   align-items: center;
-  justify-content: space-between;
+  justify-content: stretch;
+  flex-grow: 1;
   padding: 0vh 1.25vw 0vh 1.25vw;
   border-width: 0px 0px 1.5px 0px;
   border-color: rgba(128, 128, 128, 0.48);
@@ -349,7 +338,7 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-report-heading {
-  font-size: 1.05vw;
+  font-size: 0.95vw;
   vertical-align: middle;
   font-family: Roboto;
   font-weight: 400;
@@ -454,6 +443,7 @@ input::-webkit-inner-spin-button {
   border-width: 0;
   height: 4.8vh;
   font-weight: 600;
+  font-size: 1vw;
   border-radius: 5px;
 }
 
@@ -488,33 +478,41 @@ input::-webkit-inner-spin-button {
   width: 60%;
   background-color: white;
   border-radius: 6px;
-  padding: 3vh 1.6vw 4vh 2vw;
+  /* padding: 3vh 1.6vw 4vh 2vw; */
+  padding: 2vh 0vw 4vh 0vw;
 }
 
 .preview-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  padding: 0vh 1.6vw 0.75vh 1.825vw;
+  border: 1px solid rgba(236, 236, 236, 1);
+  border-width: 0px 0px 1.5px 0px;
   /* height : 8vh */
 }
 
 .preview-heading {
-  font-size: 1.65vw;
+  font-size: 1.48vw;
   font-family: Roboto;
+  padding-top: 0.5vh;
   font-weight: 500;
 }
 
 .close-preview {
+  display: flex;
   color: rgb(175, 175, 175);
+  align-items: normal;
 }
 
 .preview-scroll {
-  margin-top: -2vh;
+  margin-top: 0vh;
   overflow: auto;
+  padding: 0vh 1.6vw 4vh 2vw;
 }
 
 .preview-report {
-  margin-top: 4vh;
+  margin-top: 2.65vh;
   display: flex;
   flex-direction: column;
   min-height: fit-content;
@@ -543,23 +541,24 @@ input::-webkit-inner-spin-button {
 }
 
 .check-icon {
-  color: red;
+  margin-top: -0.25vh;
+  color: rgba(115, 115, 115, 1);
 }
 
 .preview-title {
-  font-size: 1.05vw;
+  font-size: 0.95vw;
   vertical-align: middle;
   font-family: Roboto;
   font-weight: 400;
 }
 
 .preview-report-details {
-  background-color: #f5f8fa;
+  background-color: rgba(245, 248, 250, 1);
   min-height: fit-content;
   max-height: auto;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  gap: 1px;
+  gap: 2vh;
   padding-top: 0vh;
   padding-bottom: 1.5vh;
 }
@@ -567,7 +566,7 @@ input::-webkit-inner-spin-button {
 .preview-data {
   display: flex;
   flex-direction: row;
-  padding: 3vh 3vw 0vh 3vw;
+  padding: 1.5vh 3vw 0vh 3vw;
   gap: 4vw;
 }
 
@@ -581,13 +580,14 @@ input::-webkit-inner-spin-button {
 .preview-text {
   font-weight: 400;
   font-family: Roboto;
-  font-size: 1.025vw;
+  font-size: 0.94vw;
 }
 
 .detail-range {
   display: flex;
   flex-direction: row;
   gap: 0.4vw;
+  margin-top: 0.5vh;
 }
 
 .preview-button:hover,
@@ -607,7 +607,7 @@ input::-webkit-inner-spin-button {
 .mail-draft-button:hover,
 .number-box:hover,
 .retry-button:hover {
-  box-shadow: 0px 0px 12px 0px rgba(99, 99, 99, 0.234);
+  box-shadow: 0px 0px 12px 2px rgba(99, 99, 99, 0.234);
   transition: all 0.4s;
   border-width: 1px solid white;
   /* border-radius: 40px; */
@@ -620,8 +620,8 @@ input::-webkit-inner-spin-button {
   border-width: 0px;
   background-color: transparent;
 }
-.submit-button:hover {
-  box-shadow: 1px 2px 12px 5px rgba(56, 50, 121, 0.48);
+.submit-button:hover,.clear-button:hover {
+  box-shadow: 1px 2px 12px 2px rgba(79, 77, 100, 0.48);
   transition: all 0.4s;
 }
 
@@ -771,12 +771,14 @@ input::-webkit-inner-spin-button {
 
 .request-ticket-section {
   margin-top: 3vh;
-  border-radius: 10px;
+  border-radius: 0px;
   display: flex;
   align-self: center;
   width: 100%;
   height: auto;
   overflow: scroll;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 
 .detail-buttons {
@@ -804,8 +806,8 @@ input::-webkit-inner-spin-button {
 }
 
 .view-details-button {
-  color: rgba(63, 136, 215, 1);
-  border-color: rgba(63, 136, 215, 1);
+  color: rgb(0, 97, 201);
+  border-color: rgb(0, 97, 201);
   /* color:rgb(0, 0, 177); */
 }
 
@@ -833,7 +835,7 @@ input::-webkit-inner-spin-button {
 }
 
 .view-table {
-  border-radius: 11px;
+  border-radius: 0px;
   display: flex;
   align-self: center;
   width: 100%;
@@ -841,7 +843,7 @@ input::-webkit-inner-spin-button {
 
 .view-ticket-header {
   font-weight: 500;
-  font-size: x-large;
+  font-size: 1.499vw;
 }
 
 .view-table-container {
@@ -866,6 +868,7 @@ input::-webkit-inner-spin-button {
   border-right-width: 1px;
   border-style: solid;
   border-color: rgba(225, 225, 225, 1);
+  font-size: 1vw;
 }
 
 .view-table-status-buttons {
@@ -918,7 +921,7 @@ font-size: 0.2vw;
 }
 
 .MuiTablePagination-actions {
-
+  margin-top: 0.5vh;
 }
 
 .MuiTablePagination-displayedRows {
@@ -936,11 +939,11 @@ font-size: 0.2vw;
 }
 
 .MuiTablePagination-select {
-  background-color: blue;
+
 }
 
 .MuiTablePagination-menuItem {
-  background-color: blue;
+
 }
 
 .MuiTablePagination-selectIcon {

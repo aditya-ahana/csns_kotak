@@ -3,17 +3,13 @@ import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
 import { MdOutlineFilterAlt } from "react-icons/md";
-// import Elements from "../../Elements/Elements";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { TbReload } from "react-icons/tb";
-import { RiFilter2Line } from "react-icons/ri";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-// import Sidenavsample from "../../../static/sidenavsample";
 import { useLocation, useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -21,7 +17,7 @@ import { Button } from "@mui/material";
 import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
-import { Typography } from "antd";
+import { Typography } from '@mui/material';
 
 export default function ViewRequestDetails() {
   const [viewDetailsAction, setViewDetailsAction] = useState();
@@ -512,10 +508,9 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <span className="view-ticket-header">View Details</span>
-
+      <Typography variant='h5' fontWeight={500} fontSize='1.499vw' className="view-ticket-header">View Details</Typography>
         <Box className="view-details-container">
-          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70vh"}}>
+          <TableContainer component={Paper} className="view-table-container" sx={{ boxShadow : "none",maxHeight : "70.5vh"}}>
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
                 <TableRow>
@@ -526,6 +521,7 @@ export default function ViewRequestDetails() {
                         {
                           border : "1px solid rgba(225, 225, 225, 1)",
                           backgroundColor: "rgb(243, 242, 248)",
+                          fontSize : "1vw",
                           width:
                             header === "Ticket Id"
                               ? "5vw"
@@ -549,13 +545,13 @@ export default function ViewRequestDetails() {
                 {requestDetails.map((row, index) => (
                   <>
                     <TableRow key={index}>
-                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px"}}>
+                      <TableCell align='center' className="view-table-data-row" sx={{ borderLeftWidth : "1px",fontSize : "1vw"}}>
                         {row.ticketId}
                       </TableCell>
-                      <TableCell className="view-table-data-row">
+                      <TableCell className="view-table-data-row" sx={{fontSize : "1vw"}}>
                             {row.request}
                       </TableCell>
-                      <TableCell className="view-table-data-row" align="center">
+                      <TableCell className="view-table-data-row" align="center" sx={{fontSize : "1vw"}}>
                         <Box
                           sx={{
                             display: "flex",
@@ -593,7 +589,7 @@ export default function ViewRequestDetails() {
                         </Box>
                       </TableCell>
                       <TableCell 
-                      align='center' className="view-table-data-row">
+                      align='center' className="view-table-data-row" sx={{fontSize : "1vw"}}>
                         {row.createdDateTime}
                       </TableCell>
                       <TableCell 
@@ -621,7 +617,7 @@ export default function ViewRequestDetails() {
                           >                      
                             <ExpandCircleDownOutlinedIcon
                               size="1.95vw"
-                              sx={{ color : 'rgba(95, 99, 104, 0.8)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
+                              sx={{ color : 'rgba(95, 99, 104, 0.87)',fontSize : '2.2vw',transform : viewDetailsAction === index ? 'rotate(180deg)' : ""}}
                               color="rgba(95, 99, 104, 1)"
                               className="expand-icon"
                             />

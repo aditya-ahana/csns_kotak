@@ -19,7 +19,7 @@ export default function ClippedDrawer() {
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1,boxShadow : "none" }}
         style={{
           background: primaryBG,
           color: "inherit",
