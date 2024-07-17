@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineFilterAlt, MdViewCarousel } from "react-icons/md";
 import { HiMail } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { IoIosListBox } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,10 @@ import MailDraft from "../../components/Modals/MailDraft";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
 import TableContainer from "@mui/material/TableContainer";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -37,8 +39,6 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
-import { CheckBoxOutlineBlankOutlined } from "@mui/icons-material";
-
 import { useTranslation } from "react-i18next";
 
 export default function ViewRequest() {
@@ -53,12 +53,12 @@ export default function ViewRequest() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [searchMode, setSearchMode] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const route_to = useNavigate();
   const viewFilterMenu = Boolean(filterAnchor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const rowOptions = [5, 10, 25, 100];
+  const rowOptions = [5, 10, 25, 40];
   const [checkedStates, setCheckedStates] = useState([
     { "In-progress": false },
     { Completed: false },
@@ -82,11 +82,11 @@ export default function ViewRequest() {
   };
 
   const handleStatusCheck = (event, status) => {
-    setChecked(event.target.checked);
+    // setChecked(event.target.checked);
     if (event.target.checked) {
-      setSelectedStatus(status);
+      setSelectedStatus((selected) => [...selected, status]);
     } else {
-      setSelectedStatus("");
+      setSelectedStatus((selected) => selected.filter((s) => s !== status));
     }
   };
 
@@ -136,6 +136,57 @@ export default function ViewRequest() {
 
   const requestPhases = ["Completed", "In-progress", "Failed"];
 
+  const datePickerControl = {
+    slotProps: {
+      popper: {
+        sx: {
+          ".MuiPaper-root": {
+            minheight: "44vh",
+            maxHeight: "44vh",
+            borderRadius: "10px",
+          },
+          "&.MuiPickersPopper-root": { padding: 0 },
+          ...{
+            "& .MuiPickersDay-root.Mui-selected": {
+              backgroundColor: "rgba(75, 75, 75, 1)",
+              color: "white",
+            },
+          },
+        },
+      },
+      openPickerIcon: {
+        sx: {
+          fontSize: "1.36vw",
+        },
+      },
+      field: {
+        readOnly: true,
+      },
+      textField: {
+        placeholder: "Date",
+        InputLabelProps: {
+          sx: {
+            fontSize: "1vw",
+            opacity: "0.6",
+          },
+        },
+        size: "small",
+        "aria-readonly": true,
+        sx: {
+          "& .MuiInputBase-input": {
+            height: "2.5vh",
+            fontSize: "0.85vw",
+            marginLeft: "-7%",
+          },
+        },
+      },
+    },
+    sx: {
+      height: "5.5vh",
+      backgroundColor: "transparent",
+    },
+  };
+
   const requestDetails = [
     {
       ticketId: "1300",
@@ -147,8 +198,8 @@ export default function ViewRequest() {
         "Device Details",
       ],
       status: "In-progress",
-      createdDate: "12-05-2024",
-      createdBy: "System",
+      createdDate: "31-05-2024",
+      requester: "System",
     },
     {
       ticketId: "1299",
@@ -161,7 +212,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "08-04-2024",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1298",
@@ -172,7 +223,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "08-03-2024",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1297",
@@ -183,7 +234,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1296",
@@ -194,14 +245,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1295",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
 
     {
@@ -215,7 +266,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1293",
@@ -228,7 +279,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "04-12-2023",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1292",
@@ -239,7 +290,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1291",
@@ -250,7 +301,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1290",
@@ -261,14 +312,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1289",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
 
     {
@@ -282,7 +333,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "10-01-2024",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1287",
@@ -295,7 +346,7 @@ export default function ViewRequest() {
       ],
       status: "Completed",
       createdDate: "08-12-2023",
-      createdBy: "User",
+      requester: "User",
     },
     {
       ticketId: "1286",
@@ -306,7 +357,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
     {
       ticketId: "1285",
@@ -317,7 +368,7 @@ export default function ViewRequest() {
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
-      createdBy: "System",
+      requester: "System",
     },
     {
       ticketId: "1284",
@@ -328,14 +379,14 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "14-02-2023",
-      createdBy: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1283",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      createdBy: "Admin",
+      requester: "Admin",
     },
   ];
 
@@ -347,7 +398,7 @@ export default function ViewRequest() {
     requests: request.requests,
     status: request.status,
     createdDate: request.createdDate,
-    requester: request.createdBy,
+    requester: request.requester,
   }));
 
   console.log("TICKET", ticketDetails);
@@ -358,7 +409,6 @@ export default function ViewRequest() {
     const queried_data = ticketDetails.filter(
       (ticket) =>
         ticket.requester.toLowerCase().includes(searched) ||
-        ticket.createdDate.toLowerCase().includes(searched) ||
         ticket.ticketid.toLowerCase().includes(searched)
     );
     setSearchResult(queried_data);
@@ -371,10 +421,16 @@ export default function ViewRequest() {
     }
   }, [searchInput]);
 
+  const queried_data = searchInput.length === 0 ? ticketDetails : searchResult;
+  const includedStatus = selectedStatus.map((status) => status.toLowerCase());
+
   const statusFilteredData = ticketDetails.filter((ticket) =>
-    ticket.status.toLowerCase().includes(selectedStatus.toLowerCase())
+    selectedStatus.some((status) =>
+      ticket.status.toLowerCase().includes(status.toLowerCase())
+    )
   );
-  console.log("statusFilteredData", statusFilteredData);
+
+  console.log("includedStatus", includedStatus);
 
   useEffect(() => {
     if (selectedStatus.length > 0) {
@@ -382,30 +438,89 @@ export default function ViewRequest() {
     }
   }, [selectedStatus, statusFilteredData]);
 
-  const dateRangeFilteredData = statusFilteredData.filter((ticket) => {
-    const createdDate = new Date(ticket.createdDate);
-    const from = fromDate ? new Date(fromDate) : null;
-    const to = toDate ? new Date(toDate) : null;
+  const dateRangeFilteredData = queried_data.filter((ticket) => {
+    const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
 
     if (from && to) {
-      return createdDate >= from && createdDate <= to;
+      return (
+        dayjs(createdDate, "DD-MM-YYYY").isAfter(
+          dayjs(from, "DD-MM-YYYY"),
+          "day"
+        ) && dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"))
+      );
+    }
+    return true;
+  });
+
+  const dateAndStatusRangeFilteredData = statusFilteredData.filter((ticket) => {
+    const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
+
+    if (from && to) {
+      return (
+        dayjs(createdDate, "DD-MM-YYYY").isAfter(
+          dayjs(from, "DD-MM-YYYY"),
+          "day"
+        ) && dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"))
+      );
     }
 
     return true;
   });
 
+  const searched = searchInput.length > 0;
+  const not_searched = searchInput.length === 0;
+
+  const status_filtered = selectedStatus.length > 0;
+  const not_status_filtered = selectedStatus.length === 0;
+
+  const date_ranged = fromDate !== "" && toDate !== "";
+  const not_date_ranged = fromDate === "" && toDate === "";
+
+  // const requestData = searchInput.length > 0 ? searchResult : selectedStatus !== '' ? dateRangeFilteredData : fromDate !== '' && toDate !== '' ? dateRangeFilteredData : ticketDetails;
+
+  const clearStatusFilter = () => {
+    if (status_filtered) {
+      setSelectedStatus([]);
+    }
+  };
+
+  const clearDateRangeFilter = () => {
+    if (date_ranged) {
+      setFromDate("");
+      setToDate("");
+    }
+  };
+
   const requestData =
-    searchInput.length > 0
-      ? searchResult
-      : selectedStatus !== ""
-        ? filteredResult
-        : fromDate !== "" && toDate !== ""
+    status_filtered && not_date_ranged
+      ? statusFilteredData
+      : status_filtered && date_ranged
+        ? dateAndStatusRangeFilteredData
+        : not_status_filtered && date_ranged
           ? dateRangeFilteredData
-          : ticketDetails;
+          : not_status_filtered && not_date_ranged && searched
+            ? searchResult
+            : ticketDetails;
 
   console.log("Checked", checked);
   console.log("Selected status", selectedStatus);
   console.log("Filtered Result", filteredResult);
+
+  const topRowIndex = page * rowsPerPage;
+  const nthRowIndex = page * rowsPerPage + rowsPerPage;
+  const rowCount = requestData.length;
+
+  const displayPaginationLabel = (from, to, count) => {
+    return (
+      <Typography
+        sx={{ fontSize: "0.95vw", marginTop: "0.25vh" }}
+      >{`${from} - ${to} of ${count}`}</Typography>
+    );
+  };
 
   return (
     <>
@@ -414,8 +529,10 @@ export default function ViewRequest() {
           <Typography
             variant="h5"
             fontWeight={500}
+            fontSize="1.499vw"
             className="view-ticket-header"
           >
+            {" "}
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
@@ -449,12 +566,15 @@ export default function ViewRequest() {
                   size="1.45vw"
                 /> */}
 
-                <FilterAltIcon
+                <FilterAltOutlinedIcon
                   className="filter-icon"
-                  sx={{ color: "#606060" }}
-                  size="1.45vw"
+                  sx={{ color: "#606060", fontSize: "1.5vw" }}
                 />
-                <Typography className="filter-heading" sx={{ fontWeight: 500 }}>
+                <Typography
+                  className="filter-heading"
+                  sx={{ fontWeight: 500, fontSize: "1.04vw" }}
+                >
+                  {" "}
                   {t("filter")}
                 </Typography>
               </Button>
@@ -495,6 +615,7 @@ export default function ViewRequest() {
                     <Typography
                       sx={{ color: "rgba(96, 96, 96, 1)", fontWeight: 500 }}
                     >
+                      {" "}
                       {t("filter")}
                     </Typography>
                   </Box>
@@ -515,7 +636,7 @@ export default function ViewRequest() {
                         }}
                       >
                         <Checkbox
-                          checked={checked === true ? true : false}
+                          checked={selectedStatus.includes(status)}
                           onChange={(event) => handleStatusCheck(event, status)}
                           style={{
                             marginLeft: "-1vw",
@@ -525,7 +646,7 @@ export default function ViewRequest() {
                             <CheckBoxOutlineBlank sx={{ fontSize: "1.6vw" }} />
                           }
                           checkedIcon={
-                            selectedStatus === status ? (
+                            selectedStatus.includes(status) ? (
                               <CheckBoxOutlinedIcon
                                 className="check-icon"
                                 sx={{ fontSize: "1.6vw", color: "red" }}
@@ -542,10 +663,10 @@ export default function ViewRequest() {
                         />
                         <ListItemText
                           primary={status}
-                          style={{ padding: "0.3vh 0vw 0vh 0vw" }}
                           color="black"
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.95vw" }}
+                          style={{ padding: "0.3vh 0vw 0vh 0vw" }}
                         />
                       </MenuItem>
                     ))}
@@ -581,7 +702,7 @@ export default function ViewRequest() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             format="DD-MM-YYYY"
-                            // label='Date'
+                            label="From"
                             value={
                               fromDate === ""
                                 ? null
@@ -593,54 +714,8 @@ export default function ViewRequest() {
                               "DD-MM-YYYY"
                             )}
                             defaultValue={null}
-                            slotProps={{
-                              popper: {
-                                sx: {
-                                  ".MuiPaper-root": {
-                                    height: "42vh",
-                                    borderRadius: "10px",
-                                  },
-                                  "&.MuiPickersPopper-root": { padding: 0 },
-                                  ...{
-                                    "& .MuiPickersDay-root.Mui-selected": {
-                                      backgroundColor: "rgba(75, 75, 75, 1)",
-                                      color: "white",
-                                    },
-                                  },
-                                },
-                              },
-                              openPickerIcon: {
-                                sx: {
-                                  fontSize: "1.36vw",
-                                },
-                              },
-                              field: {
-                                readOnly: true,
-                              },
-                              textField: {
-                                label: "From",
-                                placeholder: "From",
-                                InputLabelProps: {
-                                  sx: {
-                                    fontSize: "1vw",
-                                    opacity: "0.6",
-                                  },
-                                },
-                                size: "small",
-                                "aria-readonly": true,
-                                sx: {
-                                  "& .MuiInputBase-input": {
-                                    height: "2.5vh",
-                                    fontSize: "0.85vw",
-                                    marginLeft: "-7%",
-                                  },
-                                },
-                              },
-                            }}
-                            sx={{
-                              height: "5.5vh",
-                              backgroundColor: "transparent",
-                            }}
+                            slotProps={datePickerControl.slotProps}
+                            sx={datePickerControl.sx}
                             onChange={(date) => handleFromDate(date)}
                           />
                         </LocalizationProvider>
@@ -665,6 +740,7 @@ export default function ViewRequest() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             format="DD-MM-YYYY"
+                            label="To"
                             value={
                               toDate === "" ? null : dayjs(toDate, "DD-MM-YYYY")
                             }
@@ -674,59 +750,45 @@ export default function ViewRequest() {
                               "DD-MM-YYYY"
                             )}
                             defaultValue={null}
-                            slotProps={{
-                              popper: {
-                                sx: {
-                                  ".MuiPaper-root": {
-                                    height: "42vh",
-                                    borderRadius: "10px",
-                                  },
-                                  "&.MuiPickersPopper-root": { padding: 0 },
-                                  ...{
-                                    "& .MuiPickersDay-root.Mui-selected": {
-                                      backgroundColor: "rgba(75, 75, 75, 1)",
-                                      color: "white",
-                                    },
-                                  },
-                                },
-                              },
-                              openPickerIcon: {
-                                sx: {
-                                  fontSize: "1.36vw",
-                                },
-                              },
-                              field: {
-                                readOnly: true,
-                              },
-                              textField: {
-                                label: "To",
-                                placeholder: "To",
-                                InputLabelProps: {
-                                  sx: {
-                                    fontSize: "1vw",
-                                    opacity: "0.6",
-                                  },
-                                },
-                                size: "small",
-                                "aria-readonly": true,
-                                sx: {
-                                  "& .MuiInputBase-input": {
-                                    height: "2.5vh",
-                                    fontSize: "0.85vw",
-                                    marginLeft: "-7%",
-                                  },
-                                },
-                              },
-                            }}
-                            sx={{
-                              height: "5.5vh",
-                              backgroundColor: "transparent",
-                            }}
+                            slotProps={datePickerControl.slotProps}
+                            sx={datePickerControl.sx}
                             onChange={(date) => handleToDate(date)}
                           />
                         </LocalizationProvider>
                       </Box>
                     </Box>
+
+                    {(status_filtered || date_ranged) && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          padding: "1.8vh 0.8vw 0.15vh 0vw",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Button
+                          onClick={() => {
+                            clearStatusFilter();
+                            clearDateRangeFilter();
+                            handleCloseFilterMenu();
+                          }}
+                          className="clear-button"
+                          style={{
+                            backgroundColor: "rgba(237, 28, 36, 1)",
+                            borderRadius: "4px",
+                            border: "none",
+                            width: "30%",
+                            height: "3.6vh",
+                            fontWeight: 600,
+                            color: "white",
+                            fontSize: "0.92vw",
+                          }}
+                        >
+                          Clear
+                        </Button>
+                      </Box>
+                    )}
                   </Box>
                 </MenuList>
               </Menu>
@@ -742,13 +804,15 @@ export default function ViewRequest() {
                   <Table stickyHeader={true} aria-label="view-request-table">
                     <TableHead>
                       <TableRow>
-                        {viewRequestTableHeaders.map((header) => (
+                        {viewRequestTableHeaders.map((header, index) => (
                           <TableCell
                             align="center"
+                            key={index}
                             className="view-table-header"
                             sx={{
                               border: "1px solid rgba(225, 225, 225, 1)",
                               backgroundColor: "rgba(245, 248, 250, 1)",
+                              fontSize: "1vw",
                               borderLeftWidth:
                                 header === "Ticket Id" ? "1px" : "0px",
                               width:
@@ -774,15 +838,13 @@ export default function ViewRequest() {
 
                     <TableBody className="view-table-body">
                       {requestData
-                        .slice(
-                          page * rowsPerPage,
-                          page * rowsPerPage + rowsPerPage
-                        )
+                        .slice(topRowIndex, nthRowIndex)
                         .map((detail, i) => (
                           <TableRow key={i} className="table-body-row">
                             <TableCell
+                              key={i}
                               className="view-table-data-row"
-                              sx={{ borderLeftWidth: "1px" }}
+                              sx={{ borderLeftWidth: "1px", fontSize: "1vw" }}
                               align="center"
                             >
                               {detail.ticketid}
@@ -791,6 +853,7 @@ export default function ViewRequest() {
                               <Box sx={{ alignSelf: "center" }}>
                                 {detail.requests.map((req, index) => (
                                   <Typography
+                                    key={index}
                                     sx={{
                                       fontSize: "1vw",
                                       lineHeight: "3.6vh",
@@ -833,7 +896,10 @@ export default function ViewRequest() {
                                             : "",
                                   }}
                                 >
-                                  <Typography variant="body2">
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1vw" }}
+                                  >
                                     {detail.status}
                                   </Typography>
                                 </Box>
@@ -842,12 +908,14 @@ export default function ViewRequest() {
                             <TableCell
                               align="center"
                               className="view-table-data-row"
+                              sx={{ fontSize: "1vw" }}
                             >
                               {detail.createdDate}
                             </TableCell>
                             <TableCell
                               align="center"
                               className="view-table-data-row"
+                              sx={{ fontSize: "1vw" }}
                             >
                               {detail.requester}
                             </TableCell>
@@ -856,6 +924,7 @@ export default function ViewRequest() {
                                 <Button
                                   variant="outlined"
                                   className="view-details-button"
+                                  color="darkblue"
                                   style={{ alignSelf: "center" }}
                                   onClick={() =>
                                     route_to("/viewRequestDetails", {
@@ -866,9 +935,15 @@ export default function ViewRequest() {
                                   }
                                 >
                                   <DescriptionOutlinedIcon
-                                    sx={{ fontSize: "1.6vw" }}
+                                    sx={{ fontSize: "1.75vw" }}
                                   />
-                                  <Typography variant="body2" fontWeight={500}>
+                                  <Typography
+                                    variant="body2"
+                                    fontWeight={500}
+                                    sx={{ fontSize: "1vw" }}
+                                    color="rgb(0, 97, 201)"
+                                  >
+                                    {" "}
                                     {t("details")}
                                   </Typography>
                                 </Button>
@@ -904,7 +979,12 @@ export default function ViewRequest() {
                                           : "rgba(161, 161, 161, 0.6)",
                                     }}
                                   />
-                                  <Typography variant="body2" fontWeight={500}>
+                                  <Typography
+                                    variant="body2"
+                                    fontWeight={500}
+                                    sx={{ fontSize: "1vw" }}
+                                  >
+                                    {" "}
                                     {t("eDraft")}
                                   </Typography>
                                 </Button>
@@ -920,6 +1000,9 @@ export default function ViewRequest() {
 
             <Box className="table-pagination">
               <TablePagination
+                labelDisplayedRows={() =>
+                  displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
+                }
                 rowsPerPageOptions={rowOptions}
                 component="div"
                 sx={{
@@ -928,21 +1011,76 @@ export default function ViewRequest() {
                   justifyContent: "flex-end",
                   width: "100%",
                   height: "2vh",
-                  marginBottom: "2.5vh",
+                  margin: "1vh 0vw 2.5vh 0vw",
+                  overflow: "visible",
+                  "& .MuiSvgIcon-root": {
+                    color: "rgba(0, 0, 0, 0.56)",
+                    fontSize: "1.5vw",
+                  },
+                  "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root": {
+                    opacity: 0.25,
+                  },
                 }}
                 count={requestData.length}
                 slotProps={{
                   select: {
-                    MenuProps: {
-                      sx: {
-                        // marginTop : "-8vh"
-                      },
-                    },
+                    renderValue: (value) => (
+                      <Typography sx={{ fontSize: "0.95vw" }}>
+                        {value}
+                      </Typography>
+                    ),
+                    IconComponent: (props) => (
+                      <KeyboardArrowDownOutlinedIcon
+                        className="reports-type-dropdownicon"
+                        sx={{
+                          fontSize: "1.2vw",
+                          color: "rgba(115, 115, 115, 1)",
+                          marginTop: "0.05vh",
+                        }}
+                        {...props}
+                      />
+                    ),
+                    variant: "standard",
+                    input: (
+                      <OutlinedInput
+                        fullWidth={true}
+                        sx={{
+                          border: "none",
+                          height: "3vh",
+                          fontSize: "0.2vw",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                          "&:hover > .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    ),
+                    // IconComponent : props => (
+                    //   <KeyboardArrowDownOutlinedIcon
+                    //     className="reports-type-dropdownicon"
+                    //     sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
+                    //     {...props}
+                    //   />
+                    // ),
                     sx: {
                       width: "auto",
                       padding: "10px",
                       marginTop: "0.4vh",
                       marginLeft: "-3.5%",
+                    },
+                    MenuProps: {
+                      sx: {
+                        // marginTop : "-8vh"
+                        fontSize: "0.2vw",
+                      },
+                      MenuListProps: {
+                        sx: {},
+                      },
                     },
                   },
                 }}
@@ -952,7 +1090,7 @@ export default function ViewRequest() {
                     sx={{
                       display: "flex",
                       flexDirection: "row",
-                      marginTop: "2vh",
+                      marginTop: "2.25vh",
                       width: "100%",
                       textAlign: "center",
                       alignItems: "center",

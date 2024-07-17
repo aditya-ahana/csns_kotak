@@ -5,23 +5,21 @@ import Sidebar from "../components/Sidebar";
 import MainComponent from "../components/MainComponent";
 
 import Box from "@mui/material/Box";
+
 import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
-import { useTranslation } from "react-i18next";
 
 const primaryBG = "white";
 const secondaryBG = "gray";
 
-export default function SharedLayout() {
-  const { t } = useTranslation();
-
+export default function ClippedDrawer() {
   return (
     <Box sx={{ display: "flex", maxHeight: "100vh" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1,boxShadow : "none" }}
         style={{
           background: primaryBG,
           color: "inherit",
@@ -42,7 +40,6 @@ export default function SharedLayout() {
         }}
       >
         <Toolbar />
-
         <MainComponent />
       </Box>
     </Box>

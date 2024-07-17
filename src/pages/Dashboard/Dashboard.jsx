@@ -5,7 +5,6 @@ import { MdOutlineAdd } from "react-icons/md";
 import { Button } from "antd";
 
 import noData from "../../static/noData.png";
-
 import { useTranslation } from "react-i18next";
 
 export default function Dashboard() {
@@ -57,9 +56,9 @@ export default function Dashboard() {
             <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
               {t("noRequestInDashoard")}
             </span>
-            <span style={{ color: "rgba(165, 165, 165, 1)" }}>
+            {/* <span style={{ color: "rgba(165, 165, 165, 1)" }}>
               Click below to create new request
-            </span>
+            </span> */}
           </div>
         </div>
       </div>
