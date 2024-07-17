@@ -275,11 +275,11 @@ const datePickerControl = {
     );
   };
 
-  useEffect(() => {
-    if (selectedReports.length > 1) {
-      document.querySelector('#selected-reports-section').scrollIntoView();
-    }
-  }, [selectedReports.length]);
+  // useEffect(() => {
+  //   if (selectedReports.length > 1) {
+  //     document.querySelector('#selected-reports-section').scrollIntoView();
+  //   }
+  // }, [selectedReports.length]);
 
   const handleParamSelection = (event, reportIndex, reportName) => {
     setReportsState((prevState) => {
@@ -676,7 +676,7 @@ const datePickerControl = {
       // }
 
 
-        document.querySelector('#selected-reports-section').scrollIntoView();
+        // document.querySelector('#selected-reports-section').scrollIntoView();
 
       // //console.log('New State',newState);
       return newState;
@@ -1193,7 +1193,8 @@ const disableInvalidDates = (day, to) => {
               sx={inputControl.textfield} 
               InputLabelProps={inputControl.inputLabelProps}
               inputProps={inputControl.inputProps}
-                placeholder={`Enter ${detail.name2}`}       
+                placeholder={`Enter ${detail.name2}`}      
+                disabled={detail.value === '' || detail.value.length === 0 ? true : false} 
                 className="selected-param-box-3"
                 value={detail.amount === 0 || detail.amount.length === 0 ? '' : parseInt(detail.amount,10)}              
                 autoComplete="off"
