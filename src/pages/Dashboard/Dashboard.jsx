@@ -5,7 +5,11 @@ import { MdOutlineAdd } from "react-icons/md";
 import { Button } from "antd";
 
 import noData from "../../static/noData.png";
+import { useTranslation } from "react-i18next";
+
 export default function Dashboard() {
+  const { t } = useTranslation();
+
   const nav = useNavigate();
 
   function createRequestNav() {
@@ -17,7 +21,7 @@ export default function Dashboard() {
         {/* heading */}
         <div className="d-flex justify-content-between align-items-end">
           <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
-            Dashboard
+            {t("dashboard")}
           </span>
           <Button
             type="primary"
@@ -29,7 +33,7 @@ export default function Dashboard() {
             style={{ width: "24vh", height: "6vh" }}
           >
             <span style={{ fontWeight: "bold", fontSize: "medium" }}>
-              + Create Request
+              + {t("createRequest")}
             </span>
           </Button>
         </div>
@@ -50,11 +54,11 @@ export default function Dashboard() {
           >
             <img src={noData} alt="No data found" style={{ width: "33vh" }} />
             <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
-              There are no request
+              {t("noRequestInDashoard")}
             </span>
-            <span style={{ color: "rgba(165, 165, 165, 1)" }}>
+            {/* <span style={{ color: "rgba(165, 165, 165, 1)" }}>
               Click below to create new request
-            </span>
+            </span> */}
           </div>
         </div>
       </div>

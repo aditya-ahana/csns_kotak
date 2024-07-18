@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineFilterAlt, MdViewCarousel } from "react-icons/md";
 import { HiMail } from "react-icons/hi";
 import { FaClipboardList } from "react-icons/fa";
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
-import RemoveIcon from '@mui/icons-material/Remove';
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { IoIosListBox } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import MailDraft from "../../components/Modals/MailDraft";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
 import TableContainer from "@mui/material/TableContainer";
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
@@ -23,39 +23,47 @@ import dayjs, { Dayjs } from "dayjs";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import { Button } from "@mui/base/Button";
 import SearchIcon from "@mui/icons-material/Search";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AttachEmailOutlinedIcon from "@mui/icons-material/AttachEmailOutlined";
-import { Checkbox, TablePagination, TextField, Typography } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import Divider from '@mui/material/Divider';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import {
+  Checkbox,
+  TablePagination,
+  TextField,
+  Typography,
+} from "@mui/material";
+import Menu from "@mui/material/Menu";
+import Divider from "@mui/material/Divider";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
+import { useTranslation } from "react-i18next";
 
 export default function ViewRequest() {
-  const [ mailDraftModal, setMailDraftModal ] = useState(false);
-  const [ checked , setChecked ] = useState(false);
-  const [ filterAnchor , setFilterAnchor ] = useState(null);
-  const [ searchInput, setSearchInput ] = useState("");
-  const [ searchResult, setSearchResult ] = useState([]);
-  const [ filteredResult , setFilteredResult ] = useState([]);
-  const [ fromDate , setFromDate ] = useState('');
-  const [ toDate , setToDate ] = useState('');
-  const [ searchMode, setSearchMode ] = useState(false);
-  const [ selectedStatus , setSelectedStatus ] = useState([]);
+  const { t } = useTranslation();
+
+  const [mailDraftModal, setMailDraftModal] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [filteredResult, setFilteredResult] = useState([]);
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const [searchMode, setSearchMode] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState([]);
   const route_to = useNavigate();
   const viewFilterMenu = Boolean(filterAnchor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const rowOptions = [ 5, 10, 25, 40 ];
-  const [ checkedStates , setCheckedStates ] = useState([
-    { 'In-progress' : false },
-    { 'Completed' : false },
-    { 'Failed' : false }
-]);
+  const rowOptions = [5, 10, 25, 40];
+  const [checkedStates, setCheckedStates] = useState([
+    { "In-progress": false },
+    { Completed: false },
+    { Failed: false },
+  ]);
 
   const handleViewFilterMenu = (event) => {
     setFilterAnchor(event.currentTarget);
@@ -73,11 +81,12 @@ export default function ViewRequest() {
     setPage(0);
   };
 
-  const handleStatusCheck = (event,status) => {
+  const handleStatusCheck = (event, status) => {
     // setChecked(event.target.checked);
     if (event.target.checked) {
-      setSelectedStatus((selected) => [...selected,status]);
+      setSelectedStatus((selected) => [...selected, status]);
     } else {
+      setSelectedStatus((selected) => selected.filter((s) => s !== status));
       setSelectedStatus((selected) => selected.filter((s) => s !== status));
     }
   };
@@ -126,256 +135,277 @@ export default function ViewRequest() {
     "Action",
   ];
 
-  const requestPhases = [
-    "Completed",
-    "In-progress",
-    "Failed"
-  ];
+  const requestPhases = ["Completed", "In-progress", "Failed"];
 
-  const datePickerControl =  {
-   slotProps : {
+  const datePickerControl = {
+    slotProps: {
       popper: {
         sx: {
-          ".MuiPaper-root": { minheight : '44vh',maxHeight : "44vh",borderRadius : "10px" },
-          '&.MuiPickersPopper-root': { padding:0},
-          ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
+          ".MuiPaper-root": {
+            minheight: "44vh",
+            maxHeight: "44vh",
+            borderRadius: "10px",
+          },
+          "&.MuiPickersPopper-root": { padding: 0 },
+          ...{
+            "& .MuiPickersDay-root.Mui-selected": {
+              backgroundColor: "rgba(75, 75, 75, 1)",
+              color: "white",
+            },
+          },
         },
       },
-    openPickerIcon : {
-     sx : {
-       fontSize : "1.36vw"
-     }
-    },
-    field : {
-      readOnly : true,
-    },
-    textField : {
-      placeholder : "Date",
-      InputLabelProps : {
-        sx : {
-          fontSize : "1vw",
-          opacity : "0.6"
-        }
-      },
-      size:'small',
-      "aria-readonly":true,
-      sx:{
-        "& .MuiInputBase-input": {
-         height:'2.5vh',
-         fontSize:"0.85vw",
-          marginLeft : '-7%',
+      openPickerIcon: {
+        sx: {
+          fontSize: "1.36vw",
         },
-      }
-     }
+      },
+      field: {
+        readOnly: true,
+      },
+      textField: {
+        placeholder: "Date",
+        InputLabelProps: {
+          sx: {
+            fontSize: "1vw",
+            opacity: "0.6",
+          },
+        },
+        size: "small",
+        "aria-readonly": true,
+        sx: {
+          "& .MuiInputBase-input": {
+            height: "2.5vh",
+            fontSize: "0.85vw",
+            marginLeft: "-7%",
+          },
+        },
+      },
     },
-    sx : { 
-      height : "5.5vh",backgroundColor : 'transparent'
-    }
-  }
+    sx: {
+      height: "5.5vh",
+      backgroundColor: "transparent",
+    },
+  };
 
   const requestDetails = [
     {
       ticketId: "1300",
       requests: [
-       "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-        "IP Logs" ,
-        "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "In-progress",
+      createdDate: "31-05-2024",
+      requester: "System",
       createdDate: "31-05-2024",
       requester: "System",
     },
     {
       ticketId: "1299",
       requests: [
-        "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-         "IP Logs" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "Completed",
       createdDate: "08-04-2024",
+      requester: "User",
       requester: "User",
     },
     {
       ticketId: "1298",
       requests: [
-        "Statement in PDF/Excel" ,
-         "Beneficiary Details of IMPS Txns" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Device Details",
       ],
       status: "Failed",
       createdDate: "08-03-2024",
+      requester: "Admin",
       requester: "Admin",
     },
     {
       ticketId: "1297",
       requests: [
-       "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "IP Logs" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "IP Logs",
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
+      requester: "System",
       requester: "System",
     },
     {
       ticketId: "1296",
       requests: [
-         "Beneficiary Details of IMPS Txns" ,
-          "Beneficiary Details of UPI Txns" ,
-          "IP Logs" ,
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
       ],
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1295",
-      requests: ["IP Logs" , "Device Details" ],
+      requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
       requester: "Admin",
+      requester: "Admin",
     },
-
-
-
 
     {
       ticketId: "1294",
       requests: [
-       "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-        "IP Logs" ,
-        "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "In-progress",
       createdDate: "12-01-2024",
+      requester: "System",
       requester: "System",
     },
     {
       ticketId: "1293",
       requests: [
-        "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-         "IP Logs" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "Completed",
       createdDate: "04-12-2023",
+      requester: "User",
       requester: "User",
     },
     {
       ticketId: "1292",
       requests: [
-        "Statement in PDF/Excel" ,
-         "Beneficiary Details of IMPS Txns" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Device Details",
       ],
       status: "Failed",
       createdDate: "21-04-2023",
+      requester: "Admin",
       requester: "Admin",
     },
     {
       ticketId: "1291",
       requests: [
-       "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "IP Logs" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "IP Logs",
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
+      requester: "System",
       requester: "System",
     },
     {
       ticketId: "1290",
       requests: [
-         "Beneficiary Details of IMPS Txns" ,
-          "Beneficiary Details of UPI Txns" ,
-          "IP Logs" ,
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
       ],
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1289",
-      requests: ["IP Logs" , "Device Details" ],
+      requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
       requester: "Admin",
+      requester: "Admin",
     },
-
 
     {
       ticketId: "1288",
       requests: [
-       "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-        "IP Logs" ,
-        "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "In-progress",
       createdDate: "10-01-2024",
+      requester: "System",
       requester: "System",
     },
     {
       ticketId: "1287",
       requests: [
-        "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "Beneficiary Details of UPI Txns" ,
-         "IP Logs" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
+        "Device Details",
       ],
       status: "Completed",
       createdDate: "08-12-2023",
+      requester: "User",
       requester: "User",
     },
     {
       ticketId: "1286",
       requests: [
-        "Statement in PDF/Excel" ,
-         "Beneficiary Details of IMPS Txns" ,
-         "Device Details" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "Device Details",
       ],
       status: "Failed",
       createdDate: "21-04-2023",
+      requester: "Admin",
       requester: "Admin",
     },
     {
       ticketId: "1285",
       requests: [
-       "Statement in PDF/Excel" ,
-        "Beneficiary Details of IMPS Txns" ,
-        "IP Logs" ,
+        "Statement in PDF/Excel",
+        "Beneficiary Details of IMPS Txns",
+        "IP Logs",
       ],
       status: "In-progress",
       createdDate: "02-03-2023",
+      requester: "System",
       requester: "System",
     },
     {
       ticketId: "1284",
       requests: [
-         "Beneficiary Details of IMPS Txns" ,
-          "Beneficiary Details of UPI Txns" ,
-          "IP Logs" ,
+        "Beneficiary Details of IMPS Txns",
+        "Beneficiary Details of UPI Txns",
+        "IP Logs",
       ],
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1283",
-      requests: ["IP Logs" , "Device Details" ],
+      requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
+      requester: "Admin",
       requester: "Admin",
     },
   ];
@@ -389,6 +419,7 @@ export default function ViewRequest() {
     status: request.status,
     createdDate: request.createdDate,
     requester: request.requester,
+    requester: request.requester,
   }));
 
   console.log("TICKET", ticketDetails);
@@ -397,7 +428,9 @@ export default function ViewRequest() {
     const searched = e.target.value.toLowerCase();
     setSearchInput(searched);
     const queried_data = ticketDetails.filter(
-      ticket => ticket.requester.toLowerCase().includes(searched) || ticket.ticketid.toLowerCase().includes(searched)
+      (ticket) =>
+        ticket.requester.toLowerCase().includes(searched) ||
+        ticket.ticketid.toLowerCase().includes(searched)
     );
     setSearchResult(queried_data);
     setSearchMode(true);
@@ -410,40 +443,50 @@ export default function ViewRequest() {
   }, [searchInput]);
 
   const queried_data = searchInput.length === 0 ? ticketDetails : searchResult;
-  const includedStatus = selectedStatus.map(status => status.toLowerCase());
+  const includedStatus = selectedStatus.map((status) => status.toLowerCase());
 
-  const statusFilteredData = ticketDetails.filter(ticket =>
-    selectedStatus.some(status =>
+  const statusFilteredData = ticketDetails.filter((ticket) =>
+    selectedStatus.some((status) =>
       ticket.status.toLowerCase().includes(status.toLowerCase())
     )
   );
 
-    console.log('includedStatus',includedStatus);
+  console.log("includedStatus", includedStatus);
 
   useEffect(() => {
-    if(selectedStatus.length > 0){
+    if (selectedStatus.length > 0) {
       setFilteredResult(statusFilteredData);
     }
-  }, [ selectedStatus , statusFilteredData ]);
+  }, [selectedStatus, statusFilteredData]);
 
   const dateRangeFilteredData = queried_data.filter((ticket) => {
-    const createdDate = dayjs(ticket.createdDate,'DD-MM-YYYY');
-    const from = fromDate !== '' ? dayjs(fromDate,'DD-MM-YYYY') : null;
-    const to = toDate !== '' ? dayjs(toDate, 'DD-MM-YYYY') : null;
+    const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
 
     if (from && to) {
-      return dayjs(createdDate,'DD-MM-YYYY').isAfter(dayjs(from, 'DD-MM-YYYY'), 'day') && dayjs(createdDate,'DD-MM-YYYY').isBefore(dayjs(to,'DD-MM-YYYY'));
+      return (
+        dayjs(createdDate, "DD-MM-YYYY").isAfter(
+          dayjs(from, "DD-MM-YYYY"),
+          "day"
+        ) && dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"))
+      );
     }
     return true;
   });
 
   const dateAndStatusRangeFilteredData = statusFilteredData.filter((ticket) => {
-    const createdDate = dayjs(ticket.createdDate,'DD-MM-YYYY');
-    const from = fromDate !== '' ? dayjs(fromDate,'DD-MM-YYYY') : null;
-    const to = toDate !== '' ? dayjs(toDate, 'DD-MM-YYYY') : null;
+    const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
 
     if (from && to) {
-      return dayjs(createdDate,'DD-MM-YYYY').isAfter(dayjs(from, 'DD-MM-YYYY'), 'day') && dayjs(createdDate,'DD-MM-YYYY').isBefore(dayjs(to,'DD-MM-YYYY'));
+      return (
+        dayjs(createdDate, "DD-MM-YYYY").isAfter(
+          dayjs(from, "DD-MM-YYYY"),
+          "day"
+        ) && dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"))
+      );
     }
 
     return true;
@@ -455,74 +498,88 @@ export default function ViewRequest() {
   const status_filtered = selectedStatus.length > 0;
   const not_status_filtered = selectedStatus.length === 0;
 
-  const date_ranged = fromDate !== '' && toDate !== '';
-  const not_date_ranged = fromDate === '' && toDate === '';
+  const date_ranged = fromDate !== "" && toDate !== "";
+  const not_date_ranged = fromDate === "" && toDate === "";
 
   // const requestData = searchInput.length > 0 ? searchResult : selectedStatus !== '' ? dateRangeFilteredData : fromDate !== '' && toDate !== '' ? dateRangeFilteredData : ticketDetails;
 
   const clearStatusFilter = () => {
-   if(status_filtered){    
-    setSelectedStatus([]);
-   }
-};
+    if (status_filtered) {
+      setSelectedStatus([]);
+    }
+  };
 
-const clearDateRangeFilter = () => {
-   if(date_ranged){
-    setFromDate('');
-    setToDate('');
-   }
-};
+  const clearDateRangeFilter = () => {
+    if (date_ranged) {
+      setFromDate("");
+      setToDate("");
+    }
+  };
 
+  const requestData =
+    status_filtered && not_date_ranged
+      ? statusFilteredData
+      : status_filtered && date_ranged
+        ? dateAndStatusRangeFilteredData
+        : not_status_filtered && date_ranged
+          ? dateRangeFilteredData
+          : not_status_filtered && not_date_ranged && searched
+            ? searchResult
+            : ticketDetails;
 
-  const requestData = 
-  (status_filtered && not_date_ranged) ? statusFilteredData : 
-  (status_filtered && date_ranged) ? dateAndStatusRangeFilteredData : 
-  (not_status_filtered && date_ranged) ? dateRangeFilteredData  :
-  (not_status_filtered && not_date_ranged && searched) ? searchResult :  
-  ticketDetails;
-
-  console.log('Checked',checked);
-  console.log('Selected status',selectedStatus);
-  console.log('Filtered Result',filteredResult);
+  console.log("Checked", checked);
+  console.log("Selected status", selectedStatus);
+  console.log("Filtered Result", filteredResult);
 
   const topRowIndex = page * rowsPerPage;
   const nthRowIndex = page * rowsPerPage + rowsPerPage;
   const rowCount = requestData.length;
 
-  const displayPaginationLabel = (from,to,count) => {
+  const displayPaginationLabel = (from, to, count) => {
     return (
-      <Typography sx={{ fontSize : "0.95vw",marginTop : "0.25vh"}}>{`${from} - ${to} of ${count}`}</Typography>
-    )
+      <Typography
+        sx={{ fontSize: "0.95vw", marginTop: "0.25vh" }}
+      >{`${from} - ${to} of ${count}`}</Typography>
+    );
   };
 
   return (
     <>
       <Box className="table-page">
         <Box className="view-request-screen">
-          <Typography variant='h5' fontWeight={500} fontSize='1.499vw' className="view-ticket-header">View Request</Typography>
+          <Typography
+            variant="h5"
+            fontWeight={500}
+            fontSize="1.499vw"
+            className="view-ticket-header"
+          >
+            {" "}
+            {t("viewRequest")}
+          </Typography>
           <Box className="view-request-container">
             <Box className="view-request-header">
               <Box className="request-searchbar">
                 <SearchIcon className="request-search-icon" size="2vw" />
-                <FormControl sx={{ width : "100%"}}>
+                <FormControl sx={{ width: "100%" }}>
                   <Input
                     disableUnderline={true}
                     type="search"
                     sx={{ fontSize: "0.92vw" }}
                     inputMode="text"
-                    placeholder="Search by Ticket Id/Requester"
+                    placeholder={t("searchByTicketRequester")}
                     className="request-search-input"
                     onChange={(e) => handleSearchQuery(e)}
                   ></Input>
                 </FormControl>
               </Box>
 
-              <Button className="request-filter-section" 
-              id='filter-menu-container'
-              onClick={handleViewFilterMenu}
-              aria-controls={viewFilterMenu ? 'filter-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={viewFilterMenu ? 'true' : undefined}
+              <Button
+                className="request-filter-section"
+                id="filter-menu-container"
+                onClick={handleViewFilterMenu}
+                aria-controls={viewFilterMenu ? "filter-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={viewFilterMenu ? "true" : undefined}
               >
                 {/* <MdOutlineFilterAlt
                   className="filter-icon"
@@ -530,168 +587,270 @@ const clearDateRangeFilter = () => {
                   size="1.45vw"
                 /> */}
 
+                {/* <FilterAltOutlinedIcon */}
                 <FilterAltOutlinedIcon
                   className="filter-icon"
-                  sx={{ color: "#606060",fontSize: '1.5vw' }}
+                  sx={{ color: "#606060", fontSize: "1.5vw" }}
                 />
-                <Typography className="filter-heading" sx={{ fontWeight : 500 , fontSize: '1.04vw' }}>Filter</Typography>
+                <Typography
+                  className="filter-heading"
+                  sx={{ fontWeight: 500, fontSize: "1.04vw" }}
+                >
+                  {" "}
+                  {t("filter")}
+                </Typography>
               </Button>
 
               <Menu
-               id='filter-menu'
-               anchorEl={filterAnchor}
-               open={viewFilterMenu}
-               sx={{ marginLeft : "-1.65%"}}
-               slotProps={{
-                paper :{
-                  style: {
-                    height: 'fit-content',
-                    width: '21.25%',
+                id="filter-menu"
+                anchorEl={filterAnchor}
+                open={viewFilterMenu}
+                sx={{ marginLeft: "-1.65%" }}
+                slotProps={{
+                  paper: {
+                    style: {
+                      height: "fit-content",
+                      width: "21.25%",
+                    },
                   },
-                }
-               }}
-               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                horizontal: 'left',
-              }}
-               MenuListProps={{
-                style : {
-                  border:'1.5px solid rgba(232, 232, 232, 1)', 
-                  borderRadius : "4px",
-                  margin : 0,
-                  padding : 0
-                },
-                'aria-labelledby': 'filter-menu-container',
-              }}
-               onClose={handleCloseFilterMenu}>
-                <MenuList sx={{ height : "100%"}}>
-                 <Box className='filter-menu-header'>
-                  <Typography sx={{ color : 'rgba(96, 96, 96, 1)',fontWeight : 500}}>Filter</Typography>
-                 </Box>
-                
-                 <MenuList>
-          { requestPhases.map((status,index) => (
-            <MenuItem 
-             key={index} 
-             value={status} 
-             style={{ display:'flex', margin:'0vh 0vw 0vh 0vw',height:'4vh',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}>
-          <Checkbox
-          checked={selectedStatus.includes(status)} 
-          onChange={(event) => handleStatusCheck(event, status)}
-          style={{ marginLeft : '-1vw',backgroundColor : "transparent"}} 
-         icon={<CheckBoxOutlineBlank sx={{ fontSize : "1.6vw"}} />} 
-         checkedIcon={selectedStatus.includes(status) ? (
-         <CheckBoxOutlinedIcon className="check-icon" sx={{ fontSize : "1.6vw" , color : 'red'}} /> 
-         ) : (
-         <CheckBoxOutlineBlank sx={{ fontSize : "1.6vw", color : 'rgba(115, 115, 115, 1)'}} />
-          )} />
-         <ListItemText 
-          primary={status} 
-          color="black" inputMode='text' 
-          primaryTypographyProps={{ fontSize : '0.95vw'}}
-          style={{ padding : "0.3vh 0vw 0vh 0vw"}}   />
-         </MenuItem>
-          ))}
-          </MenuList>
-        
+                }}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  horizontal: "left",
+                }}
+                MenuListProps={{
+                  style: {
+                    border: "1.5px solid rgba(232, 232, 232, 1)",
+                    borderRadius: "4px",
+                    margin: 0,
+                    padding: 0,
+                  },
+                  "aria-labelledby": "filter-menu-container",
+                }}
+                onClose={handleCloseFilterMenu}
+              >
+                <MenuList sx={{ height: "100%" }}>
+                  <Box className="filter-menu-header">
+                    <Typography
+                      sx={{ color: "rgba(96, 96, 96, 1)", fontWeight: 500 }}
+                    >
+                      {" "}
+                      {t("filter")}
+                    </Typography>
+                  </Box>
 
-          <Box sx={{ padding : "1vh 0vw 0.48vh 0.75vw", borderWidth:'1px 0px 0px 0px',borderStyle: 'solid',borderColor : 'rgba(232, 232, 232, 1)'}}>
-            <Typography sx={{ color : 'rgba(96, 96, 96, 1)',fontWeight : 500,fontSize : "1vw"}}>Created Date</Typography>
+                  <MenuList>
+                    {requestPhases.map((status, index) => (
+                      <MenuItem
+                        key={index}
+                        value={status}
+                        style={{
+                          display: "flex",
+                          margin: "0vh 0vw 0vh 0vw",
+                          height: "4vh",
+                          alignItems: "left",
+                          borderRadius: "0px",
+                          backgroundColor: "transparent",
+                          fontSize: "2px",
+                        }}
+                      >
+                        <Checkbox
+                          checked={selectedStatus.includes(status)}
+                          onChange={(event) => handleStatusCheck(event, status)}
+                          style={{
+                            marginLeft: "-1vw",
+                            backgroundColor: "transparent",
+                          }}
+                          icon={
+                            <CheckBoxOutlineBlank sx={{ fontSize: "1.6vw" }} />
+                          }
+                          checkedIcon={
+                            selectedStatus.includes(status) ? (
+                              <CheckBoxOutlinedIcon
+                                className="check-icon"
+                                sx={{ fontSize: "1.6vw", color: "red" }}
+                              />
+                            ) : (
+                              <CheckBoxOutlineBlank
+                                sx={{
+                                  fontSize: "1.6vw",
+                                  color: "rgba(115, 115, 115, 1)",
+                                }}
+                              />
+                            )
+                          }
+                        />
+                        <ListItemText
+                          primary={status}
+                          color="black"
+                          inputMode="text"
+                          primaryTypographyProps={{ fontSize: "0.95vw" }}
+                          style={{ padding: "0.3vh 0vw 0vh 0vw" }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </MenuList>
 
-<Box sx={{ display : "flex",flexDirection : "row",padding : "1.6vh 0vw 0.36vh 0vw",gap : "2.5%"}}>
-  <Box sx={{ width : "40%"}}>
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker 
-        format="DD-MM-YYYY"
-        label='From'
-        value={fromDate === '' ? null : dayjs(fromDate,'DD-MM-YYYY')}
-        // defaultValue=''   
-        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
-        defaultValue={null}
-        slotProps={datePickerControl.slotProps}
-        sx={datePickerControl.sx}
-        onChange={(date) => handleFromDate(date)}
-      />
-    </LocalizationProvider>
-  </Box>
+                  <Box
+                    sx={{
+                      padding: "1vh 0vw 0.48vh 0.75vw",
+                      borderWidth: "1px 0px 0px 0px",
+                      borderStyle: "solid",
+                      borderColor: "rgba(232, 232, 232, 1)",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        color: "rgba(96, 96, 96, 1)",
+                        fontWeight: 500,
+                        fontSize: "1vw",
+                      }}
+                    >
+                      Created Date
+                    </Typography>
 
- <Box sx={{ display : "flex",height : '4.75vh',alignItems : "center"}}>
-  <RemoveIcon sx={{ fontSize : "200%",color : 'rgba(161, 161, 161, 1)'}}/>
-  </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        padding: "1.6vh 0vw 0.36vh 0vw",
+                        gap: "2.5%",
+                      }}
+                    >
+                      <Box sx={{ width: "40%" }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            format="DD-MM-YYYY"
+                            label="From"
+                            value={
+                              fromDate === ""
+                                ? null
+                                : dayjs(fromDate, "DD-MM-YYYY")
+                            }
+                            // defaultValue=''
+                            maxDate={dayjs(
+                              dayjs().format("DD-MM-YYYY"),
+                              "DD-MM-YYYY"
+                            )}
+                            defaultValue={null}
+                            slotProps={datePickerControl.slotProps}
+                            sx={datePickerControl.sx}
+                            onChange={(date) => handleFromDate(date)}
+                          />
+                        </LocalizationProvider>
+                      </Box>
 
-  <Box sx={{ width : "40%"}}>
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DatePicker 
-        format="DD-MM-YYYY"
-        label='To'
-        value={toDate === '' ? null : dayjs(toDate,'DD-MM-YYYY')}
-        // defaultValue=''   
-        maxDate={dayjs(dayjs().format('DD-MM-YYYY'),'DD-MM-YYYY')} 
-        defaultValue={null}
-        slotProps={datePickerControl.slotProps}
-        sx={datePickerControl.sx}
-        onChange={(date) => handleToDate(date)}
-      />
-    </LocalizationProvider>
-  </Box>
-  </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          height: "4.75vh",
+                          alignItems: "center",
+                        }}
+                      >
+                        <RemoveIcon
+                          sx={{
+                            fontSize: "200%",
+                            color: "rgba(161, 161, 161, 1)",
+                          }}
+                        />
+                      </Box>
 
-  {(status_filtered || date_ranged) && (
-   <Box sx={{display : "flex",padding : "1.8vh 0.8vw 0.15vh 0vw",alignItems : "center",justifyContent : "flex-end"}}>
-    <Button 
-    onClick={() => {
-      clearStatusFilter();
-      clearDateRangeFilter();
-      handleCloseFilterMenu();
-    }}
-    className='clear-button' style={{ backgroundColor : "rgba(237, 28, 36, 1)",borderRadius : "4px",border : 'none',width : "30%",height : '3.6vh',fontWeight : 600 , color : "white",fontSize : "0.92vw"}}>
-    Clear
-    </Button>
-   </Box>
-   )}
+                      <Box sx={{ width: "40%" }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            format="DD-MM-YYYY"
+                            label="To"
+                            value={
+                              toDate === "" ? null : dayjs(toDate, "DD-MM-YYYY")
+                            }
+                            // defaultValue=''
+                            maxDate={dayjs(
+                              dayjs().format("DD-MM-YYYY"),
+                              "DD-MM-YYYY"
+                            )}
+                            defaultValue={null}
+                            slotProps={datePickerControl.slotProps}
+                            sx={datePickerControl.sx}
+                            onChange={(date) => handleToDate(date)}
+                          />
+                        </LocalizationProvider>
+                      </Box>
+                    </Box>
 
-
-                 </Box>
-                 </MenuList>
+                    {(status_filtered || date_ranged) && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          padding: "1.8vh 0.8vw 0.15vh 0vw",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <Button
+                          onClick={() => {
+                            clearStatusFilter();
+                            clearDateRangeFilter();
+                            handleCloseFilterMenu();
+                          }}
+                          className="clear-button"
+                          style={{
+                            backgroundColor: "rgba(237, 28, 36, 1)",
+                            borderRadius: "4px",
+                            border: "none",
+                            width: "30%",
+                            height: "3.6vh",
+                            fontWeight: 600,
+                            color: "white",
+                            fontSize: "0.92vw",
+                          }}
+                        >
+                          Clear
+                        </Button>
+                      </Box>
+                    )}
+                  </Box>
+                </MenuList>
               </Menu>
             </Box>
 
-            <Box className="request-ticket-section" alignSelf='center'>
+            <Box className="request-ticket-section" alignSelf="center">
               <Box className="view-table">
-                <TableContainer component={Paper} 
-                className="view-table-container" sx={{ boxShadow : "none"}}>
-                  <Table
-                  stickyHeader={true}
-                  aria-label="view-request-table">
+                <TableContainer
+                  component={Paper}
+                  className="view-table-container"
+                  sx={{ boxShadow: "none" }}
+                >
+                  <Table stickyHeader={true} aria-label="view-request-table">
                     <TableHead>
                       <TableRow>
-                        {viewRequestTableHeaders.map((header,index) => (
+                        {viewRequestTableHeaders.map((header, index) => (
                           <TableCell
-                           align='center'
-                           key={index}
-                           className="view-table-header"
-                            sx={
-                              {
-                                border : "1px solid rgba(225, 225, 225, 1)",
-                                backgroundColor :'rgba(245, 248, 250, 1)',
-                                fontSize: '1vw',
-                                borderLeftWidth:header === "Ticket Id" ? '1px' : '0px',
-                                width:
-                                  header === "Ticket Id"
-                                    ? "12%"
-                                    : header === "Requests"
-                                      ? "27%"
-                                      : header === "Status"
-                                        ? "15%"
-                                        : header === "Created Date" ||
-                                            header === "Requester" ?
-                                            "16%"
-                                          : header === "Action" ? '17%' : "0vw",
-                              }
-                            }
+                            align="center"
+                            key={index}
+                            className="view-table-header"
+                            sx={{
+                              border: "1px solid rgba(225, 225, 225, 1)",
+                              backgroundColor: "rgba(245, 248, 250, 1)",
+                              fontSize: "1vw",
+                              borderLeftWidth:
+                                header === "Ticket Id" ? "1px" : "0px",
+                              width:
+                                header === "Ticket Id"
+                                  ? "12%"
+                                  : header === "Requests"
+                                    ? "27%"
+                                    : header === "Status"
+                                      ? "15%"
+                                      : header === "Created Date" ||
+                                          header === "Requester"
+                                        ? "16%"
+                                        : header === "Action"
+                                          ? "17%"
+                                          : "0vw",
+                            }}
                           >
                             {header}
                           </TableCell>
@@ -699,42 +858,48 @@ const clearDateRangeFilter = () => {
                       </TableRow>
                     </TableHead>
 
-                  
                     <TableBody className="view-table-body">
-                      {requestData.slice(topRowIndex, nthRowIndex)
-              .map((detail, i) => (
-                        <TableRow key={i} className="table-body-row">
-                          <TableCell 
-                           key={i}
-                          className="view-table-data-row"
-                          sx={{ borderLeftWidth : "1px",fontSize: '1vw' }}
-                          align='center'>
-                            {detail.ticketid}
-                          </TableCell>
-                          <TableCell className="view-table-data-row">
-                            <Box sx={{ alignSelf: "center",  }}>     
-                              {detail.requests.map((req, index) => (
-                                <Typography
-                                 key={index}
-                                 sx={{ fontSize : '1vw',lineHeight: "3.6vh"}}
-                                >{`${index + 1}. ${req}`}</Typography>
-                              ))}
-                            </Box>
-                          </TableCell>
-                          <TableCell align="center" className="view-table-data-row">
-                            <Box
-                              align='center'
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
+                      {requestData
+                        .slice(topRowIndex, nthRowIndex)
+                        .map((detail, i) => (
+                          <TableRow key={i} className="table-body-row">
+                            <TableCell
+                              key={i}
+                              className="view-table-data-row"
+                              sx={{ borderLeftWidth: "1px", fontSize: "1vw" }}
+                              align="center"
+                            >
+                              {detail.ticketid}
+                            </TableCell>
+                            <TableCell className="view-table-data-row">
+                              <Box sx={{ alignSelf: "center" }}>
+                                {detail.requests.map((req, index) => (
+                                  <Typography
+                                    key={index}
+                                    sx={{
+                                      fontSize: "1vw",
+                                      lineHeight: "3.6vh",
+                                    }}
+                                  >{`${index + 1}. ${req}`}</Typography>
+                                ))}
+                              </Box>
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              className="view-table-data-row"
                             >
                               <Box
-                                alignSelf="center"
-                                className='view-table-status-buttons'
-                                sx={
-                                  {
+                                align="center"
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <Box
+                                  alignSelf="center"
+                                  className="view-table-status-buttons"
+                                  sx={{
                                     backgroundColor:
                                       detail.status === "In-progress"
                                         ? "rgba(255, 238, 207, 1)"
@@ -751,169 +916,225 @@ const clearDateRangeFilter = () => {
                                           : detail.status === "Failed"
                                             ? "rgba(210, 26, 26, 1)"
                                             : "",
-                                  }
-                                }
-                              >
-                                <Typography variant='body2' sx={{ fontSize: '1vw' }}>{detail.status}</Typography>
-                              </Box>
-                            </Box>
-                          </TableCell>
-                          <TableCell 
-                           align='center' className="view-table-data-row" sx={{ fontSize: '1vw' }}>
-                            {detail.createdDate}
-                          </TableCell>
-                          <TableCell 
-                          align='center' className="view-table-data-row" sx={{ fontSize: '1vw' }}>
-                            {detail.requester}
-                          </TableCell>
-                          <TableCell className="view-table-data-row">
-                            <Box className="detail-buttons">
-                              <Button
-                                variant="outlined"
-                                className="view-details-button"
-                                color='darkblue'
-                                style={{ alignSelf: "center" }}
-                                onClick={() =>
-                                  route_to("/viewRequestDetails", {
-                                    state: {
-                                      //  ticketDetails : ticketDetails
-                                    },
-                                  })
-                                }
-                              >
-                                <DescriptionOutlinedIcon
-                                  sx={{ fontSize: "1.75vw" }}
-                                />
-                                <Typography variant='body2' fontWeight={500} sx={{ fontSize: '1vw' }} color='rgb(0, 97, 201)'>Details</Typography>
-                              </Button>
-                              <Button
-                                variant="outlined"
-                                className="mail-draft-button"
-                                style={{
-                                  alignSelf: "center",
-                                  backgroundColor:
-                                    detail.status === "In-progress" ||
-                                    detail.status === "Failed"
-                                      ? "rgb(236, 236, 236)"
-                                      : "transparent",
-                                  color:
-                                    detail.status === "In-progress" ||
-                                    detail.status === "Failed"
-                                      ? "rgba(165, 165, 165, 1)"
-                                      : "rgba(96, 96, 96, 1)",
-                                  borderColor: "rgba(161, 161, 161, 1)",
-                                }}
-                                onClick={(e) => {
-                                  if (detail.status === "Completed") {
-                                    setMailDraftModal(true);
-                                  }
-                                }}
-                              >
-                                <AttachEmailOutlinedIcon
-                                  sx={{
-                                    fontSize: "1.6vw",
-                                    color:
-                                      detail.status === "Completed"
-                                        ? "rgba(96, 96, 96, 1)"
-                                        : "rgba(161, 161, 161, 0.6)",
                                   }}
-                                />
-                                <Typography variant="body2" fontWeight={500} sx={{ fontSize: '1vw' }}>E-Draft</Typography>
-                              </Button>
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                                >
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ fontSize: "1vw" }}
+                                  >
+                                    {detail.status}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              className="view-table-data-row"
+                              sx={{ fontSize: "1vw" }}
+                            >
+                              {detail.createdDate}
+                            </TableCell>
+                            <TableCell
+                              align="center"
+                              className="view-table-data-row"
+                              sx={{ fontSize: "1vw" }}
+                            >
+                              {detail.requester}
+                            </TableCell>
+                            <TableCell className="view-table-data-row">
+                              <Box className="detail-buttons">
+                                <Button
+                                  variant="outlined"
+                                  className="view-details-button"
+                                  color="darkblue"
+                                  style={{ alignSelf: "center" }}
+                                  onClick={() =>
+                                    route_to("/viewRequestDetails", {
+                                      state: {
+                                        //  ticketDetails : ticketDetails
+                                      },
+                                    })
+                                  }
+                                >
+                                  <DescriptionOutlinedIcon
+                                    sx={{ fontSize: "1.75vw" }}
+                                  />
+                                  <Typography
+                                    variant="body2"
+                                    fontWeight={500}
+                                    sx={{ fontSize: "1vw" }}
+                                    color="rgb(0, 97, 201)"
+                                  >
+                                    {" "}
+                                    {t("details")}
+                                  </Typography>
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  className="mail-draft-button"
+                                  style={{
+                                    alignSelf: "center",
+                                    backgroundColor:
+                                      detail.status === "In-progress" ||
+                                      detail.status === "Failed"
+                                        ? "rgb(236, 236, 236)"
+                                        : "transparent",
+                                    color:
+                                      detail.status === "In-progress" ||
+                                      detail.status === "Failed"
+                                        ? "rgba(165, 165, 165, 1)"
+                                        : "rgba(96, 96, 96, 1)",
+                                    borderColor: "rgba(161, 161, 161, 1)",
+                                  }}
+                                  onClick={(e) => {
+                                    if (detail.status === "Completed") {
+                                      setMailDraftModal(true);
+                                    }
+                                  }}
+                                >
+                                  <AttachEmailOutlinedIcon
+                                    sx={{
+                                      fontSize: "1.6vw",
+                                      color:
+                                        detail.status === "Completed"
+                                          ? "rgba(96, 96, 96, 1)"
+                                          : "rgba(161, 161, 161, 0.6)",
+                                    }}
+                                  />
+                                  <Typography
+                                    variant="body2"
+                                    fontWeight={500}
+                                    sx={{ fontSize: "1vw" }}
+                                  >
+                                    {" "}
+                                    {t("eDraft")}
+                                  </Typography>
+                                </Button>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
-                  
                   </Table>
                 </TableContainer>
               </Box>
             </Box>
 
-            <Box className='table-pagination'>
-            <TablePagination
-          labelDisplayedRows={() => displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)}
-          rowsPerPageOptions={rowOptions}
-          component='div'
-          sx={{
-            display:"flex",
-            alignItems : 'center',
-            justifyContent:'flex-end',
-            width : '100%',
-            height : "2vh",
-            margin : "1vh 0vw 2.5vh 0vw",
-            overflow : "visible",
-              '& .MuiSvgIcon-root': {
-                color: 'rgba(0, 0, 0, 0.56)',
-                fontSize : "1.5vw"
-              },
-              '& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root' : {
-                opacity: 0.25
-              }
-          }}
-          count={requestData.length}
-          slotProps={{
-            select : {
-              renderValue : value => <Typography sx={{ fontSize : "0.95vw"}}>{value}</Typography>,
-              IconComponent : props =>  <KeyboardArrowDownOutlinedIcon
-              className="reports-type-dropdownicon"
-              sx={{ fontSize : '1.2vw', color:"rgba(115, 115, 115, 1)",marginTop : "0.05vh"}}
-              {...props}
-            />,
-              variant:'standard',
-              input : (
-              <OutlinedInput 
-              fullWidth={true} 
-              sx={{ border : "none",height : '3vh',fontSize : "0.2vw",            
-                  "& .MuiOutlinedInput-notchedOutline" : {
-                       border: 'none',
-                   },
-                  "&:hover > .MuiOutlinedInput-notchedOutline" : {
-                    border: 'none',
-                   },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-              }} />
-              
-              ),
-              // IconComponent : props => (
-              //   <KeyboardArrowDownOutlinedIcon
-              //     className="reports-type-dropdownicon"
-              //     sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
-              //     {...props}
-              //   />
-              // ),
-              sx : { 
-                width : "auto",
-                padding:"10px",
-                marginTop : "0.4vh",
-                marginLeft : "-3.5%",
-              },
-              MenuProps : {
-                sx : {
-                  // marginTop : "-8vh"
-                  fontSize : "0.2vw"
-                },
-               MenuListProps : {      
-                sx : {
-                
+            <Box className="table-pagination">
+              <TablePagination
+                labelDisplayedRows={() =>
+                  displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
                 }
-               },
-              },      
-            }
-          }}
-          rowsPerPage={rowsPerPage}
-          labelRowsPerPage={
-          <Box sx={{ display : "flex",flexDirection : "row", marginTop : "2.25vh",width : "100%",textAlign : 'center',alignItems : "center",justifyContent : "center",height : "4.5vh"}}>
-          <Typography sx={{ alignSelf : "center",fontSize : "1vw",color : 'rgba(0, 0, 0, 0.6)'}}>Rows per page : </Typography>
-          </Box>
-        }
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+                rowsPerPageOptions={rowOptions}
+                component="div"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                  height: "2vh",
+                  margin: "1vh 0vw 2.5vh 0vw",
+                  overflow: "visible",
+                  "& .MuiSvgIcon-root": {
+                    color: "rgba(0, 0, 0, 0.56)",
+                    fontSize: "1.5vw",
+                  },
+                  "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root": {
+                    opacity: 0.25,
+                  },
+                }}
+                count={requestData.length}
+                slotProps={{
+                  select: {
+                    renderValue: (value) => (
+                      <Typography sx={{ fontSize: "0.95vw" }}>
+                        {value}
+                      </Typography>
+                    ),
+                    IconComponent: (props) => (
+                      <KeyboardArrowDownOutlinedIcon
+                        className="reports-type-dropdownicon"
+                        sx={{
+                          fontSize: "1.2vw",
+                          color: "rgba(115, 115, 115, 1)",
+                          marginTop: "0.05vh",
+                        }}
+                        {...props}
+                      />
+                    ),
+                    variant: "standard",
+                    input: (
+                      <OutlinedInput
+                        fullWidth={true}
+                        sx={{
+                          border: "none",
+                          height: "3vh",
+                          fontSize: "0.2vw",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                          "&:hover > .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                            border: "none",
+                          },
+                        }}
+                      />
+                    ),
+                    // IconComponent : props => (
+                    //   <KeyboardArrowDownOutlinedIcon
+                    //     className="reports-type-dropdownicon"
+                    //     sx={{ fontSize : '1.48vw', color:"rgba(115, 115, 115, 1)"}}
+                    //     {...props}
+                    //   />
+                    // ),
+                    sx: {
+                      width: "auto",
+                      padding: "10px",
+                      marginTop: "0.4vh",
+                      marginLeft: "-3.5%",
+                    },
+                    MenuProps: {
+                      sx: {
+                        // marginTop : "-8vh"
+                        fontSize: "0.2vw",
+                      },
+                      MenuListProps: {
+                        sx: {},
+                      },
+                    },
+                  },
+                }}
+                rowsPerPage={rowsPerPage}
+                labelRowsPerPage={
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginTop: "2.25vh",
+                      width: "100%",
+                      textAlign: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "4.5vh",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        alignSelf: "center",
+                        fontSize: "1vw",
+                        color: "rgba(0, 0, 0, 0.6)",
+                      }}
+                    >
+                      {t("rowsPerPage")} :{" "}
+                    </Typography>
+                  </Box>
+                }
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
             </Box>
           </Box>
         </Box>
