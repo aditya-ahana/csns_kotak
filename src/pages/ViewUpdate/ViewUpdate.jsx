@@ -87,6 +87,7 @@ export default function ViewRequest() {
       setSelectedStatus((selected) => [...selected, status]);
     } else {
       setSelectedStatus((selected) => selected.filter((s) => s !== status));
+      setSelectedStatus((selected) => selected.filter((s) => s !== status));
     }
   };
 
@@ -200,6 +201,8 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "31-05-2024",
       requester: "System",
+      createdDate: "31-05-2024",
+      requester: "System",
     },
     {
       ticketId: "1299",
@@ -213,6 +216,7 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "08-04-2024",
       requester: "User",
+      requester: "User",
     },
     {
       ticketId: "1298",
@@ -223,6 +227,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "08-03-2024",
+      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -235,6 +240,7 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "12-01-2024",
       requester: "System",
+      requester: "System",
     },
     {
       ticketId: "1296",
@@ -246,12 +252,14 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1295",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
+      requester: "Admin",
       requester: "Admin",
     },
 
@@ -267,6 +275,7 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "12-01-2024",
       requester: "System",
+      requester: "System",
     },
     {
       ticketId: "1293",
@@ -280,6 +289,7 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "04-12-2023",
       requester: "User",
+      requester: "User",
     },
     {
       ticketId: "1292",
@@ -290,6 +300,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
+      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -302,6 +313,7 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "02-03-2023",
       requester: "System",
+      requester: "System",
     },
     {
       ticketId: "1290",
@@ -313,12 +325,14 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1289",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
+      requester: "Admin",
       requester: "Admin",
     },
 
@@ -334,6 +348,7 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "10-01-2024",
       requester: "System",
+      requester: "System",
     },
     {
       ticketId: "1287",
@@ -347,6 +362,7 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "08-12-2023",
       requester: "User",
+      requester: "User",
     },
     {
       ticketId: "1286",
@@ -357,6 +373,7 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
+      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -369,6 +386,7 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "02-03-2023",
       requester: "System",
+      requester: "System",
     },
     {
       ticketId: "1284",
@@ -380,12 +398,14 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
+      requester: "Banker",
     },
     {
       ticketId: "1283",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
+      requester: "Admin",
       requester: "Admin",
     },
   ];
@@ -398,6 +418,7 @@ export default function ViewRequest() {
     requests: request.requests,
     status: request.status,
     createdDate: request.createdDate,
+    requester: request.requester,
     requester: request.requester,
   }));
 
@@ -566,6 +587,7 @@ export default function ViewRequest() {
                   size="1.45vw"
                 /> */}
 
+                {/* <FilterAltOutlinedIcon */}
                 <FilterAltOutlinedIcon
                   className="filter-icon"
                   sx={{ color: "#606060", fontSize: "1.5vw" }}

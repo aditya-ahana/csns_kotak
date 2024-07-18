@@ -47,6 +47,7 @@ export default function CreateRequest() {
 
   const route_to = useNavigate();
   const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [ticketNumber, setTicketNumber] = useState(0);
   const [ticketDescription, setTicketDescription] = useState("");
@@ -247,6 +248,7 @@ export default function CreateRequest() {
   }, [selectedReports]);
 
   // //console.log('Selected REPORTS : ',selectedReports);
+  // //console.log('Selected REPORTS : ',selectedReports);
 
   const [reportsState, setReportsState] = useState([]);
 
@@ -328,6 +330,11 @@ export default function CreateRequest() {
   //     document.querySelector('#selected-reports-section').scrollIntoView();
   //   }
   // }, [selectedReports.length]);
+  // useEffect(() => {
+  //   if (selectedReports.length > 1) {
+  //     document.querySelector('#selected-reports-section').scrollIntoView();
+  //   }
+  // }, [selectedReports.length]);
 
   const handleParamSelection = (event, reportIndex, reportName) => {
     setReportsState((prevState) => {
@@ -341,12 +348,15 @@ export default function CreateRequest() {
       if (!report) {
         //console.error("Report is undefined for index:", reportIndex);
         //console.log("loop4");
+        //console.error("Report is undefined for index:", reportIndex);
+        //console.log("loop4");
         return prevState;
       }
 
       report.selectedParams =
         typeof value === "string" ? value.split(",") : value;
 
+      //console.log("Part", value);
       //console.log("Part", value);
 
       // if(reportName === 'IP Logs' && params.some(param => param === 'Mobile No.')){
@@ -378,6 +388,7 @@ export default function CreateRequest() {
       //   }
       // }
 
+      //console.log("PARAMS?", report.selectedParams);
       //console.log("PARAMS?", report.selectedParams);
 
       if (
@@ -781,6 +792,7 @@ export default function CreateRequest() {
 
   const addDetail = (reportIndex, detailName, name, reportName) => {
     //console.log("for detail", reportIndex, detailName);
+    //console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
 
@@ -964,6 +976,8 @@ export default function CreateRequest() {
 
     //console.log(formatted_date);
     // //console.log('Detail Index',detailIndex);
+    //console.log(formatted_date);
+    // //console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -971,13 +985,18 @@ export default function CreateRequest() {
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
         //console.log("time1");
+        //console.error("Report is undefined for index:", reportIndex);
+        //console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
         //console.log("time2");
+        //console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
         //console.log("time3");
         return prevState;
@@ -1004,6 +1023,8 @@ export default function CreateRequest() {
 
     // //console.log(formatted_date);
     // //console.log('Detail Index',detailIndex);
+    // //console.log(formatted_date);
+    // //console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -1011,13 +1032,18 @@ export default function CreateRequest() {
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
         //console.log("time1");
+        //console.error("Report is undefined for index:", reportIndex);
+        //console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
         //console.log("time2");
+        //console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
         //console.log("time3");
         return prevState;
@@ -1029,6 +1055,10 @@ export default function CreateRequest() {
   };
 
   const handleDate = (date, reportIndex, detailIndex, detailName) => {
+    //console.log("RRN date", date);
+    //console.log("RRN reportIndex", reportIndex);
+    //console.log("RRN detailIndex", detailIndex);
+    //console.log("RRN Detail", detailName);
     //console.log("RRN date", date);
     //console.log("RRN reportIndex", reportIndex);
     //console.log("RRN detailIndex", detailIndex);
@@ -1048,12 +1078,15 @@ export default function CreateRequest() {
 
     // //console.log(formatted_date);
     // //console.log('Detail Index',detailIndex);
+    // //console.log(formatted_date);
+    // //console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       newState[reportIndex][detailName][detailIndex].date = formatted_date;
 
+      //console.log("time4", date);
       //console.log("time4", date);
       return newState;
     });
@@ -1737,6 +1770,7 @@ export default function CreateRequest() {
                 }}
                 onBlur={() => setDescriptionFocused(false)}
                 multiline
+                multiline
                 sx={inputControl.textfield}
                 className="ticket-description-input"
                 autoComplete="off"
@@ -1933,6 +1967,7 @@ export default function CreateRequest() {
                         className="selected-report-header"
                       >
                         <span className="selected-report-heading">
+                          {request.selectedReport}
                           {request.selectedReport}
                         </span>
                       </AccordionSummary>
@@ -2256,10 +2291,13 @@ export default function CreateRequest() {
                     </Box>
 
                     <Box className="preview-scroll">
+                      {/* {reportsState.length > 0 &&
+                        reportsState.map((request, reportIndex) => ( */}
                       {reportsState.length > 0 &&
                         reportsState.map((request, reportIndex) => (
                           <Box className="preview-report" key={reportIndex}>
                             <Box className="preview-report-header">
+                              {/* <CheckBoxOutlinedIcon */}
                               <CheckBoxOutlinedIcon
                                 className="check-icon"
                                 size="1.4vw"
@@ -2371,6 +2409,7 @@ export default function CreateRequest() {
               </Box>
             </Box>
           </Box>
+          // </Box>
         )}
       </Box>
     </Box>
