@@ -1770,7 +1770,7 @@ export default function CreateRequest() {
                 }}
                 onBlur={() => setDescriptionFocused(false)}
                 multiline
-                multiline
+                // multiline
                 sx={inputControl.textfield}
                 className="ticket-description-input"
                 autoComplete="off"
