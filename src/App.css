@@ -3,6 +3,7 @@
 :root {
   --logoColor: rgb(237 28 36);
   --logoHoverColor: rgb(255, 97, 102);
+  --logoBlueColor: rgb(0 56 116);
 }
 
 * {
@@ -29,6 +30,10 @@
 
 .logoRedColor {
   color: var(--logoColor);
+}
+
+.logoBlueColor {
+  color: var(--logoBlueColor) !important;
 }
 
 .MuiPaper-root.MuiPaper-elevation.MuiPaper-elevation0.MuiDrawer-paper.MuiDrawer-paperAnchorLeft.MuiDrawer-paperAnchorDockedLeft.css-12i7wg6-MuiPaper-root-MuiDrawer-paper {
@@ -238,7 +243,8 @@ input::-webkit-inner-spin-button {
   width: auto;
 }
 
-.ticket-number-container,.ticket-description-container {
+.ticket-number-container,
+.ticket-description-container {
   max-height: fit-content;
   width: 40.125%;
 }
@@ -353,7 +359,7 @@ input::-webkit-inner-spin-button {
   align-self: center;
   vertical-align: middle;
   background-color: white;
-  border : none;
+  border: none;
   /* border-style: solid;
   border-color: #de1f1f;
   border-radius: 40px; */
@@ -544,7 +550,8 @@ input::-webkit-inner-spin-button {
   border-width: 0px;
   background-color: transparent;
 }
-.submit-button:hover,.clear-button:hover {
+.submit-button:hover,
+.clear-button:hover {
   box-shadow: 1px 2px 12px 2px rgba(79, 77, 100, 0.48);
   transition: all 0.4s;
 }
@@ -738,7 +745,7 @@ input::-webkit-inner-spin-button {
   margin-bottom: 2.2rem;
   border-bottom-width: 0px;
   align-self: center;
-  max-height: 28.5rem; 
+  max-height: 28.5rem;
   overflow: scroll;
 }
 
@@ -774,17 +781,16 @@ input::-webkit-inner-spin-button {
 
 .filter-menu-header {
   height: 1.85rem;
-  padding-left : 0.91rem;
+  padding-left: 0.91rem;
   border-top-width: 0px;
   border-left-width: 0px;
   border-right-width: 0px;
   border-bottom-width: 1px;
   border-style: solid;
-  border-color : rgba(232, 232, 232, 1);
+  border-color: rgba(232, 232, 232, 1);
 }
 
 .date-filter-section {
-
 }
 
 .table-pagination {
@@ -811,7 +817,7 @@ input::-webkit-inner-spin-button {
 }
 
 .MuiTablePagination-selectLabel {
-   align-self: center;
+  align-self: center;
 }
 
 .MuiTablePagination-input {
@@ -819,15 +825,13 @@ input::-webkit-inner-spin-button {
 }
 
 .MuiTablePagination-select {
-
 }
 
 .MuiTablePagination-menuItem {
-
 }
 
 .MuiTablePagination-selectIcon {
-  opacity : 0.85
+  opacity: 0.85;
 }
 
 .MuiTableBody-root {

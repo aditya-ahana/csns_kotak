@@ -1,34 +1,42 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, createTheme, Input, ThemeProvider, AccordionSummary, MenuList, AccordionDetails } from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
-import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
-import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
-import Select from '@mui/material/Select';
-import { Button } from '@mui/base/Button';
-import { Modal } from '@mui/material';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Checkbox , { checkboxClasses } from '@mui/material/Checkbox';
-import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
-import Box, { boxClasses } from '@mui/material/Box';
-import { Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import ExpandCircleDownOutlinedIcon from '@mui/icons-material/ExpandCircleDownOutlined';
+import {
+  TextField,
+  createTheme,
+  Input,
+  ThemeProvider,
+  AccordionSummary,
+  MenuList,
+  AccordionDetails,
+} from "@mui/material";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import Select from "@mui/material/Select";
+import { Button } from "@mui/base/Button";
+import { Modal } from "@mui/material";
+import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
+import Box, { boxClasses } from "@mui/material/Box";
+import { Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import dayjs, { Dayjs } from "dayjs";
-import Accordion from '@mui/material/Accordion';
-import InputAdornment from '@mui/material/InputAdornment';
-import { setRequestPayloads } from '../../Redux/csnsReducers';
-import Fade from '@mui/material/Fade';
+import Accordion from "@mui/material/Accordion";
+import InputAdornment from "@mui/material/InputAdornment";
+import { setRequestPayloads } from "../../Redux/csnsReducers";
+import Fade from "@mui/material/Fade";
 
 import { useTranslation } from "react-i18next";
 
@@ -65,112 +73,116 @@ export default function CreateRequest() {
   console.log("Current Date", currentDate);
 
   const inputControl = {
-    textfield : {
-    '& .MuiOutlinedInput-root': {
-     '& fieldset': {
-    border: '1.25px solid rgba(76, 76, 76, 1)', 
-    backgroundColor : 'transparent'
+    textfield: {
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          border: "1.25px solid rgba(76, 76, 76, 1)",
+          backgroundColor: "transparent",
+        },
+        "&:hover fieldset": {
+          border: "1.25px solid rgba(161, 161, 161, 1)",
+          backgroundColor: "transparent",
+        },
+        "&.Mui-focused fieldset": {
+          border: "1.65px solid rgb(131, 131, 210)",
+          backgroundColor: "transparent",
+        },
+      },
     },
-    '&:hover fieldset': {
-     border : "1.25px solid rgba(161, 161, 161, 1)",
-     backgroundColor : 'transparent'
-   },
-   '&.Mui-focused fieldset': {
-    border: '1.65px solid rgb(131, 131, 210)',
-    backgroundColor : 'transparent'
-   },
-  }
- },
- inputProps : {  
-  style : {
-    fontSize : "1vw",
-    height : '0.6rem',
-    // backgroundColor : "blue"
-  }
- },
- inputLabelProps : {
-    // shrink : true,
-    size:'small',
-    sx : {
-      fontSize : "1vw",
-      alignSelf : "center",
-      display : 'flex',
-      alignItems:'center',
-      height : "58%",
-    }
-  },
-  textAreaProps : {  
-    style : {
-      fontSize : "1vw",
-      minHeight : "1.65rem",
-    }
-   },
-  textAreaLabelProps : {
-    // shrink : true,
-    size:'small',
-    sx : {
-      fontSize : "1vw",
-      paddingTop : '0.15rem',
-      alignSelf : "center",
-      display : 'flex',
-      alignItems:'center',
-      height : 'auto'
-    }
-  }
-};
-
-const datePickerControl = {
-
-  slotProps : {
-    popper: {
+    inputProps: {
+      style: {
+        fontSize: "1vw",
+        height: "0.6rem",
+        // backgroundColor : "blue"
+      },
+    },
+    inputLabelProps: {
+      // shrink : true,
+      size: "small",
       sx: {
-        ".MuiPaper-root": { borderRadius : "10px",padding:0 },
-        '&.MuiPickersPopper-root': { padding : 0 },
-        ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'gray',color : "white" }},
+        fontSize: "1vw",
+        alignSelf: "center",
+        display: "flex",
+        alignItems: "center",
+        height: "58%",
       },
     },
-  field : {
-    readOnly : true,
-  },
-  openPickerIcon : {
-    sx : {
-      fontSize : "1.75vw"
-    }
-   },
-  textField : {
-    InputLabelProps:{
-        sx : {
-          fontSize : "1.1vw"
-        }
+    textAreaProps: {
+      style: {
+        fontSize: "1vw",
+        minHeight: "1.65rem",
+      },
     },
-    color:'primary',
-    size:'small',
-    "aria-readonly":true,
-    sx:{
-      "& .MuiInputBase-input": {
-       height:'1.575rem',
-       width : 'auto',
-       fontSize:"0.95vw"
+    textAreaLabelProps: {
+      // shrink : true,
+      size: "small",
+      sx: {
+        fontSize: "1vw",
+        paddingTop: "0.15rem",
+        alignSelf: "center",
+        display: "flex",
+        alignItems: "center",
+        height: "auto",
       },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-       border: '1.25px solid rgba(76, 76, 76, 1)', 
-       },
-       '&:hover fieldset': {
-        border : "1.25px solid rgba(161, 161, 161, 1)"
-      },
-      '&.Mui-focused fieldset': {
-       border: '1.65px solid rgb(131, 131, 210)',
-      },
-     } 
-    }
-   }
-  },
+    },
+  };
 
-  sx : {
-     backgroundColor : 'transparent'
-    }
-  }
+  const datePickerControl = {
+    slotProps: {
+      popper: {
+        sx: {
+          ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
+          "&.MuiPickersPopper-root": { padding: 0 },
+          ...{
+            "& .MuiPickersDay-root.Mui-selected": {
+              backgroundColor: "gray",
+              color: "white",
+            },
+          },
+        },
+      },
+      field: {
+        readOnly: true,
+      },
+      openPickerIcon: {
+        sx: {
+          fontSize: "1.75vw",
+        },
+      },
+      textField: {
+        InputLabelProps: {
+          sx: {
+            fontSize: "1.1vw",
+          },
+        },
+        color: "primary",
+        size: "small",
+        "aria-readonly": true,
+        sx: {
+          "& .MuiInputBase-input": {
+            height: "1.575rem",
+            width: "auto",
+            fontSize: "0.95vw",
+          },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              border: "1.25px solid rgba(76, 76, 76, 1)",
+            },
+            "&:hover fieldset": {
+              border: "1.25px solid rgba(161, 161, 161, 1)",
+            },
+            "&.Mui-focused fieldset": {
+              border: "1.65px solid rgb(131, 131, 210)",
+            },
+          },
+        },
+      },
+    },
+
+    sx: {
+      backgroundColor: "transparent",
+    },
+  };
 
   useEffect(() => {
     setReportsState((prevReportsState) => {
@@ -1076,56 +1088,58 @@ const datePickerControl = {
     });
   };
 
-  const isValidReportData = reportsState.some((state,index) => state.accountNumberDetails).length >= 1 
-  || reportsState.some((state,index) => state.PANdetails).length >= 1
-  || reportsState.some((state,index) => state.CRNdetails).length >= 1
-  || reportsState.some((state,index) => state.RRNdetails).length >= 1
-  || reportsState.some((state,index) => state.aadharDetails).length >= 1
-  || reportsState.some((state,index) => state.mobileNoDetails).length >= 1
-  || reportsState.some((state,index) => state.creditCardDetails).length >= 1
-  || reportsState.some((state,index) => state.debitCardDetails).length >= 1
-  || reportsState.some((state,index) => state.emailDetails).length >= 1
-  
-  console.log('Valid Report Data',isValidReportData);
+  const isValidReportData =
+    reportsState.some((state, index) => state.accountNumberDetails).length >=
+      1 ||
+    reportsState.some((state, index) => state.PANdetails).length >= 1 ||
+    reportsState.some((state, index) => state.CRNdetails).length >= 1 ||
+    reportsState.some((state, index) => state.RRNdetails).length >= 1 ||
+    reportsState.some((state, index) => state.aadharDetails).length >= 1 ||
+    reportsState.some((state, index) => state.mobileNoDetails).length >= 1 ||
+    reportsState.some((state, index) => state.creditCardDetails).length >= 1 ||
+    reportsState.some((state, index) => state.debitCardDetails).length >= 1 ||
+    reportsState.some((state, index) => state.emailDetails).length >= 1;
+
+  console.log("Valid Report Data", isValidReportData);
 
   const SelectProps = {
-    REPORT_SELECT_PROPS : {
+    REPORT_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: '19.6rem',
-          marginTop : "-0.5rem",
-          boxShadow : "1px 2px 12px 0px rgba(0, 0, 0, 0.1)"
-        }
-      }
+          maxHeight: "19.6rem",
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
     },
-    PARAM_SELECT_PROPS : {
+    PARAM_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: '9.36rem',
-          marginTop : "-0.15rem",
+          maxHeight: "9.36rem",
+          marginTop: "-0.15rem",
         },
       },
-      MenuListProps : {
-        sx : {
-          border : '1.5px solid rgba(161, 161, 161, 1)',
-          margin : 0,
-          borderTopLeftRadius:'0px',
-          borderTopRightRadius:'0px',
-          borderBottomLeftRadius:'4px',
-          borderBottomRightRadius:'4px',
-          padding : 0
-        }
-      }
-    },  
-    TYPE_SELECT_PROPS : {
+      MenuListProps: {
+        sx: {
+          border: "1.5px solid rgba(161, 161, 161, 1)",
+          margin: 0,
+          borderTopLeftRadius: "0px",
+          borderTopRightRadius: "0px",
+          borderBottomLeftRadius: "4px",
+          borderBottomRightRadius: "4px",
+          padding: 0,
+        },
+      },
+    },
+    TYPE_SELECT_PROPS: {
       PaperProps: {
         style: {
-          marginTop : "-0.5rem",
-          boxShadow : "1px 2px 12px 0px rgba(0, 0, 0, 0.1)"
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
         },
       },
-    }
-  }
+    },
+  };
 
   const displayRequestedReports = (
     detailsArray,
@@ -1481,17 +1495,36 @@ const datePickerControl = {
                   {...props}
                 />
               )}
-              renderValue={(type) => type !== 'PDF' && type !== 'Excel' ? `${type} *` : type}
+              renderValue={(type) =>
+                type !== "PDF" && type !== "Excel" ? `${type} *` : type
+              }
               MenuProps={SelectProps.TYPE_SELECT_PROPS}
               inputProps={{ "aria-label": "Without label" }}
               autoWidth={false}
               sx={{}}
-          style={{ display:'flex',alignItems:'center',height : '2.65rem',fontSize : "1vw",color : detail.type === 'Type' ? 'rgba(0, 0, 0, 0.49)' : 'black'}}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                height: "2.65rem",
+                fontSize: "1vw",
+                color: detail.type === "Type" ? "rgba(0, 0, 0, 0.49)" : "black",
+              }}
               placeholder={t("type")}
             >
               {availableReportTypes.map((type) => (
-                 <MenuItem key={type} value={type} style={{ display:'flex', border : "0px solid #cdcdcd", width : '6vw',height:'1.8rem',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent"}}>
-
+                <MenuItem
+                  key={type}
+                  value={type}
+                  style={{
+                    display: "flex",
+                    border: "0px solid #cdcdcd",
+                    width: "6vw",
+                    height: "1.8rem",
+                    alignItems: "left",
+                    borderRadius: "4px",
+                    backgroundColor: "transparent",
+                  }}
+                >
                   <ListItemText
                     primary={type}
                     style={{ padding: "0rem" }}
@@ -1532,7 +1565,14 @@ const datePickerControl = {
               addDetail(reportIndex, detailName, param, reportName)
             }
           >
-            <AddCircleOutlineRoundedIcon sx={{ color : 'red', alignSelf : "center",justifySelf : "center",fontSize:'2.65vw' }} />
+            <AddCircleOutlineRoundedIcon
+              sx={{
+                color: "red",
+                alignSelf: "center",
+                justifySelf: "center",
+                fontSize: "2.65vw",
+              }}
+            />
           </Button>
         ) : (
           <Button
@@ -1545,7 +1585,14 @@ const datePickerControl = {
             }}
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
-            <RemoveCircleOutlineRoundedIcon sx={{ color : 'red', alignSelf : "center",justifySelf : "center",fontSize:'2.65vw'}} />
+            <RemoveCircleOutlineRoundedIcon
+              sx={{
+                color: "red",
+                alignSelf: "center",
+                justifySelf: "center",
+                fontSize: "2.65vw",
+              }}
+            />
           </Button>
         )}
       </Box>
@@ -1666,15 +1713,18 @@ const datePickerControl = {
   const handleSubmit = () => {
     dispatch(setRequestPayloads(responsePayload));
     console.log("currentDate redux", currentDate);
-    route_to("/ViewUpdate");
+    route_to("/ViewRequest");
   };
 
   return (
     <Box className="page">
       <Box className="create-request-screen">
-        <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+        <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
           {t("createRequest")}
-        </span>
+        </Typography>
+        {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+          {t("createRequest")}
+        </span> */}
 
         <Box className="ticket-entry-section">
           <Box className="ticket-type-section">
@@ -1808,11 +1858,30 @@ const datePickerControl = {
               MenuProps={SelectProps.REPORT_SELECT_PROPS}
               inputProps={{ "aria-label": "Without label" }}
               autoWidth={false}
-              style={{ display:'flex',alignItems:'center',height : '2.85rem',fontSize : "1vw"}}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                height: "2.85rem",
+                fontSize: "1vw",
+              }}
               placeholder={t("statementsReportRequire")}
             >
               {requiredReportsData.map((report) => (
-                 <MenuItem key={report} value={report} style={{ display:'flex', border : "1px solid #cdcdcd", width : '96.25%', margin:'1rem 0rem 1rem 1.4vw',height:'2.65rem',alignItems:'left',borderRadius : '4px', backgroundColor : "transparent",fontSize : "2px"}}>
+                <MenuItem
+                  key={report}
+                  value={report}
+                  style={{
+                    display: "flex",
+                    border: "1px solid #cdcdcd",
+                    width: "96.25%",
+                    margin: "1rem 0rem 1rem 1.4vw",
+                    height: "2.65rem",
+                    alignItems: "left",
+                    borderRadius: "4px",
+                    backgroundColor: "transparent",
+                    fontSize: "2px",
+                  }}
+                >
                   <Checkbox
                     size="medium"
                     icon={
@@ -1833,7 +1902,13 @@ const datePickerControl = {
                       fontSize: "2px",
                     }}
                   />
-                  <ListItemText primary={report} style={{ padding : "0.05rem 0rem 0rem 0rem"}} color="black" inputMode='text' primaryTypographyProps={{ fontSize : '0.95vw'}}  />
+                  <ListItemText
+                    primary={report}
+                    style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                    color="black"
+                    inputMode="text"
+                    primaryTypographyProps={{ fontSize: "0.95vw" }}
+                  />
                 </MenuItem>
               ))}
             </Select>
@@ -1853,7 +1928,10 @@ const datePickerControl = {
             <Box>
               {reportsState.length > 0 &&
                 reportsState.map((request, reportIndex) => (
-                  <Box key={reportIndex} sx={{ marginTop : '0.25rem',marginBottom : "1.65rem" }}>
+                  <Box
+                    key={reportIndex}
+                    sx={{ marginTop: "0.25rem", marginBottom: "1.65rem" }}
+                  >
                     <Accordion
                       className="selected-report-view"
                       //  defaultExpanded={true}
@@ -1873,7 +1951,7 @@ const datePickerControl = {
                       }
                     >
                       <AccordionSummary
-                       sx={{ minHeight : "2.5rem",maxHeight : "2.75rem"}}
+                        sx={{ minHeight: "2.5rem", maxHeight: "2.75rem" }}
                         expandIcon={
                           <ExpandCircleDownOutlinedIcon
                             sx={{
@@ -1902,7 +1980,7 @@ const datePickerControl = {
 
                       <AccordionDetails
                         sx={{
-                          padding : 0,
+                          padding: 0,
                           border: "1px solid rgba(205, 205, 205, 1)",
                           borderWidth: "1px 0px 0px 0px",
                         }}
@@ -1993,14 +2071,29 @@ const datePickerControl = {
                                       "aria-label": "Without label",
                                     }}
                                     autoWidth={false}
-                                    style={{ display:'flex',alignItems:'center',height : '2.69rem',fontSize : "1vw"}}
+                                    style={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      height: "2.69rem",
+                                      fontSize: "1vw",
+                                    }}
                                     placeholder={t("selectDetails")}
                                   >
                                     {availableParameters.map((param) => (
                                       <MenuItem
                                         key={param}
                                         value={param}
-                                        style={{ display:'flex',borderStyle:'solid',borderColor : 'rgba(232, 232, 232, 1)',borderBottomWidth : "1.75px",height:'2.36rem',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}
+                                        style={{
+                                          display: "flex",
+                                          borderStyle: "solid",
+                                          borderColor: "rgba(232, 232, 232, 1)",
+                                          borderBottomWidth: "1.75px",
+                                          height: "2.36rem",
+                                          alignItems: "left",
+                                          borderRadius: "0px",
+                                          backgroundColor: "transparent",
+                                          fontSize: "2px",
+                                        }}
                                       >
                                         <Checkbox
                                           checked={
@@ -2030,7 +2123,9 @@ const datePickerControl = {
                                         />
                                         <ListItemText
                                           primary={param}
-                                          style={{ padding : "0.15rem 0rem 0rem 0rem"}} 
+                                          style={{
+                                            padding: "0.15rem 0rem 0rem 0rem",
+                                          }}
                                           color="black"
                                           inputMode="text"
                                           primaryTypographyProps={{
@@ -2051,7 +2146,8 @@ const datePickerControl = {
                                       "Beneficiary details for Single IMPS transactions" ||
                                     request.selectedReport ===
                                       "Beneficiary details for Single UPI transactions"
-                                      ?'-1.25rem' : '1.5rem',
+                                      ? "-1.25rem"
+                                      : "1.5rem",
                                 }}
                               >
                                 {reportsState[reportIndex].selectedParams.some(
@@ -2158,7 +2254,6 @@ const datePickerControl = {
                 <Button
                   className="submit-button"
                   title="Submit"
-                 
                   onClick={handleSubmit}
                 >
                   {" "}
@@ -2217,10 +2312,7 @@ const datePickerControl = {
                               </h3>
                             </Box>
 
-                            <Box
-                              className="preview-report-details"
-                              
-                            >
+                            <Box className="preview-report-details">
                               {reportsState[reportIndex] && (
                                 <>
                                   {showPreview(

@@ -137,46 +137,51 @@ export default function ViewRequest() {
 
   const requestPhases = ["Completed", "In-progress", "Failed"];
 
-  const datePickerControl =  {
-    slotProps : {
-       popper: {
-         sx: {
-           ".MuiPaper-root": { borderRadius : "10px" },
-           '&.MuiPickersPopper-root': { padding:0},
-           ...{'& .MuiPickersDay-root.Mui-selected': { backgroundColor: 'rgba(75, 75, 75, 1)',color : "white" }},
-         },
-       },
-     openPickerIcon : {
-      sx : {
-        fontSize : "1.36vw"
-      }
-     },
-     field : {
-       readOnly : true,
-     },
-     textField : {
-       placeholder : "Date",
-       InputLabelProps : {
-         sx : {
-           fontSize : "1vw",
-           opacity : "0.6"
-         }
-       },
-       size:'small',
-       "aria-readonly":true,
-       sx:{
-         "& .MuiInputBase-input": {
-          height:'1.25rem',
-          fontSize:"0.85vw",
-           marginLeft : '-7%',
-         },
-       }
-      }
-     },
-     sx : { 
-       backgroundColor : 'transparent'
-     }
-   }
+  const datePickerControl = {
+    slotProps: {
+      popper: {
+        sx: {
+          ".MuiPaper-root": { borderRadius: "10px" },
+          "&.MuiPickersPopper-root": { padding: 0 },
+          ...{
+            "& .MuiPickersDay-root.Mui-selected": {
+              backgroundColor: "rgba(75, 75, 75, 1)",
+              color: "white",
+            },
+          },
+        },
+      },
+      openPickerIcon: {
+        sx: {
+          fontSize: "1.36vw",
+        },
+      },
+      field: {
+        readOnly: true,
+      },
+      textField: {
+        placeholder: "Date",
+        InputLabelProps: {
+          sx: {
+            fontSize: "1vw",
+            opacity: "0.6",
+          },
+        },
+        size: "small",
+        "aria-readonly": true,
+        sx: {
+          "& .MuiInputBase-input": {
+            height: "1.25rem",
+            fontSize: "0.85vw",
+            marginLeft: "-7%",
+          },
+        },
+      },
+    },
+    sx: {
+      backgroundColor: "transparent",
+    },
+  };
 
   const requestDetails = [
     {
@@ -507,7 +512,9 @@ export default function ViewRequest() {
 
   const displayPaginationLabel = (from, to, count) => {
     return (
-      <Typography sx={{ fontSize : "0.95vw",marginTop : "0.1rem"}}>{`${from} - ${to} of ${count}`}</Typography>
+      <Typography
+        sx={{ fontSize: "0.95vw", marginTop: "0.1rem" }}
+      >{`${from} - ${to} of ${count}`}</Typography>
     );
   };
 
@@ -515,8 +522,7 @@ export default function ViewRequest() {
     <>
       <Box className="table-page">
         <Box className="view-request-screen">
-          <Typography variant='h5' fontWeight={500} fontSize='1.499vw' className="view-ticket-header">
-            {" "}
+          <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
@@ -610,7 +616,14 @@ export default function ViewRequest() {
                       <MenuItem
                         key={index}
                         value={status}
-                        style={{ display:'flex',height:'1.95rem',alignItems:'left',borderRadius : '0px', backgroundColor : "transparent",fontSize : "2px"}}
+                        style={{
+                          display: "flex",
+                          height: "1.95rem",
+                          alignItems: "left",
+                          borderRadius: "0px",
+                          backgroundColor: "transparent",
+                          fontSize: "2px",
+                        }}
                       >
                         <Checkbox
                           checked={selectedStatus.includes(status)}
@@ -643,14 +656,15 @@ export default function ViewRequest() {
                           color="black"
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.95vw" }}
-                          style={{ padding : "0.15rem 0rem 0rem 0rem"}}
+                          style={{ padding: "0.15rem 0rem 0rem 0rem" }}
                         />
                       </MenuItem>
                     ))}
                   </MenuList>
 
                   <Box
-                   sx={{ padding : "0.36rem 0vw 0rem 0.65rem",
+                    sx={{
+                      padding: "0.36rem 0vw 0rem 0.65rem",
                       borderWidth: "1px 0px 0px 0px",
                       borderStyle: "solid",
                       borderColor: "rgba(232, 232, 232, 1)",
@@ -666,7 +680,14 @@ export default function ViewRequest() {
                       Created Date
                     </Typography>
 
-                    <Box sx={{ display : "flex",flexDirection : "row",padding : "0.65rem 0rem 0.1rem 0rem",gap : "2.5%"}}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        padding: "0.65rem 0rem 0.1rem 0rem",
+                        gap: "2.5%",
+                      }}
+                    >
                       <Box sx={{ width: "40%" }}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
@@ -690,7 +711,13 @@ export default function ViewRequest() {
                         </LocalizationProvider>
                       </Box>
 
-                      <Box sx={{ display : "flex",marginTop : '0.15rem',alignItems : "center"}}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          marginTop: "0.15rem",
+                          alignItems: "center",
+                        }}
+                      >
                         <RemoveIcon
                           sx={{
                             fontSize: "200%",
@@ -722,7 +749,14 @@ export default function ViewRequest() {
                     </Box>
 
                     {(status_filtered || date_ranged) && (
-                      <Box sx={{display : "flex",padding : "0.75rem 0.75rem 0.1rem 0rem",alignItems : "center",justifyContent : "flex-end"}}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          padding: "0.75rem 0.75rem 0.1rem 0rem",
+                          alignItems: "center",
+                          justifyContent: "flex-end",
+                        }}
+                      >
                         <Button
                           onClick={() => {
                             clearStatusFilter();
@@ -730,7 +764,16 @@ export default function ViewRequest() {
                             handleCloseFilterMenu();
                           }}
                           className="clear-button"
-                          style={{ backgroundColor : "rgba(237, 28, 36, 1)",borderRadius : "4px",border : 'none',width : "30%",height : '1.75rem',fontWeight : 600 , color : "white",fontSize : "0.92vw"}}
+                          style={{
+                            backgroundColor: "rgba(237, 28, 36, 1)",
+                            borderRadius: "4px",
+                            border: "none",
+                            width: "30%",
+                            height: "1.75rem",
+                            fontWeight: 600,
+                            color: "white",
+                            fontSize: "0.92vw",
+                          }}
                         >
                           Clear
                         </Button>
@@ -801,7 +844,10 @@ export default function ViewRequest() {
                                 {detail.requests.map((req, index) => (
                                   <Typography
                                     key={index}
-                                    sx={{ fontSize : '1vw',lineHeight: "1.85rem"}}
+                                    sx={{
+                                      fontSize: "1vw",
+                                      lineHeight: "1.85rem",
+                                    }}
                                   >{`${index + 1}. ${req}`}</Typography>
                                 ))}
                               </Box>
@@ -871,11 +917,14 @@ export default function ViewRequest() {
                                   color="darkblue"
                                   style={{ alignSelf: "center" }}
                                   onClick={() =>
-                                    route_to("/viewRequestDetails", {
-                                      state: {
-                                        //  ticketDetails : ticketDetails
-                                      },
-                                    })
+                                    route_to(
+                                      "/ViewRequest/ViewRequestDetails",
+                                      {
+                                        state: {
+                                          //  ticketDetails : ticketDetails
+                                        },
+                                      }
+                                    )
                                   }
                                 >
                                   <DescriptionOutlinedIcon
@@ -950,20 +999,20 @@ export default function ViewRequest() {
                 rowsPerPageOptions={rowOptions}
                 component="div"
                 sx={{
-                  display:"flex",
-                  alignItems : 'center',
-                  justifyContent:'flex-end',
-                  width : '100%',
-                  height : "0rem",
-                  margin : "0rem 0rem 2rem 0rem",
-                  overflow : "visible",
-                    '& .MuiSvgIcon-root': {
-                      color: 'rgba(0, 0, 0, 0.56)',
-                      fontSize : "1.5vw"
-                    },
-                    '& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root' : {
-                      opacity: 0.25
-                    }
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                  height: "0rem",
+                  margin: "0rem 0rem 2rem 0rem",
+                  overflow: "visible",
+                  "& .MuiSvgIcon-root": {
+                    color: "rgba(0, 0, 0, 0.56)",
+                    fontSize: "1.5vw",
+                  },
+                  "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root": {
+                    opacity: 0.25,
+                  },
                 }}
                 count={rowCount}
                 slotProps={{
@@ -976,7 +1025,11 @@ export default function ViewRequest() {
                     IconComponent: (props) => (
                       <KeyboardArrowDownOutlinedIcon
                         className="reports-type-dropdownicon"
-                        sx={{ fontSize : '1.2vw', color:"rgba(115, 115, 115, 1)",marginTop : "0.002rem"}}
+                        sx={{
+                          fontSize: "1.2vw",
+                          color: "rgba(115, 115, 115, 1)",
+                          marginTop: "0.002rem",
+                        }}
                         {...props}
                       />
                     ),
@@ -985,7 +1038,9 @@ export default function ViewRequest() {
                       <OutlinedInput
                         fullWidth={true}
                         sx={{
-                          border : "none",height : '1.2rem',fontSize : "0.2vw", 
+                          border: "none",
+                          height: "1.2rem",
+                          fontSize: "0.2vw",
                           "& .MuiOutlinedInput-notchedOutline": {
                             border: "none",
                           },
@@ -1008,7 +1063,7 @@ export default function ViewRequest() {
                     sx: {
                       width: "auto",
                       padding: "10px",
-                      marginTop : "0.2rem",
+                      marginTop: "0.2rem",
                       marginLeft: "-3.5%",
                     },
                     MenuProps: {
@@ -1024,7 +1079,17 @@ export default function ViewRequest() {
                 }}
                 rowsPerPage={rowsPerPage}
                 labelRowsPerPage={
-                  <Box sx={{ display : "flex",flexDirection : "row", marginTop : "1.1rem",width : "100%",textAlign : 'center',alignItems : "center",justifyContent : "center"}}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginTop: "1.1rem",
+                      width: "100%",
+                      textAlign: "center",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Typography
                       sx={{
                         alignSelf: "center",
