@@ -2,15 +2,15 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import "./App.css";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import Login from "./pages/Login/Login";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import CreateRequest from "./pages/CreateRequest/CreateRequest";
-import ViewUpdate from "./pages/ViewUpdate/ViewUpdate";
-import ViewRequestDetails from "./pages/ViewUpdate/ViewRequestDetails";
+import ViewRequest from "./pages/ViewRequest/ViewRequest";
+import ViewRequestDetails from "./pages/ViewRequest/ViewRequestDetails";
 
 import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
@@ -22,25 +22,25 @@ import "react-toastify/dist/ReactToastify.css";
 export default function App() {
   return (
     <>
-     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ToastContainer autoClose={3000} />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<Login />} path="/" />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <ToastContainer autoClose={3000} />
+        <BrowserRouter>
+          <Routes>
+            {/* <Route element={<Login />} path="/" /> */}
 
-          <Route element={<WithNav />}>
-            <Route element={<Sidebar />} />
-            <Route element={<Header />} />
-            <Route element={<Dashboard />} path="/Dashboard" />
-            <Route element={<CreateRequest />} path="/CreateRequest" />
-            <Route element={<ViewUpdate />} path="/ViewUpdate" />
-            <Route
-              element={<ViewRequestDetails />}
-              path="/viewRequestDetails"
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            <Route element={<WithNav />}>
+              <Route element={<Sidebar />} />
+              <Route element={<Header />} />
+              <Route element={<Dashboard />} path="/" />
+              <Route element={<CreateRequest />} path="/CreateRequest" />
+              <Route element={<ViewRequest />} path="/ViewRequest" />
+              <Route
+                element={<ViewRequestDetails />}
+                path="/ViewRequest/ViewRequestDetails"
+              />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </LocalizationProvider>
     </>
   );

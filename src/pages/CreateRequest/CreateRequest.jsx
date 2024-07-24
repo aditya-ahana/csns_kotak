@@ -14,8 +14,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import Select from "@mui/material/Select";
@@ -47,7 +47,6 @@ export default function CreateRequest() {
 
   const route_to = useNavigate();
   const dispatch = useDispatch();
-  // const dispatch = useDispatch();
 
   const [ticketNumber, setTicketNumber] = useState(0);
   const [ticketDescription, setTicketDescription] = useState("");
@@ -78,19 +77,22 @@ export default function CreateRequest() {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
           border: "1.25px solid rgba(76, 76, 76, 1)",
+          backgroundColor: "transparent",
         },
         "&:hover fieldset": {
           border: "1.25px solid rgba(161, 161, 161, 1)",
+          backgroundColor: "transparent",
         },
         "&.Mui-focused fieldset": {
           border: "1.65px solid rgb(131, 131, 210)",
+          backgroundColor: "transparent",
         },
       },
     },
     inputProps: {
       style: {
         fontSize: "1vw",
-        height: "1.3vh",
+        height: "0.6rem",
         // backgroundColor : "blue"
       },
     },
@@ -108,7 +110,7 @@ export default function CreateRequest() {
     textAreaProps: {
       style: {
         fontSize: "1vw",
-        minHeight: "3.3vh",
+        minHeight: "1.65rem",
       },
     },
     textAreaLabelProps: {
@@ -116,7 +118,7 @@ export default function CreateRequest() {
       size: "small",
       sx: {
         fontSize: "1vw",
-        paddingTop: "0.25vh",
+        paddingTop: "0.15rem",
         alignSelf: "center",
         display: "flex",
         alignItems: "center",
@@ -129,12 +131,7 @@ export default function CreateRequest() {
     slotProps: {
       popper: {
         sx: {
-          ".MuiPaper-root": {
-            minheight: "44vh",
-            maxHeight: "44vh",
-            borderRadius: "10px",
-            padding: 0,
-          },
+          ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
           "&.MuiPickersPopper-root": { padding: 0 },
           ...{
             "& .MuiPickersDay-root.Mui-selected": {
@@ -163,7 +160,7 @@ export default function CreateRequest() {
         "aria-readonly": true,
         sx: {
           "& .MuiInputBase-input": {
-            height: "3.25vh",
+            height: "1.575rem",
             width: "auto",
             fontSize: "0.95vw",
           },
@@ -183,7 +180,6 @@ export default function CreateRequest() {
     },
 
     sx: {
-      height: "5.5vh",
       backgroundColor: "transparent",
     },
   };
@@ -1092,27 +1088,35 @@ export default function CreateRequest() {
     });
   };
 
+  const isValidReportData =
+    reportsState.some((state, index) => state.accountNumberDetails).length >=
+      1 ||
+    reportsState.some((state, index) => state.PANdetails).length >= 1 ||
+    reportsState.some((state, index) => state.CRNdetails).length >= 1 ||
+    reportsState.some((state, index) => state.RRNdetails).length >= 1 ||
+    reportsState.some((state, index) => state.aadharDetails).length >= 1 ||
+    reportsState.some((state, index) => state.mobileNoDetails).length >= 1 ||
+    reportsState.some((state, index) => state.creditCardDetails).length >= 1 ||
+    reportsState.some((state, index) => state.debitCardDetails).length >= 1 ||
+    reportsState.some((state, index) => state.emailDetails).length >= 1;
+
+  console.log("Valid Report Data", isValidReportData);
+
   const SelectProps = {
     REPORT_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "40.5vh",
-          marginTop: "-1vh",
-          width: "fit-content",
-          resize: "horizontal",
+          maxHeight: "19.6rem",
+          marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
-          // backgroundColor : "red"
         },
       },
     },
     PARAM_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "19.25vh",
-          marginTop: "-0.49vh",
-          overflow: "auto",
-          width: "fit-content",
-          // backgroundColor : "red"
+          maxHeight: "9.36rem",
+          marginTop: "-0.15rem",
         },
       },
       MenuListProps: {
@@ -1130,9 +1134,8 @@ export default function CreateRequest() {
     TYPE_SELECT_PROPS: {
       PaperProps: {
         style: {
-          marginTop: "-1vh",
+          marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
-          // backgroundColor : "red"
         },
       },
     },
@@ -1203,7 +1206,7 @@ export default function CreateRequest() {
                           : detail.name === "Debit Card"
                             ? 16
                             : detail.name === "Mobile No."
-                              ? 14
+                              ? 10
                               : detail.name === "RRN"
                                 ? 12
                                 : detail.name === "CRN"
@@ -1356,6 +1359,7 @@ export default function CreateRequest() {
               placeholder={`Enter ${detail.name2}`}
               className="number-box"
               value={detail.mobileno}
+              onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
               autoComplete="off"
               style={{ height: "5.5vh", fontSize: "1vw" }}
               label={detail.name2}
@@ -1491,17 +1495,19 @@ export default function CreateRequest() {
                   {...props}
                 />
               )}
-              renderValue={(type) => type}
+              renderValue={(type) =>
+                type !== "PDF" && type !== "Excel" ? `${type} *` : type
+              }
               MenuProps={SelectProps.TYPE_SELECT_PROPS}
               inputProps={{ "aria-label": "Without label" }}
               autoWidth={false}
-              sx={{ padding: "0vh 0vw 0vh 0vw" }}
+              sx={{}}
               style={{
                 display: "flex",
                 alignItems: "center",
-                height: "5.5vh",
+                height: "2.65rem",
                 fontSize: "1vw",
-                marginTop: "0vh",
+                color: detail.type === "Type" ? "rgba(0, 0, 0, 0.49)" : "black",
               }}
               placeholder={t("type")}
             >
@@ -1513,8 +1519,7 @@ export default function CreateRequest() {
                     display: "flex",
                     border: "0px solid #cdcdcd",
                     width: "6vw",
-                    margin: "0vh 0vw 0vh 0vw",
-                    height: "4vh",
+                    height: "1.8rem",
                     alignItems: "left",
                     borderRadius: "4px",
                     backgroundColor: "transparent",
@@ -1522,7 +1527,7 @@ export default function CreateRequest() {
                 >
                   <ListItemText
                     primary={type}
-                    style={{ padding: "0vh 0vw 0vh 0vw" }}
+                    style={{ padding: "0rem" }}
                     color="black"
                     inputMode="text"
                     primaryTypographyProps={{ fontSize: "0.95vw" }}
@@ -1560,12 +1565,12 @@ export default function CreateRequest() {
               addDetail(reportIndex, detailName, param, reportName)
             }
           >
-            <AddIcon
+            <AddCircleOutlineRoundedIcon
               sx={{
                 color: "red",
                 alignSelf: "center",
                 justifySelf: "center",
-                fontSize: "1.45vw",
+                fontSize: "2.65vw",
               }}
             />
           </Button>
@@ -1580,12 +1585,12 @@ export default function CreateRequest() {
             }}
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
-            <RemoveIcon
+            <RemoveCircleOutlineRoundedIcon
               sx={{
                 color: "red",
                 alignSelf: "center",
                 justifySelf: "center",
-                fontSize: "1.45vw",
+                fontSize: "2.65vw",
               }}
             />
           </Button>
@@ -1708,15 +1713,18 @@ export default function CreateRequest() {
   const handleSubmit = () => {
     dispatch(setRequestPayloads(responsePayload));
     console.log("currentDate redux", currentDate);
-    route_to("/ViewUpdate");
+    route_to("/ViewRequest");
   };
 
   return (
     <Box className="page">
       <Box className="create-request-screen">
-        <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+        <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
           {t("createRequest")}
-        </span>
+        </Typography>
+        {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+          {t("createRequest")}
+        </span> */}
 
         <Box className="ticket-entry-section">
           <Box className="ticket-type-section">
@@ -1853,9 +1861,8 @@ export default function CreateRequest() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                height: "5.6vh",
+                height: "2.85rem",
                 fontSize: "1vw",
-                marginTop: "0vh",
               }}
               placeholder={t("statementsReportRequire")}
             >
@@ -1867,8 +1874,8 @@ export default function CreateRequest() {
                     display: "flex",
                     border: "1px solid #cdcdcd",
                     width: "96.25%",
-                    margin: "2vh 1vw 1.5vh 1.4vw",
-                    height: "5.5vh",
+                    margin: "1rem 0rem 1rem 1.4vw",
+                    height: "2.65rem",
                     alignItems: "left",
                     borderRadius: "4px",
                     backgroundColor: "transparent",
@@ -1897,7 +1904,7 @@ export default function CreateRequest() {
                   />
                   <ListItemText
                     primary={report}
-                    style={{ padding: "0.3vh 0vw 0vh 0vw" }}
+                    style={{ padding: "0.05rem 0rem 0rem 0rem" }}
                     color="black"
                     inputMode="text"
                     primaryTypographyProps={{ fontSize: "0.95vw" }}
@@ -1923,7 +1930,7 @@ export default function CreateRequest() {
                 reportsState.map((request, reportIndex) => (
                   <Box
                     key={reportIndex}
-                    sx={{ marginTop: "0.25vh", marginBottom: "3.4vh" }}
+                    sx={{ marginTop: "0.25rem", marginBottom: "1.65rem" }}
                   >
                     <Accordion
                       className="selected-report-view"
@@ -1944,7 +1951,7 @@ export default function CreateRequest() {
                       }
                     >
                       <AccordionSummary
-                        sx={{ minHeight: "5.25vh", maxHeight: "5.25vh" }}
+                        sx={{ minHeight: "2.5rem", maxHeight: "2.75rem" }}
                         expandIcon={
                           <ExpandCircleDownOutlinedIcon
                             sx={{
@@ -1967,7 +1974,6 @@ export default function CreateRequest() {
                         className="selected-report-header"
                       >
                         <span className="selected-report-heading">
-                          {request.selectedReport}
                           {request.selectedReport}
                         </span>
                       </AccordionSummary>
@@ -2026,7 +2032,7 @@ export default function CreateRequest() {
                                     }
                                     sx={{
                                       "& .reports-type-dropdownicon": {
-                                        paddingRight: "2vw",
+                                        paddingRight: "1.75rem",
                                       },
                                     }}
                                     IconComponent={(props) => (
@@ -2068,9 +2074,8 @@ export default function CreateRequest() {
                                     style={{
                                       display: "flex",
                                       alignItems: "center",
-                                      height: "5.6vh",
+                                      height: "2.69rem",
                                       fontSize: "1vw",
-                                      marginTop: "0vh",
                                     }}
                                     placeholder={t("selectDetails")}
                                   >
@@ -2083,8 +2088,7 @@ export default function CreateRequest() {
                                           borderStyle: "solid",
                                           borderColor: "rgba(232, 232, 232, 1)",
                                           borderBottomWidth: "1.75px",
-                                          margin: "0vh 0vw 0vh 0vw",
-                                          height: "4.8vh",
+                                          height: "2.36rem",
                                           alignItems: "left",
                                           borderRadius: "0px",
                                           backgroundColor: "transparent",
@@ -2120,7 +2124,7 @@ export default function CreateRequest() {
                                         <ListItemText
                                           primary={param}
                                           style={{
-                                            padding: "0.3vh 0vw 0vh 0vw",
+                                            padding: "0.15rem 0rem 0rem 0rem",
                                           }}
                                           color="black"
                                           inputMode="text"
@@ -2142,8 +2146,8 @@ export default function CreateRequest() {
                                       "Beneficiary details for Single IMPS transactions" ||
                                     request.selectedReport ===
                                       "Beneficiary details for Single UPI transactions"
-                                      ? "-1vh"
-                                      : "3vh",
+                                      ? "-1.25rem"
+                                      : "1.5rem",
                                 }}
                               >
                                 {reportsState[reportIndex].selectedParams.some(
@@ -2257,6 +2261,7 @@ export default function CreateRequest() {
                 </Button>
                 <Button
                   className="preview-button"
+                  disabled={isValidReportData === true ? false : true}
                   onClick={() => {
                     setViewPreview(true);
                   }}
@@ -2307,31 +2312,7 @@ export default function CreateRequest() {
                               </h3>
                             </Box>
 
-                            <Box
-                              className="preview-report-details"
-                              display={
-                                reportsState[reportIndex].accountNumberDetails
-                                  .length >= 1 ||
-                                reportsState[reportIndex].PANdetails.length >=
-                                  1 ||
-                                reportsState[reportIndex].CRNdetails.length >=
-                                  1 ||
-                                reportsState[reportIndex].RRNdetails.length >=
-                                  1 ||
-                                reportsState[reportIndex].aadharDetails
-                                  .length >= 1 ||
-                                reportsState[reportIndex].mobileNoDetails
-                                  .length >= 1 ||
-                                reportsState[reportIndex].creditCardDetails
-                                  .length >= 1 ||
-                                reportsState[reportIndex].debitCardDetails
-                                  .length >= 1 ||
-                                reportsState[reportIndex].emailDetails.length >=
-                                  1
-                                  ? "block"
-                                  : "none"
-                              }
-                            >
+                            <Box className="preview-report-details">
                               {reportsState[reportIndex] && (
                                 <>
                                   {showPreview(

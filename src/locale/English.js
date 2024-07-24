@@ -57,6 +57,6 @@ export const English = {
   subject: "Subject",
   copyText: "Copy Text",
 
-  // view details
-  viewDetails: "View Details",
+  // view request
+  viewRequestDetails: "View Request Details",
 };

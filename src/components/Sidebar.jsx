@@ -10,6 +10,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { sidebarData } from "./data/SidebarData";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -52,6 +53,8 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function Sidebar(props) {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -128,7 +131,15 @@ export default function Sidebar(props) {
                   {sidebarElement.icon}
                 </ListItemIcon>
                 <ListItemText
-                  primary={sidebarElement.label}
+                  primary={
+                    sidebarElement.label === "Dashboard"
+                      ? t("dashboard")
+                      : sidebarElement.label === "Create Request"
+                        ? t("createRequest")
+                        : sidebarElement.label === "View/Update Request"
+                          ? t("viewUpdateRequest")
+                          : sidebarElement.label
+                  }
                   sx={{ opacity: sidebarOpen ? 1 : 0, fontWeight: "inherit" }}
                   className="m-0 mt-1"
                 />

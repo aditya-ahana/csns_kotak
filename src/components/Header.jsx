@@ -24,7 +24,7 @@ export default function Header() {
         />
         <div className="d-flex justify-content-between align-items-center">
           <LanguageSelector />
-          <div className="p-1"></div>
+          <div className="p-3"></div>
           <FaRegUserCircle />
           <div className="p-1"></div>
           <span>Admin</span>

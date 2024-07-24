@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
 
-  const [viewDetailsAction, setViewDetailsAction] = useState();
+  const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
 
   const location = useLocation();
   //  const { ticketDetails } = location.state;
@@ -511,19 +511,14 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <Typography
-          variant="h5"
-          fontWeight={500}
-          fontSize="1.499vw"
-          className="view-ticket-header"
-        >
-          {t("viewDetails")}
+        <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
+          {t("viewRequestDetails")}
         </Typography>
         <Box className="view-details-container">
           <TableContainer
             component={Paper}
             className="view-table-container"
-            sx={{ boxShadow: "none", maxHeight: "70.5vh" }}
+            sx={{ boxShadow: "none", maxHeight: "34rem" }}
           >
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
@@ -580,7 +575,6 @@ export default function ViewRequestDetails() {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            maxHeight: "2vh",
                           }}
                         >
                           <Box
@@ -630,10 +624,10 @@ export default function ViewRequestDetails() {
                           <Button
                             className="expand-button"
                             onClick={(e) => {
-                              if (viewDetailsAction === index) {
-                                setViewDetailsAction();
+                              if (viewRequestDetailsAction === index) {
+                                setViewRequestDetailsAction();
                               } else {
-                                setViewDetailsAction(index);
+                                setViewRequestDetailsAction(index);
                               }
                             }}
                           >
@@ -643,7 +637,7 @@ export default function ViewRequestDetails() {
                                 color: "rgba(95, 99, 104, 0.87)",
                                 fontSize: "2.2vw",
                                 transform:
-                                  viewDetailsAction === index
+                                  viewRequestDetailsAction === index
                                     ? "rotate(180deg)"
                                     : "",
                               }}
@@ -656,7 +650,7 @@ export default function ViewRequestDetails() {
                       </TableCell>
                     </TableRow>
 
-                    {viewDetailsAction === index ? (
+                    {viewRequestDetailsAction === index ? (
                       <>
                         {row.subData?.map((subDetails) => (
                           <>
@@ -775,7 +769,7 @@ export default function ViewRequestDetails() {
                       <></>
                     )}
 
-                    {/* {viewDetailsAction === index ? (
+                    {/* {viewRequestDetailsAction === index ? (
                     <Box
                       className="d-flex flex-column align-items-center"
                       style={{ background: "#f5f8fa", maxWidth: "73vw" }}

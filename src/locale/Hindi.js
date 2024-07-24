@@ -57,6 +57,6 @@ export const Hindi = {
   subject: "विषय",
   copyText: "कॉपी करें",
 
-  // view details
-  viewDetails: "विवरण देखें",
+  // view request
+  viewRequestDetails: "विवरण देखें",
 };

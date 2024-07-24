@@ -141,11 +141,7 @@ export default function ViewRequest() {
     slotProps: {
       popper: {
         sx: {
-          ".MuiPaper-root": {
-            minheight: "44vh",
-            maxHeight: "44vh",
-            borderRadius: "10px",
-          },
+          ".MuiPaper-root": { borderRadius: "10px" },
           "&.MuiPickersPopper-root": { padding: 0 },
           ...{
             "& .MuiPickersDay-root.Mui-selected": {
@@ -175,7 +171,7 @@ export default function ViewRequest() {
         "aria-readonly": true,
         sx: {
           "& .MuiInputBase-input": {
-            height: "2.5vh",
+            height: "1.25rem",
             fontSize: "0.85vw",
             marginLeft: "-7%",
           },
@@ -183,7 +179,6 @@ export default function ViewRequest() {
       },
     },
     sx: {
-      height: "5.5vh",
       backgroundColor: "transparent",
     },
   };
@@ -201,8 +196,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "31-05-2024",
       requester: "System",
-      createdDate: "31-05-2024",
-      requester: "System",
     },
     {
       ticketId: "1299",
@@ -216,7 +209,6 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "08-04-2024",
       requester: "User",
-      requester: "User",
     },
     {
       ticketId: "1298",
@@ -227,7 +219,6 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "08-03-2024",
-      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -240,7 +231,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "12-01-2024",
       requester: "System",
-      requester: "System",
     },
     {
       ticketId: "1296",
@@ -252,14 +242,12 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
-      requester: "Banker",
     },
     {
       ticketId: "1295",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      requester: "Admin",
       requester: "Admin",
     },
 
@@ -275,7 +263,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "12-01-2024",
       requester: "System",
-      requester: "System",
     },
     {
       ticketId: "1293",
@@ -289,7 +276,6 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "04-12-2023",
       requester: "User",
-      requester: "User",
     },
     {
       ticketId: "1292",
@@ -300,7 +286,6 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -313,7 +298,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "02-03-2023",
       requester: "System",
-      requester: "System",
     },
     {
       ticketId: "1290",
@@ -325,14 +309,12 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
-      requester: "Banker",
     },
     {
       ticketId: "1289",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      requester: "Admin",
       requester: "Admin",
     },
 
@@ -348,7 +330,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "10-01-2024",
       requester: "System",
-      requester: "System",
     },
     {
       ticketId: "1287",
@@ -362,7 +343,6 @@ export default function ViewRequest() {
       status: "Completed",
       createdDate: "08-12-2023",
       requester: "User",
-      requester: "User",
     },
     {
       ticketId: "1286",
@@ -373,7 +353,6 @@ export default function ViewRequest() {
       ],
       status: "Failed",
       createdDate: "21-04-2023",
-      requester: "Admin",
       requester: "Admin",
     },
     {
@@ -386,7 +365,6 @@ export default function ViewRequest() {
       status: "In-progress",
       createdDate: "02-03-2023",
       requester: "System",
-      requester: "System",
     },
     {
       ticketId: "1284",
@@ -398,14 +376,12 @@ export default function ViewRequest() {
       status: "Failed",
       createdDate: "14-02-2023",
       requester: "Banker",
-      requester: "Banker",
     },
     {
       ticketId: "1283",
       requests: ["IP Logs", "Device Details"],
       status: "In-progress",
       createdDate: "30-01-2023",
-      requester: "Admin",
       requester: "Admin",
     },
   ];
@@ -418,7 +394,6 @@ export default function ViewRequest() {
     requests: request.requests,
     status: request.status,
     createdDate: request.createdDate,
-    requester: request.requester,
     requester: request.requester,
   }));
 
@@ -538,7 +513,7 @@ export default function ViewRequest() {
   const displayPaginationLabel = (from, to, count) => {
     return (
       <Typography
-        sx={{ fontSize: "0.95vw", marginTop: "0.25vh" }}
+        sx={{ fontSize: "0.95vw", marginTop: "0.1rem" }}
       >{`${from} - ${to} of ${count}`}</Typography>
     );
   };
@@ -547,13 +522,7 @@ export default function ViewRequest() {
     <>
       <Box className="table-page">
         <Box className="view-request-screen">
-          <Typography
-            variant="h5"
-            fontWeight={500}
-            fontSize="1.499vw"
-            className="view-ticket-header"
-          >
-            {" "}
+          <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
@@ -649,8 +618,7 @@ export default function ViewRequest() {
                         value={status}
                         style={{
                           display: "flex",
-                          margin: "0vh 0vw 0vh 0vw",
-                          height: "4vh",
+                          height: "1.95rem",
                           alignItems: "left",
                           borderRadius: "0px",
                           backgroundColor: "transparent",
@@ -688,7 +656,7 @@ export default function ViewRequest() {
                           color="black"
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.95vw" }}
-                          style={{ padding: "0.3vh 0vw 0vh 0vw" }}
+                          style={{ padding: "0.15rem 0rem 0rem 0rem" }}
                         />
                       </MenuItem>
                     ))}
@@ -696,7 +664,7 @@ export default function ViewRequest() {
 
                   <Box
                     sx={{
-                      padding: "1vh 0vw 0.48vh 0.75vw",
+                      padding: "0.36rem 0vw 0rem 0.65rem",
                       borderWidth: "1px 0px 0px 0px",
                       borderStyle: "solid",
                       borderColor: "rgba(232, 232, 232, 1)",
@@ -716,7 +684,7 @@ export default function ViewRequest() {
                       sx={{
                         display: "flex",
                         flexDirection: "row",
-                        padding: "1.6vh 0vw 0.36vh 0vw",
+                        padding: "0.65rem 0rem 0.1rem 0rem",
                         gap: "2.5%",
                       }}
                     >
@@ -746,7 +714,7 @@ export default function ViewRequest() {
                       <Box
                         sx={{
                           display: "flex",
-                          height: "4.75vh",
+                          marginTop: "0.15rem",
                           alignItems: "center",
                         }}
                       >
@@ -784,7 +752,7 @@ export default function ViewRequest() {
                       <Box
                         sx={{
                           display: "flex",
-                          padding: "1.8vh 0.8vw 0.15vh 0vw",
+                          padding: "0.75rem 0.75rem 0.1rem 0rem",
                           alignItems: "center",
                           justifyContent: "flex-end",
                         }}
@@ -801,7 +769,7 @@ export default function ViewRequest() {
                             borderRadius: "4px",
                             border: "none",
                             width: "30%",
-                            height: "3.6vh",
+                            height: "1.75rem",
                             fontWeight: 600,
                             color: "white",
                             fontSize: "0.92vw",
@@ -878,7 +846,7 @@ export default function ViewRequest() {
                                     key={index}
                                     sx={{
                                       fontSize: "1vw",
-                                      lineHeight: "3.6vh",
+                                      lineHeight: "1.85rem",
                                     }}
                                   >{`${index + 1}. ${req}`}</Typography>
                                 ))}
@@ -949,11 +917,14 @@ export default function ViewRequest() {
                                   color="darkblue"
                                   style={{ alignSelf: "center" }}
                                   onClick={() =>
-                                    route_to("/viewRequestDetails", {
-                                      state: {
-                                        //  ticketDetails : ticketDetails
-                                      },
-                                    })
+                                    route_to(
+                                      "/ViewRequest/ViewRequestDetails",
+                                      {
+                                        state: {
+                                          //  ticketDetails : ticketDetails
+                                        },
+                                      }
+                                    )
                                   }
                                 >
                                   <DescriptionOutlinedIcon
@@ -1022,9 +993,9 @@ export default function ViewRequest() {
 
             <Box className="table-pagination">
               <TablePagination
-                labelDisplayedRows={() =>
-                  displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
-                }
+                // labelDisplayedRows={() =>
+                //   displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
+                // }
                 rowsPerPageOptions={rowOptions}
                 component="div"
                 sx={{
@@ -1032,8 +1003,8 @@ export default function ViewRequest() {
                   alignItems: "center",
                   justifyContent: "flex-end",
                   width: "100%",
-                  height: "2vh",
-                  margin: "1vh 0vw 2.5vh 0vw",
+                  height: "0rem",
+                  margin: "0rem 0rem 2rem 0rem",
                   overflow: "visible",
                   "& .MuiSvgIcon-root": {
                     color: "rgba(0, 0, 0, 0.56)",
@@ -1043,7 +1014,7 @@ export default function ViewRequest() {
                     opacity: 0.25,
                   },
                 }}
-                count={requestData.length}
+                count={rowCount}
                 slotProps={{
                   select: {
                     renderValue: (value) => (
@@ -1057,7 +1028,7 @@ export default function ViewRequest() {
                         sx={{
                           fontSize: "1.2vw",
                           color: "rgba(115, 115, 115, 1)",
-                          marginTop: "0.05vh",
+                          marginTop: "0.002rem",
                         }}
                         {...props}
                       />
@@ -1068,7 +1039,7 @@ export default function ViewRequest() {
                         fullWidth={true}
                         sx={{
                           border: "none",
-                          height: "3vh",
+                          height: "1.2rem",
                           fontSize: "0.2vw",
                           "& .MuiOutlinedInput-notchedOutline": {
                             border: "none",
@@ -1092,7 +1063,7 @@ export default function ViewRequest() {
                     sx: {
                       width: "auto",
                       padding: "10px",
-                      marginTop: "0.4vh",
+                      marginTop: "0.2rem",
                       marginLeft: "-3.5%",
                     },
                     MenuProps: {
@@ -1112,12 +1083,11 @@ export default function ViewRequest() {
                     sx={{
                       display: "flex",
                       flexDirection: "row",
-                      marginTop: "2.25vh",
+                      marginTop: "1.1rem",
                       width: "100%",
                       textAlign: "center",
                       alignItems: "center",
                       justifyContent: "center",
-                      height: "4.5vh",
                     }}
                   >
                     <Typography
