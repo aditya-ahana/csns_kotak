@@ -51,6 +51,8 @@ export default function CreateRequest() {
   const [ticketNumber, setTicketNumber] = useState(0);
   const [ticketDescription, setTicketDescription] = useState("");
   const [descriptionFocused, setDescriptionFocused] = useState(false);
+  const [Creator, setCreator] = useState("");
+
   const [selectedReports, setSelectedReports] = useState([]);
   const [viewPreview, setViewPreview] = useState(false);
   const [availableParameters, setAvailableParameters] = useState([
@@ -64,6 +66,7 @@ export default function CreateRequest() {
     "Credit Card",
     "Email ID",
   ]);
+  const [submitted, setSubmitted] = useState(false);
 
   // const new_date = new Date();
   // new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
@@ -76,11 +79,11 @@ export default function CreateRequest() {
     textfield: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: "1.25px solid rgba(76, 76, 76, 1)",
+          border: "1.25px solid rgba(120, 120, 120, 1)",
           backgroundColor: "transparent",
         },
         "&:hover fieldset": {
-          border: "1.25px solid rgba(161, 161, 161, 1)",
+          border: "1.5px solid rgb(67, 61, 139)",
           backgroundColor: "transparent",
         },
         "&.Mui-focused fieldset": {
@@ -91,7 +94,7 @@ export default function CreateRequest() {
     },
     inputProps: {
       style: {
-        fontSize: "1vw",
+        fontSize: "0.88rem",
         height: "0.6rem",
         // backgroundColor : "blue"
       },
@@ -100,7 +103,7 @@ export default function CreateRequest() {
       // shrink : true,
       size: "small",
       sx: {
-        fontSize: "1vw",
+        fontSize: "0.88rem",
         alignSelf: "center",
         display: "flex",
         alignItems: "center",
@@ -109,7 +112,7 @@ export default function CreateRequest() {
     },
     textAreaProps: {
       style: {
-        fontSize: "1vw",
+        fontSize: "0.88rem",
         minHeight: "1.65rem",
       },
     },
@@ -117,7 +120,7 @@ export default function CreateRequest() {
       // shrink : true,
       size: "small",
       sx: {
-        fontSize: "1vw",
+        fontSize: "0.88rem",
         paddingTop: "0.15rem",
         alignSelf: "center",
         display: "flex",
@@ -146,23 +149,28 @@ export default function CreateRequest() {
       },
       openPickerIcon: {
         sx: {
-          fontSize: "1.75vw",
+          fontSize: "1.5rem",
         },
       },
       textField: {
         InputLabelProps: {
           sx: {
-            fontSize: "1.1vw",
+            paddingTop: "0.05rem",
+            fontSize: "0.92rem",
           },
         },
         color: "primary",
         size: "small",
         "aria-readonly": true,
         sx: {
+          backgroundColor: "transparent",
+          width: "100%",
+
           "& .MuiInputBase-input": {
             height: "1.575rem",
-            width: "auto",
-            fontSize: "0.95vw",
+            //  width : '100%',
+            width: "100%",
+            fontSize: "0.85rem",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -183,6 +191,8 @@ export default function CreateRequest() {
       backgroundColor: "transparent",
     },
   };
+
+  const [reportsState, setReportsState] = useState([]);
 
   useEffect(() => {
     setReportsState((prevReportsState) => {
@@ -245,8 +255,6 @@ export default function CreateRequest() {
 
   // //console.log('Selected REPORTS : ',selectedReports);
   // //console.log('Selected REPORTS : ',selectedReports);
-
-  const [reportsState, setReportsState] = useState([]);
 
   const requiredReportsData = [
     "Statement in PDF/Excel",
@@ -1089,16 +1097,90 @@ export default function CreateRequest() {
   };
 
   const isValidReportData =
-    reportsState.some((state, index) => state.accountNumberDetails).length >=
-      1 ||
-    reportsState.some((state, index) => state.PANdetails).length >= 1 ||
-    reportsState.some((state, index) => state.CRNdetails).length >= 1 ||
-    reportsState.some((state, index) => state.RRNdetails).length >= 1 ||
-    reportsState.some((state, index) => state.aadharDetails).length >= 1 ||
-    reportsState.some((state, index) => state.mobileNoDetails).length >= 1 ||
-    reportsState.some((state, index) => state.creditCardDetails).length >= 1 ||
-    reportsState.some((state, index) => state.debitCardDetails).length >= 1 ||
-    reportsState.some((state, index) => state.emailDetails).length >= 1;
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].accountNumberDetails.length >= 1 &&
+        reportsState[index].accountNumberDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].accountNumberDetails[subIndex].value.length ===
+              16 &&
+            reportsState[index].accountNumberDetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].PANdetails.length >= 1 &&
+        reportsState[index].PANdetails.some(
+          (detail, subIndex) =>
+            reportsState[index].PANdetails[subIndex].length === 10 &&
+            reportsState[index].PANdetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].CRNdetails.length >= 1 &&
+        reportsState[index].CRNdetails.some(
+          (detail, subIndex) =>
+            reportsState[index].CRNdetails[subIndex].length === 10 &&
+            reportsState[index].CRNdetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].RRNdetails.length >= 1 &&
+        reportsState[index].RRNdetails.some(
+          (detail, subIndex) =>
+            reportsState[index].RRNdetails[subIndex].length === 12 &&
+            reportsState[index].RRNdetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].aadharDetails.length >= 1 &&
+        reportsState[index].aadharDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].aadharDetails[subIndex].length === 12 &&
+            reportsState[index].aadharDetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].mobileNoDetails.length >= 1 &&
+        reportsState[index].mobileNoDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].mobileNoDetails[subIndex].length === 10 &&
+            reportsState[index].mobileNoDetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].creditCardDetails.length >= 1 &&
+        reportsState[index].accountNumberDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].creditCardDetails[subIndex].length === 16 &&
+            reportsState[index].creditCardDetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].debitCardDetails.length >= 1 &&
+        reportsState[index].creditCardDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].debitCardDetails[subIndex].length === 16 &&
+            reportsState[index].debitCardDetails[subIndex].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        reportsState[index].emailDetails.length >= 1 &&
+        reportsState[index].emailDetails.some(
+          (detail, subIndex) =>
+            reportsState[index].emailDetails[subIndex].length > 16 &&
+            reportsState[index].emailDetails[subIndex].type !== "Type"
+        )
+    );
+
+  // const accountNumberDetailsValid =
 
   console.log("Valid Report Data", isValidReportData);
 
@@ -1117,11 +1199,13 @@ export default function CreateRequest() {
         style: {
           maxHeight: "9.36rem",
           marginTop: "-0.15rem",
+          overflow: "auto",
         },
       },
       MenuListProps: {
         sx: {
           border: "1.5px solid rgba(161, 161, 161, 1)",
+          borderWidth: "1.5px 0px 1.5px 1.5px",
           margin: 0,
           borderTopLeftRadius: "0px",
           borderTopRightRadius: "0px",
@@ -1216,9 +1300,8 @@ export default function CreateRequest() {
             }}
             autoComplete="off"
             style={{
-              margin: "0vh 0vw 0vh 0vw",
-              height: "5.5vh",
-              fontSize: "1vw",
+              margin: "0rem 0rem 0rem 0rem",
+              fontSize: "0.88rem",
             }}
             label={detail.name}
             margin="none"
@@ -1269,70 +1352,78 @@ export default function CreateRequest() {
           (detailName === "RRNdetails" &&
             reportName ===
               "Beneficiary details for Bulk UPI transactions")) && (
-          <Box sx={{ display: "flex", flexDirection: "row", gap: "4.8%" }}>
-            <Box sx={{ width: "auto" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  shouldDisableDate={(day) =>
-                    disableInvalidDates(day, detail.to, detail.to)
-                  }
-                  label={t("from")}
-                  disabled={
-                    detail.value === "" || detail.value.length === 0
-                      ? true
-                      : false
-                  }
-                  value={
-                    detail.from === "From"
-                      ? null
-                      : dayjs(detail.from, "DD-MM-YYYY")
-                  }
-                  maxDate={currentDate}
-                  defaultValue={dayjs.Dayjs}
-                  slotProps={datePickerControl.slotProps}
-                  sx={datePickerControl.sx}
-                  onChange={(date) =>
-                    handleFromDate(
-                      date,
-                      reportIndex,
-                      detailIndex,
-                      detailName,
-                      detail.to
-                    )
-                  }
-                />
-              </LocalizationProvider>
-            </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "1rem",
+              width: "43%",
+              backgroundColor: "transparent",
+            }}
+          >
+            {/* <Box sx={{ width: "10%" }}> */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                format="DD-MM-YYYY"
+                shouldDisableDate={(day) =>
+                  disableInvalidDates(day, detail.to, detail.to)
+                }
+                label={t("from")}
+                disabled={
+                  detail.value === "" || detail.value.length === 0
+                    ? true
+                    : false
+                }
+                value={
+                  detail.from === "From"
+                    ? null
+                    : dayjs(detail.from, "DD-MM-YYYY")
+                }
+                maxDate={currentDate}
+                defaultValue={dayjs.Dayjs}
+                slotProps={datePickerControl.slotProps}
+                sx={datePickerControl.sx}
+                onChange={(date) =>
+                  handleFromDate(
+                    date,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    detail.to
+                  )
+                }
+              />
+            </LocalizationProvider>
+            {/* </Box> */}
 
-            <Box sx={{ width: "auto" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  format="DD-MM-YYYY"
-                  label={t("to")}
-                  disabled={detail.from === "From" ? true : false}
-                  value={
-                    detail.to === "To" ? null : dayjs(detail.to, "DD-MM-YYYY")
-                  }
-                  defaultValue={dayjs.Dayjs}
-                  maxDate={currentDate}
-                  shouldDisableDate={(day) =>
-                    dayjs(day).isBefore(dayjs(detail.from, "DD-MM-YYYY"), "day")
-                  }
-                  slotProps={datePickerControl.slotProps}
-                  sx={datePickerControl.sx}
-                  onChange={(date) =>
-                    handleToDate(
-                      date,
-                      reportIndex,
-                      detailIndex,
-                      detailName,
-                      detail.from
-                    )
-                  }
-                />
-              </LocalizationProvider>
-            </Box>
+            {/* <Box sx={{ width: "auto" }}> */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                format="DD-MM-YYYY"
+                label={t("to")}
+                disabled={detail.from === "From" ? true : false}
+                value={
+                  detail.to === "To" ? null : dayjs(detail.to, "DD-MM-YYYY")
+                }
+                defaultValue={dayjs.Dayjs}
+                maxDate={currentDate}
+                shouldDisableDate={(day) =>
+                  dayjs(day).isBefore(dayjs(detail.from, "DD-MM-YYYY"), "day")
+                }
+                slotProps={datePickerControl.slotProps}
+                sx={datePickerControl.sx}
+                onChange={(date) =>
+                  handleToDate(
+                    date,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    detail.from
+                  )
+                }
+              />
+            </LocalizationProvider>
+            {/* </Box> */}
           </Box>
         )}
 
@@ -1340,7 +1431,7 @@ export default function CreateRequest() {
           <FormControl
             variant="outlined"
             margin="none"
-            sx={{ width: "23%", marginLeft: "2%" }}
+            sx={{ width: "23%", marginLeft: "0%" }}
           >
             <TextField
               sx={inputControl.textfield}
@@ -1352,7 +1443,7 @@ export default function CreateRequest() {
                     position="start"
                     sx={{ opacity: detail.to === "To" ? 0.45 : 1 }}
                   >
-                    <Typography sx={{ fontSize: "1vw" }}>+91</Typography>
+                    <Typography sx={{ fontSize: "0.88rem" }}>+91</Typography>
                   </InputAdornment>
                 ),
               }}
@@ -1361,7 +1452,7 @@ export default function CreateRequest() {
               value={detail.mobileno}
               onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
               autoComplete="off"
-              style={{ height: "5.5vh", fontSize: "1vw" }}
+              style={{ fontSize: "0.88rem" }}
               label={detail.name2}
               disabled={detail.to === "To" ? true : false}
               margin="none"
@@ -1417,9 +1508,9 @@ export default function CreateRequest() {
                   autoComplete="off"
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
                   style={{
-                    margin: "0vh 0vw 0vh 0vw",
-                    height: "5.5vh",
-                    fontSize: "1vw",
+                    margin: "0rem 0rem 0rem 0rem",
+                    // height: "5.5vh",
+                    fontSize: "0.88rem",
                     width: "100%",
                   }}
                   label={detail.name2}
@@ -1469,7 +1560,11 @@ export default function CreateRequest() {
         {reportName === "Statement in PDF/Excel" && (
           <FormControl
             variant="standard"
-            sx={{ width: "14%", marginLeft: "2%" }}
+            sx={{
+              width: "15%",
+              marginLeft: "0%",
+              backgroundColor: "transparent",
+            }}
           >
             <Select
               id="report-type-dropdown"
@@ -1491,7 +1586,7 @@ export default function CreateRequest() {
               IconComponent={(props) => (
                 <KeyboardArrowDownOutlinedIcon
                   className="reports-type-dropdownicon"
-                  sx={{ fontSize: "1.48vw", color: "rgba(115, 115, 115, 1)" }}
+                  sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
                   {...props}
                 />
               )}
@@ -1501,12 +1596,11 @@ export default function CreateRequest() {
               MenuProps={SelectProps.TYPE_SELECT_PROPS}
               inputProps={{ "aria-label": "Without label" }}
               autoWidth={false}
-              sx={{}}
               style={{
                 display: "flex",
                 alignItems: "center",
                 height: "2.65rem",
-                fontSize: "1vw",
+                fontSize: "0.88rem",
                 color: detail.type === "Type" ? "rgba(0, 0, 0, 0.49)" : "black",
               }}
               placeholder={t("type")}
@@ -1518,7 +1612,7 @@ export default function CreateRequest() {
                   style={{
                     display: "flex",
                     border: "0px solid #cdcdcd",
-                    width: "6vw",
+                    width: "100%",
                     height: "1.8rem",
                     alignItems: "left",
                     borderRadius: "4px",
@@ -1530,7 +1624,7 @@ export default function CreateRequest() {
                     style={{ padding: "0rem" }}
                     color="black"
                     inputMode="text"
-                    primaryTypographyProps={{ fontSize: "0.95vw" }}
+                    primaryTypographyProps={{ fontSize: "0.825rem" }}
                   />
                 </MenuItem>
               ))}
@@ -1570,7 +1664,7 @@ export default function CreateRequest() {
                 color: "red",
                 alignSelf: "center",
                 justifySelf: "center",
-                fontSize: "2.65vw",
+                fontSize: "2.25rem",
               }}
             />
           </Button>
@@ -1590,7 +1684,7 @@ export default function CreateRequest() {
                 color: "red",
                 alignSelf: "center",
                 justifySelf: "center",
-                fontSize: "2.65vw",
+                fontSize: "2.25rem",
               }}
             />
           </Button>
@@ -1642,7 +1736,7 @@ export default function CreateRequest() {
             >
               {detail.from !== "From" && (
                 <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.25vw" }}
+                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
                   <span className="preview-text">Date : </span>
                   <span className="preview-text">{`${detail.from} - `}</span>
@@ -1663,7 +1757,7 @@ export default function CreateRequest() {
             <Box className="detail-range">
               {detail.amount !== 0 && detail.amount.length !== 0 && (
                 <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.25vw" }}
+                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
                   <span className="preview-text">Amount : </span>
                   <span className="preview-text">{detail.amount}</span>
@@ -1672,11 +1766,9 @@ export default function CreateRequest() {
 
               {detail.date !== "Date" && (
                 <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.25vw" }}
+                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
-                  <span style={{ marginLeft: "3vw" }} className="preview-text">
-                    Date :{" "}
-                  </span>
+                  <span className="preview-text">Date : </span>
                   <span className="preview-text">{detail.date}</span>
                 </Box>
               )}
@@ -1691,7 +1783,7 @@ export default function CreateRequest() {
                   : "block"
               }
             >
-              <span style={{ marginLeft: "3vw" }} className="preview-text">
+              <span style={{ marginLeft: "0.92rem" }} className="preview-text">
                 Mobile No. :{" "}
               </span>
               <span className="preview-text">{detail.mobileno}</span>
@@ -1703,23 +1795,57 @@ export default function CreateRequest() {
 
   //console.log("ticket number length", ticketNumber);
 
-  const responsePayload = {
-    ticketNumber: ticketNumber,
-    ticketDescription: ticketDescription,
-    requestData: reportsState,
-    createdDate: reduxDate,
+  const [reportDetails, setReportDetails] = useState([]);
+
+  const payloadInitiator = () => {
+    setReportDetails((prevState) => {
+      const updatedReportState = reportsState.map((report, index) => {
+        return {
+          reportName: report.selectedReport,
+          requestDetails: [
+            ...report.accountNumberDetails,
+            ...report.PANdetails,
+            ...report.RRNdetails,
+            ...report.CRNdetails,
+            ...report.creditCardDetails,
+            ...report.debitCardDetails,
+            ...report.aadharDetails,
+            ...report.mobileNoDetails,
+            ...report.emailDetails,
+          ],
+        };
+      });
+      return updatedReportState;
+    });
+  };
+
+  const configurePayload = () => {
+    payloadInitiator();
   };
 
   const handleSubmit = () => {
-    dispatch(setRequestPayloads(responsePayload));
-    console.log("currentDate redux", currentDate);
-    route_to("/ViewRequest");
+    configurePayload();
+    // dispatch(setRequestPayloads(responsePayload));
+    setSubmitted(true);
+    route_to("/ViewUpdate");
+  };
+
+  console.log("Spring Boot Payload", reportDetails);
+
+  const requestPayload = {
+    // ticketId: "",
+    ticketNumber: ticketNumber,
+    ticketDescription: ticketDescription,
+    // status: "",
+    createdDate: reduxDate,
+    createdBy: Creator,
+    reportDetails: reportDetails,
   };
 
   return (
     <Box className="page">
       <Box className="create-request-screen">
-        <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
+        <Typography variant="h5" fontWeight={500} fontSize="1.36rem">
           {t("createRequest")}
         </Typography>
         {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
@@ -1743,9 +1869,9 @@ export default function CreateRequest() {
                 autoComplete="off"
                 size="medium"
                 style={{
-                  margin: "0vh 0vw 0vh 0vw",
+                  margin: "0rem 0rem 0rem 0rem",
                   height: "auto",
-                  fontSize: "1vw",
+                  fontSize: "0.88rem",
                 }}
                 label={t("ticketNo")}
                 margin="dense"
@@ -1788,7 +1914,7 @@ export default function CreateRequest() {
                 inputProps={inputControl.textAreaProps}
                 InputLabelProps={inputControl.textAreaLabelProps}
                 style={{
-                  margin: "0vh 0vw 0vh 0vw",
+                  margin: "0rem 0rem 0rem 0rem",
                   backgroundColor: "white",
                   height: "auto",
                 }}
@@ -1829,7 +1955,7 @@ export default function CreateRequest() {
               IconComponent={(props) => (
                 <KeyboardArrowDownOutlinedIcon
                   className="reports-type-dropdownicon"
-                  sx={{ fontSize: "1.48vw", color: "rgba(115, 115, 115, 1)" }}
+                  sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
                   {...props}
                 />
               )}
@@ -1861,8 +1987,8 @@ export default function CreateRequest() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                height: "2.85rem",
-                fontSize: "1vw",
+                height: "2.69rem",
+                fontSize: "0.88rem",
               }}
               placeholder={t("statementsReportRequire")}
             >
@@ -1874,7 +2000,7 @@ export default function CreateRequest() {
                     display: "flex",
                     border: "1px solid #cdcdcd",
                     width: "96.25%",
-                    margin: "1rem 0rem 1rem 1.4vw",
+                    margin: "1rem 0rem 1rem 1.25rem",
                     height: "2.65rem",
                     alignItems: "left",
                     borderRadius: "4px",
@@ -1885,19 +2011,19 @@ export default function CreateRequest() {
                   <Checkbox
                     size="medium"
                     icon={
-                      <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.6vw" }} />
+                      <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.5rem" }} />
                     }
                     checkedIcon={
                       <CheckBoxOutlinedIcon
                         className="check-icon"
-                        sx={{ fontSize: "1.6vw", color: "red" }}
+                        sx={{ fontSize: "1.5rem", color: "red" }}
                       />
                     }
                     sx={{ containIntrinsicSize: "2px" }}
                     checked={selectedReports.indexOf(report) > -1}
                     color="primary"
                     style={{
-                      marginLeft: "-1vw",
+                      marginLeft: "-0.88rem",
                       backgroundColor: "transparent",
                       fontSize: "2px",
                     }}
@@ -1907,7 +2033,7 @@ export default function CreateRequest() {
                     style={{ padding: "0.05rem 0rem 0rem 0rem" }}
                     color="black"
                     inputMode="text"
-                    primaryTypographyProps={{ fontSize: "0.95vw" }}
+                    primaryTypographyProps={{ fontSize: "0.825rem" }}
                   />
                 </MenuItem>
               ))}
@@ -1956,7 +2082,7 @@ export default function CreateRequest() {
                           <ExpandCircleDownOutlinedIcon
                             sx={{
                               color: "rgba(95, 99, 104, 0.87)",
-                              fontSize: "1.85vw",
+                              fontSize: "1.6rem",
                             }}
                             className="view-icon"
                             onClick={() => {
@@ -2039,7 +2165,7 @@ export default function CreateRequest() {
                                       <KeyboardArrowDownOutlinedIcon
                                         className="reports-type-dropdownicon"
                                         sx={{
-                                          fontSize: "1.56vw",
+                                          fontSize: "1.36rem",
                                           color: "rgba(115, 115, 115, 1)",
                                         }}
                                         {...props}
@@ -2074,8 +2200,8 @@ export default function CreateRequest() {
                                     style={{
                                       display: "flex",
                                       alignItems: "center",
-                                      height: "2.69rem",
-                                      fontSize: "1vw",
+                                      height: "2.65rem",
+                                      fontSize: "0.88rem",
                                     }}
                                     placeholder={t("selectDetails")}
                                   >
@@ -2103,19 +2229,19 @@ export default function CreateRequest() {
                                           }
                                           color="primary"
                                           style={{
-                                            marginLeft: "-1vw",
+                                            marginLeft: "-0.88rem",
                                             backgroundColor: "transparent",
                                           }}
                                           icon={
                                             <CheckBoxOutlineBlankIcon
-                                              sx={{ fontSize: "1.6vw" }}
+                                              sx={{ fontSize: "1.4rem" }}
                                             />
                                           }
                                           checkedIcon={
                                             <CheckBoxOutlinedIcon
                                               className="check-icon"
                                               sx={{
-                                                fontSize: "1.6vw",
+                                                fontSize: "1.4rem",
                                                 color: "red",
                                               }}
                                             />
@@ -2129,7 +2255,7 @@ export default function CreateRequest() {
                                           color="black"
                                           inputMode="text"
                                           primaryTypographyProps={{
-                                            fontSize: "0.95vw",
+                                            fontSize: "0.85rem",
                                           }}
                                         />
                                       </MenuItem>
@@ -2254,14 +2380,15 @@ export default function CreateRequest() {
                 <Button
                   className="submit-button"
                   title="Submit"
-                  onClick={handleSubmit}
+                  disabled={isValidReportData === false ? true : false}
+                  onClick={() => handleSubmit()}
                 >
                   {" "}
                   {t("submit")}
                 </Button>
                 <Button
                   className="preview-button"
-                  disabled={isValidReportData === true ? false : true}
+                  disabled={isValidReportData === false ? true : false}
                   onClick={() => {
                     setViewPreview(true);
                   }}
@@ -2288,7 +2415,7 @@ export default function CreateRequest() {
                           name="close-preview"
                           className="close-preview-button"
                           sx={{
-                            fontSize: "1.85vw",
+                            fontSize: "1.75rem",
                             color: "rgba(95, 99, 104, 1)",
                           }}
                         />
@@ -2303,10 +2430,7 @@ export default function CreateRequest() {
                           <Box className="preview-report" key={reportIndex}>
                             <Box className="preview-report-header">
                               {/* <CheckBoxOutlinedIcon */}
-                              <CheckBoxOutlinedIcon
-                                className="check-icon"
-                                size="1.4vw"
-                              />
+                              <CheckBoxOutlinedIcon className="check-icon" />
                               <h3 className="preview-title">
                                 {request.selectedReport}
                               </h3>

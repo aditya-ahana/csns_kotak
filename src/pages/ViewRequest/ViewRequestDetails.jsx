@@ -511,7 +511,7 @@ export default function ViewRequestDetails() {
   return (
     <Box className="page">
       <Box className="view-request-details-screen">
-        <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
+        <Typography variant="h5" fontWeight={500} fontSize="1.36rem">
           {t("viewRequestDetails")}
         </Typography>
         <Box className="view-details-container">
@@ -529,18 +529,18 @@ export default function ViewRequestDetails() {
                       sx={{
                         border: "1px solid rgba(225, 225, 225, 1)",
                         backgroundColor: "rgb(243, 242, 248)",
-                        fontSize: "1vw",
+                        fontSize: "0.88rem",
                         width:
                           header === "Ticket Id"
-                            ? "5vw"
+                            ? "7.5%"
                             : header === "Requests"
-                              ? "15vw"
+                              ? "20%"
                               : header === "Status"
-                                ? "9vw"
+                                ? "10%"
                                 : header === "Created Date" ||
                                     header === "Action"
-                                  ? "9vw"
-                                  : "0vw",
+                                  ? "10%"
+                                  : "0%",
                       }}
                     >
                       {header}
@@ -555,20 +555,20 @@ export default function ViewRequestDetails() {
                       <TableCell
                         align="center"
                         className="view-table-data-row"
-                        sx={{ borderLeftWidth: "1px", fontSize: "1vw" }}
+                        sx={{ borderLeftWidth: "1px", fontSize: "0.88rem" }}
                       >
                         {row.ticketId}
                       </TableCell>
                       <TableCell
                         className="view-table-data-row"
-                        sx={{ fontSize: "1vw" }}
+                        sx={{ fontSize: "0.88rem" }}
                       >
                         {row.request}
                       </TableCell>
                       <TableCell
                         className="view-table-data-row"
                         align="center"
-                        sx={{ fontSize: "1vw" }}
+                        sx={{ fontSize: "0.88rem" }}
                       >
                         <Box
                           sx={{
@@ -606,7 +606,7 @@ export default function ViewRequestDetails() {
                       <TableCell
                         align="center"
                         className="view-table-data-row"
-                        sx={{ fontSize: "1vw" }}
+                        sx={{ fontSize: "0.88rem" }}
                       >
                         {row.createdDateTime}
                       </TableCell>
@@ -632,10 +632,9 @@ export default function ViewRequestDetails() {
                             }}
                           >
                             <ExpandCircleDownOutlinedIcon
-                              size="1.95vw"
                               sx={{
                                 color: "rgba(95, 99, 104, 0.87)",
-                                fontSize: "2.2vw",
+                                fontSize: "2rem",
                                 transform:
                                   viewRequestDetailsAction === index
                                     ? "rotate(180deg)"

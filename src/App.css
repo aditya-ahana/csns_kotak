@@ -122,9 +122,9 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 /* scroll bar */
 
 /* width */
-/* ::-webkit-scrollbar {
-  width: 0.75vw;
-} */
+::-webkit-scrollbar {
+  width: 0.34rem;
+}
 
 /* Track */
 /* ::-webkit-scrollbar-track { */
@@ -133,15 +133,16 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 /* } */
 
 /* Handle */
-/* ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: rgb(192, 192, 192);
   border-radius: 12px;
-} */
+}
 
 /* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-  background: rgb(168, 168, 168);
-} */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(147, 147, 147);
+  transition: all 1s;
+}
 
 /* 
 .boxHover:hover {
@@ -275,7 +276,7 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-reports-heading {
-  font-size: 1.25vw;
+  font-size: 1.1rem;
   /* font-family: "Montserrat", sans-serif; */
   font-family: Roboto;
   font-weight: 500;
@@ -301,7 +302,7 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-report-heading {
-  font-size: 0.95vw;
+  font-size: 0.85rem;
   vertical-align: middle;
   font-family: Roboto;
   font-weight: 400;
@@ -353,13 +354,13 @@ input::-webkit-inner-spin-button {
 .add-remove-button {
   display: flex;
   align-items: center;
-  margin-top: 0.4rem;
+  margin: 0.4rem 0rem 0rem 0rem;
   justify-content: center;
   width: 3.5%;
   align-self: center;
   vertical-align: middle;
-  background-color: white;
   border: none;
+  background-color: transparent;
   /* border-style: solid;
   border-color: #de1f1f;
   border-radius: 40px; */
@@ -369,7 +370,7 @@ input::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: left;
-  background-color: white;
+  /* background-color: white; */
   gap: 1.25rem;
   border-color: rgb(255, 0, 0);
   border-radius: 40px;
@@ -381,7 +382,7 @@ input::-webkit-inner-spin-button {
   border-width: 0;
   height: 2.25rem;
   font-weight: 600;
-  font-size: 1vw;
+  font-size: 0.88rem;
   border-radius: 5px;
 }
 
@@ -428,7 +429,7 @@ input::-webkit-inner-spin-button {
 }
 
 .preview-heading {
-  font-size: 1.48vw;
+  font-size: 1.4rem;
   font-family: Roboto;
   padding-top: 0.45rem;
   font-weight: 500;
@@ -480,7 +481,7 @@ input::-webkit-inner-spin-button {
 }
 
 .preview-title {
-  font-size: 0.95vw;
+  font-size: 0.84rem;
   vertical-align: middle;
   font-family: Roboto;
   font-weight: 400;
@@ -511,7 +512,7 @@ input::-webkit-inner-spin-button {
 .preview-text {
   font-weight: 400;
   font-family: Roboto;
-  font-size: 0.94vw;
+  font-size: 0.85rem;
 }
 
 .detail-range {
@@ -523,25 +524,23 @@ input::-webkit-inner-spin-button {
 
 .preview-button:hover,
 .reports-type-dropdownicon:hover,
-.ticket-number-input:hover,
-.ticket-number-input-after:hover,
-.ticket-description-input-after:hover,
-.ticket-description-input:hover,
+/* .ticket-number-input:hover, */
+/* .ticket-description-input:hover, */
 .close-preview:hover,
-.selected-param-box:hover,
+/* .selected-param-box:hover,
 .selected-param-box-2:hover,
-.selected-param-box-3:hover,
+.selected-param-box-3:hover, */
 .request-filter-section:hover,
 .request-searchbar:hover,
 .view-details-button:hover,
 .mail-draft-button:hover,
 .number-box:hover,
 .retry-button:hover {
-  box-shadow: 0px 0px 12px 2px rgba(99, 99, 99, 0.234);
+  box-shadow: 1px 2px 12px 1px rgba(0, 0, 0, 0.1);
   transition: all 0.4s;
   border-width: 1px solid white;
-  /* border-radius: 40px; */
 }
+
 .retry-button:hover {
   background-color: rgb(255 231 232);
 }
@@ -699,7 +698,7 @@ input::-webkit-inner-spin-button {
   align-self: center;
   width: 100%;
   height: auto;
-  overflow: scroll;
+  overflow: auto;
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
@@ -746,7 +745,7 @@ input::-webkit-inner-spin-button {
   border-bottom-width: 0px;
   align-self: center;
   max-height: 28.5rem;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .view-table-header {

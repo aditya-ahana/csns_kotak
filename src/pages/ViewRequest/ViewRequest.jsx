@@ -153,7 +153,7 @@ export default function ViewRequest() {
       },
       openPickerIcon: {
         sx: {
-          fontSize: "1.36vw",
+          fontSize: "1.3rem",
         },
       },
       field: {
@@ -163,7 +163,7 @@ export default function ViewRequest() {
         placeholder: "Date",
         InputLabelProps: {
           sx: {
-            fontSize: "1vw",
+            fontSize: "0.88rem",
             opacity: "0.6",
           },
         },
@@ -172,7 +172,7 @@ export default function ViewRequest() {
         sx: {
           "& .MuiInputBase-input": {
             height: "1.25rem",
-            fontSize: "0.85vw",
+            fontSize: "0.75rem",
             marginLeft: "-7%",
           },
         },
@@ -513,7 +513,7 @@ export default function ViewRequest() {
   const displayPaginationLabel = (from, to, count) => {
     return (
       <Typography
-        sx={{ fontSize: "0.95vw", marginTop: "0.1rem" }}
+        sx={{ fontSize: "0.85rem", marginTop: "0.1rem" }}
       >{`${from} - ${to} of ${count}`}</Typography>
     );
   };
@@ -522,18 +522,18 @@ export default function ViewRequest() {
     <>
       <Box className="table-page">
         <Box className="view-request-screen">
-          <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
+          <Typography variant="h5" fontWeight={500} fontSize="1.4rem">
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
             <Box className="view-request-header">
               <Box className="request-searchbar">
-                <SearchIcon className="request-search-icon" size="2vw" />
+                <SearchIcon className="request-search-icon" />
                 <FormControl sx={{ width: "100%" }}>
                   <Input
                     disableUnderline={true}
                     type="search"
-                    sx={{ fontSize: "0.92vw" }}
+                    sx={{ fontSize: "0.88rem" }}
                     inputMode="text"
                     placeholder={t("searchByTicketRequester")}
                     className="request-search-input"
@@ -563,7 +563,11 @@ export default function ViewRequest() {
                 />
                 <Typography
                   className="filter-heading"
-                  sx={{ fontWeight: 500, fontSize: "1.04vw" }}
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: "0.95rem",
+                    color: "rgba(96, 96, 96, 1)",
+                  }}
                 >
                   {" "}
                   {t("filter")}
@@ -629,22 +633,24 @@ export default function ViewRequest() {
                           checked={selectedStatus.includes(status)}
                           onChange={(event) => handleStatusCheck(event, status)}
                           style={{
-                            marginLeft: "-1vw",
+                            marginLeft: "-1rem",
                             backgroundColor: "transparent",
                           }}
                           icon={
-                            <CheckBoxOutlineBlank sx={{ fontSize: "1.6vw" }} />
+                            <CheckBoxOutlineBlank
+                              sx={{ fontSize: "1.36rem" }}
+                            />
                           }
                           checkedIcon={
                             selectedStatus.includes(status) ? (
                               <CheckBoxOutlinedIcon
                                 className="check-icon"
-                                sx={{ fontSize: "1.6vw", color: "red" }}
+                                sx={{ fontSize: "1.36rem", color: "red" }}
                               />
                             ) : (
                               <CheckBoxOutlineBlank
                                 sx={{
-                                  fontSize: "1.6vw",
+                                  fontSize: "1.36rem",
                                   color: "rgba(115, 115, 115, 1)",
                                 }}
                               />
@@ -655,7 +661,7 @@ export default function ViewRequest() {
                           primary={status}
                           color="black"
                           inputMode="text"
-                          primaryTypographyProps={{ fontSize: "0.95vw" }}
+                          primaryTypographyProps={{ fontSize: "0.85rem" }}
                           style={{ padding: "0.15rem 0rem 0rem 0rem" }}
                         />
                       </MenuItem>
@@ -664,7 +670,7 @@ export default function ViewRequest() {
 
                   <Box
                     sx={{
-                      padding: "0.36rem 0vw 0rem 0.65rem",
+                      padding: "0.36rem 0rem 0rem 0.65rem",
                       borderWidth: "1px 0px 0px 0px",
                       borderStyle: "solid",
                       borderColor: "rgba(232, 232, 232, 1)",
@@ -674,7 +680,8 @@ export default function ViewRequest() {
                       sx={{
                         color: "rgba(96, 96, 96, 1)",
                         fontWeight: 500,
-                        fontSize: "1vw",
+                        fontSize: "0.88rem",
+                        padding: "0.25rem 0.25rem 0rem 0.125rem",
                       }}
                     >
                       Created Date
@@ -752,7 +759,7 @@ export default function ViewRequest() {
                       <Box
                         sx={{
                           display: "flex",
-                          padding: "0.75rem 0.75rem 0.1rem 0rem",
+                          padding: "0.75rem 0.75rem 0.225rem 0rem",
                           alignItems: "center",
                           justifyContent: "flex-end",
                         }}
@@ -772,7 +779,7 @@ export default function ViewRequest() {
                             height: "1.75rem",
                             fontWeight: 600,
                             color: "white",
-                            fontSize: "0.92vw",
+                            fontSize: "0.825rem",
                           }}
                         >
                           Clear
@@ -802,7 +809,7 @@ export default function ViewRequest() {
                             sx={{
                               border: "1px solid rgba(225, 225, 225, 1)",
                               backgroundColor: "rgba(245, 248, 250, 1)",
-                              fontSize: "1vw",
+                              fontSize: "0.88rem",
                               borderLeftWidth:
                                 header === "Ticket Id" ? "1px" : "0px",
                               width:
@@ -817,7 +824,7 @@ export default function ViewRequest() {
                                         ? "16%"
                                         : header === "Action"
                                           ? "17%"
-                                          : "0vw",
+                                          : "0%",
                             }}
                           >
                             {header}
@@ -834,7 +841,10 @@ export default function ViewRequest() {
                             <TableCell
                               key={i}
                               className="view-table-data-row"
-                              sx={{ borderLeftWidth: "1px", fontSize: "1vw" }}
+                              sx={{
+                                borderLeftWidth: "1px",
+                                fontSize: "0.88rem",
+                              }}
                               align="center"
                             >
                               {detail.ticketid}
@@ -845,7 +855,7 @@ export default function ViewRequest() {
                                   <Typography
                                     key={index}
                                     sx={{
-                                      fontSize: "1vw",
+                                      fontSize: "0.88rem",
                                       lineHeight: "1.85rem",
                                     }}
                                   >{`${index + 1}. ${req}`}</Typography>
@@ -888,7 +898,7 @@ export default function ViewRequest() {
                                 >
                                   <Typography
                                     variant="body2"
-                                    sx={{ fontSize: "1vw" }}
+                                    sx={{ fontSize: "0.88rem" }}
                                   >
                                     {detail.status}
                                   </Typography>
@@ -898,14 +908,14 @@ export default function ViewRequest() {
                             <TableCell
                               align="center"
                               className="view-table-data-row"
-                              sx={{ fontSize: "1vw" }}
+                              sx={{ fontSize: "0.88rem" }}
                             >
                               {detail.createdDate}
                             </TableCell>
                             <TableCell
                               align="center"
                               className="view-table-data-row"
-                              sx={{ fontSize: "1vw" }}
+                              sx={{ fontSize: "0.88rem" }}
                             >
                               {detail.requester}
                             </TableCell>
@@ -928,12 +938,12 @@ export default function ViewRequest() {
                                   }
                                 >
                                   <DescriptionOutlinedIcon
-                                    sx={{ fontSize: "1.75vw" }}
+                                    sx={{ fontSize: "1.525rem" }}
                                   />
                                   <Typography
                                     variant="body2"
                                     fontWeight={500}
-                                    sx={{ fontSize: "1vw" }}
+                                    sx={{ fontSize: "0.88rem" }}
                                     color="rgb(0, 97, 201)"
                                   >
                                     {" "}
@@ -965,7 +975,7 @@ export default function ViewRequest() {
                                 >
                                   <AttachEmailOutlinedIcon
                                     sx={{
-                                      fontSize: "1.6vw",
+                                      fontSize: "1.4rem",
                                       color:
                                         detail.status === "Completed"
                                           ? "rgba(96, 96, 96, 1)"
@@ -975,7 +985,7 @@ export default function ViewRequest() {
                                   <Typography
                                     variant="body2"
                                     fontWeight={500}
-                                    sx={{ fontSize: "1vw" }}
+                                    sx={{ fontSize: "0.88rem" }}
                                   >
                                     {" "}
                                     {t("eDraft")}
@@ -1008,7 +1018,7 @@ export default function ViewRequest() {
                   overflow: "visible",
                   "& .MuiSvgIcon-root": {
                     color: "rgba(0, 0, 0, 0.56)",
-                    fontSize: "1.5vw",
+                    fontSize: "1.25rem",
                   },
                   "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root": {
                     opacity: 0.25,
@@ -1018,7 +1028,7 @@ export default function ViewRequest() {
                 slotProps={{
                   select: {
                     renderValue: (value) => (
-                      <Typography sx={{ fontSize: "0.95vw" }}>
+                      <Typography sx={{ fontSize: "0.85rem" }}>
                         {value}
                       </Typography>
                     ),
@@ -1026,7 +1036,6 @@ export default function ViewRequest() {
                       <KeyboardArrowDownOutlinedIcon
                         className="reports-type-dropdownicon"
                         sx={{
-                          fontSize: "1.2vw",
                           color: "rgba(115, 115, 115, 1)",
                           marginTop: "0.002rem",
                         }}
@@ -1040,7 +1049,7 @@ export default function ViewRequest() {
                         sx={{
                           border: "none",
                           height: "1.2rem",
-                          fontSize: "0.2vw",
+                          fontSize: "0rem",
                           "& .MuiOutlinedInput-notchedOutline": {
                             border: "none",
                           },
@@ -1069,7 +1078,7 @@ export default function ViewRequest() {
                     MenuProps: {
                       sx: {
                         // marginTop : "-8vh"
-                        fontSize: "0.2vw",
+                        fontSize: "0.2rem",
                       },
                       MenuListProps: {
                         sx: {},
@@ -1093,7 +1102,7 @@ export default function ViewRequest() {
                     <Typography
                       sx={{
                         alignSelf: "center",
-                        fontSize: "1vw",
+                        fontSize: "0.88rem",
                         color: "rgba(0, 0, 0, 0.6)",
                       }}
                     >

@@ -17,9 +17,14 @@ import Header from "./components/Header";
 import WithNav from "./Layout/WithNav";
 
 import { ToastContainer, toast } from "react-toastify";
+import { debounce } from "@mui/material";
+
 import "react-toastify/dist/ReactToastify.css";
 
 export default function App() {
+  const handleResize = debounce(() => {}, 200);
+
+  window.addEventListener("resize", handleResize);
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
