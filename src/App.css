@@ -275,13 +275,6 @@ input::-webkit-inner-spin-button {
   gap: 0.45em;
 }
 
-.selected-reports-heading {
-  font-size: 1.1rem;
-  /* font-family: "Montserrat", sans-serif; */
-  font-family: Roboto;
-  font-weight: 500;
-}
-
 .selected-report-view {
   max-height: auto;
   border-radius: 5px;
@@ -836,4 +829,10 @@ input::-webkit-inner-spin-button {
 .MuiTableBody-root {
   border-bottom-width: 0px;
   box-shadow: none;
+}
+
+.card:hover {
+  /* padding: 2rem; */
+  box-shadow: 1px 2px 12px 2px rgba(79, 77, 100, 0.18);
+  transition: all 0.6s;
 }

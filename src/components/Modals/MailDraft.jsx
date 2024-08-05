@@ -73,8 +73,8 @@ export default function MailDraft(props) {
         aria-describedby="keep-mounted-modal-description"
       >
         <Box sx={style} className="border-0 rounded p-3">
-          <Typography className="d-flex justify-content-between align-items-center border-bottom">
-            <Typography variant="h6" component="h2">
+          <Box className="d-flex justify-content-between align-items-center border-bottom">
+            <Typography component='span' sx={{ fontWeight : 500 }}>
               Mail Draft
             </Typography>
             <IconButton
@@ -86,9 +86,9 @@ export default function MailDraft(props) {
             >
               <IoClose />
             </IconButton>
-          </Typography>
+          </Box>
           <div className="p-1"></div>
-          <Typography>
+          {/* <Typography> */}
             {/* to */}
             <TextField
               id="input-with-icon-textfield"
@@ -144,7 +144,7 @@ export default function MailDraft(props) {
                 <span>Copy text</span>
               </Button>
             </div>
-          </Typography>
+          {/* </Typography> */}
         </Box>
       </Modal>
     </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { GrSubtract } from "react-icons/gr";
 import { IoMdSearch } from "react-icons/io";
@@ -19,6 +19,7 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
 import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { requestDetails } from "../../components/data/requestsData";
 
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
@@ -37,456 +38,6 @@ export default function ViewRequestDetails() {
   ];
   const route_to = useNavigate();
 
-  const requestDetails = [
-    {
-      ticketId: "1300",
-      request: "Statement in PDF/Excel",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "123456789",
-        },
-        {
-          accNo: "98765432",
-        },
-        {
-          accNo: "34568656",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-        {
-          accNo: "976565",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of IMPS Txns",
-      status: "Completed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "456565",
-        },
-        {
-          accNo: "2423576",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of UPI Txns",
-      status: "Failed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "9754",
-        },
-        {
-          accNo: "4545",
-        },
-        {
-          accNo: "98475",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "IP Logs",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-        {
-          accNo: "7642",
-        },
-        {
-          accNo: "98343",
-        },
-        {
-          accNo: "2335",
-        },
-        {
-          accNo: "8923",
-        },
-        {
-          accNo: "56342",
-        },
-        {
-          accNo: "24562",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Device Details",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-
-        {
-          accNo: "456",
-        },
-        {
-          accNo: "2345",
-        },
-
-        {
-          accNo: "2345634",
-        },
-        {
-          accNo: "45634",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Statement in PDF/Excel",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "123456789",
-        },
-        {
-          accNo: "98765432",
-        },
-        {
-          accNo: "34568656",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-        {
-          accNo: "976565",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of IMPS Txns",
-      status: "Completed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "456565",
-        },
-        {
-          accNo: "2423576",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of UPI Txns",
-      status: "Failed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "9754",
-        },
-        {
-          accNo: "4545",
-        },
-        {
-          accNo: "98475",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "IP Logs",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-        {
-          accNo: "7642",
-        },
-        {
-          accNo: "98343",
-        },
-        {
-          accNo: "2335",
-        },
-        {
-          accNo: "8923",
-        },
-        {
-          accNo: "56342",
-        },
-        {
-          accNo: "24562",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Device Details",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-
-        {
-          accNo: "456",
-        },
-        {
-          accNo: "2345",
-        },
-
-        {
-          accNo: "2345634",
-        },
-        {
-          accNo: "45634",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Statement in PDF/Excel",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "123456789",
-        },
-        {
-          accNo: "98765432",
-        },
-        {
-          accNo: "34568656",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-        {
-          accNo: "976565",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of IMPS Txns",
-      status: "Completed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "456565",
-        },
-        {
-          accNo: "2423576",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-        {
-          accNo: "2343",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Beneficiary Details of UPI Txns",
-      status: "Failed",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "9754",
-        },
-        {
-          accNo: "4545",
-        },
-        {
-          accNo: "98475",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "9757642",
-        },
-        {
-          accNo: "434",
-        },
-        {
-          accNo: "8767",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "IP Logs",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-        {
-          accNo: "7642",
-        },
-        {
-          accNo: "98343",
-        },
-        {
-          accNo: "2335",
-        },
-        {
-          accNo: "8923",
-        },
-        {
-          accNo: "56342",
-        },
-        {
-          accNo: "24562",
-        },
-        {
-          accNo: "745656",
-        },
-      ],
-    },
-    {
-      ticketId: "1300",
-      request: "Device Details",
-      status: "In-progress",
-      createdDateTime: "28-06-2024",
-      createdBy: "User",
-      subData: [
-        {
-          accNo: "93487",
-        },
-
-        {
-          accNo: "456",
-        },
-        {
-          accNo: "2345",
-        },
-
-        {
-          accNo: "2345634",
-        },
-        {
-          accNo: "45634",
-        },
-      ],
-    },
-  ];
-
   const ticketDetails = requestDetails.map((request, index) => ({
     ticketid: request.ticketId,
     request: request.request,
@@ -499,19 +50,27 @@ export default function ViewRequestDetails() {
     ...detail,
   }));
 
-  console.log("Request with Action", requestActions);
+  // console.log("Request with Action", requestActions);
 
   //   {detail.status_text === "Failed" && (
   //   <Button className="retry-button">
   //   <TbReload size="1.4vw" color="rgba(237, 28, 36, 1)" />
-  //   <p className="retry-text">Retry</p>
+  //   <Typography className="retry-text">Retry</Typography>
   // </Button>
   // )}
 
+  const handleSelectedIndex = (event, index) => {
+    if (viewRequestDetailsAction === index) {
+      setViewRequestDetailsAction();
+    } else {
+      setViewRequestDetailsAction(index);
+    }
+  };
+
   return (
-    <Box className="page">
+    <Box className="page" data-testid="view-details-page">
       <Box className="view-request-details-screen">
-        <Typography variant="h5" fontWeight={500} fontSize="1.36rem">
+        <Typography component="span" fontWeight={500} fontSize="1.36rem">
           {t("viewRequestDetails")}
         </Typography>
         <Box className="view-details-container">
@@ -523,8 +82,10 @@ export default function ViewRequestDetails() {
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
                 <TableRow>
-                  {viewRequestTableHeaders.map((header) => (
+                  {viewRequestTableHeaders.map((header, index) => (
                     <TableCell
+                      component="td"
+                      key={index}
                       align="center"
                       sx={{
                         border: "1px solid rgba(225, 225, 225, 1)",
@@ -550,8 +111,8 @@ export default function ViewRequestDetails() {
               </TableHead>
               <TableBody className="view-table-body">
                 {requestDetails.map((row, index) => (
-                  <>
-                    <TableRow key={index}>
+                  <Fragment key={index}>
+                    <TableRow>
                       <TableCell
                         align="center"
                         className="view-table-data-row"
@@ -618,18 +179,15 @@ export default function ViewRequestDetails() {
                               size="1.4vw"
                               color="rgba(237, 28, 36, 1)"
                             />
-                            <p className="retry-text">Retry</p>
+                            <Typography className="retry-text">Retry</Typography>
                           </Button>
                         ) : ( */}
                           <Button
                             className="expand-button"
-                            onClick={(e) => {
-                              if (viewRequestDetailsAction === index) {
-                                setViewRequestDetailsAction();
-                              } else {
-                                setViewRequestDetailsAction(index);
-                              }
-                            }}
+                            onClick={(event) =>
+                              handleSelectedIndex(event, index)
+                            }
+                            data-testid={`accordion-displayer${index}`}
                           >
                             <ExpandCircleDownOutlinedIcon
                               sx={{
@@ -650,12 +208,13 @@ export default function ViewRequestDetails() {
                     </TableRow>
 
                     {viewRequestDetailsAction === index ? (
-                      <>
-                        {row.subData?.map((subDetails) => (
+                      <Fragment>
+                        {row.subData?.map((subDetails, subIndex) => (
                           <>
                             <TableRow
                               className="expanded-view"
-                              key={index}
+                              data-testid={`sub-det-disp${index}`}
+                              key={subIndex}
                               style={{
                                 backgroundColor: "rgb(243 243 243 / 79%)",
                                 height: "7vh",
@@ -673,8 +232,8 @@ export default function ViewRequestDetails() {
                                   className="d-flex align-items-center justify-content-center"
                                 >
                                   <span
-                                    key={index}
-                                    // style={{ lineHeight: "1.5vh" }}
+                                  // key={index}
+                                  // style={{ lineHeight: "1.5vh" }}
                                   >
                                     Acc No:- {subDetails.accNo}
                                   </span>
@@ -730,14 +289,14 @@ export default function ViewRequestDetails() {
                                         style={{ fontSize: "x-large" }}
                                       />
                                       {/* Retry */}
-                                      {/* <p className="retry-text">Retry</p> */}
+                                      {/* <Typography className="retry-text">Retry</Typography> */}
                                     </Button>
                                   ) : // <Button className="retry-button">
                                   //   <TbReload
                                   //     size="1.4vw"
                                   //     color="rgba(237, 28, 36, 1)"
                                   //   />
-                                  //   <p className="retry-text">Retry</p>
+                                  //   <Typography className="retry-text">Retry</Typography>
                                   // </Button>
                                   row.status === "In-progress" ? (
                                     ""
@@ -763,7 +322,7 @@ export default function ViewRequestDetails() {
                             </TableRow>
                           </>
                         ))}
-                      </>
+                      </Fragment>
                     ) : (
                       <></>
                     )}
@@ -825,7 +384,7 @@ export default function ViewRequestDetails() {
                   ) : (
                     ""
                   )} */}
-                  </>
+                  </Fragment>
                 ))}
               </TableBody>
             </Table>

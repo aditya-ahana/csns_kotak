@@ -4,7 +4,8 @@ import { MdOutlinePostAdd } from "react-icons/md";
 
 export const sidebarData = [
   {
-    linkKey: "/",
+    // linkKey: "/",
+    linkKey: "/Dashboard",
     icon: <RiDashboardFill />,
     label: "Dashboard",
   },
