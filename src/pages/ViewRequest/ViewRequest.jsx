@@ -27,6 +27,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import AttachEmailOutlinedIcon from "@mui/icons-material/AttachEmailOutlined";
 import {
   Checkbox,
+  Container,
   TablePagination,
   TextField,
   Typography,
@@ -40,6 +41,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
+import { requestList } from "../../components/data/requestsData";
 
 export default function ViewRequest() {
   const { t } = useTranslation();
@@ -183,213 +185,10 @@ export default function ViewRequest() {
     },
   };
 
-  const requestDetails = [
-    {
-      ticketId: "1300",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "In-progress",
-      createdDate: "31-05-2024",
-      requester: "System",
-    },
-    {
-      ticketId: "1299",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "Completed",
-      createdDate: "08-04-2024",
-      requester: "User",
-    },
-    {
-      ticketId: "1298",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Device Details",
-      ],
-      status: "Failed",
-      createdDate: "08-03-2024",
-      requester: "Admin",
-    },
-    {
-      ticketId: "1297",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "IP Logs",
-      ],
-      status: "In-progress",
-      createdDate: "12-01-2024",
-      requester: "System",
-    },
-    {
-      ticketId: "1296",
-      requests: [
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-      ],
-      status: "Failed",
-      createdDate: "14-02-2023",
-      requester: "Banker",
-    },
-    {
-      ticketId: "1295",
-      requests: ["IP Logs", "Device Details"],
-      status: "In-progress",
-      createdDate: "30-01-2023",
-      requester: "Admin",
-    },
+  // //console.log('ticketId' , ticketId);
+  // //console.log('ticket status : ',ticketStatus);
 
-    {
-      ticketId: "1294",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "In-progress",
-      createdDate: "12-01-2024",
-      requester: "System",
-    },
-    {
-      ticketId: "1293",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "Completed",
-      createdDate: "04-12-2023",
-      requester: "User",
-    },
-    {
-      ticketId: "1292",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Device Details",
-      ],
-      status: "Failed",
-      createdDate: "21-04-2023",
-      requester: "Admin",
-    },
-    {
-      ticketId: "1291",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "IP Logs",
-      ],
-      status: "In-progress",
-      createdDate: "02-03-2023",
-      requester: "System",
-    },
-    {
-      ticketId: "1290",
-      requests: [
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-      ],
-      status: "Failed",
-      createdDate: "14-02-2023",
-      requester: "Banker",
-    },
-    {
-      ticketId: "1289",
-      requests: ["IP Logs", "Device Details"],
-      status: "In-progress",
-      createdDate: "30-01-2023",
-      requester: "Admin",
-    },
-
-    {
-      ticketId: "1288",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "In-progress",
-      createdDate: "10-01-2024",
-      requester: "System",
-    },
-    {
-      ticketId: "1287",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-        "Device Details",
-      ],
-      status: "Completed",
-      createdDate: "08-12-2023",
-      requester: "User",
-    },
-    {
-      ticketId: "1286",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "Device Details",
-      ],
-      status: "Failed",
-      createdDate: "21-04-2023",
-      requester: "Admin",
-    },
-    {
-      ticketId: "1285",
-      requests: [
-        "Statement in PDF/Excel",
-        "Beneficiary Details of IMPS Txns",
-        "IP Logs",
-      ],
-      status: "In-progress",
-      createdDate: "02-03-2023",
-      requester: "System",
-    },
-    {
-      ticketId: "1284",
-      requests: [
-        "Beneficiary Details of IMPS Txns",
-        "Beneficiary Details of UPI Txns",
-        "IP Logs",
-      ],
-      status: "Failed",
-      createdDate: "14-02-2023",
-      requester: "Banker",
-    },
-    {
-      ticketId: "1283",
-      requests: ["IP Logs", "Device Details"],
-      status: "In-progress",
-      createdDate: "30-01-2023",
-      requester: "Admin",
-    },
-  ];
-
-  // console.log('ticketId' , ticketId);
-  // console.log('ticket status : ',ticketStatus);
-
-  const ticketDetails = requestDetails.map((request, index) => ({
+  const ticketDetails = requestList.map((request, index) => ({
     ticketid: request.ticketId,
     requests: request.requests,
     status: request.status,
@@ -397,7 +196,7 @@ export default function ViewRequest() {
     requester: request.requester,
   }));
 
-  console.log("TICKET", ticketDetails);
+  //console.log("TICKET", ticketDetails);
 
   const handleSearchQuery = (e) => {
     const searched = e.target.value.toLowerCase();
@@ -426,7 +225,7 @@ export default function ViewRequest() {
     )
   );
 
-  console.log("includedStatus", includedStatus);
+  //console.log("includedStatus", includedStatus);
 
   useEffect(() => {
     if (selectedStatus.length > 0) {
@@ -502,9 +301,9 @@ export default function ViewRequest() {
             ? searchResult
             : ticketDetails;
 
-  console.log("Checked", checked);
-  console.log("Selected status", selectedStatus);
-  console.log("Filtered Result", filteredResult);
+  //console.log("Checked", checked);
+  //console.log("Selected status", selectedStatus);
+  //console.log("Filtered Result", filteredResult);
 
   const topRowIndex = page * rowsPerPage;
   const nthRowIndex = page * rowsPerPage + rowsPerPage;
@@ -513,6 +312,7 @@ export default function ViewRequest() {
   const displayPaginationLabel = (from, to, count) => {
     return (
       <Typography
+        component="span"
         sx={{ fontSize: "0.85rem", marginTop: "0.1rem" }}
       >{`${from} - ${to} of ${count}`}</Typography>
     );
@@ -520,9 +320,9 @@ export default function ViewRequest() {
 
   return (
     <>
-      <Box className="table-page">
+      <Box className="table-page" data-testid="view-request-page">
         <Box className="view-request-screen">
-          <Typography variant="h5" fontWeight={500} fontSize="1.4rem">
+          <Typography component="span" fontWeight={500} fontSize="1.4rem">
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
@@ -545,6 +345,7 @@ export default function ViewRequest() {
               <Button
                 className="request-filter-section"
                 id="filter-menu-container"
+                data-testid="filter-menu-button"
                 onClick={handleViewFilterMenu}
                 aria-controls={viewFilterMenu ? "filter-menu" : undefined}
                 aria-haspopup="true"
@@ -559,9 +360,10 @@ export default function ViewRequest() {
                 {/* <FilterAltOutlinedIcon */}
                 <FilterAltOutlinedIcon
                   className="filter-icon"
-                  sx={{ color: "#606060", fontSize: "1.5vw" }}
+                  sx={{ color: "#606060", fontSize: "1.36rem" }}
                 />
                 <Typography
+                  component="span"
                   className="filter-heading"
                   sx={{
                     fontWeight: 500,
@@ -576,6 +378,7 @@ export default function ViewRequest() {
 
               <Menu
                 id="filter-menu"
+                data-testid="filter-menu"
                 anchorEl={filterAnchor}
                 open={viewFilterMenu}
                 sx={{ marginLeft: "-1.65%" }}
@@ -592,6 +395,7 @@ export default function ViewRequest() {
                   horizontal: "right",
                 }}
                 transformOrigin={{
+                  vertical: "top",
                   horizontal: "left",
                 }}
                 MenuListProps={{
@@ -608,6 +412,7 @@ export default function ViewRequest() {
                 <MenuList sx={{ height: "100%" }}>
                   <Box className="filter-menu-header">
                     <Typography
+                      component="span"
                       sx={{ color: "rgba(96, 96, 96, 1)", fontWeight: 500 }}
                     >
                       {" "}
@@ -615,7 +420,13 @@ export default function ViewRequest() {
                     </Typography>
                   </Box>
 
-                  <MenuList>
+                  <MenuList
+                    data-testid={
+                      selectedStatus.length === 0
+                        ? "status-unchecked"
+                        : "checked-box"
+                    }
+                  >
                     {requestPhases.map((status, index) => (
                       <MenuItem
                         key={index}
@@ -677,6 +488,7 @@ export default function ViewRequest() {
                     }}
                   >
                     <Typography
+                      component="span"
                       sx={{
                         color: "rgba(96, 96, 96, 1)",
                         fontWeight: 500,
@@ -737,6 +549,7 @@ export default function ViewRequest() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             format="DD-MM-YYYY"
+                            data-testid="to-date-picker"
                             label="To"
                             value={
                               toDate === "" ? null : dayjs(toDate, "DD-MM-YYYY")
@@ -765,11 +578,13 @@ export default function ViewRequest() {
                         }}
                       >
                         <Button
+                          title="menu-clear-button"
                           onClick={() => {
                             clearStatusFilter();
                             clearDateRangeFilter();
                             handleCloseFilterMenu();
                           }}
+                          data-testid="menu-clear-button"
                           className="clear-button"
                           style={{
                             backgroundColor: "rgba(237, 28, 36, 1)",
@@ -853,6 +668,7 @@ export default function ViewRequest() {
                               <Box sx={{ alignSelf: "center" }}>
                                 {detail.requests.map((req, index) => (
                                   <Typography
+                                    // component=''
                                     key={index}
                                     sx={{
                                       fontSize: "0.88rem",
@@ -897,7 +713,7 @@ export default function ViewRequest() {
                                   }}
                                 >
                                   <Typography
-                                    variant="body2"
+                                    component="span"
                                     sx={{ fontSize: "0.88rem" }}
                                   >
                                     {detail.status}
@@ -923,8 +739,10 @@ export default function ViewRequest() {
                               <Box className="detail-buttons">
                                 <Button
                                   variant="outlined"
+                                  // title="view-details-button"
                                   className="view-details-button"
                                   color="darkblue"
+                                  data-testid={`details-page-nav${i}`}
                                   style={{ alignSelf: "center" }}
                                   onClick={() =>
                                     route_to(
@@ -941,7 +759,7 @@ export default function ViewRequest() {
                                     sx={{ fontSize: "1.525rem" }}
                                   />
                                   <Typography
-                                    variant="body2"
+                                    component="span"
                                     fontWeight={500}
                                     sx={{ fontSize: "0.88rem" }}
                                     color="rgb(0, 97, 201)"
@@ -983,7 +801,7 @@ export default function ViewRequest() {
                                     }}
                                   />
                                   <Typography
-                                    variant="body2"
+                                    component="span"
                                     fontWeight={500}
                                     sx={{ fontSize: "0.88rem" }}
                                   >
@@ -1003,9 +821,9 @@ export default function ViewRequest() {
 
             <Box className="table-pagination">
               <TablePagination
-                // labelDisplayedRows={() =>
-                //   displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
-                // }
+                labelDisplayedRows={() =>
+                  displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
+                }
                 rowsPerPageOptions={rowOptions}
                 component="div"
                 sx={{
@@ -1028,7 +846,7 @@ export default function ViewRequest() {
                 slotProps={{
                   select: {
                     renderValue: (value) => (
-                      <Typography sx={{ fontSize: "0.85rem" }}>
+                      <Typography sx={{ fontSize: "0.85rem" }} component="span">
                         {value}
                       </Typography>
                     ),
@@ -1089,6 +907,7 @@ export default function ViewRequest() {
                 rowsPerPage={rowsPerPage}
                 labelRowsPerPage={
                   <Box
+                    component="span"
                     sx={{
                       display: "flex",
                       flexDirection: "row",
@@ -1100,6 +919,7 @@ export default function ViewRequest() {
                     }}
                   >
                     <Typography
+                      component="span"
                       sx={{
                         alignSelf: "center",
                         fontSize: "0.88rem",

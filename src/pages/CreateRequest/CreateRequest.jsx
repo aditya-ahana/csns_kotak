@@ -37,7 +37,8 @@ import Accordion from "@mui/material/Accordion";
 import InputAdornment from "@mui/material/InputAdornment";
 import { setRequestPayloads } from "../../Redux/csnsReducers";
 import Fade from "@mui/material/Fade";
-
+import { Provider } from "react-redux";
+import store from "../../Redux/reduxStore";
 import { useTranslation } from "react-i18next";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
@@ -1250,7 +1251,9 @@ export default function CreateRequest() {
                   component="text"
                   position="start"
                 >
-                  <Typography sx={{ fontSize: "1vw" }}>+91</Typography>
+                  <Typography sx={{ fontSize: "1vw" }} component="span">
+                    +91
+                  </Typography>
                 </InputAdornment>
               ),
             }}
@@ -1443,7 +1446,9 @@ export default function CreateRequest() {
                     position="start"
                     sx={{ opacity: detail.to === "To" ? 0.45 : 1 }}
                   >
-                    <Typography sx={{ fontSize: "0.88rem" }}>+91</Typography>
+                    <Typography sx={{ fontSize: "0.88rem" }} component="span">
+                      +91
+                    </Typography>
                   </InputAdornment>
                 ),
               }}
@@ -1843,680 +1848,727 @@ export default function CreateRequest() {
   };
 
   return (
-    <Box className="page">
-      <Box className="create-request-screen">
-        <Typography variant="h5" fontWeight={500} fontSize="1.36rem">
-          {t("createRequest")}
-        </Typography>
-        {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+    <Provider store={store}>
+      <Box className="page">
+        <Box className="create-request-screen">
+          <Typography component="span" fontWeight={500} fontSize="1.36rem">
+            {t("createRequest")}
+          </Typography>
+          {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
           {t("createRequest")}
         </span> */}
 
-        <Box className="ticket-entry-section">
-          <Box className="ticket-type-section">
-            <FormControl
-              variant="outlined"
-              margin="none"
-              className="ticket-number-container"
-            >
-              <TextField
-                sx={inputControl.textfield}
-                InputLabelProps={inputControl.inputLabelProps}
-                inputProps={inputControl.inputProps}
-                placeholder={t("enterTicketNo")}
-                className="ticket-number-input"
-                value={ticketNumber === 0 ? "" : ticketNumber}
-                autoComplete="off"
-                size="medium"
+          <Box className="ticket-entry-section">
+            <Box className="ticket-type-section">
+              <FormControl
+                variant="outlined"
+                margin="none"
+                className="ticket-number-container"
+              >
+                <TextField
+                  sx={inputControl.textfield}
+                  InputLabelProps={inputControl.inputLabelProps}
+                  inputProps={inputControl.inputProps}
+                  placeholder={t("enterTicketNo")}
+                  className="ticket-number-input"
+                  value={ticketNumber === 0 ? "" : ticketNumber}
+                  autoComplete="off"
+                  size="medium"
+                  style={{
+                    margin: "0rem 0rem 0rem 0rem",
+                    height: "auto",
+                    fontSize: "0.88rem",
+                  }}
+                  label={t("ticketNo")}
+                  margin="dense"
+                  onChange={(e) => setTicketNumber(e.target.value)}
+                  type="number"
+                  required
+                  inputMode="numeric"
+                  fullWidth={true}
+                  onInput={(e) =>
+                    (e.target.value = e.target.value.slice(0, 10))
+                  }
+                  color="primary"
+                />
+              </FormControl>
+
+              <FormControl
+                variant="outlined"
+                margin="none"
+                className="ticket-description-container"
+              >
+                <TextField
+                  placeholder={
+                    descriptionFocused === true ? t("enterTicketDesc") : ""
+                  }
+                  variant="outlined"
+                  required
+                  label={t("ticketDesc")}
+                  onFocus={() => {
+                    //console.log('desc length',ticketDescription.length);
+                    //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                    setDescriptionFocused(true);
+                  }}
+                  onBlur={() => setDescriptionFocused(false)}
+                  multiline
+                  // multiline
+                  sx={inputControl.textfield}
+                  className="ticket-description-input"
+                  autoComplete="off"
+                  rows={Math.ceil(ticketDescription.length / 59)}
+                  size="small"
+                  fullWidth
+                  inputProps={inputControl.textAreaProps}
+                  InputLabelProps={inputControl.textAreaLabelProps}
+                  style={{
+                    margin: "0rem 0rem 0rem 0rem",
+                    backgroundColor: "white",
+                    height: "auto",
+                  }}
+                  margin="none"
+                  // InputProps={{
+                  //   inputComponent : 'textarea',
+                  //   sx : {
+                  //      padding : 0,
+                  //      margin : 0
+                  //   }
+                  // }}
+                  type="text"
+                  // onInput={(e) => e.target.value = e.target.value.slice(0, 59) }
+                  inputMode="text"
+                  disabled={
+                    ticketNumber === 0 || ticketNumber.length === 0
+                      ? true
+                      : false
+                  }
+                  color="primary"
+                  value={ticketDescription}
+                  onChange={(e) => setTicketDescription(e.target.value)}
+                />
+              </FormControl>
+            </Box>
+
+            <FormControl variant="standard" sx={{ width: "82.75%" }}>
+              <Select
+                labelId="reports-selection-dropdown-label"
+                id="reports-selection-dropdown"
+                multiple={true}
+                value={selectedReports}
+                displayEmpty
+                disabled={
+                  ticketNumber === 0 || ticketDescription === "" ? true : false
+                }
+                onChange={handleReportSelection}
+                variant="standard"
+                input={<OutlinedInput fullWidth={true} />}
+                IconComponent={(props) => (
+                  <KeyboardArrowDownOutlinedIcon
+                    className="reports-type-dropdownicon"
+                    sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
+                    {...props}
+                  />
+                )}
+                renderValue={(reports) => {
+                  if (reports.length === 0) {
+                    return (
+                      <span style={{ opacity: 0.45 }}>
+                        {" "}
+                        {t("statementsReportRequire")}
+                      </span>
+                    );
+                  }
+                  return (
+                    <Input
+                      sx={{
+                        width: "99%",
+                        fontSize: "95%",
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                      }}
+                      disableUnderline={true}
+                      value={reports.join(" , ")}
+                    ></Input>
+                  );
+                }}
+                MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                inputProps={{ "aria-label": "Without label" }}
+                autoWidth={false}
                 style={{
-                  margin: "0rem 0rem 0rem 0rem",
-                  height: "auto",
+                  display: "flex",
+                  alignItems: "center",
+                  height: "2.69rem",
                   fontSize: "0.88rem",
                 }}
-                label={t("ticketNo")}
-                margin="dense"
-                onChange={(e) => setTicketNumber(e.target.value)}
-                type="number"
-                required
-                inputMode="numeric"
-                fullWidth={true}
-                onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
-                color="primary"
-              />
-            </FormControl>
-
-            <FormControl
-              variant="outlined"
-              margin="none"
-              className="ticket-description-container"
-            >
-              <TextField
-                placeholder={
-                  descriptionFocused === true ? t("enterTicketDesc") : ""
-                }
-                variant="outlined"
-                required
-                label={t("ticketDesc")}
-                onFocus={() => {
-                  //console.log('desc length',ticketDescription.length);
-                  //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
-                  setDescriptionFocused(true);
-                }}
-                onBlur={() => setDescriptionFocused(false)}
-                multiline
-                // multiline
-                sx={inputControl.textfield}
-                className="ticket-description-input"
-                autoComplete="off"
-                rows={Math.ceil(ticketDescription.length / 59)}
-                size="small"
-                fullWidth
-                inputProps={inputControl.textAreaProps}
-                InputLabelProps={inputControl.textAreaLabelProps}
-                style={{
-                  margin: "0rem 0rem 0rem 0rem",
-                  backgroundColor: "white",
-                  height: "auto",
-                }}
-                margin="none"
-                // InputProps={{
-                //   inputComponent : 'textarea',
-                //   sx : {
-                //      padding : 0,
-                //      margin : 0
-                //   }
-                // }}
-                type="text"
-                // onInput={(e) => e.target.value = e.target.value.slice(0, 59) }
-                inputMode="text"
-                disabled={
-                  ticketNumber === 0 || ticketNumber.length === 0 ? true : false
-                }
-                color="primary"
-                value={ticketDescription}
-                onChange={(e) => setTicketDescription(e.target.value)}
-              />
-            </FormControl>
-          </Box>
-
-          <FormControl variant="standard" sx={{ width: "82.75%" }}>
-            <Select
-              labelId="reports-selection-dropdown-label"
-              id="reports-selection-dropdown"
-              multiple={true}
-              value={selectedReports}
-              displayEmpty
-              disabled={
-                ticketNumber === 0 || ticketDescription === "" ? true : false
-              }
-              onChange={handleReportSelection}
-              variant="standard"
-              input={<OutlinedInput fullWidth={true} />}
-              IconComponent={(props) => (
-                <KeyboardArrowDownOutlinedIcon
-                  className="reports-type-dropdownicon"
-                  sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
-                  {...props}
-                />
-              )}
-              renderValue={(reports) => {
-                if (reports.length === 0) {
-                  return (
-                    <span style={{ opacity: 0.45 }}>
-                      {" "}
-                      {t("statementsReportRequire")}
-                    </span>
-                  );
-                }
-                return (
-                  <Input
-                    sx={{
-                      width: "99%",
-                      fontSize: "95%",
-                      textOverflow: "ellipsis",
-                      overflow: "hidden",
-                    }}
-                    disableUnderline={true}
-                    value={reports.join(" , ")}
-                  ></Input>
-                );
-              }}
-              MenuProps={SelectProps.REPORT_SELECT_PROPS}
-              inputProps={{ "aria-label": "Without label" }}
-              autoWidth={false}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                height: "2.69rem",
-                fontSize: "0.88rem",
-              }}
-              placeholder={t("statementsReportRequire")}
-            >
-              {requiredReportsData.map((report) => (
-                <MenuItem
-                  key={report}
-                  value={report}
-                  style={{
-                    display: "flex",
-                    border: "1px solid #cdcdcd",
-                    width: "96.25%",
-                    margin: "1rem 0rem 1rem 1.25rem",
-                    height: "2.65rem",
-                    alignItems: "left",
-                    borderRadius: "4px",
-                    backgroundColor: "transparent",
-                    fontSize: "2px",
-                  }}
-                >
-                  <Checkbox
-                    size="medium"
-                    icon={
-                      <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.5rem" }} />
-                    }
-                    checkedIcon={
-                      <CheckBoxOutlinedIcon
-                        className="check-icon"
-                        sx={{ fontSize: "1.5rem", color: "red" }}
-                      />
-                    }
-                    sx={{ containIntrinsicSize: "2px" }}
-                    checked={selectedReports.indexOf(report) > -1}
-                    color="primary"
+                placeholder={t("statementsReportRequire")}
+              >
+                {requiredReportsData.map((report) => (
+                  <MenuItem
+                    key={report}
+                    value={report}
                     style={{
-                      marginLeft: "-0.88rem",
+                      display: "flex",
+                      border: "1px solid #cdcdcd",
+                      width: "96.25%",
+                      margin: "1rem 0rem 1rem 1.25rem",
+                      height: "2.65rem",
+                      alignItems: "left",
+                      borderRadius: "4px",
                       backgroundColor: "transparent",
                       fontSize: "2px",
                     }}
-                  />
-                  <ListItemText
-                    primary={report}
-                    style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                    color="black"
-                    inputMode="text"
-                    primaryTypographyProps={{ fontSize: "0.825rem" }}
-                  />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-
-        {selectedReports.length > 0 && (
-          <Box
-            className="selected-reports-section"
-            id="selected-reports-section"
-          >
-            <h2 className="selected-reports-heading">
-              {" "}
-              {t("selectedRequest")}
-            </h2>
-
-            <Box>
-              {reportsState.length > 0 &&
-                reportsState.map((request, reportIndex) => (
-                  <Box
-                    key={reportIndex}
-                    sx={{ marginTop: "0.25rem", marginBottom: "1.65rem" }}
                   >
-                    <Accordion
-                      className="selected-report-view"
-                      //  defaultExpanded={true}
-                      //  slots={{ transition : Fade }}
-                      //  slotProps={{ transition: { timeout: 10000 } }}
-                      //  sx={{
-                      //    boxShadow : "none",
-                      //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
-                      //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
-                      // }}
-                      disableGutters
-                      sx={{ boxShadow: "none" }}
-                      expanded={
-                        reportsState[reportIndex]?.viewState === "Minimized"
-                          ? false
-                          : true
+                    <Checkbox
+                      size="medium"
+                      icon={
+                        <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.5rem" }} />
                       }
+                      checkedIcon={
+                        <CheckBoxOutlinedIcon
+                          className="check-icon"
+                          sx={{ fontSize: "1.5rem", color: "red" }}
+                        />
+                      }
+                      sx={{ containIntrinsicSize: "2px" }}
+                      checked={selectedReports.indexOf(report) > -1}
+                      color="primary"
+                      style={{
+                        marginLeft: "-0.88rem",
+                        backgroundColor: "transparent",
+                        fontSize: "2px",
+                      }}
+                    />
+                    <ListItemText
+                      primary={report}
+                      style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                      color="black"
+                      inputMode="text"
+                      primaryTypographyProps={{ fontSize: "0.825rem" }}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+
+          {selectedReports.length > 0 && (
+            <Box
+              className="selected-reports-section"
+              id="selected-reports-section"
+            >
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "1.1rem",
+                  fontFamily: "Roboto",
+                  fontWeight: "500",
+                }}
+                className="selected-reports-heading"
+              >
+                {" "}
+                {t("selectedRequest")}
+              </Typography>
+
+              <Box>
+                {reportsState.length > 0 &&
+                  reportsState.map((request, reportIndex) => (
+                    <Box
+                      key={reportIndex}
+                      sx={{ marginTop: "0.25rem", marginBottom: "1.65rem" }}
                     >
-                      <AccordionSummary
-                        sx={{ minHeight: "2.5rem", maxHeight: "2.75rem" }}
-                        expandIcon={
-                          <ExpandCircleDownOutlinedIcon
-                            sx={{
-                              color: "rgba(95, 99, 104, 0.87)",
-                              fontSize: "1.6rem",
-                            }}
-                            className="view-icon"
-                            onClick={() => {
-                              if (
-                                reportsState[reportIndex].viewState ===
-                                "Minimized"
-                              ) {
-                                handleExpandedView(reportIndex);
-                              } else {
-                                handleMinimizedView(reportIndex);
-                              }
-                            }}
-                          />
+                      <Accordion
+                        className="selected-report-view"
+                        //  defaultExpanded={true}
+                        //  slots={{ transition : Fade }}
+                        //  slotProps={{ transition: { timeout: 10000 } }}
+                        //  sx={{
+                        //    boxShadow : "none",
+                        //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
+                        //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
+                        // }}
+                        disableGutters
+                        sx={{ boxShadow: "none" }}
+                        expanded={
+                          reportsState[reportIndex]?.viewState === "Minimized"
+                            ? false
+                            : true
                         }
-                        className="selected-report-header"
                       >
-                        <span className="selected-report-heading">
-                          {request.selectedReport}
-                        </span>
-                      </AccordionSummary>
-
-                      <AccordionDetails
-                        sx={{
-                          padding: 0,
-                          border: "1px solid rgba(205, 205, 205, 1)",
-                          borderWidth: "1px 0px 0px 0px",
-                        }}
-                      >
-                        <Box className="selected-report-details">
-                          {reportsState[reportIndex] && (
-                            <>
-                              <Box
-                                sx={{ width: "100%" }}
-                                display={
-                                  request.selectedReport ===
-                                    "Beneficiary details for Single IMPS transactions" ||
-                                  request.selectedReport ===
-                                    "Beneficiary details for Single UPI transactions"
-                                    ? "none"
-                                    : "block"
+                        <AccordionSummary
+                          sx={{ minHeight: "2.5rem", maxHeight: "2.75rem" }}
+                          expandIcon={
+                            <ExpandCircleDownOutlinedIcon
+                              sx={{
+                                color: "rgba(95, 99, 104, 0.87)",
+                                fontSize: "1.6rem",
+                              }}
+                              className="view-icon"
+                              onClick={() => {
+                                if (
+                                  reportsState[reportIndex].viewState ===
+                                  "Minimized"
+                                ) {
+                                  handleExpandedView(reportIndex);
+                                } else {
+                                  handleMinimizedView(reportIndex);
                                 }
-                              >
-                                <FormControl
-                                  variant="standard"
-                                  sx={{ width: "34%" }}
-                                >
-                                  <Select
-                                    labelId="param-selection-dropdown"
-                                    id="param-selection-dropdown"
-                                    multiple={true}
-                                    value={
-                                      reportsState[reportIndex]
-                                        .selectedParams || []
-                                    }
-                                    displayEmpty
-                                    onChange={(event) =>
-                                      handleParamSelection(
-                                        event,
-                                        reportIndex,
-                                        request.selectedReport
-                                      )
-                                    }
-                                    variant="standard"
-                                    input={
-                                      <OutlinedInput
-                                        sx={{
-                                          alignItems: "center",
-                                          justifyContent: "space-around",
-                                          justifyItems: "left",
-                                        }}
-                                        fullWidth={false}
-                                      />
-                                    }
-                                    sx={{
-                                      "& .reports-type-dropdownicon": {
-                                        paddingRight: "1.75rem",
-                                      },
-                                    }}
-                                    IconComponent={(props) => (
-                                      <KeyboardArrowDownOutlinedIcon
-                                        className="reports-type-dropdownicon"
-                                        sx={{
-                                          fontSize: "1.36rem",
-                                          color: "rgba(115, 115, 115, 1)",
-                                        }}
-                                        {...props}
-                                      />
-                                    )}
-                                    renderValue={(params) => {
-                                      if (params.length === 0) {
-                                        return (
-                                          <span style={{ opacity: 0.45 }}>
-                                            {t("selectDetails")}
-                                          </span>
-                                        );
-                                      }
-                                      return (
-                                        <Input
-                                          sx={{
-                                            width: "99%",
-                                            fontSize: "95%",
-                                            textOverflow: "ellipsis",
-                                            overflow: "hidden",
-                                          }}
-                                          disableUnderline={true}
-                                          value={params.join(" , ")}
-                                        ></Input>
-                                      );
-                                    }}
-                                    MenuProps={SelectProps.PARAM_SELECT_PROPS}
-                                    inputProps={{
-                                      "aria-label": "Without label",
-                                    }}
-                                    autoWidth={false}
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      height: "2.65rem",
-                                      fontSize: "0.88rem",
-                                    }}
-                                    placeholder={t("selectDetails")}
-                                  >
-                                    {availableParameters.map((param) => (
-                                      <MenuItem
-                                        key={param}
-                                        value={param}
-                                        style={{
-                                          display: "flex",
-                                          borderStyle: "solid",
-                                          borderColor: "rgba(232, 232, 232, 1)",
-                                          borderBottomWidth: "1.75px",
-                                          height: "2.36rem",
-                                          alignItems: "left",
-                                          borderRadius: "0px",
-                                          backgroundColor: "transparent",
-                                          fontSize: "2px",
-                                        }}
-                                      >
-                                        <Checkbox
-                                          checked={
-                                            reportsState[
-                                              reportIndex
-                                            ].selectedParams.indexOf(param) > -1
-                                          }
-                                          color="primary"
-                                          style={{
-                                            marginLeft: "-0.88rem",
-                                            backgroundColor: "transparent",
-                                          }}
-                                          icon={
-                                            <CheckBoxOutlineBlankIcon
-                                              sx={{ fontSize: "1.4rem" }}
-                                            />
-                                          }
-                                          checkedIcon={
-                                            <CheckBoxOutlinedIcon
-                                              className="check-icon"
-                                              sx={{
-                                                fontSize: "1.4rem",
-                                                color: "red",
-                                              }}
-                                            />
-                                          }
-                                        />
-                                        <ListItemText
-                                          primary={param}
-                                          style={{
-                                            padding: "0.15rem 0rem 0rem 0rem",
-                                          }}
-                                          color="black"
-                                          inputMode="text"
-                                          primaryTypographyProps={{
-                                            fontSize: "0.85rem",
-                                          }}
-                                        />
-                                      </MenuItem>
-                                    ))}
-                                  </Select>
-                                </FormControl>
-                              </Box>
+                              }}
+                            />
+                          }
+                          className="selected-report-header"
+                        >
+                          <span className="selected-report-heading">
+                            {request.selectedReport}
+                          </span>
+                        </AccordionSummary>
 
-                              <Box
-                                className="details-subsection"
-                                style={{
-                                  marginTop:
+                        <AccordionDetails
+                          sx={{
+                            padding: 0,
+                            border: "1px solid rgba(205, 205, 205, 1)",
+                            borderWidth: "1px 0px 0px 0px",
+                          }}
+                        >
+                          <Box className="selected-report-details">
+                            {reportsState[reportIndex] && (
+                              <>
+                                <Box
+                                  sx={{ width: "100%" }}
+                                  display={
                                     request.selectedReport ===
                                       "Beneficiary details for Single IMPS transactions" ||
                                     request.selectedReport ===
                                       "Beneficiary details for Single UPI transactions"
-                                      ? "-1.25rem"
-                                      : "1.5rem",
-                                }}
-                              >
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Account number"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex]
-                                      .accountNumberDetails,
-                                    reportIndex,
-                                    "accountNumberDetails",
-                                    "Account number",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "PAN"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].PANdetails,
-                                    reportIndex,
-                                    "PANdetails",
-                                    "PAN",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "CRN"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].CRNdetails,
-                                    reportIndex,
-                                    "CRNdetails",
-                                    "CRN",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "RRN"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].RRNdetails,
-                                    reportIndex,
-                                    "RRNdetails",
-                                    "RRN",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Aadhar"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].aadharDetails,
-                                    reportIndex,
-                                    "aadharDetails",
-                                    "Aadhar",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Email ID"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].emailDetails,
-                                    reportIndex,
-                                    "emailDetails",
-                                    "Email ID",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Credit Card"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].creditCardDetails,
-                                    reportIndex,
-                                    "creditCardDetails",
-                                    "Credit Card",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Debit Card"
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].debitCardDetails,
-                                    reportIndex,
-                                    "debitCardDetails",
-                                    "Debit Card",
-                                    request.selectedReport
-                                  )}
-                                {reportsState[reportIndex].selectedParams.some(
-                                  (param) => param === "Mobile No."
-                                ) &&
-                                  displayRequestedReports(
-                                    reportsState[reportIndex].mobileNoDetails,
-                                    reportIndex,
-                                    "mobileNoDetails",
-                                    "Mobile No.",
-                                    request.selectedReport
-                                  )}
-                              </Box>
-                            </>
-                          )}
-                        </Box>
-                      </AccordionDetails>
-                    </Accordion>
-                  </Box>
-                ))}
+                                      ? "none"
+                                      : "block"
+                                  }
+                                >
+                                  <FormControl
+                                    variant="standard"
+                                    sx={{ width: "34%" }}
+                                  >
+                                    <Select
+                                      labelId="param-selection-dropdown"
+                                      id="param-selection-dropdown"
+                                      multiple={true}
+                                      value={
+                                        reportsState[reportIndex]
+                                          .selectedParams || []
+                                      }
+                                      displayEmpty
+                                      onChange={(event) =>
+                                        handleParamSelection(
+                                          event,
+                                          reportIndex,
+                                          request.selectedReport
+                                        )
+                                      }
+                                      variant="standard"
+                                      input={
+                                        <OutlinedInput
+                                          sx={{
+                                            alignItems: "center",
+                                            justifyContent: "space-around",
+                                            justifyItems: "left",
+                                          }}
+                                          fullWidth={false}
+                                        />
+                                      }
+                                      sx={{
+                                        "& .reports-type-dropdownicon": {
+                                          paddingRight: "1.75rem",
+                                        },
+                                      }}
+                                      IconComponent={(props) => (
+                                        <KeyboardArrowDownOutlinedIcon
+                                          className="reports-type-dropdownicon"
+                                          sx={{
+                                            fontSize: "1.36rem",
+                                            color: "rgba(115, 115, 115, 1)",
+                                          }}
+                                          {...props}
+                                        />
+                                      )}
+                                      renderValue={(params) => {
+                                        if (params.length === 0) {
+                                          return (
+                                            <span style={{ opacity: 0.45 }}>
+                                              {t("selectDetails")}
+                                            </span>
+                                          );
+                                        }
+                                        return (
+                                          <Input
+                                            sx={{
+                                              width: "99%",
+                                              fontSize: "95%",
+                                              textOverflow: "ellipsis",
+                                              overflow: "hidden",
+                                            }}
+                                            disableUnderline={true}
+                                            value={params.join(" , ")}
+                                          ></Input>
+                                        );
+                                      }}
+                                      MenuProps={SelectProps.PARAM_SELECT_PROPS}
+                                      inputProps={{
+                                        "aria-label": "Without label",
+                                      }}
+                                      autoWidth={false}
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        height: "2.65rem",
+                                        fontSize: "0.88rem",
+                                      }}
+                                      placeholder={t("selectDetails")}
+                                    >
+                                      {availableParameters.map((param) => (
+                                        <MenuItem
+                                          key={param}
+                                          value={param}
+                                          style={{
+                                            display: "flex",
+                                            borderStyle: "solid",
+                                            borderColor:
+                                              "rgba(232, 232, 232, 1)",
+                                            borderBottomWidth: "1.75px",
+                                            height: "2.36rem",
+                                            alignItems: "left",
+                                            borderRadius: "0px",
+                                            backgroundColor: "transparent",
+                                            fontSize: "2px",
+                                          }}
+                                        >
+                                          <Checkbox
+                                            checked={
+                                              reportsState[
+                                                reportIndex
+                                              ].selectedParams.indexOf(param) >
+                                              -1
+                                            }
+                                            color="primary"
+                                            style={{
+                                              marginLeft: "-0.88rem",
+                                              backgroundColor: "transparent",
+                                            }}
+                                            icon={
+                                              <CheckBoxOutlineBlankIcon
+                                                sx={{ fontSize: "1.4rem" }}
+                                              />
+                                            }
+                                            checkedIcon={
+                                              <CheckBoxOutlinedIcon
+                                                className="check-icon"
+                                                sx={{
+                                                  fontSize: "1.4rem",
+                                                  color: "red",
+                                                }}
+                                              />
+                                            }
+                                          />
+                                          <ListItemText
+                                            primary={param}
+                                            style={{
+                                              padding: "0.15rem 0rem 0rem 0rem",
+                                            }}
+                                            color="black"
+                                            inputMode="text"
+                                            primaryTypographyProps={{
+                                              fontSize: "0.85rem",
+                                            }}
+                                          />
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
+                                </Box>
 
-              <Box className="action-buttons">
-                <Button
-                  className="submit-button"
-                  title="Submit"
-                  disabled={isValidReportData === false ? true : false}
-                  onClick={() => handleSubmit()}
-                >
-                  {" "}
-                  {t("submit")}
-                </Button>
-                <Button
-                  className="preview-button"
-                  disabled={isValidReportData === false ? true : false}
-                  onClick={() => {
-                    setViewPreview(true);
-                  }}
-                >
-                  {t("preview")}
-                </Button>
-              </Box>
-
-              <Box>
-                <Modal
-                  open={viewPreview === true}
-                  onClose={() => setViewPreview(false)}
-                  className="preview-modal"
-                  contentLabel="Preview Modal"
-                >
-                  <Box className="preview-box">
-                    <Box className="preview-header">
-                      <h2 className="preview-heading">{t("preview")} </h2>
-                      <Button
-                        style={{ background: "none", border: "none" }}
-                        onClick={() => setViewPreview(false)}
-                      >
-                        <CloseOutlinedIcon
-                          name="close-preview"
-                          className="close-preview-button"
-                          sx={{
-                            fontSize: "1.75rem",
-                            color: "rgba(95, 99, 104, 1)",
-                          }}
-                        />
-                      </Button>
-                    </Box>
-
-                    <Box className="preview-scroll">
-                      {/* {reportsState.length > 0 &&
-                        reportsState.map((request, reportIndex) => ( */}
-                      {reportsState.length > 0 &&
-                        reportsState.map((request, reportIndex) => (
-                          <Box className="preview-report" key={reportIndex}>
-                            <Box className="preview-report-header">
-                              {/* <CheckBoxOutlinedIcon */}
-                              <CheckBoxOutlinedIcon className="check-icon" />
-                              <h3 className="preview-title">
-                                {request.selectedReport}
-                              </h3>
-                            </Box>
-
-                            <Box className="preview-report-details">
-                              {reportsState[reportIndex] && (
-                                <>
-                                  {showPreview(
-                                    reportsState[reportIndex]
-                                      .accountNumberDetails,
-                                    reportIndex,
-                                    "accountNumberDetails",
-                                    "Account number",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].PANdetails,
-                                    reportIndex,
-                                    "PANdetails",
-                                    "PAN",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].CRNdetails,
-                                    reportIndex,
-                                    "CRNdetails",
-                                    "CRN",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].RRNdetails,
-                                    reportIndex,
-                                    "RRNdetails",
-                                    "RRN",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].aadharDetails,
-                                    reportIndex,
-                                    "aadharDetails",
-                                    "Aadhar",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].emailDetails,
-                                    reportIndex,
-                                    "emailDetails",
-                                    "Email ID",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].creditCardDetails,
-                                    reportIndex,
-                                    "creditCardDetails",
-                                    "Credit Card",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].debitCardDetails,
-                                    reportIndex,
-                                    "debitCardDetails",
-                                    "Debit Card",
-                                    request.selectedReport
-                                  )}
-                                  {showPreview(
-                                    reportsState[reportIndex].mobileNoDetails,
-                                    reportIndex,
-                                    "mobileNoDetails",
-                                    "Mobile No.",
-                                    request.selectedReport
-                                  )}
-                                </>
-                              )}
-                            </Box>
+                                <Box
+                                  className="details-subsection"
+                                  style={{
+                                    marginTop:
+                                      request.selectedReport ===
+                                        "Beneficiary details for Single IMPS transactions" ||
+                                      request.selectedReport ===
+                                        "Beneficiary details for Single UPI transactions"
+                                        ? "-1.25rem"
+                                        : "1.5rem",
+                                  }}
+                                >
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Account number"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex]
+                                        .accountNumberDetails,
+                                      reportIndex,
+                                      "accountNumberDetails",
+                                      "Account number",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "PAN"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].PANdetails,
+                                      reportIndex,
+                                      "PANdetails",
+                                      "PAN",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "CRN"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].CRNdetails,
+                                      reportIndex,
+                                      "CRNdetails",
+                                      "CRN",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "RRN"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].RRNdetails,
+                                      reportIndex,
+                                      "RRNdetails",
+                                      "RRN",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Aadhar"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].aadharDetails,
+                                      reportIndex,
+                                      "aadharDetails",
+                                      "Aadhar",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Email ID"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].emailDetails,
+                                      reportIndex,
+                                      "emailDetails",
+                                      "Email ID",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Credit Card"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex]
+                                        .creditCardDetails,
+                                      reportIndex,
+                                      "creditCardDetails",
+                                      "Credit Card",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Debit Card"
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex]
+                                        .debitCardDetails,
+                                      reportIndex,
+                                      "debitCardDetails",
+                                      "Debit Card",
+                                      request.selectedReport
+                                    )}
+                                  {reportsState[
+                                    reportIndex
+                                  ].selectedParams.some(
+                                    (param) => param === "Mobile No."
+                                  ) &&
+                                    displayRequestedReports(
+                                      reportsState[reportIndex].mobileNoDetails,
+                                      reportIndex,
+                                      "mobileNoDetails",
+                                      "Mobile No.",
+                                      request.selectedReport
+                                    )}
+                                </Box>
+                              </>
+                            )}
                           </Box>
-                        ))}
+                        </AccordionDetails>
+                      </Accordion>
                     </Box>
-                  </Box>
-                </Modal>
+                  ))}
+
+                <Box className="action-buttons">
+                  <Button
+                    className="submit-button"
+                    title="Submit"
+                    disabled={isValidReportData === false ? true : false}
+                    onClick={() => handleSubmit()}
+                  >
+                    {" "}
+                    {t("submit")}
+                  </Button>
+                  <Button
+                    className="preview-button"
+                    disabled={isValidReportData === false ? true : false}
+                    onClick={() => {
+                      setViewPreview(true);
+                    }}
+                  >
+                    {t("preview")}
+                  </Button>
+                </Box>
+
+                <Box>
+                  <Modal
+                    open={viewPreview === true}
+                    onClose={() => setViewPreview(false)}
+                    className="preview-modal"
+                    contentLabel="Preview Modal"
+                  >
+                    <Box className="preview-box">
+                      <Box className="preview-header">
+                        <Typography
+                          sx={{
+                            fontSize: "1.125rem",
+                            fontFamily: "Roboto",
+                            fontWeight: "500",
+                          }}
+                          component="span"
+                        >
+                          {t("preview")}
+                        </Typography>
+                        <Button
+                          style={{ background: "none", border: "none" }}
+                          onClick={() => setViewPreview(false)}
+                        >
+                          <CloseOutlinedIcon
+                            name="close-preview"
+                            className="close-preview-button"
+                            sx={{
+                              fontSize: "1.75rem",
+                              color: "rgba(95, 99, 104, 1)",
+                            }}
+                          />
+                        </Button>
+                      </Box>
+
+                      <Box className="preview-scroll">
+                        {/* {reportsState.length > 0 &&
+                        reportsState.map((request, reportIndex) => ( */}
+                        {reportsState.length > 0 &&
+                          reportsState.map((request, reportIndex) => (
+                            <Box className="preview-report" key={reportIndex}>
+                              <Box className="preview-report-header">
+                                {/* <CheckBoxOutlinedIcon */}
+                                <CheckBoxOutlinedIcon className="check-icon" />
+                                <h3 className="preview-title">
+                                  {request.selectedReport}
+                                </h3>
+                              </Box>
+
+                              <Box className="preview-report-details">
+                                {reportsState[reportIndex] && (
+                                  <>
+                                    {showPreview(
+                                      reportsState[reportIndex]
+                                        .accountNumberDetails,
+                                      reportIndex,
+                                      "accountNumberDetails",
+                                      "Account number",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].PANdetails,
+                                      reportIndex,
+                                      "PANdetails",
+                                      "PAN",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].CRNdetails,
+                                      reportIndex,
+                                      "CRNdetails",
+                                      "CRN",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].RRNdetails,
+                                      reportIndex,
+                                      "RRNdetails",
+                                      "RRN",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].aadharDetails,
+                                      reportIndex,
+                                      "aadharDetails",
+                                      "Aadhar",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].emailDetails,
+                                      reportIndex,
+                                      "emailDetails",
+                                      "Email ID",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex]
+                                        .creditCardDetails,
+                                      reportIndex,
+                                      "creditCardDetails",
+                                      "Credit Card",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex]
+                                        .debitCardDetails,
+                                      reportIndex,
+                                      "debitCardDetails",
+                                      "Debit Card",
+                                      request.selectedReport
+                                    )}
+                                    {showPreview(
+                                      reportsState[reportIndex].mobileNoDetails,
+                                      reportIndex,
+                                      "mobileNoDetails",
+                                      "Mobile No.",
+                                      request.selectedReport
+                                    )}
+                                  </>
+                                )}
+                              </Box>
+                            </Box>
+                          ))}
+                      </Box>
+                    </Box>
+                  </Modal>
+                </Box>
               </Box>
             </Box>
-          </Box>
-          // </Box>
-        )}
+            // </Box>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </Provider>
   );
 }

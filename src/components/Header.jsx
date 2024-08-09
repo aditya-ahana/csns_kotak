@@ -9,9 +9,9 @@ export default function Header() {
   return (
     <>
       <Typography
-        variant="h7"
+        component='span'
         noWrap
-        component="div"
+        // component="div"
         className="d-flex justify-content-between align-items-center"
         style={{
           width: "-webkit-fill-available",
@@ -20,7 +20,8 @@ export default function Header() {
         <img
           src={logo}
           alt="Kotak Logo"
-          style={{ width: "11%", height: "fit-content" }}
+          // style={{ width: "11%", height: "fit-content" }}
+          style={{ width: "11%", height: "2.75rem" }}
         />
         <div className="d-flex justify-content-between align-items-center">
           <LanguageSelector />

@@ -6,8 +6,8 @@ import { English } from "./locale/English";
 import { Hindi } from "./locale/Hindi";
 
 i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
+.use(LanguageDetector)
+.use(initReactI18next)
   .init({
     debug: true,
     lng: "en",

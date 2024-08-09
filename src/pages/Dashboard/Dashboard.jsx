@@ -21,7 +21,7 @@ export default function Dashboard() {
       <div>
         {/* heading */}
         <div className="d-flex justify-content-between align-items-end">
-          <Typography variant="h5" fontWeight={500} fontSize="1.499vw">
+          <Typography component="span" fontWeight={500} fontSize="1.499vw">
             {t("dashboard")}
           </Typography>
           {/* <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
