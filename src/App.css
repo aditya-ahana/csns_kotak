@@ -169,12 +169,12 @@ border-radius: 10px;
   max-height: auto;
   border-radius: 8px;
   justify-content: center;
-  margin-bottom: auto;
+  margin-bottom: 1.75rem;
 }
 
 .view-request-screen,
 .view-request-details-screen {
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 100%;
   border-radius: 8px;
   justify-content: center;
@@ -737,7 +737,7 @@ input::-webkit-inner-spin-button {
   margin-bottom: 2.2rem;
   border-bottom-width: 0px;
   align-self: center;
-  max-height: 28.5rem;
+  max-height: 27.325rem;
   overflow: auto;
 }
 

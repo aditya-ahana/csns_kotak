@@ -64,10 +64,11 @@ export default function MailDraft(props) {
   }
 
   return (
-    <div>
+    <div data-testid={props.datatestid1}>
       <Modal
         keepMounted
         open={props.mailDraftModal}
+        data-testid={props.datatestid2}
         onClose={handleClose}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
@@ -80,6 +81,7 @@ export default function MailDraft(props) {
             <IconButton
               className=" text-dark"
               style={{ fontSize: "x-large" }}
+              data-testid="close-draft-modal"
               onClick={(e) => {
                 handleClose();
               }}

@@ -3,7 +3,7 @@ import slicedDataConfig from "./csnsReducers";
 
 const store = configureStore({
   reducer: {
-    csns: slicedDataConfig,
+    // csns: slicedDataConfig,
   },
 });
 

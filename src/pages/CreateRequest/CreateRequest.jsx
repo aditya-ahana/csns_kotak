@@ -40,6 +40,10 @@ import Fade from "@mui/material/Fade";
 import { Provider } from "react-redux";
 import store from "../../Redux/reduxStore";
 import { useTranslation } from "react-i18next";
+import {
+  requiredReportsData,
+  availableParameters,
+} from "../../components/data/requestsData";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
@@ -49,24 +53,13 @@ export default function CreateRequest() {
   const route_to = useNavigate();
   const dispatch = useDispatch();
 
-  const [ticketNumber, setTicketNumber] = useState(0);
+  const [ticketNumber, setTicketNumber] = useState("");
   const [ticketDescription, setTicketDescription] = useState("");
   const [descriptionFocused, setDescriptionFocused] = useState(false);
   const [Creator, setCreator] = useState("");
 
   const [selectedReports, setSelectedReports] = useState([]);
   const [viewPreview, setViewPreview] = useState(false);
-  const [availableParameters, setAvailableParameters] = useState([
-    "Account number",
-    "CRN",
-    "RRN",
-    "PAN",
-    "Aadhar",
-    "Mobile No.",
-    "Debit Card",
-    "Credit Card",
-    "Email ID",
-  ]);
   const [submitted, setSubmitted] = useState(false);
 
   // const new_date = new Date();
@@ -90,6 +83,9 @@ export default function CreateRequest() {
         "&.Mui-focused fieldset": {
           border: "1.65px solid rgb(131, 131, 210)",
           backgroundColor: "transparent",
+        },
+        "& fieldset>legend": {
+          fontSize: "0.64rem",
         },
       },
     },
@@ -145,9 +141,9 @@ export default function CreateRequest() {
           },
         },
       },
-      field: {
-        readOnly: true,
-      },
+      // field: {
+      //   readOnly: true,
+      // },
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
@@ -257,15 +253,6 @@ export default function CreateRequest() {
   // //console.log('Selected REPORTS : ',selectedReports);
   // //console.log('Selected REPORTS : ',selectedReports);
 
-  const requiredReportsData = [
-    "Statement in PDF/Excel",
-    "Beneficiary details for Single IMPS transactions",
-    "Beneficiary details for Bulk IMPS transactions",
-    "Beneficiary details for Single UPI transactions",
-    "Beneficiary details for Bulk UPI transactions",
-    "IP Logs",
-    "Device details",
-  ];
   // //console.log('selected reports : ',selectedReports);
 
   const availableReportTypes = ["PDF", "Excel"];
@@ -790,7 +777,7 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][details].splice(detailIndex, 1);
-      document.querySelector("#selected-reports-section").scrollIntoView();
+      // document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
     });
   };
@@ -893,7 +880,7 @@ export default function CreateRequest() {
                 : {},
         ];
       }
-      document.querySelector("#selected-reports-section").scrollIntoView();
+      // document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
     });
   };
@@ -907,13 +894,13 @@ export default function CreateRequest() {
   ) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detailName][detailIndex].value =
-        detailName === "creditCardDetails" ||
-        detailName === "aadharDetails" ||
-        detailName === "debitCardDetails" ||
-        detailName === "RRNdetails"
-          ? parseInt(value, 10)
-          : value;
+      newState[reportIndex][detailName][detailIndex].value = value;
+      // detailName === "creditCardDetails" ||
+      // detailName === "aadharDetails" ||
+      // detailName === "debitCardDetails" ||
+      // detailName === "RRNdetails"
+      //   ? parseInt(value, 10)
+      //   : value;
       return newState;
     });
   };
@@ -929,7 +916,8 @@ export default function CreateRequest() {
   const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].amount = parseInt(value, 10);
+      newState[reportIndex][detail][detailIndex].amount = value;
+      // parseInt(value, 10);
       return newState;
     });
   };
@@ -1234,7 +1222,11 @@ export default function CreateRequest() {
     reportName
   ) =>
     detailsArray.map((detail, detailIndex) => (
-      <Box className="selected-param-details" key={detailIndex}>
+      <Box
+        className="selected-param-details"
+        key={detailIndex}
+        data-testid={`detail-fieldset-${detailIndex}`}
+      >
         {/* {//console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
         <FormControl
           variant="outlined"
@@ -1243,6 +1235,7 @@ export default function CreateRequest() {
         >
           <TextField
             sx={inputControl.textfield}
+            data-testid={`detail-name-input-${detailIndex}`}
             InputLabelProps={inputControl.inputLabelProps}
             InputProps={{
               startAdornment: detail.name === "Mobile No." && (
@@ -1260,21 +1253,22 @@ export default function CreateRequest() {
             required
             inputProps={inputControl.inputProps}
             className="selected-param-box"
-            value={
-              (detail.name === "Credit Card" ||
-                detail.name === "Aadhar" ||
-                detail.name === "Debit Card" ||
-                detail.name === "RRN") &&
-              (detail.value === 0 || detail.value.length === 0)
-                ? ""
-                : (detail.name === "Credit Card" ||
-                      detail.name === "Aadhar" ||
-                      detail.name === "Debit Card" ||
-                      detail.name === "RRN") &&
-                    (detail.value !== 0 || detail.value.length !== 0)
-                  ? parseInt(detail.value, 10)
-                  : detail.value
-            }
+            // value={
+            //   (detail.name === "Credit Card" ||
+            //     detail.name === "Aadhar" ||
+            //     detail.name === "Debit Card" ||
+            //     detail.name === "RRN") &&
+            //   (detail.value === 0 || detail.value.length === 0)
+            //     ? ""
+            //     : (detail.name === "Credit Card" ||
+            //           detail.name === "Aadhar" ||
+            //           detail.name === "Debit Card" ||
+            //           detail.name === "RRN") &&
+            //         (detail.value !== 0 || detail.value.length !== 0)
+            //       ? parseInt(detail.value, 10)
+            //       : detail.value
+            // }
+            value={detail.value.length === 0 ? "" : detail.value}
             id="paramvalue"
             placeholder={`Enter ${detail.name}`}
             onInput={(e) => {
@@ -1317,28 +1311,29 @@ export default function CreateRequest() {
                 reportName
               )
             }
-            type={
-              detail.name === "Account number"
-                ? "text"
-                : detail.name === "CRN"
-                  ? "text"
-                  : detail.name === "Email ID"
-                    ? "email"
-                    : detail.name === "PAN"
-                      ? "text"
-                      : detail.name === "Mobile No."
-                        ? "tel"
-                        : detail.name === "Credit Card"
-                          ? "number"
-                          : detail.name === "Aadhar"
-                            ? "number"
-                            : detail.name === "Debit Card"
-                              ? "number"
-                              : detail.name === "RRN"
-                                ? "number"
-                                : "text"
-            }
-            inputMode="numeric"
+            // type={
+            //   detail.name === "Account number"
+            //     ? "text"
+            //     : detail.name === "CRN"
+            //       ? "text"
+            //       : detail.name === "Email ID"
+            //         ? "email"
+            //         : detail.name === "PAN"
+            //           ? "text"
+            //           : detail.name === "Mobile No."
+            //             ? "tel"
+            //             : detail.name === "Credit Card"
+            //               ? "number"
+            //               : detail.name === "Aadhar"
+            //                 ? "number"
+            //                 : detail.name === "Debit Card"
+            //                   ? "number"
+            //                   : detail.name === "RRN"
+            //                     ? "number"
+            //                     : "text"
+            // }
+            type="text"
+            inputMode="text"
             color="primary"
           />
         </FormControl>
@@ -1368,6 +1363,7 @@ export default function CreateRequest() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 format="DD-MM-YYYY"
+                data-testid={`from-date-picker-${detailIndex}`}
                 shouldDisableDate={(day) =>
                   disableInvalidDates(day, detail.to, detail.to)
                 }
@@ -1438,6 +1434,7 @@ export default function CreateRequest() {
           >
             <TextField
               sx={inputControl.textfield}
+              data-testid={`mobileno-input-${detailIndex}`}
               InputLabelProps={inputControl.inputLabelProps}
               inputProps={inputControl.inputProps}
               InputProps={{
@@ -1476,9 +1473,10 @@ export default function CreateRequest() {
               //       ? "rgba(128, 128, 128, 0.36)"
               //       : "rgba(128, 128, 128, 0.74)",
               //   borderWidth: "1px"}}
-              type="tel"
-              inputMode="tel"
-              Input
+              // type="tel"
+              // inputMode="tel"
+              type="text"
+              inputMode="text"
               color="primary"
             />
           </FormControl>
@@ -1496,6 +1494,7 @@ export default function CreateRequest() {
               >
                 <TextField
                   sx={inputControl.textfield}
+                  data-testid={`amount-detail-${detailIndex}`}
                   InputLabelProps={inputControl.inputLabelProps}
                   inputProps={inputControl.inputProps}
                   placeholder={`Enter ${detail.name2}`}
@@ -1505,11 +1504,7 @@ export default function CreateRequest() {
                       : false
                   }
                   className="selected-param-box-3"
-                  value={
-                    detail.amount === 0 || detail.amount.length === 0
-                      ? ""
-                      : parseInt(detail.amount, 10)
-                  }
+                  value={detail.amount.length === 0 ? "" : detail.amount}
                   autoComplete="off"
                   onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
                   style={{
@@ -1528,8 +1523,8 @@ export default function CreateRequest() {
                       detailName
                     )
                   }
-                  type="number"
-                  inputMode="numeric"
+                  type="text"
+                  inputMode="text"
                   color="primary"
                 />
               </FormControl>
@@ -1539,6 +1534,7 @@ export default function CreateRequest() {
                   <DatePicker
                     format="DD-MM-YYYY"
                     label={t("date")}
+                    data-testid={`rrn-datepicker-${detailIndex}`}
                     disabled={
                       detail.value === "" || detail.value.length === 0
                         ? true
@@ -1574,6 +1570,7 @@ export default function CreateRequest() {
             <Select
               id="report-type-dropdown"
               value={detail.type}
+              data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
               disabled={
                 detail.value === "" || detail.value.length === 0 ? true : false
@@ -1610,9 +1607,10 @@ export default function CreateRequest() {
               }}
               placeholder={t("type")}
             >
-              {availableReportTypes.map((type) => (
+              {availableReportTypes.map((type, typeIndex) => (
                 <MenuItem
                   key={type}
+                  data-testid={`type-dropdown-menuitem-${typeIndex}`}
                   value={type}
                   style={{
                     display: "flex",
@@ -1641,6 +1639,7 @@ export default function CreateRequest() {
         reportsState[reportIndex][detailName].length === 1 ? (
           <Button
             className="add-remove-button"
+            data-testid={`add-button-${detailIndex}`}
             style={{
               marginLeft:
                 reportName === "IP Logs" && detailName === "mobileNoDetails"
@@ -1676,6 +1675,7 @@ export default function CreateRequest() {
         ) : (
           <Button
             className="add-remove-button"
+            data-testid={`delete-button-${detailIndex}`}
             style={{
               marginLeft:
                 reportName === "IP Logs" && detailName === "mobileNoDetails"
@@ -1832,7 +1832,7 @@ export default function CreateRequest() {
     configurePayload();
     // dispatch(setRequestPayloads(responsePayload));
     setSubmitted(true);
-    route_to("/ViewUpdate");
+    route_to("/ViewRequest");
   };
 
   console.log("Spring Boot Payload", reportDetails);
@@ -1849,7 +1849,7 @@ export default function CreateRequest() {
 
   return (
     <Provider store={store}>
-      <Box className="page">
+      <Box className="page" data-testid="create-request-page">
         <Box className="create-request-screen">
           <Typography component="span" fontWeight={500} fontSize="1.36rem">
             {t("createRequest")}
@@ -1869,9 +1869,10 @@ export default function CreateRequest() {
                   sx={inputControl.textfield}
                   InputLabelProps={inputControl.inputLabelProps}
                   inputProps={inputControl.inputProps}
+                  data-testid="ticket-num-input"
                   placeholder={t("enterTicketNo")}
                   className="ticket-number-input"
-                  value={ticketNumber === 0 ? "" : ticketNumber}
+                  value={ticketNumber}
                   autoComplete="off"
                   size="medium"
                   style={{
@@ -1882,9 +1883,9 @@ export default function CreateRequest() {
                   label={t("ticketNo")}
                   margin="dense"
                   onChange={(e) => setTicketNumber(e.target.value)}
-                  type="number"
+                  type="text"
                   required
-                  inputMode="numeric"
+                  inputMode="text"
                   fullWidth={true}
                   onInput={(e) =>
                     (e.target.value = e.target.value.slice(0, 10))
@@ -1937,13 +1938,10 @@ export default function CreateRequest() {
                   type="text"
                   // onInput={(e) => e.target.value = e.target.value.slice(0, 59) }
                   inputMode="text"
-                  disabled={
-                    ticketNumber === 0 || ticketNumber.length === 0
-                      ? true
-                      : false
-                  }
+                  disabled={ticketNumber.length === 0 ? true : false}
                   color="primary"
                   value={ticketDescription}
+                  data-testid="ticket-descr-input"
                   onChange={(e) => setTicketDescription(e.target.value)}
                 />
               </FormControl>
@@ -1951,13 +1949,15 @@ export default function CreateRequest() {
 
             <FormControl variant="standard" sx={{ width: "82.75%" }}>
               <Select
-                labelId="reports-selection-dropdown-label"
+                label="Reports Selection Dropdown"
+                name="reports-selection-dropdown"
                 id="reports-selection-dropdown"
+                data-testid="reports-selection-dropdown"
                 multiple={true}
                 value={selectedReports}
                 displayEmpty
                 disabled={
-                  ticketNumber === 0 || ticketDescription === "" ? true : false
+                  ticketNumber === "" || ticketDescription === "" ? true : false
                 }
                 onChange={handleReportSelection}
                 variant="standard"
@@ -1972,7 +1972,10 @@ export default function CreateRequest() {
                 renderValue={(reports) => {
                   if (reports.length === 0) {
                     return (
-                      <span style={{ opacity: 0.45 }}>
+                      <span
+                        style={{ opacity: 0.45 }}
+                        data-testid="reports-dropdown-input-initial"
+                      >
                         {" "}
                         {t("statementsReportRequire")}
                       </span>
@@ -1984,28 +1987,33 @@ export default function CreateRequest() {
                         width: "99%",
                         fontSize: "95%",
                         textOverflow: "ellipsis",
-                        overflow: "hidden",
+                        // overflow: "hidden",
                       }}
                       disableUnderline={true}
                       value={reports.join(" , ")}
+                      data-testid="reports-dropdown-input-changed"
                     ></Input>
                   );
                 }}
                 MenuProps={SelectProps.REPORT_SELECT_PROPS}
-                inputProps={{ "aria-label": "Without label" }}
                 autoWidth={false}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   height: "2.69rem",
                   fontSize: "0.88rem",
+                  border:
+                    ticketNumber.length === 0 || ticketDescription.length === 0
+                      ? "none"
+                      : "0.25px solid black",
                 }}
                 placeholder={t("statementsReportRequire")}
               >
-                {requiredReportsData.map((report) => (
+                {requiredReportsData.map((report, index) => (
                   <MenuItem
                     key={report}
                     value={report}
+                    data-testid={`reports-selection-dropdown-menu-item-${index}`}
                     style={{
                       display: "flex",
                       border: "1px solid #cdcdcd",
@@ -2020,9 +2028,13 @@ export default function CreateRequest() {
                   >
                     <Checkbox
                       size="medium"
+                      data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
                       icon={
                         <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.5rem" }} />
                       }
+                      // inputProps={{
+                      //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
+                      // }}
                       checkedIcon={
                         <CheckBoxOutlinedIcon
                           className="check-icon"
@@ -2040,6 +2052,7 @@ export default function CreateRequest() {
                     />
                     <ListItemText
                       primary={report}
+                      data-testid="reports-selection-dropdown-menu-item-text"
                       style={{ padding: "0.05rem 0rem 0rem 0rem" }}
                       color="black"
                       inputMode="text"
@@ -2055,6 +2068,7 @@ export default function CreateRequest() {
             <Box
               className="selected-reports-section"
               id="selected-reports-section"
+              data-testid="selected-reports-section"
             >
               <Typography
                 component="span"
@@ -2103,6 +2117,7 @@ export default function CreateRequest() {
                                 fontSize: "1.6rem",
                               }}
                               className="view-icon"
+                              data-testid={`selected-report-detail-control-${reportIndex}`}
                               onClick={() => {
                                 if (
                                   reportsState[reportIndex].viewState ===
@@ -2123,6 +2138,12 @@ export default function CreateRequest() {
                         </AccordionSummary>
 
                         <AccordionDetails
+                          hidden={
+                            reportsState[reportIndex]?.viewState === "Minimized"
+                              ? true
+                              : false
+                          }
+                          data-testid={`selected-report-detail-${reportIndex}`}
                           sx={{
                             padding: 0,
                             border: "1px solid rgba(205, 205, 205, 1)",
@@ -2148,9 +2169,17 @@ export default function CreateRequest() {
                                     sx={{ width: "34%" }}
                                   >
                                     <Select
-                                      labelId="param-selection-dropdown"
+                                      label="Param Selection Dropdown"
+                                      name="param-selection-dropdown"
+                                      role="combobox"
                                       id="param-selection-dropdown"
+                                      data-testid={`param-dropdown-${reportIndex}`}
                                       multiple={true}
+                                      SelectDisplayProps={{
+                                        "data-testid": `param-dropdown-sas-${reportIndex}`,
+                                        role: "combobox",
+                                      }}
+                                      aria-labelledby="param-selection-dropdown-label"
                                       value={
                                         reportsState[reportIndex]
                                           .selectedParams || []
@@ -2171,6 +2200,7 @@ export default function CreateRequest() {
                                             justifyContent: "space-around",
                                             justifyItems: "left",
                                           }}
+                                          role="combobox"
                                           fullWidth={false}
                                         />
                                       }
@@ -2203,16 +2233,17 @@ export default function CreateRequest() {
                                               width: "99%",
                                               fontSize: "95%",
                                               textOverflow: "ellipsis",
-                                              overflow: "hidden",
+                                              // overflow: "hidden",
                                             }}
                                             disableUnderline={true}
+                                            data-testid={`param-dropdown-input-${reportIndex}`}
                                             value={params.join(" , ")}
                                           ></Input>
                                         );
                                       }}
                                       MenuProps={SelectProps.PARAM_SELECT_PROPS}
                                       inputProps={{
-                                        "aria-label": "Without label",
+                                        "aria-label": "Select Parameters",
                                       }}
                                       autoWidth={false}
                                       style={{
@@ -2220,66 +2251,74 @@ export default function CreateRequest() {
                                         alignItems: "center",
                                         height: "2.65rem",
                                         fontSize: "0.88rem",
+                                        border: "0.25px solid black",
                                       }}
                                       placeholder={t("selectDetails")}
                                     >
-                                      {availableParameters.map((param) => (
-                                        <MenuItem
-                                          key={param}
-                                          value={param}
-                                          style={{
-                                            display: "flex",
-                                            borderStyle: "solid",
-                                            borderColor:
-                                              "rgba(232, 232, 232, 1)",
-                                            borderBottomWidth: "1.75px",
-                                            height: "2.36rem",
-                                            alignItems: "left",
-                                            borderRadius: "0px",
-                                            backgroundColor: "transparent",
-                                            fontSize: "2px",
-                                          }}
-                                        >
-                                          <Checkbox
-                                            checked={
-                                              reportsState[
-                                                reportIndex
-                                              ].selectedParams.indexOf(param) >
-                                              -1
-                                            }
-                                            color="primary"
+                                      {availableParameters.map(
+                                        (param, paramIndex) => (
+                                          <MenuItem
+                                            key={param}
+                                            value={param}
+                                            data-testid={`param-dropdown-menu-item-${paramIndex}`}
                                             style={{
-                                              marginLeft: "-0.88rem",
+                                              display: "flex",
+                                              borderStyle: "solid",
+                                              borderColor:
+                                                "rgba(232, 232, 232, 1)",
+                                              borderBottomWidth: "1.75px",
+                                              height: "2.36rem",
+                                              alignItems: "left",
+                                              borderRadius: "0px",
                                               backgroundColor: "transparent",
+                                              fontSize: "2px",
                                             }}
-                                            icon={
-                                              <CheckBoxOutlineBlankIcon
-                                                sx={{ fontSize: "1.4rem" }}
-                                              />
-                                            }
-                                            checkedIcon={
-                                              <CheckBoxOutlinedIcon
-                                                className="check-icon"
-                                                sx={{
-                                                  fontSize: "1.4rem",
-                                                  color: "red",
-                                                }}
-                                              />
-                                            }
-                                          />
-                                          <ListItemText
-                                            primary={param}
-                                            style={{
-                                              padding: "0.15rem 0rem 0rem 0rem",
-                                            }}
-                                            color="black"
-                                            inputMode="text"
-                                            primaryTypographyProps={{
-                                              fontSize: "0.85rem",
-                                            }}
-                                          />
-                                        </MenuItem>
-                                      ))}
+                                          >
+                                            <Checkbox
+                                              checked={
+                                                reportsState[
+                                                  reportIndex
+                                                ].selectedParams.indexOf(
+                                                  param
+                                                ) > -1
+                                              }
+                                              color="primary"
+                                              data-testid={`param-dropdown-checkbox-${paramIndex}`}
+                                              style={{
+                                                marginLeft: "-0.88rem",
+                                                backgroundColor: "transparent",
+                                              }}
+                                              icon={
+                                                <CheckBoxOutlineBlankIcon
+                                                  sx={{ fontSize: "1.4rem" }}
+                                                />
+                                              }
+                                              checkedIcon={
+                                                <CheckBoxOutlinedIcon
+                                                  className="check-icon"
+                                                  sx={{
+                                                    fontSize: "1.4rem",
+                                                    color: "red",
+                                                  }}
+                                                />
+                                              }
+                                            />
+                                            <ListItemText
+                                              primary={param}
+                                              style={{
+                                                padding:
+                                                  "0.15rem 0rem 0rem 0rem",
+                                              }}
+                                              data-testid={`param-dropdown-listitemtext-${paramIndex}`}
+                                              color="black"
+                                              inputMode="text"
+                                              primaryTypographyProps={{
+                                                fontSize: "0.85rem",
+                                              }}
+                                            />
+                                          </MenuItem>
+                                        )
+                                      )}
                                     </Select>
                                   </FormControl>
                                 </Box>
@@ -2420,6 +2459,7 @@ export default function CreateRequest() {
                   <Button
                     className="submit-button"
                     title="Submit"
+                    data-testid="submit-button"
                     disabled={isValidReportData === false ? true : false}
                     onClick={() => handleSubmit()}
                   >
@@ -2428,7 +2468,9 @@ export default function CreateRequest() {
                   </Button>
                   <Button
                     className="preview-button"
-                    disabled={isValidReportData === false ? true : false}
+                    title="Preview"
+                    data-testid="preview-button"
+                    // disabled={isValidReportData === false ? true : false}
                     onClick={() => {
                       setViewPreview(true);
                     }}
@@ -2442,6 +2484,7 @@ export default function CreateRequest() {
                     open={viewPreview === true}
                     onClose={() => setViewPreview(false)}
                     className="preview-modal"
+                    data-testid="preview-modal"
                     contentLabel="Preview Modal"
                   >
                     <Box className="preview-box">
@@ -2457,6 +2500,7 @@ export default function CreateRequest() {
                           {t("preview")}
                         </Typography>
                         <Button
+                          title="Close Preview"
                           style={{ background: "none", border: "none" }}
                           onClick={() => setViewPreview(false)}
                         >
