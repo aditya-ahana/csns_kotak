@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Button } from "antd";
-
 import noData from "../../static/noData.png";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
@@ -18,10 +16,10 @@ export default function Dashboard() {
   }
   return (
     <>
-      <div>
+      <div data-testid="dashboard-main">
         {/* heading */}
         <div className="d-flex justify-content-between align-items-end">
-          <Typography component="span" fontWeight={500} fontSize="1.499vw">
+          <Typography component="span" fontWeight={500} fontSize="1.36rem">
             {t("dashboard")}
           </Typography>
           {/* <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
@@ -60,6 +58,7 @@ export default function Dashboard() {
           <div
             className="d-flex flex-column justify-content-center align-items-center"
             style={{ cursor: "pointer" }}
+            data-testid="create-request-button"
             onClick={(e) => {
               createRequestNav();
             }}
@@ -74,3 +73,7 @@ export default function Dashboard() {
     </>
   );
 }
+
+//////Rejected///////
+
+/////// 1.import noData (says unexpected import or token)

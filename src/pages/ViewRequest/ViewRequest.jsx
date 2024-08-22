@@ -11,7 +11,11 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
+import {
+  DatePicker,
+  DesktopDatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers-pro";
 import TableContainer from "@mui/material/TableContainer";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import CheckBoxOutlinedIcon from "@mui/icons-material/CheckBoxOutlined";
@@ -41,7 +45,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
-import { requestList } from "../../components/data/requestsData";
+import { requestList, requestPhases } from "../../components/data/requestsData";
 
 export default function ViewRequest() {
   const { t } = useTranslation();
@@ -137,8 +141,6 @@ export default function ViewRequest() {
     "Action",
   ];
 
-  const requestPhases = ["Completed", "In-progress", "Failed"];
-
   const datePickerControl = {
     slotProps: {
       popper: {
@@ -158,9 +160,9 @@ export default function ViewRequest() {
           fontSize: "1.3rem",
         },
       },
-      field: {
-        readOnly: true,
-      },
+      // field: {
+      //   readOnly: true,
+      // },
       textField: {
         placeholder: "Date",
         InputLabelProps: {
@@ -332,9 +334,11 @@ export default function ViewRequest() {
                 <FormControl sx={{ width: "100%" }}>
                   <Input
                     disableUnderline={true}
+                    data-testid="searchbar"
                     type="search"
                     sx={{ fontSize: "0.88rem" }}
                     inputMode="text"
+                    value={searchInput}
                     placeholder={t("searchByTicketRequester")}
                     className="request-search-input"
                     onChange={(e) => handleSearchQuery(e)}
@@ -409,7 +413,9 @@ export default function ViewRequest() {
                 }}
                 onClose={handleCloseFilterMenu}
               >
-                <MenuList sx={{ height: "100%" }}>
+                <Box
+                  sx={{ height: "100%", padding: "0.6rem 0rem 0.6rem 0rem" }}
+                >
                   <Box className="filter-menu-header">
                     <Typography
                       component="span"
@@ -420,17 +426,21 @@ export default function ViewRequest() {
                     </Typography>
                   </Box>
 
-                  <MenuList
+                  <Box
                     data-testid={
                       selectedStatus.length === 0
                         ? "status-unchecked"
                         : "checked-box"
                     }
+                    // data-testid="status-menu"
+                    sx={{ padding: "0.6rem 0rem 0.6rem 0rem" }}
                   >
                     {requestPhases.map((status, index) => (
                       <MenuItem
-                        key={index}
+                        key={status}
                         value={status}
+                        role="option"
+                        data-testid={`status-menu-item-${index}`}
                         style={{
                           display: "flex",
                           height: "1.95rem",
@@ -442,6 +452,9 @@ export default function ViewRequest() {
                       >
                         <Checkbox
                           checked={selectedStatus.includes(status)}
+                          value={status}
+                          color="primary"
+                          data-testid={`status-checkbox-${index}`}
                           onChange={(event) => handleStatusCheck(event, status)}
                           style={{
                             marginLeft: "-1rem",
@@ -474,10 +487,11 @@ export default function ViewRequest() {
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.85rem" }}
                           style={{ padding: "0.15rem 0rem 0rem 0rem" }}
+                          data-testid={`status-text-${index}`}
                         />
                       </MenuItem>
                     ))}
-                  </MenuList>
+                  </Box>
 
                   <Box
                     sx={{
@@ -507,11 +521,15 @@ export default function ViewRequest() {
                         gap: "2.5%",
                       }}
                     >
-                      <Box sx={{ width: "40%" }}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Box sx={{ width: "40%" }} data-testid="from-date-box">
+                        <LocalizationProvider
+                          dateAdapter={AdapterDayjs}
+                          data-testid="from-date-provider"
+                        >
                           <DatePicker
                             format="DD-MM-YYYY"
                             label="From"
+                            data-testid="from-date-picker"
                             value={
                               fromDate === ""
                                 ? null
@@ -602,7 +620,7 @@ export default function ViewRequest() {
                       </Box>
                     )}
                   </Box>
-                </MenuList>
+                </Box>
               </Menu>
             </Box>
 
@@ -769,6 +787,11 @@ export default function ViewRequest() {
                                   </Typography>
                                 </Button>
                                 <Button
+                                  data-testid={
+                                    detail.status === "Completed"
+                                      ? `email-draft-button-${i}`
+                                      : ""
+                                  }
                                   variant="outlined"
                                   className="mail-draft-button"
                                   style={{
@@ -821,10 +844,11 @@ export default function ViewRequest() {
 
             <Box className="table-pagination">
               <TablePagination
-                labelDisplayedRows={() =>
-                  displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
-                }
+                // labelDisplayedRows={() =>
+                //   displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
+                // }
                 rowsPerPageOptions={rowOptions}
+                data-testid="view-request-pagination"
                 component="div"
                 sx={{
                   display: "flex",
@@ -846,7 +870,11 @@ export default function ViewRequest() {
                 slotProps={{
                   select: {
                     renderValue: (value) => (
-                      <Typography sx={{ fontSize: "0.85rem" }} component="span">
+                      <Typography
+                        sx={{ fontSize: "0.85rem" }}
+                        component="span"
+                        data-testid="rows-display"
+                      >
                         {value}
                       </Typography>
                     ),
@@ -861,9 +889,14 @@ export default function ViewRequest() {
                       />
                     ),
                     variant: "standard",
+                    SelectDisplayProps: {
+                      "data-testid": "paginate-select",
+                    },
                     input: (
                       <OutlinedInput
                         fullWidth={true}
+                        value={rowCount}
+                        data-testid="paginate-select-input"
                         sx={{
                           border: "none",
                           height: "1.2rem",
@@ -940,6 +973,8 @@ export default function ViewRequest() {
       </Box>
 
       <MailDraft
+        datatestid1="email-draft-section"
+        datatestid2="email-draft-modal"
         setMailDraftModal={setMailDraftModal}
         mailDraftModal={mailDraftModal}
       />

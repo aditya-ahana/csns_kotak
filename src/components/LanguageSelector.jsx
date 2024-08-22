@@ -9,7 +9,7 @@ const languages = [
   { code: "en", desc: "English" },
   { code: "hi", desc: "हिंदी" },
 ];
-export default function LanguageSelector() {
+export default function LanguageSelector(props) {
   const { i18n } = useTranslation();
 
   const handleChange = (lng) => {
@@ -21,12 +21,13 @@ export default function LanguageSelector() {
       <FormControl fullWidth size="small">
         <Select
           defaultValue={i18n.language}
+          data-testid={props.datatestid}
           onChange={(e) => {
             handleChange(e.target.value);
           }}
         >
-          {languages.map((lang) => (
-            <MenuItem value={lang.code}>{lang.desc}</MenuItem>
+          {languages.map((lang, langIndex) => (
+            <MenuItem data-testid={`language-dropdown-menuitem-${langIndex}`} value={lang.code}>{lang.desc}</MenuItem>
           ))}
         </Select>
       </FormControl>

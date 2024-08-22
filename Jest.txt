@@ -1,9 +1,0 @@
-Jest for JSX Components : 
-
-for onClick events use import { fireEvent } from '@testing-library/react';
-
-describe(Name,() => {
-  it("test case name", () => {
-     const { xyz } = render(<Component {...props} />)
-  })
-})

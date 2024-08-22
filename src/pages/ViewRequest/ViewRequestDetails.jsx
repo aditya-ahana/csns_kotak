@@ -77,7 +77,7 @@ export default function ViewRequestDetails() {
           <TableContainer
             component={Paper}
             className="view-table-container"
-            sx={{ boxShadow: "none", maxHeight: "34rem" }}
+            sx={{ boxShadow: "none", maxHeight: "33rem" }}
           >
             <Table className="details-table" stickyHeader={true}>
               <TableHead>
@@ -187,7 +187,7 @@ export default function ViewRequestDetails() {
                             onClick={(event) =>
                               handleSelectedIndex(event, index)
                             }
-                            data-testid={`accordion-displayer${index}`}
+                            data-testid={`accordion-displayer-${index}`}
                           >
                             <ExpandCircleDownOutlinedIcon
                               sx={{
@@ -200,6 +200,7 @@ export default function ViewRequestDetails() {
                               }}
                               color="rgba(95, 99, 104, 1)"
                               className="expand-icon"
+                              data-testid={`accordion-hider-${index}`}
                             />
                           </Button>
                           {/* )} */}
@@ -208,12 +209,12 @@ export default function ViewRequestDetails() {
                     </TableRow>
 
                     {viewRequestDetailsAction === index ? (
-                      <Fragment>
+                      <Fragment key={index}>
                         {row.subData?.map((subDetails, subIndex) => (
-                          <>
+                          <Fragment key={subIndex}>
                             <TableRow
                               className="expanded-view"
-                              data-testid={`sub-det-disp${index}`}
+                              data-testid={`sub-data-display-${subIndex}`}
                               key={subIndex}
                               style={{
                                 backgroundColor: "rgb(243 243 243 / 79%)",
@@ -320,7 +321,7 @@ export default function ViewRequestDetails() {
                                 </Box>
                               </TableCell>
                             </TableRow>
-                          </>
+                          </Fragment>
                         ))}
                       </Fragment>
                     ) : (

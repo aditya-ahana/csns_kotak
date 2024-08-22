@@ -1,3 +1,27 @@
+export const requestPhases = ["Completed", "In-progress", "Failed"];
+
+export const requiredReportsData = [
+  "Statement in PDF/Excel",
+  "Beneficiary details for Single IMPS transactions",
+  "Beneficiary details for Bulk IMPS transactions",
+  "Beneficiary details for Single UPI transactions",
+  "Beneficiary details for Bulk UPI transactions",
+  "IP Logs",
+  "Device details",
+];
+
+export const availableParameters = [
+  "Account number",
+  "CRN",
+  "RRN",
+  "PAN",
+  "Aadhar",
+  "Mobile No.",
+  "Debit Card",
+  "Credit Card",
+  "Email ID",
+];
+
 export const requestList = [
   {
     ticketId: "1300",
