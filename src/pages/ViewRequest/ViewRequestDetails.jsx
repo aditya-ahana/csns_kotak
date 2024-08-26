@@ -20,9 +20,17 @@ import { RiRepeat2Line } from "react-icons/ri";
 import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { requestDetails } from "../../components/data/requestsData";
+import Loader from "../../components/Loader";
 
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
+  const [ loading , setLoading ] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    },620)
+  });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
 
@@ -69,11 +77,16 @@ export default function ViewRequestDetails() {
 
   return (
     <Box className="page" data-testid="view-details-page">
+
       <Box className="view-request-details-screen">
         <Typography component="span" fontWeight={500} fontSize="1.36rem">
           {t("viewRequestDetails")}
         </Typography>
+     
         <Box className="view-details-container">
+        { loading === true ? (
+        <Loader />
+      ) : (    
           <TableContainer
             component={Paper}
             className="view-table-container"
@@ -390,6 +403,7 @@ export default function ViewRequestDetails() {
               </TableBody>
             </Table>
           </TableContainer>
+                  )}
         </Box>
       </Box>
     </Box>

@@ -1,10 +1,27 @@
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import federationData from "../components/data/FederationData";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 function UnifiedDesktop() {
+  const [ loading , setLoading ] = useState(true);
+
+  const routeDashboard = () => {
+    // setLoading(true)
+    // setTimeout(() => {
+      route_to("/Dashboard")
+      // setLoading(false);
+    // },620)
+  };
+
   const route_to = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    },620)
+  });
   // return (
   //   <>
   //     <div>
@@ -31,6 +48,10 @@ function UnifiedDesktop() {
   // )
 
   return (
+  <Fragment>
+    { loading === true ? (
+      <Loader />
+    ) : (
     <Box
       sx={{
         display: "flex",
@@ -46,7 +67,7 @@ function UnifiedDesktop() {
           className="card"
           key={index}
           // href={app.url}
-          onClick={() => route_to("/Dashboard")}
+          onClick={routeDashboard}
           sx={{
             backgroundColor: "rgba(255, 255, 255, 1)",
             width: "19rem",
@@ -76,6 +97,8 @@ function UnifiedDesktop() {
         </Box>
       ))}
     </Box>
+     )}
+    </Fragment>
   );
 }
 

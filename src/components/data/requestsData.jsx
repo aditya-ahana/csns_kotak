@@ -22,6 +22,8 @@ export const availableParameters = [
   "Email ID",
 ];
 
+// export const requestList = [];
+
 export const requestList = [
   {
     ticketId: "1300",
