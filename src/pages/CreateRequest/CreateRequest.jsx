@@ -106,7 +106,6 @@ export default function CreateRequest() {
   const [toastColor, setToastColor] = useState("");
   const [toastFontWeight, setToastFontWeight] = useState();
 
-
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
     setToastDuration(duration);
@@ -1165,9 +1164,7 @@ export default function CreateRequest() {
     });
   };
 
-
   // const accountNumberDetailsValid =
-
 
   const SelectProps = {
     REPORT_SELECT_PROPS: {
@@ -1543,8 +1540,9 @@ export default function CreateRequest() {
               placeholder={`Enter ${detail.name2}`}
               className="number-box"
               helperText={
-                detail.mobileno.length < 10 ? "(if needed) mobile no. must be 10 digits long"
-                    : validatedDetail()
+                detail.mobileno.length < 10
+                  ? "(if needed) mobile no. must be 10 digits long"
+                  : validatedDetail()
               }
               value={detail.mobileno}
               autoComplete="off"
@@ -1607,12 +1605,14 @@ export default function CreateRequest() {
                   className="selected-param-box-3"
                   value={detail.amount.length === 0 ? "" : detail.amount}
                   helperText={
-                    detail.value.length < 12 ? "" :
-                      detail.value.length === 12 && detail.amount.length === 0 ? "(if needed) amount must be 1-6 digits long"
+                    detail.value.length < 12
+                      ? ""
+                      : detail.value.length === 12 && detail.amount.length === 0
+                        ? "(if needed) amount must be 1-6 digits long"
                         : validatedDetail()
                   }
                   autoComplete="off"
-                  FormHelperTextProps={{ sx : { color : 'red'}}}
+                  FormHelperTextProps={{ sx: { color: "red" } }}
                   style={{
                     margin: "0rem 0rem 0rem 0rem",
                     // height: "5.5vh",
@@ -1986,158 +1986,170 @@ export default function CreateRequest() {
   const configurePayload = () => {
     payloadInitiator();
   };
-  
-  const isValidDisplay =
-  reportsState.some(
-    (state, index) =>
-      state.accountNumberDetails.length >= 1 &&
-      state.accountNumberDetails.some(
-        (detail, subIndex) =>
-          state.accountNumberDetails[0].value.length === 16 &&
-          state.accountNumberDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.PANdetails.length >= 1 &&
-      state.PANdetails.some(
-        (detail, subIndex) =>
-          state.PANdetails[0].length === 10 &&
-          state.PANdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.CRNdetails.length >= 1 &&
-      state.CRNdetails.some(
-        (detail, subIndex) =>
-          state.CRNdetails[0].length === 10 &&
-          state.CRNdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.RRNdetails.length >= 1 &&
-      state.RRNdetails.some(
-        (detail, subIndex) =>
-          state.RRNdetails[0].length === 12 &&
-          state.RRNdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.aadharDetails.length >= 1 &&
-      state.aadharDetails.some(
-        (detail, subIndex) =>
-          state.aadharDetails[0].length === 12 &&
-          state.aadharDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.mobileNoDetails.length >= 1 &&
-      state.mobileNoDetails.some(
-        (detail, subIndex) =>
-          state.mobileNoDetails[0].length === 10 &&
-          state.mobileNoDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.creditCardDetails.length >= 1 &&
-      state.creditCardDetails.some(
-        (detail, subIndex) =>
-          state.creditCardDetails[0].length === 16 &&
-          state.creditCardDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.debitCardDetails.length >= 1 &&
-      state.debitCardDetails.some(
-        (detail, subIndex) =>
-          state.debitCardDetails[0].length === 16 &&
-          state.debitCardDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.emailDetails.length >= 1 &&
-      state.emailDetails.some(
-        (detail, subIndex) =>
-          state.emailDetails[0].length > 16 &&
-          state.emailDetails[0].type !== "Type"
-      )
-  );
 
-const isValidReportData = reportsState.some(
-  (state, index) =>
-    (state.accountNumberDetails.length > 0 &&
-      state.accountNumberDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.PANdetails.length > 0 &&
-      state.PANdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.CRNdetails.length > 0 &&
-      state.CRNdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.RRNdetails.length > 0 &&
-      state.RRNdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 12 && detail.type !== "Type"
-      )) ||
-    (state.aadharDetails.length > 0 &&
-      state.aadharDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 12 && detail.type !== "Type"
-      )) ||
-    (state.mobileNoDetails.length > 0 &&
-      state.mobileNoDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.creditCardDetails.length > 0 &&
-      state.creditCardDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.debitCardDetails.length > 0 &&
-      state.debitCardDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.emailDetails.length > 0 &&
-      state.emailDetails.every(
-        (detail, subIndex) =>
-          detail.value.length > 16 && detail.type !== "Type"
-      ))
-);
+  const isValidDisplay =
+    reportsState.some(
+      (state, index) =>
+        state.accountNumberDetails.length >= 1 &&
+        state.accountNumberDetails.some(
+          (detail, subIndex) =>
+            state.accountNumberDetails[0].value.length === 16 &&
+            state.accountNumberDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.PANdetails.length >= 1 &&
+        state.PANdetails.some(
+          (detail, subIndex) =>
+            state.PANdetails[0].length === 10 &&
+            state.PANdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.CRNdetails.length >= 1 &&
+        state.CRNdetails.some(
+          (detail, subIndex) =>
+            state.CRNdetails[0].length === 10 &&
+            state.CRNdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.RRNdetails.length >= 1 &&
+        state.RRNdetails.some(
+          (detail, subIndex) =>
+            state.RRNdetails[0].length === 12 &&
+            state.RRNdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.aadharDetails.length >= 1 &&
+        state.aadharDetails.some(
+          (detail, subIndex) =>
+            state.aadharDetails[0].length === 12 &&
+            state.aadharDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.mobileNoDetails.length >= 1 &&
+        state.mobileNoDetails.some(
+          (detail, subIndex) =>
+            state.mobileNoDetails[0].length === 10 &&
+            state.mobileNoDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.creditCardDetails.length >= 1 &&
+        state.creditCardDetails.some(
+          (detail, subIndex) =>
+            state.creditCardDetails[0].length === 16 &&
+            state.creditCardDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.debitCardDetails.length >= 1 &&
+        state.debitCardDetails.some(
+          (detail, subIndex) =>
+            state.debitCardDetails[0].length === 16 &&
+            state.debitCardDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.emailDetails.length >= 1 &&
+        state.emailDetails.some(
+          (detail, subIndex) =>
+            state.emailDetails[0].length > 16 &&
+            state.emailDetails[0].type !== "Type"
+        )
+    );
+
+  const isValidReportData = reportsState.some(
+    (state, index) =>
+      (state.accountNumberDetails.length > 0 &&
+        state.accountNumberDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.PANdetails.length > 0 &&
+        state.PANdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.CRNdetails.length > 0 &&
+        state.CRNdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.RRNdetails.length > 0 &&
+        state.RRNdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 12 && detail.type !== "Type"
+        )) ||
+      (state.aadharDetails.length > 0 &&
+        state.aadharDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 12 && detail.type !== "Type"
+        )) ||
+      (state.mobileNoDetails.length > 0 &&
+        state.mobileNoDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.creditCardDetails.length > 0 &&
+        state.creditCardDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.debitCardDetails.length > 0 &&
+        state.debitCardDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.emailDetails.length > 0 &&
+        state.emailDetails.every(
+          (detail, subIndex) =>
+            detail.value.length > 16 && detail.type !== "Type"
+        ))
+  );
 
   const handleSubmit = () => {
     configurePayload();
-    
-    if(isValidReportData === false){
-      displayToast("All Mandatory Fields must be non-empty!", 3000, "rgb(93, 235, 215)","black",500);
+
+    if (isValidReportData === false) {
+      displayToast(
+        "All Mandatory Fields must be non-empty!",
+        3000,
+        "rgb(93, 235, 215)",
+        "black",
+        500
+      );
     } else {
-    //Submit API Function
+      //Submit API Function
 
-    //Error Block
-    // displayToast("Error Submitting Request",3200,"red","white",600);
+      //Error Block
+      // displayToast("Error Submitting Request",3200,"red","white",600);
 
-    // SuccessBlock
+      // SuccessBlock
 
-    setSubmitted(true);
-    // dispatch(setRequestPayloads(responsePayload));
-    displayToast("Successfully Submitted Request", 2000, "rgb(7, 65, 115)","white",600);
-    setTimeout(() => {
-      route_to("/ViewRequest");
-    }, 1000);
+      setSubmitted(true);
+      // dispatch(setRequestPayloads(responsePayload));
+      displayToast(
+        "Successfully Submitted Request",
+        2000,
+        "rgb(7, 65, 115)",
+        "white",
+        600
+      );
+      setTimeout(() => {
+        route_to("/ViewRequest");
+      }, 1000);
     }
   };
 
@@ -2175,255 +2187,253 @@ const isValidReportData = reportsState.some(
                   : "1.25rem 1.5rem 1.15rem 1.5rem",
             }}
           >
-            {loading === true ? (
+            {/* {loading === true ? (
               <Loader />
-            ) : (
-              <>
-                <Box className="ticket-type-section">
-                  <FormControl
-                    variant="outlined"
-                    margin="none"
-                    className="ticket-number-container"
-                  >
-                    <TextField
-                      sx={inputControl.textfield}
-                      helperText={
-                        ticketNumber.length < 10
-                          ? "ticket number should be 10 characters long"
-                          : validatedDetail()
-                      }
-                      InputLabelProps={inputControl.inputLabelProps}
-                      FormHelperTextProps={{ sx: { color: "red" } }}
-                      inputProps={{
-                        style: {
-                          fontSize: "0.88rem",
-                          height: "0.6rem",
-                          // backgroundColor : "blue"
-                        },
-                        maxLength: 10,
-                      }}
-                      data-testid="ticket-num-input"
-                      placeholder={t("enterTicketNo")}
-                      className="ticket-number-input"
-                      value={ticketNumber}
-                      autoComplete="off"
-                      size="medium"
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        height: "auto",
-                        fontSize: "0.88rem",
-                      }}
-                      label={t("ticketNo")}
-                      margin="dense"
-                      onChange={(e) => setTicketNumber(e.target.value)}
-                      type="text"
-                      required
-                      inputMode="text"
-                      fullWidth={true}
-                      color="primary"
-                    />
-                  </FormControl>
-
-                  <FormControl
-                    variant="outlined"
-                    margin="none"
-                    className="ticket-description-container"
-                  >
-                    <TextField
-                      placeholder={
-                        descriptionFocused === true ? t("enterTicketDesc") : ""
-                      }
-                      variant="outlined"
-                      FormHelperTextProps={{ sx: { color: "red" } }}
-                      helperText={
-                        ticketNumber.length < 10
-                          ? ""
-                          : ticketNumber.length === 10 &&
-                              ticketDescription.length === 0
-                            ? "ticket description should be between 10-60 characters long"
-                            : ticketDescription.length < 10
-                              ? "ticket description should be between 10-60 characters long"
-                              : validatedDetail()
-                      }
-                      required
-                      label={t("ticketDesc")}
-                      onFocus={() => {
-                        //console.log('desc length',ticketDescription.length);
-                        //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
-                        setDescriptionFocused(true);
-                      }}
-                      onBlur={() => setDescriptionFocused(false)}
-                      multiline
-                      // multiline
-                      sx={inputControl.textfield}
-                      className="ticket-description-input"
-                      autoComplete="off"
-                      rows={Math.ceil(ticketDescription.length / 60)}
-                      size="small"
-                      fullWidth
-                      inputProps={inputControl.textAreaProps}
-                      InputLabelProps={inputControl.textAreaLabelProps}
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        backgroundColor: "white",
-                        height: "auto",
-                      }}
-                      margin="none"
-                      // InputProps={{
-                      //   inputComponent : 'textarea',
-                      //   sx : {
-                      //      padding : 0,
-                      //      margin : 0
-                      //   }
-                      // }}
-                      type="text"
-                      inputMode="text"
-                      disabled={ticketNumber.length < 10 ? true : false}
-                      color="primary"
-                      value={ticketDescription}
-                      data-testid="ticket-descr-input"
-                      onChange={(e) => setTicketDescription(e.target.value)}
-                    />
-                  </FormControl>
-                </Box>
-
-                <FormControl variant="standard" sx={{ width: "82.75%" }}>
-                  <Select
-                    label="Reports Selection Dropdown"
-                    name="reports-selection-dropdown"
-                    id="reports-selection-dropdown"
-                    data-testid="reports-selection-dropdown"
-                    multiple={true}
-                    value={selectedReports}
-                    displayEmpty
-                    disabled={
-                      ticketNumber.length < 10 ||
-                      ticketDescription.length < 10
-                        ? true
-                        : false
+            ) : ( */}
+            <>
+              <Box className="ticket-type-section">
+                <FormControl
+                  variant="outlined"
+                  margin="none"
+                  className="ticket-number-container"
+                >
+                  <TextField
+                    sx={inputControl.textfield}
+                    helperText={
+                      ticketNumber.length < 10
+                        ? "ticket number should be 10 characters long"
+                        : validatedDetail()
                     }
-                    onChange={handleReportSelection}
-                    variant="standard"
-                    input={<OutlinedInput fullWidth={true} />}
-                    IconComponent={(props) => (
-                      <KeyboardArrowDownOutlinedIcon
-                        className="reports-type-dropdownicon"
-                        sx={{
-                          fontSize: "1.4rem",
-                          color: "rgba(115, 115, 115, 1)",
-                        }}
-                        {...props}
-                      />
-                    )}
-                    renderValue={(reports) => {
-                      if (reports.length === 0) {
-                        return (
-                          <span
-                            style={{ opacity: 0.45 }}
-                            data-testid="reports-dropdown-input-initial"
-                          >
-                            {" "}
-                            {t("statementsReportRequire")}
-                          </span>
-                        );
-                      }
-                      return (
-                        <Input
-                          sx={{
-                            width: "99%",
-                            fontSize: "95%",
-                            textOverflow: "ellipsis",
-                            // overflow: "hidden",
-                          }}
-                          disableUnderline={true}
-                          value={reports.join(" , ")}
-                          data-testid="reports-dropdown-input-changed"
-                        ></Input>
-                      );
+                    InputLabelProps={inputControl.inputLabelProps}
+                    FormHelperTextProps={{ sx: { color: "red" } }}
+                    inputProps={{
+                      style: {
+                        fontSize: "0.88rem",
+                        height: "0.6rem",
+                        // backgroundColor : "blue"
+                      },
+                      maxLength: 10,
                     }}
-                    inputProps={{}}
-                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
-                    autoWidth={false}
+                    data-testid="ticket-num-input"
+                    placeholder={t("enterTicketNo")}
+                    className="ticket-number-input"
+                    value={ticketNumber}
+                    autoComplete="off"
+                    size="medium"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "2.56rem",
+                      margin: "0rem 0rem 0rem 0rem",
+                      height: "auto",
                       fontSize: "0.88rem",
-                      border:
-                        ticketNumber.length === 0 ||
-                        ticketDescription.length === 0
-                          ? "none"
-                          : "0.25px solid black",
                     }}
-                    placeholder={t("statementsReportRequire")}
-                  >
-                    {requiredReportsData.map((report, index) => (
-                      <MenuItem
-                        key={report}
-                        value={report}
-                        data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                    label={t("ticketNo")}
+                    margin="dense"
+                    onChange={(e) => setTicketNumber(e.target.value)}
+                    type="text"
+                    required
+                    inputMode="text"
+                    fullWidth={true}
+                    color="primary"
+                  />
+                </FormControl>
+
+                <FormControl
+                  variant="outlined"
+                  margin="none"
+                  className="ticket-description-container"
+                >
+                  <TextField
+                    placeholder={
+                      descriptionFocused === true ? t("enterTicketDesc") : ""
+                    }
+                    variant="outlined"
+                    FormHelperTextProps={{ sx: { color: "red" } }}
+                    helperText={
+                      ticketNumber.length < 10
+                        ? ""
+                        : ticketNumber.length === 10 &&
+                            ticketDescription.length === 0
+                          ? "ticket description should be between 10-60 characters long"
+                          : ticketDescription.length < 10
+                            ? "ticket description should be between 10-60 characters long"
+                            : validatedDetail()
+                    }
+                    required
+                    label={t("ticketDesc")}
+                    onFocus={() => {
+                      //console.log('desc length',ticketDescription.length);
+                      //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                      setDescriptionFocused(true);
+                    }}
+                    onBlur={() => setDescriptionFocused(false)}
+                    multiline
+                    // multiline
+                    sx={inputControl.textfield}
+                    className="ticket-description-input"
+                    autoComplete="off"
+                    rows={Math.ceil(ticketDescription.length / 60)}
+                    size="small"
+                    fullWidth
+                    inputProps={inputControl.textAreaProps}
+                    InputLabelProps={inputControl.textAreaLabelProps}
+                    style={{
+                      margin: "0rem 0rem 0rem 0rem",
+                      backgroundColor: "white",
+                      height: "auto",
+                    }}
+                    margin="none"
+                    // InputProps={{
+                    //   inputComponent : 'textarea',
+                    //   sx : {
+                    //      padding : 0,
+                    //      margin : 0
+                    //   }
+                    // }}
+                    type="text"
+                    inputMode="text"
+                    disabled={ticketNumber.length < 10 ? true : false}
+                    color="primary"
+                    value={ticketDescription}
+                    data-testid="ticket-descr-input"
+                    onChange={(e) => setTicketDescription(e.target.value)}
+                  />
+                </FormControl>
+              </Box>
+
+              <FormControl variant="standard" sx={{ width: "82.75%" }}>
+                <Select
+                  label="Reports Selection Dropdown"
+                  name="reports-selection-dropdown"
+                  id="reports-selection-dropdown"
+                  data-testid="reports-selection-dropdown"
+                  multiple={true}
+                  value={selectedReports}
+                  displayEmpty
+                  disabled={
+                    ticketNumber.length < 10 || ticketDescription.length < 10
+                      ? true
+                      : false
+                  }
+                  onChange={handleReportSelection}
+                  variant="standard"
+                  input={<OutlinedInput fullWidth={true} />}
+                  IconComponent={(props) => (
+                    <KeyboardArrowDownOutlinedIcon
+                      className="reports-type-dropdownicon"
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: "rgba(115, 115, 115, 1)",
+                      }}
+                      {...props}
+                    />
+                  )}
+                  renderValue={(reports) => {
+                    if (reports.length === 0) {
+                      return (
+                        <span
+                          style={{ opacity: 0.45 }}
+                          data-testid="reports-dropdown-input-initial"
+                        >
+                          {" "}
+                          {t("statementsReportRequire")}
+                        </span>
+                      );
+                    }
+                    return (
+                      <Input
+                        sx={{
+                          width: "99%",
+                          fontSize: "95%",
+                          textOverflow: "ellipsis",
+                          // overflow: "hidden",
+                        }}
+                        disableUnderline={true}
+                        value={reports.join(" , ")}
+                        data-testid="reports-dropdown-input-changed"
+                      ></Input>
+                    );
+                  }}
+                  inputProps={{}}
+                  MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                  autoWidth={false}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    height: "2.56rem",
+                    fontSize: "0.88rem",
+                    border:
+                      ticketNumber.length === 0 ||
+                      ticketDescription.length === 0
+                        ? "none"
+                        : "0.25px solid black",
+                  }}
+                  placeholder={t("statementsReportRequire")}
+                >
+                  {requiredReportsData.map((report, index) => (
+                    <MenuItem
+                      key={report}
+                      value={report}
+                      data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                      style={{
+                        display: "flex",
+                        border: "1px solid #cdcdcd",
+                        width: "96.25%",
+                        margin: "1rem 0rem 1rem 1.25rem",
+                        height: "2.65rem",
+                        alignItems: "left",
+                        borderRadius: "4px",
+                        backgroundColor: "transparent",
+                        fontSize: "2px",
+                      }}
+                    >
+                      <Checkbox
+                        size="medium"
+                        data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                        icon={
+                          <CheckBoxOutlineBlankIcon
+                            sx={{ fontSize: "1.5rem" }}
+                          />
+                        }
+                        // inputProps={{
+                        //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
+                        // }}
+                        checkedIcon={
+                          <CheckBoxOutlinedIcon
+                            className="check-icon"
+                            sx={{ fontSize: "1.5rem", color: "red" }}
+                          />
+                        }
+                        sx={{ containIntrinsicSize: "2px" }}
+                        checked={selectedReports.indexOf(report) > -1}
+                        color="primary"
                         style={{
-                          display: "flex",
-                          border: "1px solid #cdcdcd",
-                          width: "96.25%",
-                          margin: "1rem 0rem 1rem 1.25rem",
-                          height: "2.65rem",
-                          alignItems: "left",
-                          borderRadius: "4px",
+                          marginLeft: "-0.88rem",
                           backgroundColor: "transparent",
                           fontSize: "2px",
                         }}
-                      >
-                        <Checkbox
-                          size="medium"
-                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
-                          icon={
-                            <CheckBoxOutlineBlankIcon
-                              sx={{ fontSize: "1.5rem" }}
-                            />
-                          }
-                          // inputProps={{
-                          //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
-                          // }}
-                          checkedIcon={
-                            <CheckBoxOutlinedIcon
-                              className="check-icon"
-                              sx={{ fontSize: "1.5rem", color: "red" }}
-                            />
-                          }
-                          sx={{ containIntrinsicSize: "2px" }}
-                          checked={selectedReports.indexOf(report) > -1}
-                          color="primary"
-                          style={{
-                            marginLeft: "-0.88rem",
-                            backgroundColor: "transparent",
-                            fontSize: "2px",
-                          }}
-                        />
-                        <ListItemText
-                          primary={report}
-                          data-testid="reports-selection-dropdown-menu-item-text"
-                          style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                          color="black"
-                          inputMode="text"
-                          primaryTypographyProps={{ fontSize: "0.825rem" }}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {selectedReports.length >= 1
-                    ? validatedHelperText("Selected")
-                    : ticketNumber.length === 0 ||
-                        ticketDescription.length === 0
-                      ? () => {}
-                      : ticketNumber.length === 10 &&
-                          ticketDescription.length >= 10 &&
-                          selectedReports.length === 0
-                        ? customFormText("select reports")
-                        : () => {}}
-                </FormControl>
-              </>
-            )}
+                      />
+                      <ListItemText
+                        primary={report}
+                        data-testid="reports-selection-dropdown-menu-item-text"
+                        style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                        color="black"
+                        inputMode="text"
+                        primaryTypographyProps={{ fontSize: "0.825rem" }}
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {selectedReports.length >= 1
+                  ? validatedHelperText("Selected")
+                  : ticketNumber.length === 0 || ticketDescription.length === 0
+                    ? () => {}
+                    : ticketNumber.length === 10 &&
+                        ticketDescription.length >= 10 &&
+                        selectedReports.length === 0
+                      ? customFormText("select reports")
+                      : () => {}}
+              </FormControl>
+            </>
+            {/* )} */}
           </Box>
 
           {selectedReports.length > 0 && (

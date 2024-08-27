@@ -24,12 +24,12 @@ import Loader from "../../components/Loader";
 
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
-  const [ loading , setLoading ] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    },620)
+    }, 620);
   });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
@@ -77,16 +77,15 @@ export default function ViewRequestDetails() {
 
   return (
     <Box className="page" data-testid="view-details-page">
-
       <Box className="view-request-details-screen">
         <Typography component="span" fontWeight={500} fontSize="1.36rem">
           {t("viewRequestDetails")}
         </Typography>
-     
+
         <Box className="view-details-container">
-        { loading === true ? (
+          {/* { loading === true ? (
         <Loader />
-      ) : (    
+      ) : (     */}
           <TableContainer
             component={Paper}
             className="view-table-container"
@@ -403,7 +402,7 @@ export default function ViewRequestDetails() {
               </TableBody>
             </Table>
           </TableContainer>
-                  )}
+          {/* )} */}
         </Box>
       </Box>
     </Box>

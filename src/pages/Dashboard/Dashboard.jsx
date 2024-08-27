@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import noData from "../../static/noData.png";
@@ -9,19 +9,19 @@ import Loader from "../../components/Loader";
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const [ loading , setLoading ] = useState(true);
- 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    },620)
+    }, 620);
   });
 
   const nav = useNavigate();
 
   function createRequestNav() {
-        nav("/createrequest");
-  };
+    nav("/createrequest");
+  }
 
   return (
     <>
@@ -31,9 +31,6 @@ export default function Dashboard() {
           <Typography component="span" fontWeight={500} fontSize="1.36rem">
             {t("dashboard")}
           </Typography>
-          {/* <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
-         
-          </span> */}
           <Button
             type="primary"
             // danger
@@ -48,12 +45,8 @@ export default function Dashboard() {
               fontSize: "medium",
             }}
           >
-            {/* <span style={{ fontWeight: "bold", fontSize: "medium" }}>
-              <span col> */}
             <RiAddLargeFill />
             {t("createRequest")}
-            {/* </span> */}
-            {/* </span> */}
           </Button>
         </div>
         {/* space */}
@@ -63,9 +56,9 @@ export default function Dashboard() {
           className="d-flex justify-content-center align-items-center bg-white rounded"
           style={{ height: "73vh" }}
         >
-           { loading === true ? (
-        <Loader />
-      ) : ( 
+          {/* {loading === true ? (
+            <Loader />
+          ) : ( */}
           <div
             className="d-flex flex-column justify-content-center align-items-center"
             style={{ cursor: "pointer" }}
@@ -79,13 +72,9 @@ export default function Dashboard() {
               {t("noRequestInDashoard")}
             </span>
           </div>
-            )}
+          {/* )} */}
         </div>
-      </div>     
+      </div>
     </>
   );
 }
-
-//////Rejected///////
-
-/////// 1.import noData (says unexpected import or token)
