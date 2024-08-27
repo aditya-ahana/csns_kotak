@@ -56,23 +56,23 @@ export default function Dashboard() {
           className="d-flex justify-content-center align-items-center bg-white rounded"
           style={{ height: "73vh" }}
         >
-          {loading === true ? (
+          {/* {loading === true ? (
             <Loader />
-          ) : (
-            <div
-              className="d-flex flex-column justify-content-center align-items-center"
-              style={{ cursor: "pointer" }}
-              data-testid="create-request-button"
-              onClick={(e) => {
-                createRequestNav();
-              }}
-            >
-              <img src={noData} alt="No data found" style={{ width: "33vh" }} />
-              <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
-                {t("noRequestInDashoard")}
-              </span>
-            </div>
-          )}
+          ) : ( */}
+          <div
+            className="d-flex flex-column justify-content-center align-items-center"
+            style={{ cursor: "pointer" }}
+            data-testid="create-request-button"
+            onClick={(e) => {
+              createRequestNav();
+            }}
+          >
+            <img src={noData} alt="No data found" style={{ width: "33vh" }} />
+            <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
+              {t("noRequestInDashoard")}
+            </span>
+          </div>
+          {/* )} */}
         </div>
       </div>
     </>
