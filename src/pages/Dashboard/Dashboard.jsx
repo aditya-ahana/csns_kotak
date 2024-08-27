@@ -1,19 +1,28 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import noData from "../../static/noData.png";
 import { useTranslation } from "react-i18next";
 import { Typography } from "@mui/material";
 import { RiAddLargeFill } from "react-icons/ri";
+import Loader from "../../components/Loader";
 
 export default function Dashboard() {
   const { t } = useTranslation();
+  const [ loading , setLoading ] = useState(true);
+ 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    },620)
+  });
 
   const nav = useNavigate();
 
   function createRequestNav() {
-    nav("/createrequest");
-  }
+        nav("/createrequest");
+  };
+
   return (
     <>
       <div data-testid="dashboard-main">
@@ -50,11 +59,13 @@ export default function Dashboard() {
         {/* space */}
         <div className="p-2"></div>
         {/* content */}
-
         <div
           className="d-flex justify-content-center align-items-center bg-white rounded"
           style={{ height: "73vh" }}
         >
+           { loading === true ? (
+        <Loader />
+      ) : ( 
           <div
             className="d-flex flex-column justify-content-center align-items-center"
             style={{ cursor: "pointer" }}
@@ -68,8 +79,9 @@ export default function Dashboard() {
               {t("noRequestInDashoard")}
             </span>
           </div>
+            )}
         </div>
-      </div>
+      </div>     
     </>
   );
 }

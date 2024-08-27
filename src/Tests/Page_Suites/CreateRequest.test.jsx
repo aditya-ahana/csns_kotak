@@ -60,7 +60,7 @@ const fillTicketNumberInput = () => {
 
 const fillTicketDescriptionInput = () => {
   const ticketDescriptionField = screen.getByTestId("ticket-descr-input");
-
+  screen.get
   expect(ticketDescriptionField).toBeInTheDocument();
 
   const ticketDescriptionInput =
@@ -860,6 +860,7 @@ test("RRN Date Picker Functionality Check for Beneficiary Details for Single Tra
 });
 
 test("Add Detail Button Functionality Check", () => {
+  window.HTMLElement.prototype.scrollIntoView = function() {};
   renderCreateRequest();
   fillTicketNumberInput();
   fillTicketDescriptionInput();
@@ -902,7 +903,8 @@ test("Add Detail Button Functionality Check", () => {
   expect(newDetailFieldset).toBeInTheDocument();
 });
 
-test("Remove Detail Button Functionality Check", () => {
+test("Delete Detail Button Functionality Check", () => {
+  window.HTMLElement.prototype.scrollIntoView = function() {};
   renderCreateRequest();
   fillTicketNumberInput();
   fillTicketDescriptionInput();

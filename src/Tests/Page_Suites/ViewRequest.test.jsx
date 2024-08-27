@@ -48,14 +48,11 @@ test("Render View Request Page", () => {
   expect(screen.getByText("viewRequest")).toBeInTheDocument();
 
   // screen.debug();
-  cleanup();
 });
 
 test("Open Filter Menu", () => {
   renderViewRequest();
   openFilterMenu();
-
-  cleanup();
   renderViewRequest().unmount();
 });
 
@@ -148,55 +145,6 @@ test("Close Email Draft Modal Button Functionality Check", () => {
   expect(draftModal).not.toBeVisible();
 });
 
-test.skip("Latest Menu Checkbox Functionality Check", () => {
-  renderViewRequest();
-  openFilterMenu();
-
-  const statusMenu = screen.getByTestId("status-unchecked");
-
-  expect(statusMenu).toBeInTheDocument();
-
-  screen.debug(statusMenu);
-
-  const statusMenuItem0 = screen.getByTestId("status-menu-item-0");
-  const statusMenuItem1 = screen.getByTestId("status-menu-item-1");
-  const statusMenuItem2 = screen.getByTestId("status-menu-item-2");
-
-  const status0 = screen.getByTestId("status-checkbox-0");
-  const status1 = screen.getByTestId("status-checkbox-1");
-  const status2 = screen.getByTestId("status-checkbox-2");
-
-  const status0Checkbox = within(status0).getByRole("checkbox", {
-    hidden: true,
-  });
-  const status1Checkbox = within(status1).getByRole("checkbox", {
-    hidden: true,
-  });
-  const status2Checkbox = within(status2).getByRole("checkbox", {
-    hidden: true,
-  });
-
-  expect(status0Checkbox).not.toBeChecked();
-  expect(status1Checkbox).not.toBeChecked();
-  expect(status2Checkbox).not.toBeChecked();
-
-  // await waitFor(() =>
-  // userEvent.click(statusMenuItem0);
-  fireEvent.click(status0Checkbox);
-  //  );
-
-  expect(status0Checkbox).toBeChecked();
-
-  fireEvent.click(status1Checkbox);
-
-  expect(status1Checkbox).toBeChecked();
-
-  fireEvent.click(status2Checkbox);
-
-  expect(status2Checkbox).toBeChecked();
-  // expect(status0Checkbox).toHaveProperty('checked', true);
-});
-
 test("Clear Filter Button Rendering on Date Range Select", () => {
   renderViewRequest();
   openFilterMenu();
@@ -262,4 +210,64 @@ test("Select Rows Per Page Dropdown Functionality Check", () => {
   );
 
   expect(rowsDisplay).toHaveTextContent("40");
+});
+
+
+test.skip("Latest Menu Checkbox Functionality Check", () => {
+  renderViewRequest();
+  openFilterMenu();
+
+  const statusMenu = screen.getByTestId("status-unchecked");
+
+  expect(statusMenu).toBeInTheDocument();
+
+  // screen.debug(statusMenu);
+
+  const statusMenuItem0 = screen.getByTestId("status-menu-item-0");
+
+  const statusMenuItem1 = screen.getByTestId("status-menu-item-1");
+
+  const statusMenuItem2 = screen.getByTestId("status-menu-item-2");
+
+  expect(statusMenuItem0).toBeInTheDocument();
+  expect(statusMenuItem1).toBeInTheDocument();
+  expect(statusMenuItem2).toBeInTheDocument();
+
+  // screen.debug(statusMenuItem0);
+
+  const status0 = screen.getByTestId("status-checkbox-0");
+  const status1 = screen.getByTestId("status-checkbox-1");
+  const status2 = screen.getByTestId("status-checkbox-2");
+
+  // const status0 = screen.getByLabelText("checkbox-x-0");
+  // const status1 = screen.getByLabelText("checkbox-x-1");
+  // const status2 = screen.getByLabelText("checkbox-x-2");
+
+  const status0Checkbox = within(status0).getByRole("checkbox", {
+    hidden: true,
+    //  name : "status-checkbox-0"
+  });
+  const status1Checkbox = within(status1).getByRole("checkbox", {
+    hidden: true,
+    //  name : "status-checkbox-1"
+  });
+  const status2Checkbox = within(status2).getByRole("checkbox", {
+    hidden: true,
+    //  name : "status-checkbox-2"
+  });
+
+  // fireEvent.click(status0Checkbox);
+
+  expect(status0Checkbox).toBeInTheDocument();
+  expect(status1Checkbox).toBeInTheDocument();
+  expect(status2Checkbox).toBeInTheDocument();
+  // expect(status0Checkbox).toBeChecked();
+
+  // // fireEvent.click(status1Checkbox);
+
+  // // expect(status1Checkbox).toBeChecked();
+
+  // // fireEvent.click(status2Checkbox);
+
+  // // expect(status2Checkbox).toBeChecked();
 });

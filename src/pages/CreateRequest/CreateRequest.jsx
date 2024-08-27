@@ -8,6 +8,7 @@ import {
   AccordionSummary,
   MenuList,
   AccordionDetails,
+  FormHelperText,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -44,11 +45,88 @@ import {
   requiredReportsData,
   availableParameters,
 } from "../../components/data/requestsData";
+import Loader from "../../components/Loader";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import MaterialToast from "../../components/Snackbar";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
+const validatedDetail = () => {
+  return (
+    <Box sx={{ display: "flex", flexDirection: "row", gap: "0.25rem" }}>
+      <Typography
+        sx={{ color: "green", fontSize: "0.785rem", fontWeight: 400 }}
+      >
+        Valid
+      </Typography>
+      <CheckCircleIcon
+        sx={{ color: "green", marginTop: "0.05rem", fontSize: "1rem" }}
+      />
+    </Box>
+  );
+};
+
+const validatedHelperText = (text) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "0.25rem",
+        margin: "0.1rem 0rem 0rem 0.85rem",
+      }}
+    >
+      <Typography
+        sx={{ color: "green", fontSize: "0.785rem", fontWeight: 400 }}
+      >
+        {text}
+      </Typography>
+      <CheckCircleIcon
+        sx={{ color: "green", marginTop: "0.075rem", fontSize: "1rem" }}
+      />
+    </Box>
+  );
+};
+
+const customFormText = (text, visibility) => {
+  return (
+    <FormHelperText
+      sx={{ marginLeft: "0.85rem", color: "red", opacity: visibility }}
+    >
+      {text}
+    </FormHelperText>
+  );
+};
+
 export default function CreateRequest() {
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastDuration, setToastDuration] = useState(0);
+  const [toastBackground, setToastBackground] = useState("brown");
+  const [toastColor, setToastColor] = useState("");
+  const [toastFontWeight, setToastFontWeight] = useState();
+
+
+  const displayToast = (message, duration, background, color, fontWeight) => {
+    setToastMessage(message);
+    setToastDuration(duration);
+    setToastBackground(background);
+    setToastColor(color);
+    setToastFontWeight(fontWeight);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, duration);
+  };
+
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 600);
+  });
 
   const route_to = useNavigate();
   const dispatch = useDispatch();
@@ -95,6 +173,7 @@ export default function CreateRequest() {
         height: "0.6rem",
         // backgroundColor : "blue"
       },
+      maxLength: 10,
     },
     inputLabelProps: {
       // shrink : true,
@@ -104,7 +183,7 @@ export default function CreateRequest() {
         alignSelf: "center",
         display: "flex",
         alignItems: "center",
-        height: "58%",
+        marginTop: "0.125rem",
       },
     },
     textAreaProps: {
@@ -112,6 +191,7 @@ export default function CreateRequest() {
         fontSize: "0.88rem",
         minHeight: "1.65rem",
       },
+      // maxLength : 69
     },
     textAreaLabelProps: {
       // shrink : true,
@@ -158,7 +238,7 @@ export default function CreateRequest() {
         },
         color: "primary",
         size: "small",
-        "aria-readonly": true,
+        // "aria-readonly": true,
         sx: {
           backgroundColor: "transparent",
           width: "100%",
@@ -1085,93 +1165,9 @@ export default function CreateRequest() {
     });
   };
 
-  const isValidReportData =
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].accountNumberDetails.length >= 1 &&
-        reportsState[index].accountNumberDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].accountNumberDetails[subIndex].value.length ===
-              16 &&
-            reportsState[index].accountNumberDetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].PANdetails.length >= 1 &&
-        reportsState[index].PANdetails.some(
-          (detail, subIndex) =>
-            reportsState[index].PANdetails[subIndex].length === 10 &&
-            reportsState[index].PANdetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].CRNdetails.length >= 1 &&
-        reportsState[index].CRNdetails.some(
-          (detail, subIndex) =>
-            reportsState[index].CRNdetails[subIndex].length === 10 &&
-            reportsState[index].CRNdetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].RRNdetails.length >= 1 &&
-        reportsState[index].RRNdetails.some(
-          (detail, subIndex) =>
-            reportsState[index].RRNdetails[subIndex].length === 12 &&
-            reportsState[index].RRNdetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].aadharDetails.length >= 1 &&
-        reportsState[index].aadharDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].aadharDetails[subIndex].length === 12 &&
-            reportsState[index].aadharDetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].mobileNoDetails.length >= 1 &&
-        reportsState[index].mobileNoDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].mobileNoDetails[subIndex].length === 10 &&
-            reportsState[index].mobileNoDetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].creditCardDetails.length >= 1 &&
-        reportsState[index].accountNumberDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].creditCardDetails[subIndex].length === 16 &&
-            reportsState[index].creditCardDetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].debitCardDetails.length >= 1 &&
-        reportsState[index].creditCardDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].debitCardDetails[subIndex].length === 16 &&
-            reportsState[index].debitCardDetails[subIndex].type !== "Type"
-        )
-    ) ||
-    reportsState.some(
-      (state, index) =>
-        reportsState[index].emailDetails.length >= 1 &&
-        reportsState[index].emailDetails.some(
-          (detail, subIndex) =>
-            reportsState[index].emailDetails[subIndex].length > 16 &&
-            reportsState[index].emailDetails[subIndex].type !== "Type"
-        )
-    );
 
   // const accountNumberDetailsValid =
 
-  console.log("Valid Report Data", isValidReportData);
 
   const SelectProps = {
     REPORT_SELECT_PROPS: {
@@ -1224,10 +1220,18 @@ export default function CreateRequest() {
     detailsArray.map((detail, detailIndex) => (
       <Box
         className="selected-param-details"
+        marginTop={
+          (reportName === "Beneficiary details for Single IMPS transactions" ||
+            reportName === "Beneficiary details for Single UPI transactions") &&
+          detailIndex === 0
+            ? "0rem"
+            : "2.65rem"
+        }
         key={detailIndex}
         data-testid={`detail-fieldset-${detailIndex}`}
       >
         {/* {//console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
+
         <FormControl
           variant="outlined"
           margin="none"
@@ -1236,6 +1240,50 @@ export default function CreateRequest() {
           <TextField
             sx={inputControl.textfield}
             data-testid={`detail-name-input-${detailIndex}`}
+            helperText={
+              detail.value.length <
+              (detail.name === "Account number"
+                ? 16
+                : detail.name === "Email ID"
+                  ? 320
+                  : detail.name === "PAN"
+                    ? 10
+                    : detail.name === "Credit Card"
+                      ? 16
+                      : detail.name === "Aadhar"
+                        ? 12
+                        : detail.name === "Debit Card"
+                          ? 16
+                          : detail.name === "Mobile No."
+                            ? 10
+                            : detail.name === "RRN"
+                              ? 12
+                              : detail.name === "CRN"
+                                ? 10
+                                : 0)
+                ? `${detail.name.toLowerCase()} should be ${
+                    detail.name === "Account number"
+                      ? 16
+                      : detail.name === "Email ID"
+                        ? 320
+                        : detail.name === "PAN"
+                          ? 10
+                          : detail.name === "Credit Card"
+                            ? 16
+                            : detail.name === "Aadhar"
+                              ? 12
+                              : detail.name === "Debit Card"
+                                ? 16
+                                : detail.name === "Mobile No."
+                                  ? 10
+                                  : detail.name === "RRN"
+                                    ? 12
+                                    : detail.name === "CRN"
+                                      ? 10
+                                      : 0
+                  } characters long`
+                : validatedDetail()
+            }
             InputLabelProps={inputControl.inputLabelProps}
             InputProps={{
               startAdornment: detail.name === "Mobile No." && (
@@ -1244,14 +1292,40 @@ export default function CreateRequest() {
                   component="text"
                   position="start"
                 >
-                  <Typography sx={{ fontSize: "1vw" }} component="span">
+                  <Typography sx={{ fontSize: "0.92rem" }} component="span">
                     +91
                   </Typography>
                 </InputAdornment>
               ),
             }}
             required
-            inputProps={inputControl.inputProps}
+            inputProps={{
+              style: {
+                fontSize: "0.88rem",
+                height: "0.6rem",
+                // backgroundColor : "blue"
+              },
+              maxLength:
+                detail.name === "Account number"
+                  ? 16
+                  : detail.name === "Email ID"
+                    ? 320
+                    : detail.name === "PAN"
+                      ? 10
+                      : detail.name === "Credit Card"
+                        ? 16
+                        : detail.name === "Aadhar"
+                          ? 12
+                          : detail.name === "Debit Card"
+                            ? 16
+                            : detail.name === "Mobile No."
+                              ? 10
+                              : detail.name === "RRN"
+                                ? 12
+                                : detail.name === "CRN"
+                                  ? 10
+                                  : 0,
+            }}
             className="selected-param-box"
             // value={
             //   (detail.name === "Credit Card" ||
@@ -1271,36 +1345,13 @@ export default function CreateRequest() {
             value={detail.value.length === 0 ? "" : detail.value}
             id="paramvalue"
             placeholder={`Enter ${detail.name}`}
-            onInput={(e) => {
-              e.target.value = e.target.value.slice(
-                0,
-                detail.name === "Account number"
-                  ? 16
-                  : detail.name === "Email ID"
-                    ? 320
-                    : detail.name === "PAN"
-                      ? 10
-                      : detail.name === "Credit Card"
-                        ? 16
-                        : detail.name === "Aadhar"
-                          ? 12
-                          : detail.name === "Debit Card"
-                            ? 16
-                            : detail.name === "Mobile No."
-                              ? 10
-                              : detail.name === "RRN"
-                                ? 12
-                                : detail.name === "CRN"
-                                  ? 10
-                                  : 0
-              );
-            }}
             autoComplete="off"
             style={{
               margin: "0rem 0rem 0rem 0rem",
               fontSize: "0.88rem",
             }}
             label={detail.name}
+            FormHelperTextProps={{ sx: { color: "red" } }}
             margin="none"
             onChange={(e) =>
               handleInputValue(
@@ -1359,70 +1410,103 @@ export default function CreateRequest() {
               backgroundColor: "transparent",
             }}
           >
-            {/* <Box sx={{ width: "10%" }}> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                format="DD-MM-YYYY"
-                data-testid={`from-date-picker-${detailIndex}`}
-                shouldDisableDate={(day) =>
-                  disableInvalidDates(day, detail.to, detail.to)
+            <Box flex={1}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  format="DD-MM-YYYY"
+                  data-testid={`from-date-picker-${detailIndex}`}
+                  shouldDisableDate={(day) =>
+                    disableInvalidDates(day, detail.to, detail.to)
+                  }
+                  label={t("from")}
+                  disabled={
+                    detail.value === "" || detail.value.length === 0
+                      ? true
+                      : false
+                  }
+                  value={
+                    detail.from === "From"
+                      ? null
+                      : dayjs(detail.from, "DD-MM-YYYY")
+                  }
+                  maxDate={currentDate}
+                  defaultValue={dayjs.Dayjs}
+                  slotProps={datePickerControl.slotProps}
+                  sx={datePickerControl.sx}
+                  onChange={(date) =>
+                    handleFromDate(
+                      date,
+                      reportIndex,
+                      detailIndex,
+                      detailName,
+                      detail.to
+                    )
+                  }
+                />
+                {
+                  // detail.from !== "From" ? validatedHelperText("Dated") :
+                  (detail.name === "Account number" &&
+                    detail.value.length < 16) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "Email ID" &&
+                    detail.value.length > 12 &&
+                    detail.value.length <= 320) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "PAN" && detail.value.length < 10) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "Credit Card" && detail.value.length < 16) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "Aadhar" && detail.value.length < 12) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "Debit Card" && detail.value.length < 16) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "Mobile No." && detail.value.length < 10) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "RRN" && detail.value.length < 12) ||
+                  (detail.from !== "From" && detail.to === "To") ||
+                  (detail.name === "CRN" && detail.value.length < 10) ||
+                  (detail.from !== "From" && detail.to === "To")
+                    ? customFormText("")
+                    : detail.from === "From"
+                      ? customFormText("(if needed) select from date")
+                      : ""
                 }
-                label={t("from")}
-                disabled={
-                  detail.value === "" || detail.value.length === 0
-                    ? true
-                    : false
-                }
-                value={
-                  detail.from === "From"
-                    ? null
-                    : dayjs(detail.from, "DD-MM-YYYY")
-                }
-                maxDate={currentDate}
-                defaultValue={dayjs.Dayjs}
-                slotProps={datePickerControl.slotProps}
-                sx={datePickerControl.sx}
-                onChange={(date) =>
-                  handleFromDate(
-                    date,
-                    reportIndex,
-                    detailIndex,
-                    detailName,
-                    detail.to
-                  )
-                }
-              />
-            </LocalizationProvider>
-            {/* </Box> */}
+              </LocalizationProvider>
+            </Box>
 
-            {/* <Box sx={{ width: "auto" }}> */}
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                format="DD-MM-YYYY"
-                label={t("to")}
-                disabled={detail.from === "From" ? true : false}
-                value={
-                  detail.to === "To" ? null : dayjs(detail.to, "DD-MM-YYYY")
-                }
-                defaultValue={dayjs.Dayjs}
-                maxDate={currentDate}
-                shouldDisableDate={(day) =>
-                  dayjs(day).isBefore(dayjs(detail.from, "DD-MM-YYYY"), "day")
-                }
-                slotProps={datePickerControl.slotProps}
-                sx={datePickerControl.sx}
-                onChange={(date) =>
-                  handleToDate(
-                    date,
-                    reportIndex,
-                    detailIndex,
-                    detailName,
-                    detail.from
-                  )
-                }
-              />
-            </LocalizationProvider>
-            {/* </Box> */}
+            <Box flex={1}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  format="DD-MM-YYYY"
+                  label={t("to")}
+                  disabled={detail.from === "From" ? true : false}
+                  value={
+                    detail.to === "To" ? null : dayjs(detail.to, "DD-MM-YYYY")
+                  }
+                  defaultValue={dayjs.Dayjs}
+                  maxDate={currentDate}
+                  shouldDisableDate={(day) =>
+                    dayjs(day).isBefore(dayjs(detail.from, "DD-MM-YYYY"), "day")
+                  }
+                  slotProps={datePickerControl.slotProps}
+                  sx={datePickerControl.sx}
+                  onChange={(date) =>
+                    handleToDate(
+                      date,
+                      reportIndex,
+                      detailIndex,
+                      detailName,
+                      detail.from
+                    )
+                  }
+                />
+                {detail.from === "From"
+                  ? customFormText("")
+                  : detail.to === "To"
+                    ? customFormText("select to date")
+                    : validatedHelperText("Dated")}
+              </LocalizationProvider>
+            </Box>
           </Box>
         )}
 
@@ -1436,7 +1520,14 @@ export default function CreateRequest() {
               sx={inputControl.textfield}
               data-testid={`mobileno-input-${detailIndex}`}
               InputLabelProps={inputControl.inputLabelProps}
-              inputProps={inputControl.inputProps}
+              inputProps={{
+                style: {
+                  fontSize: "0.88rem",
+                  height: "0.6rem",
+                  // backgroundColor : "blue"
+                },
+                maxLength: 10,
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment
@@ -1451,8 +1542,11 @@ export default function CreateRequest() {
               }}
               placeholder={`Enter ${detail.name2}`}
               className="number-box"
+              helperText={
+                detail.mobileno.length < 10 ? "(if needed) mobile no. must be 10 digits long"
+                    : validatedDetail()
+              }
               value={detail.mobileno}
-              onInput={(e) => (e.target.value = e.target.value.slice(0, 10))}
               autoComplete="off"
               style={{ fontSize: "0.88rem" }}
               label={detail.name2}
@@ -1496,7 +1590,14 @@ export default function CreateRequest() {
                   sx={inputControl.textfield}
                   data-testid={`amount-detail-${detailIndex}`}
                   InputLabelProps={inputControl.inputLabelProps}
-                  inputProps={inputControl.inputProps}
+                  inputProps={{
+                    style: {
+                      fontSize: "0.88rem",
+                      height: "0.6rem",
+                      // backgroundColor : "blue"
+                    },
+                    maxLength: 6,
+                  }}
                   placeholder={`Enter ${detail.name2}`}
                   disabled={
                     detail.value === "" || detail.value.length === 0
@@ -1505,8 +1606,13 @@ export default function CreateRequest() {
                   }
                   className="selected-param-box-3"
                   value={detail.amount.length === 0 ? "" : detail.amount}
+                  helperText={
+                    detail.value.length < 12 ? "" :
+                      detail.value.length === 12 && detail.amount.length === 0 ? "(if needed) amount must be 1-6 digits long"
+                        : validatedDetail()
+                  }
                   autoComplete="off"
-                  onInput={(e) => (e.target.value = e.target.value.slice(0, 6))}
+                  FormHelperTextProps={{ sx : { color : 'red'}}}
                   style={{
                     margin: "0rem 0rem 0rem 0rem",
                     // height: "5.5vh",
@@ -1553,6 +1659,13 @@ export default function CreateRequest() {
                       handleDate(date, reportIndex, detailIndex, detailName)
                     }
                   />
+                  {detail.date !== "Date"
+                    ? validatedHelperText("Dated")
+                    : detail.value.length === 12
+                      ? customFormText("(if needed) select date")
+                      : detail.date === "Date" && detail.value.length === 12
+                        ? customFormText("(if needed) select date")
+                        : ""}
                 </LocalizationProvider>
               </Box>
             </Box>
@@ -1573,7 +1686,29 @@ export default function CreateRequest() {
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
               disabled={
-                detail.value === "" || detail.value.length === 0 ? true : false
+                (detail.name === "Account number" &&
+                  detail.value.length < 16) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "Email ID" &&
+                  detail.value.length > 12 &&
+                  detail.value.length <= 320) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "PAN" && detail.value.length < 10) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "Credit Card" && detail.value.length < 16) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "Aadhar" && detail.value.length < 12) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "Debit Card" && detail.value.length < 16) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "Mobile No." && detail.value.length < 10) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "RRN" && detail.value.length < 12) ||
+                (detail.from !== "From" && detail.to === "To") ||
+                (detail.name === "CRN" && detail.value.length < 10) ||
+                (detail.from !== "From" && detail.to === "To")
+                  ? true
+                  : false
               }
               onChange={(e) =>
                 handleReportType(
@@ -1632,6 +1767,30 @@ export default function CreateRequest() {
                 </MenuItem>
               ))}
             </Select>
+            {(detail.name === "Account number" && detail.value.length < 16) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "Email ID" &&
+              detail.value.length > 12 &&
+              detail.value.length <= 320) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "PAN" && detail.value.length < 10) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "Credit Card" && detail.value.length < 16) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "Aadhar" && detail.value.length < 12) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "Debit Card" && detail.value.length < 16) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "Mobile No." && detail.value.length < 10) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "RRN" && detail.value.length < 12) ||
+            (detail.from !== "From" && detail.to === "To") ||
+            (detail.name === "CRN" && detail.value.length < 10) ||
+            (detail.from !== "From" && detail.to === "To")
+              ? customFormText("")
+              : detail.type === "Type"
+                ? customFormText("select report type")
+                : validatedHelperText("Selected")}
           </FormControl>
         )}
 
@@ -1689,7 +1848,7 @@ export default function CreateRequest() {
                 color: "red",
                 alignSelf: "center",
                 justifySelf: "center",
-                fontSize: "2.25rem",
+                fontSize: "2.35rem",
               }}
             />
           </Button>
@@ -1827,14 +1986,162 @@ export default function CreateRequest() {
   const configurePayload = () => {
     payloadInitiator();
   };
+  
+  const isValidDisplay =
+  reportsState.some(
+    (state, index) =>
+      state.accountNumberDetails.length >= 1 &&
+      state.accountNumberDetails.some(
+        (detail, subIndex) =>
+          state.accountNumberDetails[0].value.length === 16 &&
+          state.accountNumberDetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.PANdetails.length >= 1 &&
+      state.PANdetails.some(
+        (detail, subIndex) =>
+          state.PANdetails[0].length === 10 &&
+          state.PANdetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.CRNdetails.length >= 1 &&
+      state.CRNdetails.some(
+        (detail, subIndex) =>
+          state.CRNdetails[0].length === 10 &&
+          state.CRNdetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.RRNdetails.length >= 1 &&
+      state.RRNdetails.some(
+        (detail, subIndex) =>
+          state.RRNdetails[0].length === 12 &&
+          state.RRNdetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.aadharDetails.length >= 1 &&
+      state.aadharDetails.some(
+        (detail, subIndex) =>
+          state.aadharDetails[0].length === 12 &&
+          state.aadharDetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.mobileNoDetails.length >= 1 &&
+      state.mobileNoDetails.some(
+        (detail, subIndex) =>
+          state.mobileNoDetails[0].length === 10 &&
+          state.mobileNoDetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.creditCardDetails.length >= 1 &&
+      state.creditCardDetails.some(
+        (detail, subIndex) =>
+          state.creditCardDetails[0].length === 16 &&
+          state.creditCardDetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.debitCardDetails.length >= 1 &&
+      state.debitCardDetails.some(
+        (detail, subIndex) =>
+          state.debitCardDetails[0].length === 16 &&
+          state.debitCardDetails[0].type !== "Type"
+      )
+  ) ||
+  reportsState.some(
+    (state, index) =>
+      state.emailDetails.length >= 1 &&
+      state.emailDetails.some(
+        (detail, subIndex) =>
+          state.emailDetails[0].length > 16 &&
+          state.emailDetails[0].type !== "Type"
+      )
+  );
+
+const isValidReportData = reportsState.some(
+  (state, index) =>
+    (state.accountNumberDetails.length > 0 &&
+      state.accountNumberDetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 16 && detail.type !== "Type"
+      )) ||
+    (state.PANdetails.length > 0 &&
+      state.PANdetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 10 && detail.type !== "Type"
+      )) ||
+    (state.CRNdetails.length > 0 &&
+      state.CRNdetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 10 && detail.type !== "Type"
+      )) ||
+    (state.RRNdetails.length > 0 &&
+      state.RRNdetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 12 && detail.type !== "Type"
+      )) ||
+    (state.aadharDetails.length > 0 &&
+      state.aadharDetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 12 && detail.type !== "Type"
+      )) ||
+    (state.mobileNoDetails.length > 0 &&
+      state.mobileNoDetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 10 && detail.type !== "Type"
+      )) ||
+    (state.creditCardDetails.length > 0 &&
+      state.creditCardDetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 16 && detail.type !== "Type"
+      )) ||
+    (state.debitCardDetails.length > 0 &&
+      state.debitCardDetails.every(
+        (detail, subIndex) =>
+          detail.value.length === 16 && detail.type !== "Type"
+      )) ||
+    (state.emailDetails.length > 0 &&
+      state.emailDetails.every(
+        (detail, subIndex) =>
+          detail.value.length > 16 && detail.type !== "Type"
+      ))
+);
 
   const handleSubmit = () => {
     configurePayload();
-    // dispatch(setRequestPayloads(responsePayload));
+    
+    if(isValidReportData === false){
+      displayToast("All Mandatory Fields must be non-empty!", 3000, "rgb(93, 235, 215)","black",500);
+    } else {
+    //Submit API Function
+
+    //Error Block
+    // displayToast("Error Submitting Request",3200,"red","white",600);
+
+    // SuccessBlock
+
     setSubmitted(true);
-    route_to("/ViewRequest");
+    // dispatch(setRequestPayloads(responsePayload));
+    displayToast("Successfully Submitted Request", 2000, "rgb(7, 65, 115)","white",600);
+    setTimeout(() => {
+      route_to("/ViewRequest");
+    }, 1000);
+    }
   };
 
+  // console.log("Valid Report Data", isValidReportData);
   console.log("Spring Boot Payload", reportDetails);
 
   const requestPayload = {
@@ -1849,219 +2156,274 @@ export default function CreateRequest() {
 
   return (
     <Provider store={store}>
+      <Typography component="span" fontWeight={500} fontSize="1.36rem">
+        {t("createRequest")}
+      </Typography>
       <Box className="page" data-testid="create-request-page">
         <Box className="create-request-screen">
-          <Typography component="span" fontWeight={500} fontSize="1.36rem">
-            {t("createRequest")}
-          </Typography>
-          {/* <span style={{ fontWeight: "420", fontSize: "1.499vw" }}>
+          {/* <span style={{ fontWeight: "420", fontSize: "1.36rem" }}>
           {t("createRequest")}
         </span> */}
 
-          <Box className="ticket-entry-section">
-            <Box className="ticket-type-section">
-              <FormControl
-                variant="outlined"
-                margin="none"
-                className="ticket-number-container"
-              >
-                <TextField
-                  sx={inputControl.textfield}
-                  InputLabelProps={inputControl.inputLabelProps}
-                  inputProps={inputControl.inputProps}
-                  data-testid="ticket-num-input"
-                  placeholder={t("enterTicketNo")}
-                  className="ticket-number-input"
-                  value={ticketNumber}
-                  autoComplete="off"
-                  size="medium"
-                  style={{
-                    margin: "0rem 0rem 0rem 0rem",
-                    height: "auto",
-                    fontSize: "0.88rem",
-                  }}
-                  label={t("ticketNo")}
-                  margin="dense"
-                  onChange={(e) => setTicketNumber(e.target.value)}
-                  type="text"
-                  required
-                  inputMode="text"
-                  fullWidth={true}
-                  onInput={(e) =>
-                    (e.target.value = e.target.value.slice(0, 10))
-                  }
-                  color="primary"
-                />
-              </FormControl>
-
-              <FormControl
-                variant="outlined"
-                margin="none"
-                className="ticket-description-container"
-              >
-                <TextField
-                  placeholder={
-                    descriptionFocused === true ? t("enterTicketDesc") : ""
-                  }
-                  variant="outlined"
-                  required
-                  label={t("ticketDesc")}
-                  onFocus={() => {
-                    //console.log('desc length',ticketDescription.length);
-                    //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
-                    setDescriptionFocused(true);
-                  }}
-                  onBlur={() => setDescriptionFocused(false)}
-                  multiline
-                  // multiline
-                  sx={inputControl.textfield}
-                  className="ticket-description-input"
-                  autoComplete="off"
-                  rows={Math.ceil(ticketDescription.length / 59)}
-                  size="small"
-                  fullWidth
-                  inputProps={inputControl.textAreaProps}
-                  InputLabelProps={inputControl.textAreaLabelProps}
-                  style={{
-                    margin: "0rem 0rem 0rem 0rem",
-                    backgroundColor: "white",
-                    height: "auto",
-                  }}
-                  margin="none"
-                  // InputProps={{
-                  //   inputComponent : 'textarea',
-                  //   sx : {
-                  //      padding : 0,
-                  //      margin : 0
-                  //   }
-                  // }}
-                  type="text"
-                  // onInput={(e) => e.target.value = e.target.value.slice(0, 59) }
-                  inputMode="text"
-                  disabled={ticketNumber.length === 0 ? true : false}
-                  color="primary"
-                  value={ticketDescription}
-                  data-testid="ticket-descr-input"
-                  onChange={(e) => setTicketDescription(e.target.value)}
-                />
-              </FormControl>
-            </Box>
-
-            <FormControl variant="standard" sx={{ width: "82.75%" }}>
-              <Select
-                label="Reports Selection Dropdown"
-                name="reports-selection-dropdown"
-                id="reports-selection-dropdown"
-                data-testid="reports-selection-dropdown"
-                multiple={true}
-                value={selectedReports}
-                displayEmpty
-                disabled={
-                  ticketNumber === "" || ticketDescription === "" ? true : false
-                }
-                onChange={handleReportSelection}
-                variant="standard"
-                input={<OutlinedInput fullWidth={true} />}
-                IconComponent={(props) => (
-                  <KeyboardArrowDownOutlinedIcon
-                    className="reports-type-dropdownicon"
-                    sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
-                    {...props}
-                  />
-                )}
-                renderValue={(reports) => {
-                  if (reports.length === 0) {
-                    return (
-                      <span
-                        style={{ opacity: 0.45 }}
-                        data-testid="reports-dropdown-input-initial"
-                      >
-                        {" "}
-                        {t("statementsReportRequire")}
-                      </span>
-                    );
-                  }
-                  return (
-                    <Input
-                      sx={{
-                        width: "99%",
-                        fontSize: "95%",
-                        textOverflow: "ellipsis",
-                        // overflow: "hidden",
+          <Box
+            className="ticket-entry-section"
+            sx={{
+              minHeight: loading === true ? "10.275rem" : "auto",
+              padding:
+                ticketNumber.length === 10 && ticketDescription.length >= 10
+                  ? "1.25rem 1.5rem 0.6rem 1.5rem"
+                  : "1.25rem 1.5rem 1.15rem 1.5rem",
+            }}
+          >
+            {loading === true ? (
+              <Loader />
+            ) : (
+              <>
+                <Box className="ticket-type-section">
+                  <FormControl
+                    variant="outlined"
+                    margin="none"
+                    className="ticket-number-container"
+                  >
+                    <TextField
+                      sx={inputControl.textfield}
+                      helperText={
+                        ticketNumber.length < 10
+                          ? "ticket number should be 10 characters long"
+                          : validatedDetail()
+                      }
+                      InputLabelProps={inputControl.inputLabelProps}
+                      FormHelperTextProps={{ sx: { color: "red" } }}
+                      inputProps={{
+                        style: {
+                          fontSize: "0.88rem",
+                          height: "0.6rem",
+                          // backgroundColor : "blue"
+                        },
+                        maxLength: 10,
                       }}
-                      disableUnderline={true}
-                      value={reports.join(" , ")}
-                      data-testid="reports-dropdown-input-changed"
-                    ></Input>
-                  );
-                }}
-                MenuProps={SelectProps.REPORT_SELECT_PROPS}
-                autoWidth={false}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  height: "2.69rem",
-                  fontSize: "0.88rem",
-                  border:
-                    ticketNumber.length === 0 || ticketDescription.length === 0
-                      ? "none"
-                      : "0.25px solid black",
-                }}
-                placeholder={t("statementsReportRequire")}
-              >
-                {requiredReportsData.map((report, index) => (
-                  <MenuItem
-                    key={report}
-                    value={report}
-                    data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                      data-testid="ticket-num-input"
+                      placeholder={t("enterTicketNo")}
+                      className="ticket-number-input"
+                      value={ticketNumber}
+                      autoComplete="off"
+                      size="medium"
+                      style={{
+                        margin: "0rem 0rem 0rem 0rem",
+                        height: "auto",
+                        fontSize: "0.88rem",
+                      }}
+                      label={t("ticketNo")}
+                      margin="dense"
+                      onChange={(e) => setTicketNumber(e.target.value)}
+                      type="text"
+                      required
+                      inputMode="text"
+                      fullWidth={true}
+                      color="primary"
+                    />
+                  </FormControl>
+
+                  <FormControl
+                    variant="outlined"
+                    margin="none"
+                    className="ticket-description-container"
+                  >
+                    <TextField
+                      placeholder={
+                        descriptionFocused === true ? t("enterTicketDesc") : ""
+                      }
+                      variant="outlined"
+                      FormHelperTextProps={{ sx: { color: "red" } }}
+                      helperText={
+                        ticketNumber.length < 10
+                          ? ""
+                          : ticketNumber.length === 10 &&
+                              ticketDescription.length === 0
+                            ? "ticket description should be between 10-60 characters long"
+                            : ticketDescription.length < 10
+                              ? "ticket description should be between 10-60 characters long"
+                              : validatedDetail()
+                      }
+                      required
+                      label={t("ticketDesc")}
+                      onFocus={() => {
+                        //console.log('desc length',ticketDescription.length);
+                        //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                        setDescriptionFocused(true);
+                      }}
+                      onBlur={() => setDescriptionFocused(false)}
+                      multiline
+                      // multiline
+                      sx={inputControl.textfield}
+                      className="ticket-description-input"
+                      autoComplete="off"
+                      rows={Math.ceil(ticketDescription.length / 60)}
+                      size="small"
+                      fullWidth
+                      inputProps={inputControl.textAreaProps}
+                      InputLabelProps={inputControl.textAreaLabelProps}
+                      style={{
+                        margin: "0rem 0rem 0rem 0rem",
+                        backgroundColor: "white",
+                        height: "auto",
+                      }}
+                      margin="none"
+                      // InputProps={{
+                      //   inputComponent : 'textarea',
+                      //   sx : {
+                      //      padding : 0,
+                      //      margin : 0
+                      //   }
+                      // }}
+                      type="text"
+                      inputMode="text"
+                      disabled={ticketNumber.length < 10 ? true : false}
+                      color="primary"
+                      value={ticketDescription}
+                      data-testid="ticket-descr-input"
+                      onChange={(e) => setTicketDescription(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
+
+                <FormControl variant="standard" sx={{ width: "82.75%" }}>
+                  <Select
+                    label="Reports Selection Dropdown"
+                    name="reports-selection-dropdown"
+                    id="reports-selection-dropdown"
+                    data-testid="reports-selection-dropdown"
+                    multiple={true}
+                    value={selectedReports}
+                    displayEmpty
+                    disabled={
+                      ticketNumber.length < 10 ||
+                      ticketDescription.length < 10
+                        ? true
+                        : false
+                    }
+                    onChange={handleReportSelection}
+                    variant="standard"
+                    input={<OutlinedInput fullWidth={true} />}
+                    IconComponent={(props) => (
+                      <KeyboardArrowDownOutlinedIcon
+                        className="reports-type-dropdownicon"
+                        sx={{
+                          fontSize: "1.4rem",
+                          color: "rgba(115, 115, 115, 1)",
+                        }}
+                        {...props}
+                      />
+                    )}
+                    renderValue={(reports) => {
+                      if (reports.length === 0) {
+                        return (
+                          <span
+                            style={{ opacity: 0.45 }}
+                            data-testid="reports-dropdown-input-initial"
+                          >
+                            {" "}
+                            {t("statementsReportRequire")}
+                          </span>
+                        );
+                      }
+                      return (
+                        <Input
+                          sx={{
+                            width: "99%",
+                            fontSize: "95%",
+                            textOverflow: "ellipsis",
+                            // overflow: "hidden",
+                          }}
+                          disableUnderline={true}
+                          value={reports.join(" , ")}
+                          data-testid="reports-dropdown-input-changed"
+                        ></Input>
+                      );
+                    }}
+                    inputProps={{}}
+                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                    autoWidth={false}
                     style={{
                       display: "flex",
-                      border: "1px solid #cdcdcd",
-                      width: "96.25%",
-                      margin: "1rem 0rem 1rem 1.25rem",
-                      height: "2.65rem",
-                      alignItems: "left",
-                      borderRadius: "4px",
-                      backgroundColor: "transparent",
-                      fontSize: "2px",
+                      alignItems: "center",
+                      height: "2.56rem",
+                      fontSize: "0.88rem",
+                      border:
+                        ticketNumber.length === 0 ||
+                        ticketDescription.length === 0
+                          ? "none"
+                          : "0.25px solid black",
                     }}
+                    placeholder={t("statementsReportRequire")}
                   >
-                    <Checkbox
-                      size="medium"
-                      data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
-                      icon={
-                        <CheckBoxOutlineBlankIcon sx={{ fontSize: "1.5rem" }} />
-                      }
-                      // inputProps={{
-                      //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
-                      // }}
-                      checkedIcon={
-                        <CheckBoxOutlinedIcon
-                          className="check-icon"
-                          sx={{ fontSize: "1.5rem", color: "red" }}
+                    {requiredReportsData.map((report, index) => (
+                      <MenuItem
+                        key={report}
+                        value={report}
+                        data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                        style={{
+                          display: "flex",
+                          border: "1px solid #cdcdcd",
+                          width: "96.25%",
+                          margin: "1rem 0rem 1rem 1.25rem",
+                          height: "2.65rem",
+                          alignItems: "left",
+                          borderRadius: "4px",
+                          backgroundColor: "transparent",
+                          fontSize: "2px",
+                        }}
+                      >
+                        <Checkbox
+                          size="medium"
+                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              sx={{ fontSize: "1.5rem" }}
+                            />
+                          }
+                          // inputProps={{
+                          //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
+                          // }}
+                          checkedIcon={
+                            <CheckBoxOutlinedIcon
+                              className="check-icon"
+                              sx={{ fontSize: "1.5rem", color: "red" }}
+                            />
+                          }
+                          sx={{ containIntrinsicSize: "2px" }}
+                          checked={selectedReports.indexOf(report) > -1}
+                          color="primary"
+                          style={{
+                            marginLeft: "-0.88rem",
+                            backgroundColor: "transparent",
+                            fontSize: "2px",
+                          }}
                         />
-                      }
-                      sx={{ containIntrinsicSize: "2px" }}
-                      checked={selectedReports.indexOf(report) > -1}
-                      color="primary"
-                      style={{
-                        marginLeft: "-0.88rem",
-                        backgroundColor: "transparent",
-                        fontSize: "2px",
-                      }}
-                    />
-                    <ListItemText
-                      primary={report}
-                      data-testid="reports-selection-dropdown-menu-item-text"
-                      style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                      color="black"
-                      inputMode="text"
-                      primaryTypographyProps={{ fontSize: "0.825rem" }}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                        <ListItemText
+                          primary={report}
+                          data-testid="reports-selection-dropdown-menu-item-text"
+                          style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                          color="black"
+                          inputMode="text"
+                          primaryTypographyProps={{ fontSize: "0.825rem" }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {selectedReports.length >= 1
+                    ? validatedHelperText("Selected")
+                    : ticketNumber.length === 0 ||
+                        ticketDescription.length === 0
+                      ? () => {}
+                      : ticketNumber.length === 10 &&
+                          ticketDescription.length >= 10 &&
+                          selectedReports.length === 0
+                        ? customFormText("select reports")
+                        : () => {}}
+                </FormControl>
+              </>
+            )}
           </Box>
 
           {selectedReports.length > 0 && (
@@ -2320,6 +2682,10 @@ export default function CreateRequest() {
                                         )
                                       )}
                                     </Select>
+                                    {reportsState[reportIndex].selectedParams
+                                      .length === 0
+                                      ? customFormText("select detail input")
+                                      : validatedHelperText("Selected")}
                                   </FormControl>
                                 </Box>
 
@@ -2331,8 +2697,13 @@ export default function CreateRequest() {
                                         "Beneficiary details for Single IMPS transactions" ||
                                       request.selectedReport ===
                                         "Beneficiary details for Single UPI transactions"
-                                        ? "-1.25rem"
-                                        : "1.5rem",
+                                        ? "0rem"
+                                        : "-1rem",
+                                    marginBottom:
+                                      reportsState[reportIndex].selectedParams
+                                        .length === 0
+                                        ? "1.5rem"
+                                        : "2.25rem",
                                   }}
                                 >
                                   {reportsState[
@@ -2458,13 +2829,21 @@ export default function CreateRequest() {
                 <Box className="action-buttons">
                   <Button
                     className="submit-button"
+                    style={{ opacity: isValidReportData === true ? 1 : 0.45 }}
                     title="Submit"
                     data-testid="submit-button"
-                    disabled={isValidReportData === false ? true : false}
-                    onClick={() => handleSubmit()}
+                    // disabled={!isValidReportData}
+                    onClick={handleSubmit}
                   >
                     {" "}
-                    {t("submit")}
+                    <Typography
+                      fontFamily="Roboto"
+                      fontSize="0.92rem"
+                      fontWeight={500}
+                      color={isValidReportData === true ? "white" : "black"}
+                    >
+                      {t("submit")}
+                    </Typography>
                   </Button>
                   <Button
                     className="preview-button"
@@ -2529,7 +2908,12 @@ export default function CreateRequest() {
                                 </h3>
                               </Box>
 
-                              <Box className="preview-report-details">
+                              <Box
+                                className="preview-report-details"
+                                display={
+                                  isValidDisplay === true ? "block" : "none"
+                                }
+                              >
                                 {reportsState[reportIndex] && (
                                   <>
                                     {showPreview(
@@ -2613,6 +2997,15 @@ export default function CreateRequest() {
           )}
         </Box>
       </Box>
+      {showToast === true && (
+        <MaterialToast
+          message={toastMessage}
+          duration={toastDuration}
+          backgroundColor={toastBackground}
+          color={toastColor}
+          fontWeight={toastFontWeight}
+        />
+      )}
     </Provider>
   );
 }

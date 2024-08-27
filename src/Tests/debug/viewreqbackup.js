@@ -46,19 +46,9 @@ import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
 import { requestList, requestPhases } from "../../components/data/requestsData";
-import Loader from "../../components/Loader";
-import Lottie from "lottie-react";
-import zeroDataAnimation from '../../Dynamic/ktk_no_data.json'
 
 export default function ViewRequest() {
   const { t } = useTranslation();
-  const [ loading , setLoading ] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    },620)
-  });
 
   const [mailDraftModal, setMailDraftModal] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -330,18 +320,6 @@ export default function ViewRequest() {
     );
   };
 
-  const handleViewDetails = () => {
-    // setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
-      route_to("/ViewRequest/ViewRequestDetails", {
-        state: {
-          //  ticketDetails : ticketDetails
-        },
-      });
-    // }, 1000);
-  };
-
   return (
     <>
       <Box className="table-page" data-testid="view-request-page">
@@ -350,35 +328,6 @@ export default function ViewRequest() {
             {t("viewRequest")}
           </Typography>
           <Box className="view-request-container">
-          { loading === true ? (
-        <Loader />
-      ) : (  
-           <>
-           { requestData.length === 0 ? (
-            <Box sx={{ display : "flex",flexDirection : "row-reverse",alignItems: "center",justifyContent : "center",flex : 1,gap : '4rem'}}>
-            <Lottie
-            animationData={zeroDataAnimation} 
-            autoplay
-            loop
-            style={{ 
-              alignSelf : "center", 
-              height : "20rem",
-              justifySelf : "center",
-              // marginTop : "4rem"
-            }}
-            />
-            <Typography sx={{ fontFamily : "Roboto",fontWeight : 600,
-              // width : "100%",
-              alignItems:"center",
-              justifyContent:"center",
-              display:"flex",
-              marginTop:"1rem",
-              fontSize : "1.5rem",letterSpacing : 0.25, color : "rgba(96, 96, 96, 1)"}}>
-             No Data Found
-            </Typography>
-            </Box>
-           ) : (
-           <>
             <Box className="view-request-header">
               <Box className="request-searchbar">
                 <SearchIcon className="request-search-icon" />
@@ -486,15 +435,15 @@ export default function ViewRequest() {
                     // data-testid="status-menu"
                     sx={{ padding: "0.6rem 0rem 0.6rem 0rem" }}
                   >
-                    {requestPhases.map((status, statusIndex) => (
+                    {requestPhases.map((status, index) => (
                       <MenuItem
                         key={status}
                         role="option"
                         value={status}
-                        tabIndex={statusIndex}
+                        tabIndex={index}
                         data-value={status}
                         onClick={(event) => handleStatusCheck(event, status)}
-                        data-testid={`status-menu-item-${statusIndex}`}
+                        data-testid={`status-menu-item-${index}`}
                         style={{
                           display: "flex",
                           height: "1.95rem",
@@ -506,15 +455,16 @@ export default function ViewRequest() {
                       >
                         <Checkbox
                           // checked={selectedStatus.includes(status)}
-                          checked={selectedStatus.indexOf(status) > -1}
+                          checked={
+                          selectedStatus.indexOf(
+                              status
+                            ) > -1
+                          }
                           value={status}
-                          inputProps={{
-                            "aria-label": `checkbox-x-${statusIndex}`,
-                          }}
                           color="primary"
-                          name={`status-checkbox-${statusIndex}`}
+                          name={`status-checkbox-${index}`}
                           // role="checkbox"
-                          data-testid={`status-checkbox-${statusIndex}`}
+                          data-testid={`status-checkbox-${index}`}
                           onChange={(event) => handleStatusCheck(event, status)}
                           style={{
                             marginLeft: "-1rem",
@@ -527,10 +477,18 @@ export default function ViewRequest() {
                           }
                           checkedIcon={
                             // selectedStatus.includes(status) ? (
-                            <CheckBoxOutlinedIcon
-                              className="check-icon"
-                              sx={{ fontSize: "1.36rem", color: "red" }}
-                            />
+                              <CheckBoxOutlinedIcon
+                                className="check-icon"
+                                sx={{ fontSize: "1.36rem", color: "red" }}
+                              />
+                            // ) : (
+                            //   <CheckBoxOutlineBlank
+                            //     sx={{
+                            //       fontSize: "1.36rem",
+                            //       color: "rgba(115, 115, 115, 1)",
+                            //     }}
+                            //   />
+                            // )
                           }
                         />
                         <ListItemText
@@ -539,7 +497,7 @@ export default function ViewRequest() {
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.85rem" }}
                           style={{ padding: "0.15rem 0rem 0rem 0rem" }}
-                          data-testid={`status-text-${statusIndex}`}
+                          data-testid={`status-text-${index}`}
                         />
                       </MenuItem>
                     ))}
@@ -814,7 +772,16 @@ export default function ViewRequest() {
                                   color="darkblue"
                                   data-testid={`details-page-nav${i}`}
                                   style={{ alignSelf: "center" }}
-                                  onClick={handleViewDetails}
+                                  onClick={() =>
+                                    route_to(
+                                      "/ViewRequest/ViewRequestDetails",
+                                      {
+                                        state: {
+                                          //  ticketDetails : ticketDetails
+                                        },
+                                      }
+                                    )
+                                  }
                                 >
                                   <DescriptionOutlinedIcon
                                     sx={{ fontSize: "1.525rem" }}
@@ -1011,14 +978,7 @@ export default function ViewRequest() {
                 onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </Box>
-            </>
-      )}
-      </>
-        )}
-      </Box>
-
-        
-
+          </Box>
         </Box>
       </Box>
 
