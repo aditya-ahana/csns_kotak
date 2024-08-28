@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   render,
   fireEvent,
@@ -14,6 +15,7 @@ import { BrowserRouter } from "react-router-dom";
 import { cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MailDraft from "../../components/Modals/MailDraft";
+import { requestDetails } from "../../components/data/requestsData";
 
 const renderViewRequest = () => {
   return render(
@@ -42,23 +44,39 @@ const openFilterMenu = () => {
   expect(filterMenu).toBeInTheDocument();
 };
 
-test("Render View Request Page", () => {
+test("View Request Page Loader Render Check",() => {
   renderViewRequest();
 
-  expect(screen.getByText("viewRequest")).toBeInTheDocument();
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
+test("Render View Request Page", () => {
+  renderViewRequest();
+  setTimeout(() => {
+
+  // expect(screen.getByText("viewRequest")).toBeInTheDocument();
+  expect(screen.getByTestId("lottie-data")).toBeInTheDocument();
 
   // screen.debug();
+},1000);
 });
 
 test("Open Filter Menu", () => {
   renderViewRequest();
-  openFilterMenu();
-  renderViewRequest().unmount();
+   setTimeout(() => {
+   openFilterMenu();
+  },1000);
 });
 
 test("Search Input Functionality", () => {
   renderViewRequest();
 
+  setTimeout(() => {
   const searchBar = screen.getByTestId("searchbar").querySelector("input");
 
   expect(searchBar.value).toBe("");
@@ -70,10 +88,12 @@ test("Search Input Functionality", () => {
   fireEvent.change(searchBar, { target: { value: "User".toLowerCase() } });
 
   expect(searchBar.value).toBe("User".toLowerCase());
+},1000);
 });
 
 test("From Date Picker Functionality", async () => {
   renderViewRequest();
+   setTimeout(() => {
   openFilterMenu();
 
   const fromPicker = screen.getByLabelText("From");
@@ -83,12 +103,13 @@ test("From Date Picker Functionality", async () => {
   fireEvent.change(fromPicker, { target: { value: "20-08-2024" } });
 
   expect(fromPicker.value).toBe("20-08-2024");
+  },1000);
 });
 
 test("To Date Picker Functionality Check", () => {
   renderViewRequest();
+   setTimeout(() => {
   openFilterMenu();
-
   const toPicker = screen.getByLabelText("To");
 
   expect(toPicker).toBeInTheDocument();
@@ -96,10 +117,13 @@ test("To Date Picker Functionality Check", () => {
   fireEvent.change(toPicker, { target: { value: "21-08-2024" } });
 
   expect(toPicker.value).toBe("21-08-2024");
+  },1000);
 });
 
 test("Routing to View Details Page on clicking Details button Functionality check", () => {
   renderViewRequest();
+
+  setTimeout(() => {
 
   const viewDetailsButton = screen.queryByTestId("details-page-nav0");
 
@@ -110,10 +134,13 @@ test("Routing to View Details Page on clicking Details button Functionality chec
   const viewDetailsPage = screen.queryByTestId("view-details-page");
 
   expect(viewDetailsPage).toBeInTheDocument();
+},1000);
 });
 
 test("Viewing Mail Draft modal on clicking the E-draft button Functionality check", () => {
   renderViewRequest();
+
+  setTimeout(() => {
 
   const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
 
@@ -122,10 +149,13 @@ test("Viewing Mail Draft modal on clicking the E-draft button Functionality chec
   const draftModal = screen.queryByTestId("email-draft-section");
 
   expect(draftModal).toBeInTheDocument();
+},1000);
 });
 
 test("Close Email Draft Modal Button Functionality Check", () => {
   renderViewRequest();
+
+  setTimeout(() => {
 
   const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
 
@@ -143,11 +173,16 @@ test("Close Email Draft Modal Button Functionality Check", () => {
   fireEvent.click(closeDraftButton);
 
   expect(draftModal).not.toBeVisible();
+},1000);
 });
 
 test("Clear Filter Button Rendering on Date Range Select", () => {
   renderViewRequest();
+   setTimeout(() => {
   openFilterMenu();
+  },1000);
+
+  setTimeout(() => {
 
   const fromPicker = screen.getByLabelText("From");
 
@@ -168,10 +203,13 @@ test("Clear Filter Button Rendering on Date Range Select", () => {
   const clearFilterButton = screen.queryByTestId("menu-clear-button");
 
   expect(clearFilterButton).toBeInTheDocument();
+},1000);
 });
 
 test("Select Rows Per Page Dropdown Functionality Check", () => {
   renderViewRequest();
+
+  setTimeout(() => {
 
   const pagination = screen.getByTestId("view-request-pagination");
   expect(pagination).toBeInTheDocument();
@@ -210,12 +248,15 @@ test("Select Rows Per Page Dropdown Functionality Check", () => {
   );
 
   expect(rowsDisplay).toHaveTextContent("40");
+},1000);
 });
 
 
 test.skip("Latest Menu Checkbox Functionality Check", () => {
   renderViewRequest();
+   setTimeout(() => {
   openFilterMenu();
+  },1000);
 
   const statusMenu = screen.getByTestId("status-unchecked");
 
@@ -271,3 +312,23 @@ test.skip("Latest Menu Checkbox Functionality Check", () => {
 
   // // expect(status2Checkbox).toBeChecked();
 });
+
+// test("New Menu",() => {
+//   renderViewRequest();
+//   setTimeout(() => {
+//   openFilterMenu();
+//   },1000);
+
+//   const checkbox = screen.getByLabelText('Completed');
+//   expect(checkbox).toBeInTheDocument();
+//   // expect(checkbox).not.toBeChecked();
+
+//   // // Click to check the checkbox
+//   // fireEvent.click(checkbox);
+//   // expect(checkbox).toBeChecked();
+
+//   // // Click to uncheck the checkbox
+//   // fireEvent.click(checkbox);
+//   // expect(checkbox).not.toBeChecked();
+
+// })

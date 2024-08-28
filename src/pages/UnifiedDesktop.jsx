@@ -53,6 +53,7 @@ function UnifiedDesktop() {
       <Loader />
     ) : (
     <Box
+      data-testid="unified-desktop"
       sx={{
         display: "flex",
         alignItems: "left",

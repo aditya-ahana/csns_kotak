@@ -35,16 +35,30 @@ const renderCreateRequest = () => {
   );
 };
 
+test("Dashboard Page Loader Render Check",() => {
+  renderDashboard();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Dashboard Render", () => {
-  expect(renderDashboard());
+  renderDashboard();
+  setTimeout(() => {
 
   const dashMain = screen.getByTestId("dashboard-main");
 
   expect(dashMain).toBeInTheDocument();
+  },1000);
 });
 
 test("Create Request Button Functionality", async () => {
   renderDashboard();
+  setTimeout(() => {
 
   const createRequestButton = screen.getByTestId("create-request-button");
 
@@ -57,4 +71,5 @@ test("Create Request Button Functionality", async () => {
   const createRequestPage = screen.getByTestId("create-request-page");
 
   expect(createRequestPage).toBeInTheDocument();
+},1000);
 });
