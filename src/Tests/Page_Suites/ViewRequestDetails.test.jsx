@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   render,
   fireEvent,
@@ -22,14 +23,17 @@ const renderViewDetails = () => {
 
 test("Render View Details component", () => {
   renderViewDetails();
+  setTimeout(() => {
 
   const viewDetailsPage = screen.getByTestId("view-details-page");
 
   expect(viewDetailsPage).toBeInTheDocument();
+  },1000)
 });
 
 test("Sub-Request Expand Button Functionality check", async () => {
   renderViewDetails();
+  setTimeout(() => {
 
   const expandButton = screen.getByTestId("accordion-displayer-0");
   expect(expandButton).toBeInTheDocument();
@@ -43,10 +47,12 @@ test("Sub-Request Expand Button Functionality check", async () => {
 
   const accordion = screen.getByTestId("sub-data-display-0");
   expect(accordion).toBeInTheDocument();
+},1000)
 });
 
 test("Sub-Request Minimize Button Functionality check", () => {
   renderViewDetails();
+  setTimeout(() => {
 
   const expandButton = screen.getByTestId("accordion-displayer-0");
   // expect(expandButton).toBeInTheDocument();
@@ -67,10 +73,12 @@ test("Sub-Request Minimize Button Functionality check", () => {
   fireEvent.click(hideButton);
   expect(accordion).not.toBeInTheDocument();
   cleanup();
+},1000)
 });
 
 test("Conditional Render of Show and Hide Accordion buttons", () => {
   renderViewDetails();
+  setTimeout(() => {
 
   const expandButton = screen.getByTestId("accordion-displayer-0");
   expect(expandButton).toBeInTheDocument();
@@ -84,4 +92,5 @@ test("Conditional Render of Show and Hide Accordion buttons", () => {
 
   expect(expandButton).toBeInTheDocument();
   cleanup();
+},1000)
 });

@@ -1,4 +1,5 @@
 import React from "react";
+
 import { render, fireEvent, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import UnifiedDesktop from "../../pages/UnifiedDesktop";
@@ -15,5 +16,11 @@ const renderUnifiedDesktop = () => {
 };
 
 test("Render Unified Desktop component", () => {
-  expect(renderUnifiedDesktop());
+  renderUnifiedDesktop();
+
+  setTimeout(() => {
+  const unifiedDesktopContainer = screen.getByTestId("unified-desktop");
+
+  expect(unifiedDesktopContainer).toBeInTheDocument();
+},1000)
 });

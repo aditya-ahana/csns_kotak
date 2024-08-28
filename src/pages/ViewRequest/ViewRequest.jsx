@@ -349,13 +349,13 @@ export default function ViewRequest() {
           <Typography component="span" fontWeight={500} fontSize="1.4rem">
             {t("viewRequest")}
           </Typography>
-          <Box className="view-request-container">
+          <Box className="view-request-container" data-testid="view-request-container">
           { loading === true ? (
         <Loader />
       ) : (  
            <>
            { requestData.length === 0 ? (
-            <Box sx={{ display : "flex",flexDirection : "row-reverse",alignItems: "center",justifyContent : "center",flex : 1,gap : '4rem'}}>
+            <Box sx={{ display : "flex",flexDirection : "row-reverse",alignItems: "center",justifyContent : "center",flex : 1,gap : '4rem'}} data-testid="lottie-data">
             <Lottie
             animationData={zeroDataAnimation} 
             autoplay
