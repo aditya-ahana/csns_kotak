@@ -15,6 +15,17 @@ const renderUnifiedDesktop = () => {
   );
 };
 
+test("Unified Desktop Loader Render Check",() => {
+  renderUnifiedDesktop();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Render Unified Desktop component", () => {
   renderUnifiedDesktop();
 
@@ -24,3 +35,5 @@ test("Render Unified Desktop component", () => {
   expect(unifiedDesktopContainer).toBeInTheDocument();
 },1000)
 });
+
+

@@ -35,6 +35,17 @@ const renderCreateRequest = () => {
   );
 };
 
+test("Dashboard Page Loader Render Check",() => {
+  renderDashboard();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Dashboard Render", () => {
   renderDashboard();
   setTimeout(() => {

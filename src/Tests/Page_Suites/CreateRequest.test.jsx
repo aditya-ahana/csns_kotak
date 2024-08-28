@@ -167,6 +167,17 @@ const selectParams = (
   expect(paramSelectInput.value).toBe(param);
 };
 
+test("Create Request Page Loader Render Check",() => {
+  renderCreateRequest();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Render Create Request component", () => {
   setTimeout(() => {
   expect(renderCreateRequest());

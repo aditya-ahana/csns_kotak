@@ -44,6 +44,17 @@ const openFilterMenu = () => {
   expect(filterMenu).toBeInTheDocument();
 };
 
+test("View Request Page Loader Render Check",() => {
+  renderViewRequest();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Render View Request Page", () => {
   renderViewRequest();
   setTimeout(() => {
@@ -308,8 +319,8 @@ test("New Menu",() => {
   openFilterMenu();
   },1000);
 
-  // const checkbox = screen.getByLabelText('Completed');
-  // expect(checkbox).toBeInTheDocument()
+  const checkbox = screen.getByLabelText('Completed');
+  expect(checkbox).toBeInTheDocument();
   // expect(checkbox).not.toBeChecked();
 
   // // Click to check the checkbox

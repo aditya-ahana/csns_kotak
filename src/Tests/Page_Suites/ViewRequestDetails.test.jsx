@@ -21,6 +21,17 @@ const renderViewDetails = () => {
   );
 };
 
+test("View Details Page Loader Render Check",() => {
+  renderViewDetails();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Render View Details component", () => {
   renderViewDetails();
   setTimeout(() => {
