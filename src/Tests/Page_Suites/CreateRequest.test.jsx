@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   render,
   fireEvent,
@@ -166,14 +167,29 @@ const selectParams = (
   expect(paramSelectInput.value).toBe(param);
 };
 
+test("Create Request Page Loader Render Check",() => {
+  renderCreateRequest();
+
+  const loader = screen.getByTestId("loader-modal");
+  expect(loader).toBeInTheDocument();
+
+  setTimeout(() => {
+    expect(loader).not.toBeInTheDocument();
+  },1000)
+});
+
 test("Render Create Request component", () => {
+  setTimeout(() => {
   expect(renderCreateRequest());
-  cleanup();
+
+},1000);
 });
 
 test("Ticket Number Input Field Test", () => {
-  renderCreateRequest();
+  
+   renderCreateRequest();
 
+  setTimeout(() => {
   const ticketNumberField = screen.getByTestId("ticket-num-input");
 
   expect(ticketNumberField).toBeInTheDocument();
@@ -188,26 +204,31 @@ test("Ticket Number Input Field Test", () => {
 
   expect(ticketNumberInput.value.slice(0, 10)).toBe("4924924701");
 
-  cleanup();
+},1000);
 });
 
 test("Ticket Description TextArea Field Test", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketDescriptionInput();
   cleanup();
+},1000);
 });
 
 describe("Reports Selection Dropdown Functionality Check", () => {
   test("Mock Selection Check", () => {
-    renderCreateRequest();
+     renderCreateRequest();
+  setTimeout(() => {
     fillTicketNumberInput();
     fillTicketDescriptionInput();
     selectReports(0, "Statement in PDF/Excel");
     // screen.debug();
-  });
+  },1000);
+});
 
   test("Multiple Reports Selection Check", () => {
-    renderCreateRequest();
+     renderCreateRequest();
+  setTimeout(() => {
     fillTicketNumberInput();
     fillTicketDescriptionInput();
 
@@ -376,11 +397,13 @@ describe("Reports Selection Dropdown Functionality Check", () => {
     );
 
     // screen.debug();
-  });
+  },1000);
+});
 });
 
 test("Rendering Selected Reports Section", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectReports(0, "Statement in PDF/Excel");
@@ -388,18 +411,22 @@ test("Rendering Selected Reports Section", () => {
   const selectedReportsSection = screen.getByTestId("selected-reports-section");
 
   expect(selectedReportsSection).toBeInTheDocument();
+},1000);
 });
 
 describe("Params Selection Dropdown Functionality Check", () => {
   test("Mock Params Selection Check", () => {
-    renderCreateRequest();
+     renderCreateRequest();
+  setTimeout(() => {
     fillTicketNumberInput();
     fillTicketDescriptionInput();
     selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
-  });
+  },1000);
+});
 
   test("Multiple Params Selection Check", () => {
-    renderCreateRequest();
+     renderCreateRequest();
+  setTimeout(() => {
     fillTicketNumberInput();
     fillTicketDescriptionInput();
 
@@ -608,11 +635,13 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(selectInput.value).toBe(
       "CRN,RRN,Aadhar,Mobile No.,Debit Card,Email ID"
     );
-  });
+  },1000);
+});
 });
 
 test("Rendering Form Fields After Param Selection", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -620,10 +649,12 @@ test("Rendering Form Fields After Param Selection", () => {
   const formFieldset = screen.queryByTestId("detail-fieldset-0");
 
   expect(formFieldset).toBeInTheDocument();
+},1000);
 });
 
 test("Detail Name Input Render and Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -641,10 +672,12 @@ test("Detail Name Input Render and Functionality Check", () => {
   });
 
   expect(detailNameInput.value).toBe("8510542870441383");
+},1000);
 });
 
 test("From Date Picker Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -668,10 +701,12 @@ test("From Date Picker Functionality Check", () => {
   fireEvent.change(fromDatepicker, { target: { value: datePickerTestValue } });
 
   expect(fromDatepicker.value).toBe(datePickerTestValue);
+},1000);
 });
 
 test("To Date Picker Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -703,10 +738,12 @@ test("To Date Picker Functionality Check", () => {
   fireEvent.change(toDatepicker, { target: { value: datePickerTestValue } });
 
   expect(toDatepicker.value).toBe(datePickerTestValue);
+},1000);
 });
 
 test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -748,10 +785,12 @@ test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report
   fireEvent.click(typeMenuItem1);
 
   expect(typeSelectInput.value).toBe("PDF");
+},1000);
 });
 
 test("Mobile Number Input Functionality Check for IP Logs", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(5, "IP Logs", 0, 0, "Account number");
@@ -783,10 +822,12 @@ test("Mobile Number Input Functionality Check for IP Logs", () => {
   });
 
   expect(mobileNoInput.value).toBe("7359124706");
+},1000);
 });
 
 test("RRN Amount Input Functionality Check for Beneficiary Details for Single IMPS Transactions", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
 
@@ -821,10 +862,12 @@ test("RRN Amount Input Functionality Check for Beneficiary Details for Single IM
   expect(amountInput.value).toBe("96480");
 
   cleanup();
+},1000);
 });
 
 test("RRN Date Picker Functionality Check for Beneficiary Details for Single Transactions", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
 
@@ -857,11 +900,13 @@ test("RRN Date Picker Functionality Check for Beneficiary Details for Single Tra
   expect(rrnDatePicker.value).toBe(datePickerTestValue);
 
   cleanup();
+},1000);
 });
 
 test("Add Detail Button Functionality Check", () => {
   window.HTMLElement.prototype.scrollIntoView = function() {};
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -901,11 +946,13 @@ test("Add Detail Button Functionality Check", () => {
   const newDetailFieldset = screen.getByTestId("detail-fieldset-1");
 
   expect(newDetailFieldset).toBeInTheDocument();
+},1000);
 });
 
 test("Delete Detail Button Functionality Check", () => {
   window.HTMLElement.prototype.scrollIntoView = function() {};
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -951,10 +998,12 @@ test("Delete Detail Button Functionality Check", () => {
   fireEvent.click(deleteDetailButton);
 
   expect(newDetailFieldsetIndex).not.toBeInTheDocument();
+},1000);
 });
 
 test("Preview Open Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -996,10 +1045,12 @@ test("Preview Open Functionality Check", () => {
   const previewModal = screen.queryByTestId("preview-modal");
 
   expect(previewModal).toBeInTheDocument();
+},1000);
 });
 
 test("Preview Modal Close Button Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -1047,10 +1098,12 @@ test("Preview Modal Close Button Functionality Check", () => {
   fireEvent.click(closePreviewButton);
 
   expect(previewModal).not.toBeInTheDocument();
+},1000);
 });
 
 test("Submission and Route To View Requests Page on clicking Submit Button Functionlaity Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
   fillTicketNumberInput();
   fillTicketDescriptionInput();
   selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
@@ -1102,10 +1155,12 @@ test("Submission and Route To View Requests Page on clicking Submit Button Funct
   const viewRequestPage = screen.getByTestId("view-request-page");
 
   expect(viewRequestPage).toBeInTheDocument();
+},1000);
 });
 
 test("Selected Report Detail View Controller Functionality Check", () => {
-  renderCreateRequest();
+   renderCreateRequest();
+  setTimeout(() => {
 
   fillTicketNumberInput();
   fillTicketDescriptionInput();
@@ -1126,6 +1181,7 @@ test("Selected Report Detail View Controller Functionality Check", () => {
   fireEvent.click(viewControllerIcon);
 
   expect(detailView).not.toBeVisible();
+},1000);
 });
 
 //// Rejected /////
