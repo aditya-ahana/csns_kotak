@@ -46,7 +46,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
-import { readOnly, requestList, requestPhases } from "../../components/data/requestsData";
+import {
+  readOnly,
+  requestList,
+  requestPhases,
+} from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
 import Lottie from "lottie-react";
 import zeroDataAnimation from "../../Dynamic/ktk_no_data.json";
@@ -102,7 +106,7 @@ export default function ViewRequest() {
     setRetrieving(true);
     setTimeout(() => {
       setRetrieving(false);
-    },500)
+    }, 500);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -130,7 +134,7 @@ export default function ViewRequest() {
   };
 
   const disableInvalidToDates = (day) => {
-    dayjs(day).isBefore(dayjs(fromDate, "DD-MM-YYYY"), "day")
+    dayjs(day).isBefore(dayjs(fromDate, "DD-MM-YYYY"), "day");
   };
 
   const handleFromDate = (date) => {
@@ -146,7 +150,7 @@ export default function ViewRequest() {
       .split("/")
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
-   
+
     callRetrieve();
     setFromDate(formatted_date);
     disableInvalidToDates(date);
@@ -174,7 +178,7 @@ export default function ViewRequest() {
 
   const viewRequestTableHeaders = [
     "Ticket Id",
-    "Requests",
+    "Reports",
     "Status",
     "Created Date",
     "Requester",
@@ -201,7 +205,7 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color : fromDate === "" ? "red" : "green"
+          color: fromDate === "" ? "red" : "green",
         },
       },
       textField: {
@@ -223,12 +227,15 @@ export default function ViewRequest() {
             height: "1.36rem",
             //  width : '100%',
             width: "100%",
-            paddingLeft : '0.48rem',
+            paddingLeft: "0.48rem",
             fontSize: "0.72rem",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: fromDate === "" ? "1.45px solid rgb(255, 0, 0)" : "1.85px solid rgb(0, 142, 0)",
+              border:
+                fromDate === ""
+                  ? "1.45px solid rgb(255, 0, 0)"
+                  : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(67, 61, 139)",
@@ -260,7 +267,7 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color : toDate === "" ? "red" : "green"
+          color: toDate === "" ? "red" : "green",
         },
       },
       textField: {
@@ -282,12 +289,15 @@ export default function ViewRequest() {
             height: "1.36rem",
             //  width : '100%',
             width: "100%",
-            paddingLeft : '0.48rem',
+            paddingLeft: "0.48rem",
             fontSize: "0.72rem",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: toDate === "" ? "1.45px solid rgb(255, 0, 0)" : "1.85px solid rgb(0, 142, 0)",
+              border:
+                toDate === ""
+                  ? "1.45px solid rgb(255, 0, 0)"
+                  : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(67, 61, 139)",
@@ -358,19 +368,15 @@ export default function ViewRequest() {
     const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
     const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
 
-    if(from){
-      return (
-        dayjs(createdDate, "DD-MM-YYYY").isAfter(
-          dayjs(from, "DD-MM-YYYY"),
-          "day"
-        )
+    if (from) {
+      return dayjs(createdDate, "DD-MM-YYYY").isAfter(
+        dayjs(from, "DD-MM-YYYY"),
+        "day"
       );
     }
 
-    if(to){
-      return (
-        dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"))
-      );
+    if (to) {
+      return dayjs(createdDate, "DD-MM-YYYY").isBefore(dayjs(to, "DD-MM-YYYY"));
     }
 
     if (from && to) {
@@ -407,7 +413,8 @@ export default function ViewRequest() {
   const status_filtered = selectedStatus.length > 0;
   const not_status_filtered = selectedStatus.length === 0;
 
-  const date_ranged = fromDate !== "" || toDate !== "" || (fromDate !== "" && toDate !== "");
+  const date_ranged =
+    fromDate !== "" || toDate !== "" || (fromDate !== "" && toDate !== "");
   const not_date_ranged = fromDate === "" && toDate === "";
 
   // const requestData = searchInput.length > 0 ? searchResult : selectedStatus !== '' ? dateRangeFilteredData : fromDate !== '' && toDate !== '' ? dateRangeFilteredData : ticketDetails;
@@ -416,7 +423,7 @@ export default function ViewRequest() {
     if (status_filtered) {
       setSelectedStatus([]);
     }
-    if(date_ranged){
+    if (date_ranged) {
       setFromDate("");
       setToDate("");
     }
@@ -485,330 +492,332 @@ export default function ViewRequest() {
               <Loader />
             ) : (
               <>
-                    <Box className="view-request-header">
-                      <Box className="request-searchbar" sx={{ opacity : retrieving === true ? 0.25 : 1 }}>
-                        
-                        <SearchIcon className="request-search-icon" />
-                        <FormControl sx={{ width: "100%" }}>
-                          <Input
-                            disableUnderline={true}
-                            data-testid="searchbar"
-                            type="search"
-                            disabled={retrieving}
-                            sx={{ fontSize: "0.88rem" }}
-                            inputMode="text"
-                            value={searchInput}
-                            placeholder={t("searchByTicketRequester")}
-                            className="request-search-input"
-                            onChange={(e) => handleSearchQuery(e)}
-                          >
-                          </Input>
-                        </FormControl>
-                      </Box>
-
-                      <Button
+                <Box className="view-request-header">
+                  <Box
+                    className="request-searchbar"
+                    sx={{ opacity: retrieving === true ? 0.25 : 1 }}
+                  >
+                    <SearchIcon className="request-search-icon" />
+                    <FormControl sx={{ width: "100%" }}>
+                      <Input
+                        disableUnderline={true}
+                        data-testid="searchbar"
+                        type="search"
                         disabled={retrieving}
-                        className="request-filter-section"
-                        id="filter-menu-container"
-                        data-testid="filter-menu-button"
-                        onClick={handleViewFilterMenu}
-                        style={{ opacity : retrieving === true ? 0.25 : 1 }}
-                        aria-controls={
-                          viewFilterMenu ? "filter-menu" : undefined
-                        }
-                        aria-haspopup="true"
-                        aria-expanded={viewFilterMenu ? "true" : undefined}
-                      >
+                        sx={{ fontSize: "0.88rem" }}
+                        inputMode="text"
+                        value={searchInput}
+                        placeholder={t("searchByTicketRequester")}
+                        className="request-search-input"
+                        onChange={(e) => handleSearchQuery(e)}
+                      ></Input>
+                    </FormControl>
+                  </Box>
 
-                        <FilterAltOutlinedIcon
-                          className="filter-icon"
-                          sx={{ color: "#606060", fontSize: "1.36rem" }}
-                        />
+                  <Button
+                    disabled={retrieving}
+                    className="request-filter-section"
+                    id="filter-menu-container"
+                    data-testid="filter-menu-button"
+                    onClick={handleViewFilterMenu}
+                    style={{ opacity: retrieving === true ? 0.25 : 1 }}
+                    aria-controls={viewFilterMenu ? "filter-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={viewFilterMenu ? "true" : undefined}
+                  >
+                    <FilterAltOutlinedIcon
+                      className="filter-icon"
+                      sx={{ color: "#606060", fontSize: "1.36rem" }}
+                    />
+                    <Typography
+                      component="span"
+                      className="filter-heading"
+                      sx={{
+                        fontWeight: 500,
+                        fontSize: "0.95rem",
+                        color: "rgba(96, 96, 96, 1)",
+                      }}
+                    >
+                      {" "}
+                      {t("filter")}
+                    </Typography>
+                  </Button>
+
+                  <Menu
+                    id="filter-menu"
+                    data-testid="filter-menu"
+                    anchorEl={filterAnchor}
+                    open={viewFilterMenu}
+                    sx={{ marginLeft: "-1.65%" }}
+                    slotProps={{
+                      paper: {
+                        style: {
+                          height: "fit-content",
+                          width: "21.25%",
+                        },
+                      },
+                    }}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    MenuListProps={{
+                      style: {
+                        border: "1.5px solid rgba(232, 232, 232, 1)",
+                        borderRadius: "4px",
+                        margin: 0,
+                        padding: 0,
+                      },
+                      "aria-labelledby": "filter-menu-container",
+                    }}
+                    onClose={handleCloseFilterMenu}
+                  >
+                    <Box
+                      sx={{
+                        height: "100%",
+                        padding: "0.6rem 0rem 0.6rem 0rem",
+                      }}
+                    >
+                      <Box className="filter-menu-header">
                         <Typography
                           component="span"
-                          className="filter-heading"
                           sx={{
-                            fontWeight: 500,
-                            fontSize: "0.95rem",
                             color: "rgba(96, 96, 96, 1)",
+                            fontWeight: 500,
                           }}
                         >
                           {" "}
                           {t("filter")}
                         </Typography>
-                      </Button>
+                      </Box>
 
-                      <Menu
-                        id="filter-menu"
-                        data-testid="filter-menu"
-                        anchorEl={filterAnchor}
-                        open={viewFilterMenu}
-                        sx={{ marginLeft: "-1.65%" }}
-                        slotProps={{
-                          paper: {
-                            style: {
-                              height: "fit-content",
-                              width: "21.25%",
-                            },
-                          },
-                        }}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left",
-                        }}
-                        MenuListProps={{
-                          style: {
-                            border: "1.5px solid rgba(232, 232, 232, 1)",
-                            borderRadius: "4px",
-                            margin: 0,
-                            padding: 0,
-                          },
-                          "aria-labelledby": "filter-menu-container",
-                        }}
-                        onClose={handleCloseFilterMenu}
+                      <Box
+                        data-testid={
+                          selectedStatus.length === 0
+                            ? "status-unchecked"
+                            : "checked-box"
+                        }
+                        // data-testid="status-menu"
+                        sx={{ padding: "0.6rem 0rem 0.6rem 0rem" }}
                       >
-                        <Box
+                        {requestPhases.map((status, statusIndex) => (
+                          <MenuItem
+                            key={status}
+                            role="option"
+                            value={status}
+                            tabIndex={statusIndex}
+                            data-value={status}
+                            onClick={(event) =>
+                              handleStatusCheck(event, status)
+                            }
+                            data-testid={`status-menu-item-${statusIndex}`}
+                            style={{
+                              display: "flex",
+                              height: "1.95rem",
+                              alignItems: "left",
+                              borderRadius: "0px",
+                              backgroundColor: "transparent",
+                              fontSize: "2px",
+                            }}
+                          >
+                            <Checkbox
+                              // checked={selectedStatus.includes(status)}
+                              checked={selectedStatus.indexOf(status) > -1}
+                              value={status}
+                              inputProps={{
+                                "aria-label": `checkbox-x-${statusIndex}`,
+                              }}
+                              color="primary"
+                              name={`status-checkbox-${statusIndex}`}
+                              // role="checkbox"
+                              data-testid={`status-checkbox-${statusIndex}`}
+                              onChange={(event) =>
+                                handleStatusCheck(event, status)
+                              }
+                              style={{
+                                marginLeft: "-1rem",
+                                backgroundColor: "transparent",
+                              }}
+                              icon={
+                                <CheckBoxOutlineBlank
+                                  sx={{ fontSize: "1.36rem" }}
+                                />
+                              }
+                              checkedIcon={
+                                // selectedStatus.includes(status) ? (
+                                <CheckBoxOutlinedIcon
+                                  className="check-icon"
+                                  sx={{ fontSize: "1.36rem", color: "red" }}
+                                />
+                              }
+                            />
+                            <ListItemText
+                              primary={status}
+                              color="black"
+                              inputMode="text"
+                              primaryTypographyProps={{
+                                fontSize: "0.85rem",
+                              }}
+                              style={{ padding: "0.15rem 0rem 0rem 0rem" }}
+                              data-testid={`status-text-${statusIndex}`}
+                            />
+                          </MenuItem>
+                        ))}
+                      </Box>
+
+                      <Box
+                        sx={{
+                          padding: "0.36rem 0rem 0rem 0.65rem",
+                          borderWidth: "1px 0px 0px 0px",
+                          borderStyle: "solid",
+                          borderColor: "rgba(232, 232, 232, 1)",
+                        }}
+                      >
+                        <Typography
+                          component="span"
                           sx={{
-                            height: "100%",
-                            padding: "0.6rem 0rem 0.6rem 0rem",
+                            color: "rgba(96, 96, 96, 1)",
+                            fontWeight: 500,
+                            fontSize: "0.88rem",
+                            padding: "0.25rem 0.25rem 0rem 0.125rem",
                           }}
                         >
-                          <Box className="filter-menu-header">
-                            <Typography
-                              component="span"
-                              sx={{
-                                color: "rgba(96, 96, 96, 1)",
-                                fontWeight: 500,
-                              }}
-                            >
-                              {" "}
-                              {t("filter")}
-                            </Typography>
-                          </Box>
+                          Created Date
+                        </Typography>
 
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            padding: "0.65rem 0rem 0.1rem 0rem",
+                            gap: "2.5%",
+                          }}
+                        >
                           <Box
-                            data-testid={
-                              selectedStatus.length === 0
-                                ? "status-unchecked"
-                                : "checked-box"
-                            }
-                            // data-testid="status-menu"
-                            sx={{ padding: "0.6rem 0rem 0.6rem 0rem" }}
+                            sx={{ width: "40%" }}
+                            data-testid="from-date-box"
                           >
-                            {requestPhases.map((status, statusIndex) => (
-                              <MenuItem
-                                key={status}
-                                role="option"
-                                value={status}
-                                tabIndex={statusIndex}
-                                data-value={status}
-                                onClick={(event) =>
-                                  handleStatusCheck(event, status)
+                            <LocalizationProvider
+                              dateAdapter={AdapterDayjs}
+                              data-testid="from-date-provider"
+                            >
+                              <DatePicker
+                                format="DD-MM-YYYY"
+                                label="From"
+                                shouldDisableDate={(day) =>
+                                  dayjs(day).isAfter(
+                                    dayjs(toDate, "DD-MM-YYYY"),
+                                    "day"
+                                  )
                                 }
-                                data-testid={`status-menu-item-${statusIndex}`}
-                                style={{
-                                  display: "flex",
-                                  height: "1.95rem",
-                                  alignItems: "left",
-                                  borderRadius: "0px",
-                                  backgroundColor: "transparent",
-                                  fontSize: "2px",
-                                }}
-                              >
-                                <Checkbox
-                                  // checked={selectedStatus.includes(status)}
-                                  checked={selectedStatus.indexOf(status) > -1}
-                                  value={status}
-                                  inputProps={{
-                                    "aria-label": `checkbox-x-${statusIndex}`,
-                                  }}
-                                  color="primary"
-                                  name={`status-checkbox-${statusIndex}`}
-                                  // role="checkbox"
-                                  data-testid={`status-checkbox-${statusIndex}`}
-                                  onChange={(event) =>
-                                    handleStatusCheck(event, status)
-                                  }
-                                  style={{
-                                    marginLeft: "-1rem",
-                                    backgroundColor: "transparent",
-                                  }}
-                                  icon={
-                                    <CheckBoxOutlineBlank
-                                      sx={{ fontSize: "1.36rem" }}
-                                    />
-                                  }
-                                  checkedIcon={
-                                    // selectedStatus.includes(status) ? (
-                                    <CheckBoxOutlinedIcon
-                                      className="check-icon"
-                                      sx={{ fontSize: "1.36rem", color: "red" }}
-                                    />
-                                  }
-                                />
-                                <ListItemText
-                                  primary={status}
-                                  color="black"
-                                  inputMode="text"
-                                  primaryTypographyProps={{
-                                    fontSize: "0.85rem",
-                                  }}
-                                  style={{ padding: "0.15rem 0rem 0rem 0rem" }}
-                                  data-testid={`status-text-${statusIndex}`}
-                                />
-                              </MenuItem>
-                            ))}
+                                data-testid="from-date-picker"
+                                value={
+                                  fromDate === ""
+                                    ? null
+                                    : dayjs(fromDate, "DD-MM-YYYY")
+                                }
+                                // defaultValue=''
+                                maxDate={dayjs(
+                                  dayjs().format("DD-MM-YYYY"),
+                                  "DD-MM-YYYY"
+                                )}
+                                defaultValue={null}
+                                slotProps={datePickerControl.fromSlotProps}
+                                sx={datePickerControl.sx}
+                                onChange={(date) => handleFromDate(date)}
+                              />
+                            </LocalizationProvider>
                           </Box>
 
                           <Box
                             sx={{
-                              padding: "0.36rem 0rem 0rem 0.65rem",
-                              borderWidth: "1px 0px 0px 0px",
-                              borderStyle: "solid",
-                              borderColor: "rgba(232, 232, 232, 1)",
+                              display: "flex",
+                              marginTop: "0.15rem",
+                              alignItems: "center",
                             }}
                           >
-                            <Typography
-                              component="span"
+                            <RemoveIcon
                               sx={{
-                                color: "rgba(96, 96, 96, 1)",
-                                fontWeight: 500,
-                                fontSize: "0.88rem",
-                                padding: "0.25rem 0.25rem 0rem 0.125rem",
+                                fontSize: "200%",
+                                color: "rgba(161, 161, 161, 1)",
                               }}
-                            >
-                              Created Date
-                            </Typography>
+                            />
+                          </Box>
 
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                padding: "0.65rem 0rem 0.1rem 0rem",
-                                gap: "2.5%",
-                              }}
-                            >
-                              <Box
-                                sx={{ width: "40%" }}
-                                data-testid="from-date-box"
-                              >
-                                <LocalizationProvider
-                                  dateAdapter={AdapterDayjs}
-                                  data-testid="from-date-provider"
-                                >
-                                  <DatePicker
-                                    format="DD-MM-YYYY"
-                                    label="From"
-                                    shouldDisableDate={(day) =>
-                                      dayjs(day).isAfter(dayjs(toDate, "DD-MM-YYYY"), "day")
-                                    }
-                                    data-testid="from-date-picker"
-                                    value={
-                                      fromDate === ""
-                                        ? null
-                                        : dayjs(fromDate, "DD-MM-YYYY")
-                                    }
-                                    // defaultValue=''
-                                    maxDate={dayjs(
-                                      dayjs().format("DD-MM-YYYY"),
-                                      "DD-MM-YYYY"
-                                    )}
-                                    defaultValue={null}
-                                    slotProps={datePickerControl.fromSlotProps}
-                                    sx={datePickerControl.sx}
-                                    onChange={(date) => handleFromDate(date)}
-                                  />
-                                </LocalizationProvider>
-                              </Box>
-
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  marginTop: "0.15rem",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <RemoveIcon
-                                  sx={{
-                                    fontSize: "200%",
-                                    color: "rgba(161, 161, 161, 1)",
-                                  }}
-                                />
-                              </Box>
-
-                              <Box sx={{ width: "40%" }}>
-                                <LocalizationProvider
-                                  dateAdapter={AdapterDayjs}
-                                >
-                                  <DatePicker
-                                    format="DD-MM-YYYY"
-                                    data-testid="to-date-picker"
-                                    label="To"
-                                    shouldDisableDate={(day) =>
-                                      dayjs(day).isBefore(dayjs(fromDate, "DD-MM-YYYY"), "day")
-                                    }
-                                    value={
-                                      toDate === ""
-                                        ? null
-                                        : dayjs(toDate, "DD-MM-YYYY")
-                                    }
-                                    // defaultValue=''
-                                    maxDate={dayjs(
-                                      dayjs().format("DD-MM-YYYY"),
-                                      "DD-MM-YYYY"
-                                    )}
-                                    defaultValue={null}
-                                    slotProps={datePickerControl.toSlotProps}
-                                    sx={datePickerControl.sx}
-                                    onChange={(date) => handleToDate(date)}
-                                  />
-                                </LocalizationProvider>
-                              </Box>
-                            </Box>
-
-                            {(status_filtered || date_ranged) && (
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  padding: "0.75rem 0.75rem 0.225rem 0rem",
-                                  alignItems: "center",
-                                  justifyContent: "flex-end",
-                                }}
-                              >
-                                <Button
-                                  title="menu-clear-button"
-                                  onClick={() => {
-                                    clearStatusFilter();
-                                    clearDateRangeFilter();
-                                    handleCloseFilterMenu();
-                                  }}
-                                  data-testid="menu-clear-button"
-                                  className="clear-button"
-                                  style={{
-                                    backgroundColor: "rgba(237, 28, 36, 1)",
-                                    borderRadius: "4px",
-                                    border: "none",
-                                    width: "30%",
-                                    height: "1.75rem",
-                                    fontWeight: 600,
-                                    color: "white",
-                                    fontSize: "0.825rem",
-                                  }}
-                                >
-                                  Clear
-                                </Button>
-                              </Box>
-                            )}
+                          <Box sx={{ width: "40%" }}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DatePicker
+                                format="DD-MM-YYYY"
+                                data-testid="to-date-picker"
+                                label="To"
+                                shouldDisableDate={(day) =>
+                                  dayjs(day).isBefore(
+                                    dayjs(fromDate, "DD-MM-YYYY"),
+                                    "day"
+                                  )
+                                }
+                                value={
+                                  toDate === ""
+                                    ? null
+                                    : dayjs(toDate, "DD-MM-YYYY")
+                                }
+                                // defaultValue=''
+                                maxDate={dayjs(
+                                  dayjs().format("DD-MM-YYYY"),
+                                  "DD-MM-YYYY"
+                                )}
+                                defaultValue={null}
+                                slotProps={datePickerControl.toSlotProps}
+                                sx={datePickerControl.sx}
+                                onChange={(date) => handleToDate(date)}
+                              />
+                            </LocalizationProvider>
                           </Box>
                         </Box>
-                      </Menu>
-                    </Box>
 
-                    {requestData.length === 0 ? (
+                        {(status_filtered || date_ranged) && (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              padding: "0.75rem 0.75rem 0.225rem 0rem",
+                              alignItems: "center",
+                              justifyContent: "flex-end",
+                            }}
+                          >
+                            <Button
+                              title="menu-clear-button"
+                              onClick={() => {
+                                clearStatusFilter();
+                                clearDateRangeFilter();
+                                handleCloseFilterMenu();
+                              }}
+                              data-testid="menu-clear-button"
+                              className="clear-button"
+                              style={{
+                                backgroundColor: "rgba(237, 28, 36, 1)",
+                                borderRadius: "4px",
+                                border: "none",
+                                width: "30%",
+                                height: "1.75rem",
+                                fontWeight: 600,
+                                color: "white",
+                                fontSize: "0.825rem",
+                              }}
+                            >
+                              Clear
+                            </Button>
+                          </Box>
+                        )}
+                      </Box>
+                    </Box>
+                  </Menu>
+                </Box>
+
+                {requestData.length === 0 ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -849,520 +858,502 @@ export default function ViewRequest() {
                     </Typography>
                   </Box>
                 ) : (
-                  
-                    <Box className="request-ticket-section" alignSelf="center">
-                      <Box className="view-table">
-                        <TableContainer
-                          component={Paper}
-                          className="view-table-container"
-                          sx={{ boxShadow: "none" }}
+                  <Box className="request-ticket-section" alignSelf="center">
+                    <Box className="view-table">
+                      <TableContainer
+                        component={Paper}
+                        className="view-table-container"
+                        sx={{ boxShadow: "none" }}
+                      >
+                        <Table
+                          stickyHeader={true}
+                          aria-label="view-request-table"
                         >
-                          <Table
-                            stickyHeader={true}
-                            aria-label="view-request-table"
-                          >
-                            <TableHead>
-                              <TableRow>
-                                {viewRequestTableHeaders.map(
-                                  (header, index) => (
-                                    <TableCell
+                          <TableHead>
+                            <TableRow>
+                              {viewRequestTableHeaders.map((header, index) => (
+                                <TableCell
+                                  align="center"
+                                  key={index}
+                                  className="view-table-header"
+                                  sx={{
+                                    border: "1px solid rgba(225, 225, 225, 1)",
+                                    backgroundColor: "rgba(245, 248, 250, 1)",
+                                    fontSize: "0.88rem",
+                                    borderLeftWidth:
+                                      header === "Ticket Id" ? "1px" : "0px",
+                                    width:
+                                      header === "Ticket Id"
+                                        ? "12%"
+                                        : header === "Reports"
+                                          ? "27%"
+                                          : header === "Status"
+                                            ? "15%"
+                                            : header === "Created Date" ||
+                                                header === "Requester"
+                                              ? "16%"
+                                              : header === "Action"
+                                                ? "17%"
+                                                : "0%",
+                                  }}
+                                >
+                                  {header}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          </TableHead>
+
+                          <TableBody className="view-table-body">
+                            {requestData
+                              .slice(topRowIndex, nthRowIndex)
+                              .map((detail, i) => (
+                                <TableRow key={i} className="table-body-row">
+                                  <TableCell
+                                    key={i}
+                                    className="view-table-data-row"
+                                    sx={{
+                                      borderLeftWidth: "1px",
+                                      fontSize: "0.88rem",
+                                    }}
+                                    align="center"
+                                  >
+                                    <Box
                                       align="center"
-                                      key={index}
-                                      className="view-table-header"
                                       sx={{
-                                        border:
-                                          "1px solid rgba(225, 225, 225, 1)",
-                                        backgroundColor:
-                                          "rgba(245, 248, 250, 1)",
-                                        fontSize: "0.88rem",
-                                        borderLeftWidth:
-                                          header === "Ticket Id"
-                                            ? "1px"
-                                            : "0px",
-                                        width:
-                                          header === "Ticket Id"
-                                            ? "12%"
-                                            : header === "Requests"
-                                              ? "27%"
-                                              : header === "Status"
-                                                ? "15%"
-                                                : header === "Created Date" ||
-                                                    header === "Requester"
-                                                  ? "16%"
-                                                  : header === "Action"
-                                                    ? "17%"
-                                                    : "0%",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
                                       }}
                                     >
-                                      {header}
-                                    </TableCell>
-                                  )
-                                )}
-                              </TableRow>
-                            </TableHead>
-
-                            <TableBody className="view-table-body">
-                              {requestData
-                                .slice(topRowIndex, nthRowIndex)
-                                .map((detail, i) => (
-                                  <TableRow key={i} className="table-body-row">
-                                    <TableCell
-                                      key={i}
-                                      className="view-table-data-row"
-                                      sx={{
-                                        borderLeftWidth: "1px",
-                                        fontSize: "0.88rem",
-                                      }}
-                                      align="center"
-                                    >
-                                      <Box
-                                        align="center"
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                        }}
-                                      >
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "4px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "6rem",
-                                              height : "2rem"
-                                            }}
-                                            animation="pulse"
-                                            variant="text"
-                                          />
-                                        ) : (
-                                          <Typography fontSize="0.88rem">
-                                            {detail.ticketid}
-                                          </Typography>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell className="view-table-data-row">
-                                      <Box sx={{ alignSelf: "center" }}>
-                                        {detail.requests.map((req, index) => (
-                                          <>
-                                            {retrieving === true ? (
-                                              <Skeleton
-                                                sx={{
-                                                  display: "flex",
-                                                  borderRadius: "4px",
-                                                  backgroundColor:
-                                                    "rgb(230, 230, 235)",
-                                                  alignSelf: "center",
-                                                  lineHeight: "1.85rem",
-                                                }}
-                                                animation="pulse"
-                                                variant="text"
-                                              />
-                                            ) : (
-                                              <Typography
-                                                // component=''
-                                                key={index}
-                                                sx={{
-                                                  fontSize: "0.88rem",
-                                                  lineHeight: "1.85rem",
-                                                }}
-                                              >
-                                                {`${index + 1}. ${req}`}
-                                              </Typography>
-                                            )}
-                                          </>
-                                        ))}
-                                      </Box>
-                                    </TableCell>
-
-                                    <TableCell
-                                      align="center"
-                                      className="view-table-data-row"
-                                    >
-                                      <Box
-                                        align="center"
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                        }}
-                                      >
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "22px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "7rem",
-                                              height: "2.5rem",
-                                            }}
-                                            animation="pulse"
-                                            variant="rounded"
-                                          />
-                                        ) : (
-                                          <Box
-                                            alignSelf="center"
-                                            className="view-table-status-buttons"
-                                            sx={{
-                                              backgroundColor:
-                                                detail.status === "In-progress"
-                                                  ? "rgba(255, 238, 207, 1)"
-                                                  : detail.status ===
-                                                      "Completed"
-                                                    ? "rgba(205, 252, 229, 1)"
-                                                    : detail.status === "Failed"
-                                                      ? "rgba(255, 220, 222, 1)"
-                                                      : "",
-                                              color:
-                                                detail.status === "In-progress"
-                                                  ? "rgba(232, 125, 0, 1)"
-                                                  : detail.status ===
-                                                      "Completed"
-                                                    ? "rgba(21, 122, 73, 1)"
-                                                    : detail.status === "Failed"
-                                                      ? "rgba(210, 26, 26, 1)"
-                                                      : "",
-                                            }}
-                                          >
-                                            <Typography
-                                              component="span"
-                                              sx={{ fontSize: "0.88rem" }}
-                                            >
-                                              {detail.status}
-                                            </Typography>
-                                          </Box>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-
-                                    <TableCell
-                                      align="center"
-                                      className="view-table-data-row"
-                                      sx={{ fontSize: "0.88rem" }}
-                                    >
-                                      <Box
-                                        align="center"
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                        }}
-                                      >
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "4px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "8rem",
-                                              height : "2rem"
-                                            }}
-                                            animation="pulse"
-                                            variant="text"
-                                          />
-                                        ) : (
-                                          <Typography fontSize="0.88rem">
-                                            {detail.createdDate}
-                                          </Typography>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell
-                                      align="center"
-                                      className="view-table-data-row"
-                                      sx={{ fontSize: "0.88rem" }}
-                                    >
-                                      <Box
-                                        align="center"
-                                        sx={{
-                                          display: "flex",
-                                          alignItems: "center",
-                                          justifyContent: "center",
-                                        }}
-                                      >
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "4px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "10rem",
-                                              height : "2rem"
-                                            }}
-                                            animation="pulse"
-                                            variant="text"
-                                          />
-                                        ) : (
-                                          <Typography fontSize="0.88rem">
-                                            {detail.requester}
-                                          </Typography>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell className="view-table-data-row">
-                                      <Box className="detail-buttons">
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "5px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "7rem",
-                                              height: "2.85rem",
-                                            }}
-                                            animation="pulse"
-                                            variant="rounded"
-                                          />
-                                        ) : (
-                                          <Button
-                                            variant="outlined"
-                                            // title="view-details-button"
-                                            className="view-details-button"
-                                            color="darkblue"
-                                            data-testid={`details-page-nav${i}`}
-                                            style={{ alignSelf: "center" }}
-                                            onClick={handleViewDetails}
-                                          >
-                                            <DescriptionOutlinedIcon
-                                              sx={{ fontSize: "1.525rem" }}
-                                            />
-                                            <Typography
-                                              component="span"
-                                              fontWeight={500}
-                                              sx={{ fontSize: "0.88rem" }}
-                                              color="rgb(0, 97, 201)"
-                                            >
-                                              {" "}
-                                              {t("details")}
-                                            </Typography>
-                                          </Button>
-                                        )}
-
-                                        {retrieving === true ? (
-                                          <Skeleton
-                                            sx={{
-                                              display: "flex",
-                                              borderRadius: "5px",
-                                              backgroundColor:
-                                                "rgb(230, 230, 235)",
-                                              alignSelf: "center",
-                                              width: "7rem",
-                                              height: "2.85rem",
-                                            }}
-                                            animation="pulse"
-                                            variant="rounded"
-                                          />
-                                        ) : (
-                                          <Button
-                                            data-testid={
-                                              detail.status === "Completed"
-                                                ? `email-draft-button-${i}`
-                                                : ""
-                                            }
-                                            variant="outlined"
-                                            className="mail-draft-button"
-                                            style={{
-                                              alignSelf: "center",
-                                              backgroundColor:
-                                                detail.status ===
-                                                  "In-progress" ||
-                                                detail.status === "Failed"
-                                                  ? "rgb(236, 236, 236)"
-                                                  : "transparent",
-                                              color:
-                                                detail.status ===
-                                                  "In-progress" ||
-                                                detail.status === "Failed"
-                                                  ? "rgba(165, 165, 165, 1)"
-                                                  : "rgba(96, 96, 96, 1)",
-                                              borderColor:
-                                                "rgba(161, 161, 161, 1)",
-                                            }}
-                                            onClick={(e) => {
-                                              if (
-                                                detail.status === "Completed"
-                                              ) {
-                                                setMailDraftModal(true);
-                                              }
-                                            }}
-                                          >
-                                            <AttachEmailOutlinedIcon
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "4px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "6rem",
+                                            height: "2rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="text"
+                                        />
+                                      ) : (
+                                        <Typography fontSize="0.88rem">
+                                          {detail.ticketid}
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell className="view-table-data-row">
+                                    <Box sx={{ alignSelf: "center" }}>
+                                      {detail.requests.map((req, index) => (
+                                        <>
+                                          {retrieving === true ? (
+                                            <Skeleton
                                               sx={{
-                                                fontSize: "1.4rem",
-                                                color:
-                                                  detail.status === "Completed"
-                                                    ? "rgba(96, 96, 96, 1)"
-                                                    : "rgba(161, 161, 161, 0.6)",
+                                                display: "flex",
+                                                borderRadius: "4px",
+                                                backgroundColor:
+                                                  "rgb(230, 230, 235)",
+                                                alignSelf: "center",
+                                                lineHeight: "1.85rem",
                                               }}
+                                              animation="pulse"
+                                              variant="text"
                                             />
+                                          ) : (
                                             <Typography
-                                              component="span"
-                                              fontWeight={500}
-                                              sx={{ fontSize: "0.88rem" }}
+                                              // component=''
+                                              key={index}
+                                              sx={{
+                                                fontSize: "0.88rem",
+                                                lineHeight: "1.85rem",
+                                              }}
                                             >
-                                              {" "}
-                                              {t("eDraft")}
+                                              {`${index + 1}. ${req}`}
                                             </Typography>
-                                          </Button>
-                                        )}
-                                      </Box>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
-                      </Box>
-               
-                    </Box>
-                   )}
+                                          )}
+                                        </>
+                                      ))}
+                                    </Box>
+                                  </TableCell>
 
-                  
-                  { requestData.length > 0 && (   
-                    <Box className="table-pagination">
-                      <TablePagination
-                        // labelDisplayedRows={() =>
-                        //   displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
-                        // }
-                        rowsPerPageOptions={rowOptions}
-                        data-testid="view-request-pagination"
-                        component="div"
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                          width: "100%",
-                          height: "0rem",
-                          margin: "0rem 0rem 2rem 0rem",
-                          overflow: "visible",
-                          "& .MuiSvgIcon-root": {
-                            color: "rgba(0, 0, 0, 0.56)",
-                            fontSize: "1.25rem",
+                                  <TableCell
+                                    align="center"
+                                    className="view-table-data-row"
+                                  >
+                                    <Box
+                                      align="center"
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                      }}
+                                    >
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "22px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "7rem",
+                                            height: "2.5rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="rounded"
+                                        />
+                                      ) : (
+                                        <Box
+                                          alignSelf="center"
+                                          className="view-table-status-buttons"
+                                          sx={{
+                                            backgroundColor:
+                                              detail.status === "In-progress"
+                                                ? "rgba(255, 238, 207, 1)"
+                                                : detail.status === "Completed"
+                                                  ? "rgba(205, 252, 229, 1)"
+                                                  : detail.status === "Failed"
+                                                    ? "rgba(255, 220, 222, 1)"
+                                                    : "",
+                                            color:
+                                              detail.status === "In-progress"
+                                                ? "rgba(232, 125, 0, 1)"
+                                                : detail.status === "Completed"
+                                                  ? "rgba(21, 122, 73, 1)"
+                                                  : detail.status === "Failed"
+                                                    ? "rgba(210, 26, 26, 1)"
+                                                    : "",
+                                          }}
+                                        >
+                                          <Typography
+                                            component="span"
+                                            sx={{ fontSize: "0.88rem" }}
+                                          >
+                                            {detail.status}
+                                          </Typography>
+                                        </Box>
+                                      )}
+                                    </Box>
+                                  </TableCell>
+
+                                  <TableCell
+                                    align="center"
+                                    className="view-table-data-row"
+                                    sx={{ fontSize: "0.88rem" }}
+                                  >
+                                    <Box
+                                      align="center"
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                      }}
+                                    >
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "4px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "8rem",
+                                            height: "2rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="text"
+                                        />
+                                      ) : (
+                                        <Typography fontSize="0.88rem">
+                                          {detail.createdDate}
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell
+                                    align="center"
+                                    className="view-table-data-row"
+                                    sx={{ fontSize: "0.88rem" }}
+                                  >
+                                    <Box
+                                      align="center"
+                                      sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                      }}
+                                    >
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "4px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "10rem",
+                                            height: "2rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="text"
+                                        />
+                                      ) : (
+                                        <Typography fontSize="0.88rem">
+                                          {detail.requester}
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell className="view-table-data-row">
+                                    <Box className="detail-buttons">
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "5px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "7rem",
+                                            height: "2.85rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="rounded"
+                                        />
+                                      ) : (
+                                        <Button
+                                          variant="outlined"
+                                          // title="view-details-button"
+                                          className="view-details-button"
+                                          color="darkblue"
+                                          data-testid={`details-page-nav${i}`}
+                                          style={{ alignSelf: "center" }}
+                                          onClick={handleViewDetails}
+                                        >
+                                          <DescriptionOutlinedIcon
+                                            sx={{ fontSize: "1.525rem" }}
+                                          />
+                                          <Typography
+                                            component="span"
+                                            fontWeight={500}
+                                            sx={{ fontSize: "0.88rem" }}
+                                            color="rgb(0, 97, 201)"
+                                          >
+                                            {" "}
+                                            {t("details")}
+                                          </Typography>
+                                        </Button>
+                                      )}
+
+                                      {retrieving === true ? (
+                                        <Skeleton
+                                          sx={{
+                                            display: "flex",
+                                            borderRadius: "5px",
+                                            backgroundColor:
+                                              "rgb(230, 230, 235)",
+                                            alignSelf: "center",
+                                            width: "7rem",
+                                            height: "2.85rem",
+                                          }}
+                                          animation="pulse"
+                                          variant="rounded"
+                                        />
+                                      ) : (
+                                        <Button
+                                          data-testid={
+                                            detail.status === "Completed"
+                                              ? `email-draft-button-${i}`
+                                              : ""
+                                          }
+                                          variant="outlined"
+                                          className="mail-draft-button"
+                                          style={{
+                                            alignSelf: "center",
+                                            backgroundColor:
+                                              detail.status === "In-progress" ||
+                                              detail.status === "Failed"
+                                                ? "rgb(236, 236, 236)"
+                                                : "transparent",
+                                            color:
+                                              detail.status === "In-progress" ||
+                                              detail.status === "Failed"
+                                                ? "rgba(165, 165, 165, 1)"
+                                                : "rgba(96, 96, 96, 1)",
+                                            borderColor:
+                                              "rgba(161, 161, 161, 1)",
+                                          }}
+                                          onClick={(e) => {
+                                            if (detail.status === "Completed") {
+                                              setMailDraftModal(true);
+                                            }
+                                          }}
+                                        >
+                                          <AttachEmailOutlinedIcon
+                                            sx={{
+                                              fontSize: "1.4rem",
+                                              color:
+                                                detail.status === "Completed"
+                                                  ? "rgba(96, 96, 96, 1)"
+                                                  : "rgba(161, 161, 161, 0.6)",
+                                            }}
+                                          />
+                                          <Typography
+                                            component="span"
+                                            fontWeight={500}
+                                            sx={{ fontSize: "0.88rem" }}
+                                          >
+                                            {" "}
+                                            {t("eDraft")}
+                                          </Typography>
+                                        </Button>
+                                      )}
+                                    </Box>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                  </Box>
+                )}
+
+                {requestData.length > 0 && (
+                  <Box className="table-pagination">
+                    <TablePagination
+                      // labelDisplayedRows={() =>
+                      //   displayPaginationLabel(topRowIndex + 1, nthRowIndex, rowCount)
+                      // }
+                      rowsPerPageOptions={rowOptions}
+                      data-testid="view-request-pagination"
+                      component="div"
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        width: "100%",
+                        height: "0rem",
+                        margin: "0rem 0rem 2rem 0rem",
+                        overflow: "visible",
+                        "& .MuiSvgIcon-root": {
+                          color: "rgba(0, 0, 0, 0.56)",
+                          fontSize: "1.25rem",
+                        },
+                        "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root": {
+                          opacity: 0.25,
+                        },
+                      }}
+                      count={rowCount}
+                      slotProps={{
+                        select: {
+                          renderValue: (value) => (
+                            <Typography
+                              sx={{ fontSize: "0.85rem" }}
+                              component="span"
+                              data-testid="rows-display"
+                            >
+                              {value}
+                            </Typography>
+                          ),
+                          IconComponent: (props) => (
+                            <KeyboardArrowDownOutlinedIcon
+                              className="reports-type-dropdownicon"
+                              sx={{
+                                color: "rgba(115, 115, 115, 1)",
+                                marginTop: "0.002rem",
+                              }}
+                              {...props}
+                            />
+                          ),
+                          variant: "standard",
+                          SelectDisplayProps: {
+                            "data-testid": "paginate-select",
                           },
-                          "& .MuiButtonBase-root.Mui-disabled .MuiSvgIcon-root":
-                            {
-                              opacity: 0.25,
-                            },
-                        }}
-                        count={rowCount}
-                        slotProps={{
-                          select: {
-                            renderValue: (value) => (
-                              <Typography
-                                sx={{ fontSize: "0.85rem" }}
-                                component="span"
-                                data-testid="rows-display"
-                              >
-                                {value}
-                              </Typography>
-                            ),
-                            IconComponent: (props) => (
-                              <KeyboardArrowDownOutlinedIcon
-                                className="reports-type-dropdownicon"
-                                sx={{
-                                  color: "rgba(115, 115, 115, 1)",
-                                  marginTop: "0.002rem",
-                                }}
-                                {...props}
-                              />
-                            ),
-                            variant: "standard",
-                            SelectDisplayProps: {
-                              "data-testid": "paginate-select",
-                            },
-                            input: (
-                              <OutlinedInput
-                                fullWidth={true}
-                                value={rowCount}
-                                data-testid="paginate-select-input"
-                                sx={{
+                          input: (
+                            <OutlinedInput
+                              fullWidth={true}
+                              value={rowCount}
+                              data-testid="paginate-select-input"
+                              sx={{
+                                border: "none",
+                                height: "1.2rem",
+                                fontSize: "0rem",
+                                "& .MuiOutlinedInput-notchedOutline": {
                                   border: "none",
-                                  height: "1.2rem",
-                                  fontSize: "0rem",
-                                  "& .MuiOutlinedInput-notchedOutline": {
+                                },
+                                "&:hover > .MuiOutlinedInput-notchedOutline": {
+                                  border: "none",
+                                },
+                                "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                  {
                                     border: "none",
                                   },
-                                  "&:hover > .MuiOutlinedInput-notchedOutline":
-                                    {
-                                      border: "none",
-                                    },
-                                  "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                    {
-                                      border: "none",
-                                    },
-                                }}
-                              />
-                            ),
-                            // IconComponent : props => (
-                            //   <KeyboardArrowDownOutlinedIcon
-                            //     className="reports-type-dropdownicon"
-                            //     sx={{ fontSize : '1.375rem', color:"rgba(115, 115, 115, 1)"}}
-                            //     {...props}
-                            //   />
-                            // ),
+                              }}
+                            />
+                          ),
+                          // IconComponent : props => (
+                          //   <KeyboardArrowDownOutlinedIcon
+                          //     className="reports-type-dropdownicon"
+                          //     sx={{ fontSize : '1.375rem', color:"rgba(115, 115, 115, 1)"}}
+                          //     {...props}
+                          //   />
+                          // ),
+                          sx: {
+                            width: "auto",
+                            padding: "10px",
+                            marginTop: "0.2rem",
+                            marginLeft: "-3.5%",
+                          },
+                          MenuProps: {
                             sx: {
-                              width: "auto",
-                              padding: "10px",
-                              marginTop: "0.2rem",
-                              marginLeft: "-3.5%",
+                              // marginTop : "-8vh"
+                              fontSize: "0.2rem",
                             },
-                            MenuProps: {
-                              sx: {
-                                // marginTop : "-8vh"
-                                fontSize: "0.2rem",
-                              },
-                              MenuListProps: {
-                                sx: {},
-                              },
+                            MenuListProps: {
+                              sx: {},
                             },
                           },
-                        }}
-                        rowsPerPage={rowsPerPage}
-                        labelRowsPerPage={
-                          <Box
+                        },
+                      }}
+                      rowsPerPage={rowsPerPage}
+                      labelRowsPerPage={
+                        <Box
+                          component="span"
+                          sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            marginTop: "1.1rem",
+                            width: "100%",
+                            textAlign: "center",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Typography
                             component="span"
                             sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              marginTop: "1.1rem",
-                              width: "100%",
-                              textAlign: "center",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              alignSelf: "center",
+                              fontSize: "0.88rem",
+                              color: "rgba(0, 0, 0, 0.6)",
                             }}
                           >
-                            <Typography
-                              component="span"
-                              sx={{
-                                alignSelf: "center",
-                                fontSize: "0.88rem",
-                                color: "rgba(0, 0, 0, 0.6)",
-                              }}
-                            >
-                              {t("rowsPerPage")} :{" "}
-                            </Typography>
-                          </Box>
-                        }
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                      />
-                    </Box>
-                   ) }
-                    
-                  </>
+                            {t("rowsPerPage")} :{" "}
+                          </Typography>
+                        </Box>
+                      }
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </Box>
                 )}
+              </>
+            )}
           </Box>
         </Box>
       </Box>

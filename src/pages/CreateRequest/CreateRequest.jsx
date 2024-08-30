@@ -1129,16 +1129,16 @@ export default function CreateRequest() {
                 type: "Excel",
               }
             : detailName === "accountNumberDetails"
-            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
-            : detailName === "PANdetails" ||
-              detailName === "mobileNoDetails" ||
-              detailName === "CRNdetails" ||
-              detailName === "emailDetails" ||
-              detailName === "creditCardDetails" ||
-              detailName === "debitCardDetails" ||
-              detailName === "aadharDetails"
-            ? { name: name, value: "", type: "Excel" }
-            : {},
+              ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+              : detailName === "PANdetails" ||
+                  detailName === "mobileNoDetails" ||
+                  detailName === "CRNdetails" ||
+                  detailName === "emailDetails" ||
+                  detailName === "creditCardDetails" ||
+                  detailName === "debitCardDetails" ||
+                  detailName === "aadharDetails"
+                ? { name: name, value: "", type: "Excel" }
+                : {},
         ];
       }
       // document.querySelector("#selected-reports-section").scrollIntoView();
@@ -1399,42 +1399,42 @@ export default function CreateRequest() {
                 (detail.name === "Account number"
                   ? 16
                   : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                  ? 10
-                  : detail.name === "Credit Card"
-                  ? 16
-                  : detail.name === "Aadhar"
-                  ? 12
-                  : detail.name === "Debit Card"
-                  ? 16
-                  : detail.name === "Mobile No."
-                  ? 10
-                  : detail.name === "RRN"
-                  ? 12
-                  : detail.name === "CRN"
-                  ? 10
-                  : 0)
+                    ? 320
+                    : detail.name === "PAN"
+                      ? 10
+                      : detail.name === "Credit Card"
+                        ? 16
+                        : detail.name === "Aadhar"
+                          ? 12
+                          : detail.name === "Debit Card"
+                            ? 16
+                            : detail.name === "Mobile No."
+                              ? 10
+                              : detail.name === "RRN"
+                                ? 12
+                                : detail.name === "CRN"
+                                  ? 10
+                                  : 0)
                 ? `${
                     detail.name === "Account number"
                       ? 16
                       : detail.name === "Email ID"
-                      ? 320
-                      : detail.name === "PAN"
-                      ? 10
-                      : detail.name === "Credit Card"
-                      ? 16
-                      : detail.name === "Aadhar"
-                      ? 12
-                      : detail.name === "Debit Card"
-                      ? 16
-                      : detail.name === "Mobile No."
-                      ? 10
-                      : detail.name === "RRN"
-                      ? 12
-                      : detail.name === "CRN"
-                      ? 10
-                      : 0
+                        ? 320
+                        : detail.name === "PAN"
+                          ? 10
+                          : detail.name === "Credit Card"
+                            ? 16
+                            : detail.name === "Aadhar"
+                              ? 12
+                              : detail.name === "Debit Card"
+                                ? 16
+                                : detail.name === "Mobile No."
+                                  ? 10
+                                  : detail.name === "RRN"
+                                    ? 12
+                                    : detail.name === "CRN"
+                                      ? 10
+                                      : 0
                   } characters only`
                 : validatedDetail()
             }
@@ -1443,22 +1443,22 @@ export default function CreateRequest() {
               (detail.name === "Account number"
                 ? 16
                 : detail.name === "Email ID"
-                ? 320
-                : detail.name === "PAN"
-                ? 10
-                : detail.name === "Credit Card"
-                ? 16
-                : detail.name === "Aadhar"
-                ? 12
-                : detail.name === "Debit Card"
-                ? 16
-                : detail.name === "Mobile No."
-                ? 10
-                : detail.name === "RRN"
-                ? 12
-                : detail.name === "CRN"
-                ? 10
-                : 0)
+                  ? 320
+                  : detail.name === "PAN"
+                    ? 10
+                    : detail.name === "Credit Card"
+                      ? 16
+                      : detail.name === "Aadhar"
+                        ? 12
+                        : detail.name === "Debit Card"
+                          ? 16
+                          : detail.name === "Mobile No."
+                            ? 10
+                            : detail.name === "RRN"
+                              ? 12
+                              : detail.name === "CRN"
+                                ? 10
+                                : 0)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
@@ -1486,22 +1486,22 @@ export default function CreateRequest() {
                 detail.name === "Account number"
                   ? 16
                   : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                  ? 10
-                  : detail.name === "Credit Card"
-                  ? 16
-                  : detail.name === "Aadhar"
-                  ? 12
-                  : detail.name === "Debit Card"
-                  ? 16
-                  : detail.name === "Mobile No."
-                  ? 10
-                  : detail.name === "RRN"
-                  ? 12
-                  : detail.name === "CRN"
-                  ? 10
-                  : 0,
+                    ? 320
+                    : detail.name === "PAN"
+                      ? 10
+                      : detail.name === "Credit Card"
+                        ? 16
+                        : detail.name === "Aadhar"
+                          ? 12
+                          : detail.name === "Debit Card"
+                            ? 16
+                            : detail.name === "Mobile No."
+                              ? 10
+                              : detail.name === "RRN"
+                                ? 12
+                                : detail.name === "CRN"
+                                  ? 10
+                                  : 0,
             }}
             className="selected-param-box"
             // value={
@@ -1659,27 +1659,29 @@ export default function CreateRequest() {
                   detail.From === "From"
                     ? customFormText("")
                     : ((detail.name === "Account number" &&
-                        detail.value.length === 16) ||
-                        (detail.name === "Email ID" &&
-                          detail.value.length >= 12 &&
-                          detail.value.length <= 320) ||
-                        (detail.name === "PAN" && detail.value.length === 10) ||
-                        (detail.name === "Credit Card" &&
                           detail.value.length === 16) ||
-                        (detail.name === "Aadhar" &&
-                          detail.value.length === 12) ||
-                        (detail.name === "Debit Card" &&
-                          detail.value.length === 16) ||
-                        (detail.name === "Mobile No." &&
-                          detail.value.length === 10) ||
-                        (detail.name === "RRN" && detail.value.length === 12) ||
-                        (detail.name === "CRN" &&
-                          detail.value.length === 10)) &&
-                      detail.from === "From"
-                    ? customFormText("If needed, select from date")
-                    : detail.from !== "From"
-                    ? validatedHelperText("Dated")
-                    : ""
+                          (detail.name === "Email ID" &&
+                            detail.value.length >= 12 &&
+                            detail.value.length <= 320) ||
+                          (detail.name === "PAN" &&
+                            detail.value.length === 10) ||
+                          (detail.name === "Credit Card" &&
+                            detail.value.length === 16) ||
+                          (detail.name === "Aadhar" &&
+                            detail.value.length === 12) ||
+                          (detail.name === "Debit Card" &&
+                            detail.value.length === 16) ||
+                          (detail.name === "Mobile No." &&
+                            detail.value.length === 10) ||
+                          (detail.name === "RRN" &&
+                            detail.value.length === 12) ||
+                          (detail.name === "CRN" &&
+                            detail.value.length === 10)) &&
+                        detail.from === "From"
+                      ? customFormText("If needed, select from date")
+                      : detail.from !== "From"
+                        ? validatedHelperText("Dated")
+                        : ""
                 }
               </LocalizationProvider>
             </Box>
@@ -1753,27 +1755,29 @@ export default function CreateRequest() {
                   detail.to === "To"
                     ? customFormText("")
                     : ((detail.name === "Account number" &&
-                        detail.value.length === 16) ||
-                        (detail.name === "Email ID" &&
-                          detail.value.length >= 12 &&
-                          detail.value.length <= 320) ||
-                        (detail.name === "PAN" && detail.value.length === 10) ||
-                        (detail.name === "Credit Card" &&
                           detail.value.length === 16) ||
-                        (detail.name === "Aadhar" &&
-                          detail.value.length === 12) ||
-                        (detail.name === "Debit Card" &&
-                          detail.value.length === 16) ||
-                        (detail.name === "Mobile No." &&
-                          detail.value.length === 10) ||
-                        (detail.name === "RRN" && detail.value.length === 12) ||
-                        (detail.name === "CRN" &&
-                          detail.value.length === 10)) &&
-                      detail.to === "To"
-                    ? customFormText("If needed, select to date")
-                    : detail.to !== "To"
-                    ? validatedHelperText("Dated")
-                    : ""
+                          (detail.name === "Email ID" &&
+                            detail.value.length >= 12 &&
+                            detail.value.length <= 320) ||
+                          (detail.name === "PAN" &&
+                            detail.value.length === 10) ||
+                          (detail.name === "Credit Card" &&
+                            detail.value.length === 16) ||
+                          (detail.name === "Aadhar" &&
+                            detail.value.length === 12) ||
+                          (detail.name === "Debit Card" &&
+                            detail.value.length === 16) ||
+                          (detail.name === "Mobile No." &&
+                            detail.value.length === 10) ||
+                          (detail.name === "RRN" &&
+                            detail.value.length === 12) ||
+                          (detail.name === "CRN" &&
+                            detail.value.length === 10)) &&
+                        detail.to === "To"
+                      ? customFormText("If needed, select to date")
+                      : detail.to !== "To"
+                        ? validatedHelperText("Dated")
+                        : ""
                 }
               </LocalizationProvider>
             </Box>
@@ -1909,8 +1913,8 @@ export default function CreateRequest() {
                     detail.value.length < 12
                       ? ""
                       : detail.value.length === 12 && detail.amount.length === 0
-                      ? "If needed, amount must be 1-6 digits long"
-                      : validatedDetail()
+                        ? "If needed, amount must be 1-6 digits long"
+                        : validatedDetail()
                   }
                   autoComplete="off"
                   FormHelperTextProps={{ sx: { color: "rgb(255, 0, 0)" } }}
@@ -1963,10 +1967,10 @@ export default function CreateRequest() {
                   {detail.date !== "Date"
                     ? validatedHelperText("Dated")
                     : detail.value.length === 12
-                    ? customFormText("If needed, select date")
-                    : detail.date === "Date" && detail.value.length === 12
-                    ? customFormText("If needed, select date")
-                    : ""}
+                      ? customFormText("If needed, select date")
+                      : detail.date === "Date" && detail.value.length === 12
+                        ? customFormText("If needed, select date")
+                        : ""}
                 </LocalizationProvider>
               </Box>
             </Box>
@@ -2086,8 +2090,8 @@ export default function CreateRequest() {
             (detail.from !== "From" && detail.to === "To")
               ? customFormText("")
               : detail.type === "Type"
-              ? customFormText("select report type")
-              : validatedHelperText("Selected")}
+                ? customFormText("select report type")
+                : validatedHelperText("Selected")}
           </FormControl>
         )}
 
@@ -2549,9 +2553,9 @@ export default function CreateRequest() {
         "white",
         600
       );
-      // setTimeout(() => {
-      //   route_to("/ViewRequest");
-      // }, 1000);
+      setTimeout(() => {
+        route_to("/ViewRequest");
+      }, 1000);
     }
   };
 
@@ -2677,11 +2681,11 @@ export default function CreateRequest() {
                         ticketNumber.length < 10
                           ? ""
                           : ticketNumber.length === 10 &&
-                            ticketDescription.length === 0
-                          ? "10-60 characters only"
-                          : ticketDescription.length < 10
-                          ? "10-60 characters only"
-                          : validatedDetail()
+                              ticketDescription.length === 0
+                            ? "10-60 characters only"
+                            : ticketDescription.length < 10
+                              ? "10-60 characters only"
+                              : validatedDetail()
                       }
                       required
                       label={t("ticketDesc")}
@@ -2860,13 +2864,13 @@ export default function CreateRequest() {
                   {selectedReports.length >= 1
                     ? validatedHelperText("Selected")
                     : ticketNumber.length === 0 ||
-                      ticketDescription.length === 0
-                    ? () => {}
-                    : ticketNumber.length === 10 &&
-                      ticketDescription.length >= 10 &&
-                      selectedReports.length === 0
-                    ? customFormText("select reports")
-                    : () => {}}
+                        ticketDescription.length === 0
+                      ? () => {}
+                      : ticketNumber.length === 10 &&
+                          ticketDescription.length >= 10 &&
+                          selectedReports.length === 0
+                        ? customFormText("select reports")
+                        : () => {}}
                 </FormControl>
               </>
             )}
