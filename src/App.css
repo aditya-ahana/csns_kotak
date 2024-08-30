@@ -94,6 +94,9 @@ li.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
   height: 3rem;
 } */
 
+.css-10hburv-MuiTypography-root {
+  font-weight: inherit !important;
+}
 .height3rem {
   height: 3rem !important;
 }

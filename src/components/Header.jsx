@@ -16,6 +16,7 @@ function Header() {
         className="d-flex justify-content-between align-items-center"
         style={{
           width: "-webkit-fill-available",
+          fontWeight: "500",
         }}
       >
         <img

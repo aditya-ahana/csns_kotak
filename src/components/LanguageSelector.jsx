@@ -27,7 +27,13 @@ export default function LanguageSelector(props) {
           }}
         >
           {languages.map((lang, langIndex) => (
-            <MenuItem data-testid={`language-dropdown-menuitem-${langIndex}`} value={lang.code}>{lang.desc}</MenuItem>
+            <MenuItem
+              data-testid={`language-dropdown-menuitem-${langIndex}`}
+              value={lang.code}
+              className={lang.code === i18n.language ? "fw-bold" : ""}
+            >
+              {lang.desc}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
