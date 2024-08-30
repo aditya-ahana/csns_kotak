@@ -1,11 +1,10 @@
 import React from "react";
-
 import { render, fireEvent, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
 import UnifiedDesktop from "../../pages/UnifiedDesktop";
 import { requestList } from "../../components/data/requestsData";
 import { BrowserRouter } from "react-router-dom";
 import { cleanup } from "@testing-library/react";
+import { test, expect,vi,describe } from "vitest";
 
 const renderUnifiedDesktop = () => {
   return render(
@@ -15,7 +14,7 @@ const renderUnifiedDesktop = () => {
   );
 };
 
-test("Unified Desktop Loader Render Check",() => {
+test("Unified Desktop Loader Render Check", () => {
   renderUnifiedDesktop();
 
   const loader = screen.getByTestId("loader-modal");
@@ -23,17 +22,15 @@ test("Unified Desktop Loader Render Check",() => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  },1000)
+  }, 1000);
 });
 
 test("Render Unified Desktop component", () => {
   renderUnifiedDesktop();
 
   setTimeout(() => {
-  const unifiedDesktopContainer = screen.getByTestId("unified-desktop");
+    const unifiedDesktopContainer = screen.getByTestId("unified-desktop");
 
-  expect(unifiedDesktopContainer).toBeInTheDocument();
-},1000)
+    expect(unifiedDesktopContainer).toBeInTheDocument();
+  }, 1000);
 });
-
-

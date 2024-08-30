@@ -48,17 +48,19 @@ import {
 import Loader from "../../components/Loader";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MaterialToast from "../../components/Snackbar";
+import Skeleton from "@mui/material/Skeleton";
+import { readOnly } from "../../components/data/requestsData";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 const validatedDetail = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "row", gap: "0.25rem" }}>
-      <Typography
+      {/* <Typography
         sx={{ color: "green", fontSize: "0.785rem", fontWeight: 400 }}
       >
         Valid
-      </Typography>
+      </Typography> */}
       <CheckCircleIcon
         sx={{ color: "green", marginTop: "0.05rem", fontSize: "1rem" }}
       />
@@ -76,11 +78,11 @@ const validatedHelperText = (text) => {
         margin: "0.1rem 0rem 0rem 0.85rem",
       }}
     >
-      <Typography
+      {/* <Typography
         sx={{ color: "green", fontSize: "0.785rem", fontWeight: 400 }}
       >
         {text}
-      </Typography>
+      </Typography> */}
       <CheckCircleIcon
         sx={{ color: "green", marginTop: "0.075rem", fontSize: "1rem" }}
       />
@@ -106,7 +108,6 @@ export default function CreateRequest() {
   const [toastColor, setToastColor] = useState("");
   const [toastFontWeight, setToastFontWeight] = useState();
 
-
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
     setToastDuration(duration);
@@ -125,7 +126,7 @@ export default function CreateRequest() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 600);
+    }, 620);
   });
 
   const route_to = useNavigate();
@@ -145,13 +146,32 @@ export default function CreateRequest() {
 
   const currentDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
   const reduxDate = dayjs(new Date()).format("DD-MM-YYYY");
-  console.log("Current Date", currentDate);
+  //console.log("Current Date", currentDate);
 
   const inputControl = {
     textfield: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: "1.25px solid rgba(120, 120, 120, 1)",
+          border: "1.45px solid rgb(255, 0, 0)",
+          backgroundColor: "transparent",
+        },
+        "&:hover fieldset": {
+          border: "1.5px solid rgb(67, 61, 139)",
+          backgroundColor: "transparent",
+        },
+        "&.Mui-focused fieldset": {
+          border: "1.65px solid rgb(131, 131, 210)",
+          backgroundColor: "transparent",
+        },
+        "& fieldset>legend": {
+          fontSize: "0.64rem",
+        },
+      },
+    },
+    validatedTextfield: {
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          border: "1.85px solid rgb(0, 142, 0)",
           backgroundColor: "transparent",
         },
         "&:hover fieldset": {
@@ -182,6 +202,19 @@ export default function CreateRequest() {
         fontSize: "0.88rem",
         alignSelf: "center",
         display: "flex",
+        color: "red",
+        alignItems: "center",
+        marginTop: "0.125rem",
+      },
+    },
+    validatedInputLabelProps: {
+      // shrink : true,
+      size: "small",
+      sx: {
+        fontSize: "0.88rem",
+        alignSelf: "center",
+        color: "green",
+        display: "flex",
         alignItems: "center",
         marginTop: "0.125rem",
       },
@@ -201,8 +234,97 @@ export default function CreateRequest() {
         paddingTop: "0.15rem",
         alignSelf: "center",
         display: "flex",
+        color: "red",
         alignItems: "center",
         height: "auto",
+      },
+    },
+    validatedTextAreaLabelProps: {
+      // shrink : true,
+      size: "small",
+      sx: {
+        fontSize: "0.88rem",
+        paddingTop: "0.15rem",
+        alignSelf: "center",
+        display: "flex",
+        alignItems: "center",
+        height: "auto",
+        color: "green",
+      },
+    },
+  };
+
+  const SelectProps = {
+    containerProps: {
+      ".MuiOutlinedInput-notchedOutline": {
+        border: "1.4px solid red",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        border: "1.65px solid rgba(131, 131, 210)",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        border:
+          ticketNumber.length === 0 || ticketDescription.length === 0
+            ? "0.25px solid grey"
+            : "1.5px solid rgb(67, 61, 139)",
+      },
+      ".MuiSvgIcon-root ": {
+        fill:
+          ticketNumber.length === 0 || ticketDescription.length === 0
+            ? "silver"
+            : "red !important",
+      },
+    },
+    validatedContainerProps: {
+      ".MuiOutlinedInput-notchedOutline": {
+        border: "1.85px solid rgb(0, 142, 0)",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        border: "1.65px solid rgb(131, 131, 210)",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        border: "1.5px solid rgb(67, 61, 139)",
+      },
+      ".MuiSvgIcon-root ": {
+        fill: "green !important",
+      },
+    },
+    REPORT_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          maxHeight: "19.6rem",
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
+    PARAM_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          maxHeight: "9.36rem",
+          marginTop: "-0.15rem",
+          overflow: "auto",
+        },
+      },
+      MenuListProps: {
+        sx: {
+          border: "1.5px solid rgba(161, 161, 161, 1)",
+          borderWidth: "1.5px 0px 1.5px 1.5px",
+          margin: 0,
+          borderTopLeftRadius: "0px",
+          borderTopRightRadius: "0px",
+          borderBottomLeftRadius: "4px",
+          borderBottomRightRadius: "4px",
+          padding: 0,
+        },
+      },
+    },
+    TYPE_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
       },
     },
   };
@@ -221,9 +343,9 @@ export default function CreateRequest() {
           },
         },
       },
-      // field: {
-      //   readOnly: true,
-      // },
+      field: {
+        readOnly: true,
+      },
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
@@ -233,6 +355,7 @@ export default function CreateRequest() {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
+            color: "red",
             fontSize: "0.92rem",
           },
         },
@@ -251,10 +374,68 @@ export default function CreateRequest() {
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: "1.25px solid rgba(76, 76, 76, 1)",
+              border: "1.45px solid rgb(255, 0, 0)",
             },
             "&:hover fieldset": {
-              border: "1.25px solid rgba(161, 161, 161, 1)",
+              border: "1.5px solid rgb(67, 61, 139)",
+            },
+            "&.Mui-focused fieldset": {
+              border: "1.65px solid rgb(131, 131, 210)",
+            },
+          },
+        },
+      },
+    },
+
+    validatedSlotProps: {
+      popper: {
+        sx: {
+          ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
+          "&.MuiPickersPopper-root": { padding: 0 },
+          ...{
+            "& .MuiPickersDay-root.Mui-selected": {
+              backgroundColor: "gray",
+              color: "white",
+            },
+          },
+        },
+      },
+      // field: {
+      //   readOnly: true,
+      // },
+      openPickerIcon: {
+        sx: {
+          fontSize: "1.5rem",
+          color: "green",
+        },
+      },
+      textField: {
+        InputLabelProps: {
+          sx: {
+            paddingTop: "0.05rem",
+            fontSize: "0.92rem",
+            color: "green",
+          },
+        },
+        color: "primary",
+        size: "small",
+        // "aria-readonly": true,
+        sx: {
+          backgroundColor: "transparent",
+          width: "100%",
+
+          "& .MuiInputBase-input": {
+            height: "1.575rem",
+            //  width : '100%',
+            width: "100%",
+            fontSize: "0.85rem",
+          },
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              border: "1.85px solid rgb(0, 142, 0)",
+            },
+            "&:hover fieldset": {
+              border: "1.5px solid rgb(67, 61, 139)",
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
@@ -330,10 +511,10 @@ export default function CreateRequest() {
     });
   }, [selectedReports]);
 
-  // //console.log('Selected REPORTS : ',selectedReports);
-  // //console.log('Selected REPORTS : ',selectedReports);
+  // ////console.log('Selected REPORTS : ',selectedReports);
+  // ////console.log('Selected REPORTS : ',selectedReports);
 
-  // //console.log('selected reports : ',selectedReports);
+  // ////console.log('selected reports : ',selectedReports);
 
   const availableReportTypes = ["PDF", "Excel"];
 
@@ -372,7 +553,7 @@ export default function CreateRequest() {
   //   }
   // };
 
-  // //console.log('Final Selected',selectedParams);
+  // ////console.log('Final Selected',selectedParams);
 
   const handleMinimizedView = (reportIndex) => {
     setReportsState((prevState) => {
@@ -419,17 +600,17 @@ export default function CreateRequest() {
 
       if (!report) {
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("loop4");
+        ////console.log("loop4");
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("loop4");
+        ////console.log("loop4");
         return prevState;
       }
 
       report.selectedParams =
         typeof value === "string" ? value.split(",") : value;
 
-      //console.log("Part", value);
-      //console.log("Part", value);
+      ////console.log("Part", value);
+      ////console.log("Part", value);
 
       // if(reportName === 'IP Logs' && params.some(param => param === 'Mobile No.')){
       //   params = [...params,{value : '6',label : 'Mobile No.'},{ value : '2',label : 'CRN' }]
@@ -460,8 +641,8 @@ export default function CreateRequest() {
       //   }
       // }
 
-      //console.log("PARAMS?", report.selectedParams);
-      //console.log("PARAMS?", report.selectedParams);
+      ////console.log("PARAMS?", report.selectedParams);
+      ////console.log("PARAMS?", report.selectedParams);
 
       if (
         value.some((param) => param === "Account number") &&
@@ -848,7 +1029,7 @@ export default function CreateRequest() {
 
       // document.querySelector('#selected-reports-section').scrollIntoView();
 
-      // //console.log('New State',newState);
+      // ////console.log('New State',newState);
       return newState;
     });
   };
@@ -863,8 +1044,8 @@ export default function CreateRequest() {
   };
 
   const addDetail = (reportIndex, detailName, name, reportName) => {
-    //console.log("for detail", reportIndex, detailName);
-    //console.log("for detail", reportIndex, detailName);
+    ////console.log("for detail", reportIndex, detailName);
+    ////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
 
@@ -948,16 +1129,16 @@ export default function CreateRequest() {
                 type: "Excel",
               }
             : detailName === "accountNumberDetails"
-              ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
-              : detailName === "PANdetails" ||
-                  detailName === "mobileNoDetails" ||
-                  detailName === "CRNdetails" ||
-                  detailName === "emailDetails" ||
-                  detailName === "creditCardDetails" ||
-                  detailName === "debitCardDetails" ||
-                  detailName === "aadharDetails"
-                ? { name: name, value: "", type: "Excel" }
-                : {},
+            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+            : detailName === "PANdetails" ||
+              detailName === "mobileNoDetails" ||
+              detailName === "CRNdetails" ||
+              detailName === "emailDetails" ||
+              detailName === "creditCardDetails" ||
+              detailName === "debitCardDetails" ||
+              detailName === "aadharDetails"
+            ? { name: name, value: "", type: "Excel" }
+            : {},
         ];
       }
       // document.querySelector("#selected-reports-section").scrollIntoView();
@@ -1015,8 +1196,8 @@ export default function CreateRequest() {
   //     const firstDate = dayjs(date1, 'DD-MM-YYYY');
   //     const secondDate = dayjs(date2, 'DD-MM-YYYY');
 
-  //     //console.log('from',date1);
-  //     //console.log('to',date2);
+  //     ////console.log('from',date1);
+  //     ////console.log('to',date2);
 
   //     if(secondDate.isBefore(firstDate)){
   //       return 'Wrong Date'
@@ -1031,7 +1212,7 @@ export default function CreateRequest() {
     return dayjs(day).isAfter(dayjs(to, "DD-MM-YYYY"), "day");
   };
 
-  //console.log('ULTIMATE',reportsState);
+  ////console.log('ULTIMATE',reportsState);
 
   const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
     const selected_date = new Date(date);
@@ -1047,31 +1228,31 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
-    //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
+    ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
+    ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("time1");
+        ////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("time1");
+        ////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //console.log("time2");
-        //console.log("time2");
+        ////console.log("time2");
+        ////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //console.log("time3");
+        ////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //console.log("time3");
+        ////console.log("time3");
         return prevState;
       }
 
@@ -1094,31 +1275,31 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
-    // //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
+    // ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
+    // ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("time1");
+        ////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //console.log("time1");
+        ////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //console.log("time2");
-        //console.log("time2");
+        ////console.log("time2");
+        ////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //console.log("time3");
+        ////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //console.log("time3");
+        ////console.log("time3");
         return prevState;
       }
 
@@ -1128,14 +1309,14 @@ export default function CreateRequest() {
   };
 
   const handleDate = (date, reportIndex, detailIndex, detailName) => {
-    //console.log("RRN date", date);
-    //console.log("RRN reportIndex", reportIndex);
-    //console.log("RRN detailIndex", detailIndex);
-    //console.log("RRN Detail", detailName);
-    //console.log("RRN date", date);
-    //console.log("RRN reportIndex", reportIndex);
-    //console.log("RRN detailIndex", detailIndex);
-    //console.log("RRN Detail", detailName);
+    ////console.log("RRN date", date);
+    ////console.log("RRN reportIndex", reportIndex);
+    ////console.log("RRN detailIndex", detailIndex);
+    ////console.log("RRN Detail", detailName);
+    ////console.log("RRN date", date);
+    ////console.log("RRN reportIndex", reportIndex);
+    ////console.log("RRN detailIndex", detailIndex);
+    ////console.log("RRN Detail", detailName);
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -1149,66 +1330,23 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
-    // //console.log(formatted_date);
-    // //console.log('Detail Index',detailIndex);
+    // ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
+    // ////console.log(formatted_date);
+    // ////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       newState[reportIndex][detailName][detailIndex].date = formatted_date;
 
-      //console.log("time4", date);
-      //console.log("time4", date);
+      ////console.log("time4", date);
+      ////console.log("time4", date);
       return newState;
     });
   };
 
-
   // const accountNumberDetailsValid =
-
-
-  const SelectProps = {
-    REPORT_SELECT_PROPS: {
-      PaperProps: {
-        style: {
-          maxHeight: "19.6rem",
-          marginTop: "-0.5rem",
-          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
-        },
-      },
-    },
-    PARAM_SELECT_PROPS: {
-      PaperProps: {
-        style: {
-          maxHeight: "9.36rem",
-          marginTop: "-0.15rem",
-          overflow: "auto",
-        },
-      },
-      MenuListProps: {
-        sx: {
-          border: "1.5px solid rgba(161, 161, 161, 1)",
-          borderWidth: "1.5px 0px 1.5px 1.5px",
-          margin: 0,
-          borderTopLeftRadius: "0px",
-          borderTopRightRadius: "0px",
-          borderBottomLeftRadius: "4px",
-          borderBottomRightRadius: "4px",
-          padding: 0,
-        },
-      },
-    },
-    TYPE_SELECT_PROPS: {
-      PaperProps: {
-        style: {
-          marginTop: "-0.5rem",
-          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
-        },
-      },
-    },
-  };
 
   const displayRequestedReports = (
     detailsArray,
@@ -1230,61 +1368,100 @@ export default function CreateRequest() {
         key={detailIndex}
         data-testid={`detail-fieldset-${detailIndex}`}
       >
-        {/* {//console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
+        {/* {////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
 
         <FormControl
           variant="outlined"
           margin="none"
-          sx={{ width: reportName === "IP Logs" ? "25%" : "34%" }}
+          sx={{ width: reportName === "IP Logs" ? "25%" : "34.15%" }}
         >
           <TextField
-            sx={inputControl.textfield}
+            sx={
+              (detail.name === "Account number" &&
+                detail.value.length === 16) ||
+              (detail.name === "Email ID" &&
+                detail.value.length >= 12 &&
+                detail.value.length <= 320) ||
+              (detail.name === "PAN" && detail.value.length === 10) ||
+              (detail.name === "Credit Card" && detail.value.length === 16) ||
+              (detail.name === "Aadhar" && detail.value.length === 12) ||
+              (detail.name === "Debit Card" && detail.value.length === 16) ||
+              (detail.name === "Mobile No." && detail.value.length === 10) ||
+              (detail.name === "RRN" && detail.value.length === 12) ||
+              (detail.name === "CRN" && detail.value.length === 10)
+                ? inputControl.validatedTextfield
+                : inputControl.textfield
+            }
             data-testid={`detail-name-input-${detailIndex}`}
             helperText={
+              detail.value &&
+              detail.value.length <
+                (detail.name === "Account number"
+                  ? 16
+                  : detail.name === "Email ID"
+                  ? 320
+                  : detail.name === "PAN"
+                  ? 10
+                  : detail.name === "Credit Card"
+                  ? 16
+                  : detail.name === "Aadhar"
+                  ? 12
+                  : detail.name === "Debit Card"
+                  ? 16
+                  : detail.name === "Mobile No."
+                  ? 10
+                  : detail.name === "RRN"
+                  ? 12
+                  : detail.name === "CRN"
+                  ? 10
+                  : 0)
+                ? `${
+                    detail.name === "Account number"
+                      ? 16
+                      : detail.name === "Email ID"
+                      ? 320
+                      : detail.name === "PAN"
+                      ? 10
+                      : detail.name === "Credit Card"
+                      ? 16
+                      : detail.name === "Aadhar"
+                      ? 12
+                      : detail.name === "Debit Card"
+                      ? 16
+                      : detail.name === "Mobile No."
+                      ? 10
+                      : detail.name === "RRN"
+                      ? 12
+                      : detail.name === "CRN"
+                      ? 10
+                      : 0
+                  } characters only`
+                : validatedDetail()
+            }
+            InputLabelProps={
               detail.value.length <
               (detail.name === "Account number"
                 ? 16
                 : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                    ? 10
-                    : detail.name === "Credit Card"
-                      ? 16
-                      : detail.name === "Aadhar"
-                        ? 12
-                        : detail.name === "Debit Card"
-                          ? 16
-                          : detail.name === "Mobile No."
-                            ? 10
-                            : detail.name === "RRN"
-                              ? 12
-                              : detail.name === "CRN"
-                                ? 10
-                                : 0)
-                ? `${detail.name.toLowerCase()} should be ${
-                    detail.name === "Account number"
-                      ? 16
-                      : detail.name === "Email ID"
-                        ? 320
-                        : detail.name === "PAN"
-                          ? 10
-                          : detail.name === "Credit Card"
-                            ? 16
-                            : detail.name === "Aadhar"
-                              ? 12
-                              : detail.name === "Debit Card"
-                                ? 16
-                                : detail.name === "Mobile No."
-                                  ? 10
-                                  : detail.name === "RRN"
-                                    ? 12
-                                    : detail.name === "CRN"
-                                      ? 10
-                                      : 0
-                  } characters long`
-                : validatedDetail()
+                ? 320
+                : detail.name === "PAN"
+                ? 10
+                : detail.name === "Credit Card"
+                ? 16
+                : detail.name === "Aadhar"
+                ? 12
+                : detail.name === "Debit Card"
+                ? 16
+                : detail.name === "Mobile No."
+                ? 10
+                : detail.name === "RRN"
+                ? 12
+                : detail.name === "CRN"
+                ? 10
+                : 0)
+                ? inputControl.inputLabelProps
+                : inputControl.validatedInputLabelProps
             }
-            InputLabelProps={inputControl.inputLabelProps}
             InputProps={{
               startAdornment: detail.name === "Mobile No." && (
                 <InputAdornment
@@ -1309,22 +1486,22 @@ export default function CreateRequest() {
                 detail.name === "Account number"
                   ? 16
                   : detail.name === "Email ID"
-                    ? 320
-                    : detail.name === "PAN"
-                      ? 10
-                      : detail.name === "Credit Card"
-                        ? 16
-                        : detail.name === "Aadhar"
-                          ? 12
-                          : detail.name === "Debit Card"
-                            ? 16
-                            : detail.name === "Mobile No."
-                              ? 10
-                              : detail.name === "RRN"
-                                ? 12
-                                : detail.name === "CRN"
-                                  ? 10
-                                  : 0,
+                  ? 320
+                  : detail.name === "PAN"
+                  ? 10
+                  : detail.name === "Credit Card"
+                  ? 16
+                  : detail.name === "Aadhar"
+                  ? 12
+                  : detail.name === "Debit Card"
+                  ? 16
+                  : detail.name === "Mobile No."
+                  ? 10
+                  : detail.name === "RRN"
+                  ? 12
+                  : detail.name === "CRN"
+                  ? 10
+                  : 0,
             }}
             className="selected-param-box"
             // value={
@@ -1410,17 +1587,32 @@ export default function CreateRequest() {
               backgroundColor: "transparent",
             }}
           >
-            <Box flex={1}>
+            <Box flex={1} sx={{ cursor: "pointer" }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
+                  className="date-picker"
                   data-testid={`from-date-picker-${detailIndex}`}
                   shouldDisableDate={(day) =>
                     disableInvalidDates(day, detail.to, detail.to)
                   }
                   label={t("from")}
                   disabled={
-                    detail.value === "" || detail.value.length === 0
+                    (detail.name === "Account number" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Email ID" &&
+                      detail.value.length > 12 &&
+                      detail.value.length <= 320) ||
+                    (detail.name === "PAN" && detail.value.length < 10) ||
+                    (detail.name === "Credit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Aadhar" && detail.value.length < 12) ||
+                    (detail.name === "Debit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Mobile No." &&
+                      detail.value.length < 10) ||
+                    (detail.name === "RRN" && detail.value.length < 12) ||
+                    (detail.name === "CRN" && detail.value.length < 10)
                       ? true
                       : false
                   }
@@ -1431,7 +1623,11 @@ export default function CreateRequest() {
                   }
                   maxDate={currentDate}
                   defaultValue={dayjs.Dayjs}
-                  slotProps={datePickerControl.slotProps}
+                  slotProps={
+                    detail.from === "From"
+                      ? datePickerControl.slotProps
+                      : datePickerControl.validatedSlotProps
+                  }
                   sx={datePickerControl.sx}
                   onChange={(date) =>
                     handleFromDate(
@@ -1445,41 +1641,74 @@ export default function CreateRequest() {
                 />
                 {
                   // detail.from !== "From" ? validatedHelperText("Dated") :
-                  (detail.name === "Account number" &&
+                  ((detail.name === "Account number" &&
                     detail.value.length < 16) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "Email ID" &&
-                    detail.value.length > 12 &&
-                    detail.value.length <= 320) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "PAN" && detail.value.length < 10) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "Credit Card" && detail.value.length < 16) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "Aadhar" && detail.value.length < 12) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "Debit Card" && detail.value.length < 16) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "Mobile No." && detail.value.length < 10) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "RRN" && detail.value.length < 12) ||
-                  (detail.from !== "From" && detail.to === "To") ||
-                  (detail.name === "CRN" && detail.value.length < 10) ||
-                  (detail.from !== "From" && detail.to === "To")
+                    (detail.name === "Email ID" &&
+                      detail.value.length > 12 &&
+                      detail.value.length <= 320) ||
+                    (detail.name === "PAN" && detail.value.length < 10) ||
+                    (detail.name === "Credit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Aadhar" && detail.value.length < 12) ||
+                    (detail.name === "Debit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Mobile No." &&
+                      detail.value.length < 10) ||
+                    (detail.name === "RRN" && detail.value.length < 12) ||
+                    (detail.name === "CRN" && detail.value.length < 10)) &&
+                  detail.From === "From"
                     ? customFormText("")
-                    : detail.from === "From"
-                      ? customFormText("(if needed) select from date")
-                      : ""
+                    : ((detail.name === "Account number" &&
+                        detail.value.length === 16) ||
+                        (detail.name === "Email ID" &&
+                          detail.value.length >= 12 &&
+                          detail.value.length <= 320) ||
+                        (detail.name === "PAN" && detail.value.length === 10) ||
+                        (detail.name === "Credit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Aadhar" &&
+                          detail.value.length === 12) ||
+                        (detail.name === "Debit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Mobile No." &&
+                          detail.value.length === 10) ||
+                        (detail.name === "RRN" && detail.value.length === 12) ||
+                        (detail.name === "CRN" &&
+                          detail.value.length === 10)) &&
+                      detail.from === "From"
+                    ? customFormText("If needed, select from date")
+                    : detail.from !== "From"
+                    ? validatedHelperText("Dated")
+                    : ""
                 }
               </LocalizationProvider>
             </Box>
 
-            <Box flex={1}>
+            <Box flex={1} sx={{ cursor: "pointer" }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
+                  className="date-picker"
                   label={t("to")}
-                  disabled={detail.from === "From" ? true : false}
+                  disabled={
+                    (detail.name === "Account number" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Email ID" &&
+                      detail.value.length > 12 &&
+                      detail.value.length <= 320) ||
+                    (detail.name === "PAN" && detail.value.length < 10) ||
+                    (detail.name === "Credit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Aadhar" && detail.value.length < 12) ||
+                    (detail.name === "Debit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Mobile No." &&
+                      detail.value.length < 10) ||
+                    (detail.name === "RRN" && detail.value.length < 12) ||
+                    (detail.name === "CRN" && detail.value.length < 10)
+                      ? true
+                      : false
+                  }
                   value={
                     detail.to === "To" ? null : dayjs(detail.to, "DD-MM-YYYY")
                   }
@@ -1488,7 +1717,11 @@ export default function CreateRequest() {
                   shouldDisableDate={(day) =>
                     dayjs(day).isBefore(dayjs(detail.from, "DD-MM-YYYY"), "day")
                   }
-                  slotProps={datePickerControl.slotProps}
+                  slotProps={
+                    detail.to === "To"
+                      ? datePickerControl.slotProps
+                      : datePickerControl.validatedSlotProps
+                  }
                   sx={datePickerControl.sx}
                   onChange={(date) =>
                     handleToDate(
@@ -1500,11 +1733,48 @@ export default function CreateRequest() {
                     )
                   }
                 />
-                {detail.from === "From"
-                  ? customFormText("")
-                  : detail.to === "To"
-                    ? customFormText("select to date")
-                    : validatedHelperText("Dated")}
+                {
+                  // detail.from !== "From" ? validatedHelperText("Dated") :
+                  ((detail.name === "Account number" &&
+                    detail.value.length < 16) ||
+                    (detail.name === "Email ID" &&
+                      detail.value.length > 12 &&
+                      detail.value.length <= 320) ||
+                    (detail.name === "PAN" && detail.value.length < 10) ||
+                    (detail.name === "Credit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Aadhar" && detail.value.length < 12) ||
+                    (detail.name === "Debit Card" &&
+                      detail.value.length < 16) ||
+                    (detail.name === "Mobile No." &&
+                      detail.value.length < 10) ||
+                    (detail.name === "RRN" && detail.value.length < 12) ||
+                    (detail.name === "CRN" && detail.value.length < 10)) &&
+                  detail.to === "To"
+                    ? customFormText("")
+                    : ((detail.name === "Account number" &&
+                        detail.value.length === 16) ||
+                        (detail.name === "Email ID" &&
+                          detail.value.length >= 12 &&
+                          detail.value.length <= 320) ||
+                        (detail.name === "PAN" && detail.value.length === 10) ||
+                        (detail.name === "Credit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Aadhar" &&
+                          detail.value.length === 12) ||
+                        (detail.name === "Debit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Mobile No." &&
+                          detail.value.length === 10) ||
+                        (detail.name === "RRN" && detail.value.length === 12) ||
+                        (detail.name === "CRN" &&
+                          detail.value.length === 10)) &&
+                      detail.to === "To"
+                    ? customFormText("If needed, select to date")
+                    : detail.to !== "To"
+                    ? validatedHelperText("Dated")
+                    : ""
+                }
               </LocalizationProvider>
             </Box>
           </Box>
@@ -1517,9 +1787,17 @@ export default function CreateRequest() {
             sx={{ width: "23%", marginLeft: "0%" }}
           >
             <TextField
-              sx={inputControl.textfield}
+              sx={
+                detail.mobileno.length === 10
+                  ? inputControl.validatedTextfield
+                  : inputControl.textfield
+              }
               data-testid={`mobileno-input-${detailIndex}`}
-              InputLabelProps={inputControl.inputLabelProps}
+              InputLabelProps={
+                detail.mobileno.length === 10
+                  ? inputControl.validatedInputLabelProps
+                  : inputControl.inputLabelProps
+              }
               inputProps={{
                 style: {
                   fontSize: "0.88rem",
@@ -1530,10 +1808,7 @@ export default function CreateRequest() {
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    sx={{ opacity: detail.to === "To" ? 0.45 : 1 }}
-                  >
+                  <InputAdornment position="start" sx={{ opacity: 0.85 }}>
                     <Typography sx={{ fontSize: "0.88rem" }} component="span">
                       +91
                     </Typography>
@@ -1543,14 +1818,30 @@ export default function CreateRequest() {
               placeholder={`Enter ${detail.name2}`}
               className="number-box"
               helperText={
-                detail.mobileno.length < 10 ? "(if needed) mobile no. must be 10 digits long"
-                    : validatedDetail()
+                detail.mobileno.length < 10
+                  ? "(mobile no. must be 10 digits long)"
+                  : validatedDetail()
               }
               value={detail.mobileno}
               autoComplete="off"
               style={{ fontSize: "0.88rem" }}
               label={detail.name2}
-              disabled={detail.to === "To" ? true : false}
+              disabled={
+                (detail.name === "Account number" &&
+                  detail.value.length < 16) ||
+                (detail.name === "Email ID" &&
+                  detail.value.length > 12 &&
+                  detail.value.length <= 320) ||
+                (detail.name === "PAN" && detail.value.length < 10) ||
+                (detail.name === "Credit Card" && detail.value.length < 16) ||
+                (detail.name === "Aadhar" && detail.value.length < 12) ||
+                (detail.name === "Debit Card" && detail.value.length < 16) ||
+                (detail.name === "Mobile No." && detail.value.length < 10) ||
+                (detail.name === "RRN" && detail.value.length < 12) ||
+                (detail.name === "CRN" && detail.value.length < 10)
+                  ? true
+                  : false
+              }
               margin="none"
               onChange={(e) =>
                 handleMobileNoValue(
@@ -1587,9 +1878,17 @@ export default function CreateRequest() {
                 sx={{ width: "57%" }}
               >
                 <TextField
-                  sx={inputControl.textfield}
+                  sx={
+                    detail.amount.length >= 1
+                      ? inputControl.validatedTextfield
+                      : inputControl.textfield
+                  }
                   data-testid={`amount-detail-${detailIndex}`}
-                  InputLabelProps={inputControl.inputLabelProps}
+                  InputLabelProps={
+                    detail.amount.length >= 1
+                      ? inputControl.validatedInputLabelProps
+                      : inputControl.inputLabelProps
+                  }
                   inputProps={{
                     style: {
                       fontSize: "0.88rem",
@@ -1607,12 +1906,14 @@ export default function CreateRequest() {
                   className="selected-param-box-3"
                   value={detail.amount.length === 0 ? "" : detail.amount}
                   helperText={
-                    detail.value.length < 12 ? "" :
-                      detail.value.length === 12 && detail.amount.length === 0 ? "(if needed) amount must be 1-6 digits long"
-                        : validatedDetail()
+                    detail.value.length < 12
+                      ? ""
+                      : detail.value.length === 12 && detail.amount.length === 0
+                      ? "If needed, amount must be 1-6 digits long"
+                      : validatedDetail()
                   }
                   autoComplete="off"
-                  FormHelperTextProps={{ sx : { color : 'red'}}}
+                  FormHelperTextProps={{ sx: { color: "rgb(255, 0, 0)" } }}
                   style={{
                     margin: "0rem 0rem 0rem 0rem",
                     // height: "5.5vh",
@@ -1662,10 +1963,10 @@ export default function CreateRequest() {
                   {detail.date !== "Date"
                     ? validatedHelperText("Dated")
                     : detail.value.length === 12
-                      ? customFormText("(if needed) select date")
-                      : detail.date === "Date" && detail.value.length === 12
-                        ? customFormText("(if needed) select date")
-                        : ""}
+                    ? customFormText("If needed, select date")
+                    : detail.date === "Date" && detail.value.length === 12
+                    ? customFormText("If needed, select date")
+                    : ""}
                 </LocalizationProvider>
               </Box>
             </Box>
@@ -1688,25 +1989,16 @@ export default function CreateRequest() {
               disabled={
                 (detail.name === "Account number" &&
                   detail.value.length < 16) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "Email ID" &&
                   detail.value.length > 12 &&
                   detail.value.length <= 320) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "PAN" && detail.value.length < 10) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "Credit Card" && detail.value.length < 16) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "Aadhar" && detail.value.length < 12) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "Debit Card" && detail.value.length < 16) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "Mobile No." && detail.value.length < 10) ||
-                (detail.from !== "From" && detail.to === "To") ||
                 (detail.name === "RRN" && detail.value.length < 12) ||
-                (detail.from !== "From" && detail.to === "To") ||
-                (detail.name === "CRN" && detail.value.length < 10) ||
-                (detail.from !== "From" && detail.to === "To")
+                (detail.name === "CRN" && detail.value.length < 10)
                   ? true
                   : false
               }
@@ -1719,6 +2011,11 @@ export default function CreateRequest() {
                 )
               }
               variant="standard"
+              sx={
+                detail.type === "Type"
+                  ? SelectProps.containerProps
+                  : SelectProps.validatedContainerProps
+              }
               input={<OutlinedInput fullWidth={true} />}
               IconComponent={(props) => (
                 <KeyboardArrowDownOutlinedIcon
@@ -1789,11 +2086,76 @@ export default function CreateRequest() {
             (detail.from !== "From" && detail.to === "To")
               ? customFormText("")
               : detail.type === "Type"
-                ? customFormText("select report type")
-                : validatedHelperText("Selected")}
+              ? customFormText("select report type")
+              : validatedHelperText("Selected")}
           </FormControl>
         )}
 
+        {/* {detailIndex < reportsState[reportIndex][detailName].length && (
+          <Button
+            className="add-remove-button"
+            data-testid={`delete-button-${detailIndex}`}
+            style={{
+              marginLeft:
+                reportName === "IP Logs" && detailName === "mobileNoDetails"
+                  ? "2%"
+                  : "0%",
+            }}
+            onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
+          >
+            <RemoveCircleOutlineRoundedIcon
+              sx={{
+                color: "red",
+                alignSelf: "center",
+                justifySelf: "center",
+                fontSize: "2.35rem",
+              }}
+            />
+          </Button>
+        )}
+
+       <Box sx={{ display : "flex",flexDirection : "row",marginLeft : "0.55rem"}}>
+        {detailIndex === reportsState[reportIndex][detailName].length - 1 && (
+          <Button
+            className="add-remove-button"
+            data-testid={`add-button-${detailIndex}`}
+            style={{
+              marginLeft:
+                reportName === "IP Logs" && detailName === "mobileNoDetails"
+                  ? "2%"
+                  : "0%",
+              opacity:
+                detail.value === "" ||
+                detail.value === 0 ||
+                detail.type === "Type"
+                  ? 0.5
+                  : 1,
+            }}
+            disabled={
+              detail.value === "" ||
+              detail.value === 0 ||
+              detail.type === "Type"
+                ? true
+                : false
+            }
+            onClick={() =>
+              addDetail(reportIndex, detailName, param, reportName)
+            }
+          >
+            <AddCircleOutlineRoundedIcon
+              sx={{
+                color: "red",
+                alignSelf: "center",
+                justifySelf: "center",
+                fontSize: "2.25rem",
+              }}
+            />
+          </Button>
+        )}
+        </Box>
+      </Box>
+
+    )); */}
         {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
         reportsState[reportIndex][detailName].length === 1 ? (
           <Button
@@ -1876,8 +2238,11 @@ export default function CreateRequest() {
                 ? "none"
                 : "block"
             }
+            sx={{ minWidth: "12rem", maxWidth: "12rem" }}
           >
-            <span className="preview-text">{`${detail.name}  : `}</span>
+            <span className="preview-text" style={{ fontWeight: 500 }}>{`${
+              detail.name === "Account number" ? "Acc no." : detail.name
+            }  : `}</span>
             <span className="preview-text">{detail.value}</span>
           </Box>
 
@@ -1902,7 +2267,9 @@ export default function CreateRequest() {
                 <Box
                   sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
-                  <span className="preview-text">Date : </span>
+                  <span className="preview-text" style={{ fontWeight: 500 }}>
+                    Date :{" "}
+                  </span>
                   <span className="preview-text">{`${detail.from} - `}</span>
                 </Box>
               )}
@@ -1923,7 +2290,9 @@ export default function CreateRequest() {
                 <Box
                   sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
-                  <span className="preview-text">Amount : </span>
+                  <span className="preview-text" style={{ fontWeight: 500 }}>
+                    Amount :{" "}
+                  </span>
                   <span className="preview-text">{detail.amount}</span>
                 </Box>
               )}
@@ -1932,7 +2301,9 @@ export default function CreateRequest() {
                 <Box
                   sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
                 >
-                  <span className="preview-text">Date : </span>
+                  <span className="preview-text" style={{ fontWeight: 500 }}>
+                    Date :{" "}
+                  </span>
                   <span className="preview-text">{detail.date}</span>
                 </Box>
               )}
@@ -1947,19 +2318,36 @@ export default function CreateRequest() {
                   : "block"
               }
             >
-              <span style={{ marginLeft: "0.92rem" }} className="preview-text">
+              <span
+                style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                className="preview-text"
+              >
                 Mobile No. :{" "}
               </span>
               <span className="preview-text">{detail.mobileno}</span>
+            </Box>
+          )}
+
+          {reportName === "Statement in PDF/Excel" && (
+            <Box display={detail.type === "Type" ? "none" : "block"}>
+              <span
+                style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                className="preview-text"
+              >
+                Type :{" "}
+              </span>
+              <span className="preview-text">{detail.type}</span>
             </Box>
           )}
         </Box>
       </Box>
     ));
 
-  //console.log("ticket number length", ticketNumber);
+  ////console.log("ticket number length", ticketNumber);
 
   const [reportDetails, setReportDetails] = useState([]);
+
+  const [deviceDetails, setDeviceDetails] = useState([]);
 
   const payloadInitiator = () => {
     setReportDetails((prevState) => {
@@ -1983,168 +2371,194 @@ export default function CreateRequest() {
     });
   };
 
+  const individualReportHandler = () => {
+    const deviceDetailData = reportDetails.filter(
+      (report) => report.reportName === "Device details"
+    );
+    setDeviceDetails(deviceDetailData);
+  };
+
   const configurePayload = () => {
     payloadInitiator();
   };
-  
-  const isValidDisplay =
-  reportsState.some(
-    (state, index) =>
-      state.accountNumberDetails.length >= 1 &&
-      state.accountNumberDetails.some(
-        (detail, subIndex) =>
-          state.accountNumberDetails[0].value.length === 16 &&
-          state.accountNumberDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.PANdetails.length >= 1 &&
-      state.PANdetails.some(
-        (detail, subIndex) =>
-          state.PANdetails[0].length === 10 &&
-          state.PANdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.CRNdetails.length >= 1 &&
-      state.CRNdetails.some(
-        (detail, subIndex) =>
-          state.CRNdetails[0].length === 10 &&
-          state.CRNdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.RRNdetails.length >= 1 &&
-      state.RRNdetails.some(
-        (detail, subIndex) =>
-          state.RRNdetails[0].length === 12 &&
-          state.RRNdetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.aadharDetails.length >= 1 &&
-      state.aadharDetails.some(
-        (detail, subIndex) =>
-          state.aadharDetails[0].length === 12 &&
-          state.aadharDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.mobileNoDetails.length >= 1 &&
-      state.mobileNoDetails.some(
-        (detail, subIndex) =>
-          state.mobileNoDetails[0].length === 10 &&
-          state.mobileNoDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.creditCardDetails.length >= 1 &&
-      state.creditCardDetails.some(
-        (detail, subIndex) =>
-          state.creditCardDetails[0].length === 16 &&
-          state.creditCardDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.debitCardDetails.length >= 1 &&
-      state.debitCardDetails.some(
-        (detail, subIndex) =>
-          state.debitCardDetails[0].length === 16 &&
-          state.debitCardDetails[0].type !== "Type"
-      )
-  ) ||
-  reportsState.some(
-    (state, index) =>
-      state.emailDetails.length >= 1 &&
-      state.emailDetails.some(
-        (detail, subIndex) =>
-          state.emailDetails[0].length > 16 &&
-          state.emailDetails[0].type !== "Type"
-      )
-  );
 
-const isValidReportData = reportsState.some(
-  (state, index) =>
-    (state.accountNumberDetails.length > 0 &&
-      state.accountNumberDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.PANdetails.length > 0 &&
-      state.PANdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.CRNdetails.length > 0 &&
-      state.CRNdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.RRNdetails.length > 0 &&
-      state.RRNdetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 12 && detail.type !== "Type"
-      )) ||
-    (state.aadharDetails.length > 0 &&
-      state.aadharDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 12 && detail.type !== "Type"
-      )) ||
-    (state.mobileNoDetails.length > 0 &&
-      state.mobileNoDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 10 && detail.type !== "Type"
-      )) ||
-    (state.creditCardDetails.length > 0 &&
-      state.creditCardDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.debitCardDetails.length > 0 &&
-      state.debitCardDetails.every(
-        (detail, subIndex) =>
-          detail.value.length === 16 && detail.type !== "Type"
-      )) ||
-    (state.emailDetails.length > 0 &&
-      state.emailDetails.every(
-        (detail, subIndex) =>
-          detail.value.length > 16 && detail.type !== "Type"
-      ))
-);
+  const configureIndividualRequests = () => {
+    individualReportHandler();
+  };
+
+  const isValidDisplay =
+    reportsState.some(
+      (state, index) =>
+        state.accountNumberDetails.length >= 1 &&
+        state.accountNumberDetails.some(
+          (detail, subIndex) =>
+            state.accountNumberDetails[0].value.length === 16 &&
+            state.accountNumberDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.PANdetails.length >= 1 &&
+        state.PANdetails.some(
+          (detail, subIndex) =>
+            state.PANdetails[0].length === 10 &&
+            state.PANdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.CRNdetails.length >= 1 &&
+        state.CRNdetails.some(
+          (detail, subIndex) =>
+            state.CRNdetails[0].length === 10 &&
+            state.CRNdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.RRNdetails.length >= 1 &&
+        state.RRNdetails.some(
+          (detail, subIndex) =>
+            state.RRNdetails[0].length === 12 &&
+            state.RRNdetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.aadharDetails.length >= 1 &&
+        state.aadharDetails.some(
+          (detail, subIndex) =>
+            state.aadharDetails[0].length === 12 &&
+            state.aadharDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.mobileNoDetails.length >= 1 &&
+        state.mobileNoDetails.some(
+          (detail, subIndex) =>
+            state.mobileNoDetails[0].length === 10 &&
+            state.mobileNoDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.creditCardDetails.length >= 1 &&
+        state.creditCardDetails.some(
+          (detail, subIndex) =>
+            state.creditCardDetails[0].length === 16 &&
+            state.creditCardDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.debitCardDetails.length >= 1 &&
+        state.debitCardDetails.some(
+          (detail, subIndex) =>
+            state.debitCardDetails[0].length === 16 &&
+            state.debitCardDetails[0].type !== "Type"
+        )
+    ) ||
+    reportsState.some(
+      (state, index) =>
+        state.emailDetails.length >= 1 &&
+        state.emailDetails.some(
+          (detail, subIndex) =>
+            state.emailDetails[0].length > 16 &&
+            state.emailDetails[0].type !== "Type"
+        )
+    );
+
+  const isValidReportData = reportsState.some(
+    (state, index) =>
+      (state.accountNumberDetails.length > 0 &&
+        state.accountNumberDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.PANdetails.length > 0 &&
+        state.PANdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.CRNdetails.length > 0 &&
+        state.CRNdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.RRNdetails.length > 0 &&
+        state.RRNdetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 12 && detail.type !== "Type"
+        )) ||
+      (state.aadharDetails.length > 0 &&
+        state.aadharDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 12 && detail.type !== "Type"
+        )) ||
+      (state.mobileNoDetails.length > 0 &&
+        state.mobileNoDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 10 && detail.type !== "Type"
+        )) ||
+      (state.creditCardDetails.length > 0 &&
+        state.creditCardDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.debitCardDetails.length > 0 &&
+        state.debitCardDetails.every(
+          (detail, subIndex) =>
+            detail.value.length === 16 && detail.type !== "Type"
+        )) ||
+      (state.emailDetails.length > 0 &&
+        state.emailDetails.every(
+          (detail, subIndex) =>
+            detail.value.length > 16 && detail.type !== "Type"
+        ))
+  );
 
   const handleSubmit = () => {
     configurePayload();
-    
-    if(isValidReportData === false){
-      displayToast("All Mandatory Fields must be non-empty!", 3000, "rgb(93, 235, 215)","black",500);
+    // setTimeout(() => {
+    configureIndividualRequests();
+    // },1400);
+
+    if (isValidReportData === false) {
+      displayToast(
+        "All Mandatory Fields must be non-empty!",
+        3000,
+        "rgb(254, 236, 179)",
+        "black",
+        500
+      );
     } else {
-    //Submit API Function
+      //Submit API Function
 
-    //Error Block
-    // displayToast("Error Submitting Request",3200,"red","white",600);
+      //Error Block
+      // displayToast("Error Submitting Request",3200,"red","white",600);
 
-    // SuccessBlock
+      // SuccessBlock
 
-    setSubmitted(true);
-    // dispatch(setRequestPayloads(responsePayload));
-    displayToast("Successfully Submitted Request", 2000, "rgb(7, 65, 115)","white",600);
-    setTimeout(() => {
-      route_to("/ViewRequest");
-    }, 1000);
+      setSubmitted(true);
+      // dispatch(setRequestPayloads(responsePayload));
+      displayToast(
+        "Successfully Submitted Request",
+        2000,
+        "rgb(7, 65, 115)",
+        "white",
+        600
+      );
+      // setTimeout(() => {
+      //   route_to("/ViewRequest");
+      // }, 1000);
     }
   };
 
-  // console.log("Valid Report Data", isValidReportData);
-  console.log("Spring Boot Payload", reportDetails);
+  // //console.log("Valid Report Data", isValidReportData);
+  //console.log("Spring Boot Payload", reportDetails);
 
-  const requestPayload = {
+  const createRequestPayload = {
     // ticketId: "",
     ticketNumber: ticketNumber,
     ticketDescription: ticketDescription,
@@ -2153,6 +2567,19 @@ const isValidReportData = reportsState.some(
     createdBy: Creator,
     reportDetails: reportDetails,
   };
+
+  const deviceDetailsPayload = {
+    // ticketId: "",
+    ticketNumber: ticketNumber,
+    ticketDescription: ticketDescription,
+    // status: "",
+    createdDate: reduxDate,
+    createdBy: Creator,
+    reportDetails: deviceDetails,
+  };
+
+  console.log("Create Request Details array", createRequestPayload);
+  console.log("Device Details Array", deviceDetails);
 
   return (
     <Provider store={store}>
@@ -2185,14 +2612,25 @@ const isValidReportData = reportsState.some(
                     margin="none"
                     className="ticket-number-container"
                   >
+                    {/* {loading === true ? (
+                      <Skeleton height="2.75rem" sx={{ borderRadius : '4px', backgroundColor : "rgb(230, 230, 235)"}} animation="pulse" variant="rectangular" />
+                    ) : ( */}
                     <TextField
-                      sx={inputControl.textfield}
+                      sx={
+                        ticketNumber.length === 10
+                          ? inputControl.validatedTextfield
+                          : inputControl.textfield
+                      }
                       helperText={
                         ticketNumber.length < 10
-                          ? "ticket number should be 10 characters long"
+                          ? "10 characters only"
                           : validatedDetail()
                       }
-                      InputLabelProps={inputControl.inputLabelProps}
+                      InputLabelProps={
+                        ticketNumber.length === 10
+                          ? inputControl.validatedInputLabelProps
+                          : inputControl.inputLabelProps
+                      }
                       FormHelperTextProps={{ sx: { color: "red" } }}
                       inputProps={{
                         style: {
@@ -2239,30 +2677,38 @@ const isValidReportData = reportsState.some(
                         ticketNumber.length < 10
                           ? ""
                           : ticketNumber.length === 10 &&
-                              ticketDescription.length === 0
-                            ? "ticket description should be between 10-60 characters long"
-                            : ticketDescription.length < 10
-                              ? "ticket description should be between 10-60 characters long"
-                              : validatedDetail()
+                            ticketDescription.length === 0
+                          ? "10-60 characters only"
+                          : ticketDescription.length < 10
+                          ? "10-60 characters only"
+                          : validatedDetail()
                       }
                       required
                       label={t("ticketDesc")}
                       onFocus={() => {
-                        //console.log('desc length',ticketDescription.length);
-                        //console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                        ////console.log('desc length',ticketDescription.length);
+                        ////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
                         setDescriptionFocused(true);
                       }}
                       onBlur={() => setDescriptionFocused(false)}
                       multiline
                       // multiline
-                      sx={inputControl.textfield}
+                      sx={
+                        ticketDescription.length >= 10
+                          ? inputControl.validatedTextfield
+                          : inputControl.textfield
+                      }
                       className="ticket-description-input"
                       autoComplete="off"
                       rows={Math.ceil(ticketDescription.length / 60)}
                       size="small"
                       fullWidth
                       inputProps={inputControl.textAreaProps}
-                      InputLabelProps={inputControl.textAreaLabelProps}
+                      InputLabelProps={
+                        ticketDescription.length >= 10
+                          ? inputControl.validatedTextAreaLabelProps
+                          : inputControl.textAreaLabelProps
+                      }
                       style={{
                         margin: "0rem 0rem 0rem 0rem",
                         backgroundColor: "white",
@@ -2297,8 +2743,7 @@ const isValidReportData = reportsState.some(
                     value={selectedReports}
                     displayEmpty
                     disabled={
-                      ticketNumber.length < 10 ||
-                      ticketDescription.length < 10
+                      ticketNumber.length < 10 || ticketDescription.length < 10
                         ? true
                         : false
                     }
@@ -2342,6 +2787,11 @@ const isValidReportData = reportsState.some(
                       );
                     }}
                     inputProps={{}}
+                    sx={
+                      selectedReports.length === 0
+                        ? SelectProps.containerProps
+                        : SelectProps.validatedContainerProps
+                    }
                     MenuProps={SelectProps.REPORT_SELECT_PROPS}
                     autoWidth={false}
                     style={{
@@ -2349,11 +2799,7 @@ const isValidReportData = reportsState.some(
                       alignItems: "center",
                       height: "2.56rem",
                       fontSize: "0.88rem",
-                      border:
-                        ticketNumber.length === 0 ||
-                        ticketDescription.length === 0
-                          ? "none"
-                          : "0.25px solid black",
+                      border: "none",
                     }}
                     placeholder={t("statementsReportRequire")}
                   >
@@ -2414,13 +2860,13 @@ const isValidReportData = reportsState.some(
                   {selectedReports.length >= 1
                     ? validatedHelperText("Selected")
                     : ticketNumber.length === 0 ||
-                        ticketDescription.length === 0
-                      ? () => {}
-                      : ticketNumber.length === 10 &&
-                          ticketDescription.length >= 10 &&
-                          selectedReports.length === 0
-                        ? customFormText("select reports")
-                        : () => {}}
+                      ticketDescription.length === 0
+                    ? () => {}
+                    : ticketNumber.length === 10 &&
+                      ticketDescription.length >= 10 &&
+                      selectedReports.length === 0
+                    ? customFormText("select reports")
+                    : () => {}}
                 </FormControl>
               </>
             )}
@@ -2537,6 +2983,12 @@ const isValidReportData = reportsState.some(
                                       id="param-selection-dropdown"
                                       data-testid={`param-dropdown-${reportIndex}`}
                                       multiple={true}
+                                      sx={
+                                        reportsState[reportIndex].selectedParams
+                                          .length === 0
+                                          ? SelectProps.containerProps
+                                          : SelectProps.validatedContainerProps
+                                      }
                                       SelectDisplayProps={{
                                         "data-testid": `param-dropdown-sas-${reportIndex}`,
                                         role: "combobox",
@@ -2566,11 +3018,6 @@ const isValidReportData = reportsState.some(
                                           fullWidth={false}
                                         />
                                       }
-                                      sx={{
-                                        "& .reports-type-dropdownicon": {
-                                          paddingRight: "1.75rem",
-                                        },
-                                      }}
                                       IconComponent={(props) => (
                                         <KeyboardArrowDownOutlinedIcon
                                           className="reports-type-dropdownicon"
@@ -2613,7 +3060,6 @@ const isValidReportData = reportsState.some(
                                         alignItems: "center",
                                         height: "2.65rem",
                                         fontSize: "0.88rem",
-                                        border: "0.25px solid black",
                                       }}
                                       placeholder={t("selectDetails")}
                                     >
@@ -2839,7 +3285,7 @@ const isValidReportData = reportsState.some(
                     <Typography
                       fontFamily="Roboto"
                       fontSize="0.92rem"
-                      fontWeight={500}
+                      fontWeight={600}
                       color={isValidReportData === true ? "white" : "black"}
                     >
                       {t("submit")}

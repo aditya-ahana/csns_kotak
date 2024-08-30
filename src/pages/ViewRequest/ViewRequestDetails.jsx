@@ -29,7 +29,7 @@ export default function ViewRequestDetails() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    },620)
+    },360)
   });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();

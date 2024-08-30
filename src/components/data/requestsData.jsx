@@ -1,5 +1,11 @@
 export const requestPhases = ["Completed", "In-progress", "Failed"];
 
+export let readOnly = true;
+
+export const changeReadOnly = (newState) => {
+  readOnly = newState;
+};
+
 export const requiredReportsData = [
   "Statement in PDF/Excel",
   "Beneficiary details for Single IMPS transactions",

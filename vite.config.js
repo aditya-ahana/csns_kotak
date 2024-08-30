@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'url';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig(() => {
@@ -12,6 +13,22 @@ export default defineConfig(() => {
     //   hmr : {
     //     overlay : false
     //   }
-    }
+    },
+    test: {
+      deps: {
+        inline: ['vitest-canvas-mock'],
+      },
+      threads: false,
+      globals : true,
+      setupFiles: ["src/Mocks/VitestSetup.js"],
+      environment: 'jsdom',
+      css : true,
+      coverage: {
+        reporter: ['lcov', 'text'],
+      },
+    },
+    resolve: {
+      alias: [{ find: '@/', replacement: fileURLToPath(new URL('./', import.meta.url))}]
+        },
   };
 });

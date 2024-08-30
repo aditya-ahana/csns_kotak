@@ -7,7 +7,7 @@ import {
   within,
   waitFor,
 } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import { test, expect,vi,describe } from "vitest";
 import ViewRequest from "../../pages/ViewRequest/ViewRequest";
 import ViewRequestDetails from "../../pages/ViewRequest/ViewRequestDetails";
 import { requestList, requestPhases } from "../../components/data/requestsData";
@@ -16,6 +16,7 @@ import { cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import MailDraft from "../../components/Modals/MailDraft";
 import { requestDetails } from "../../components/data/requestsData";
+import { changeReadOnly } from "../../components/data/requestsData";
 
 const renderViewRequest = () => {
   return render(
@@ -44,7 +45,7 @@ const openFilterMenu = () => {
   expect(filterMenu).toBeInTheDocument();
 };
 
-test("View Request Page Loader Render Check",() => {
+test("View Request Page Loader Render Check", () => {
   renderViewRequest();
 
   const loader = screen.getByTestId("loader-modal");
@@ -52,211 +53,208 @@ test("View Request Page Loader Render Check",() => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  },1000)
+  }, 1000);
 });
 
 test("Render View Request Page", () => {
   renderViewRequest();
   setTimeout(() => {
+    // expect(screen.getByText("viewRequest")).toBeInTheDocument();
+    expect(screen.getByTestId("lottie-data")).toBeInTheDocument();
 
-  // expect(screen.getByText("viewRequest")).toBeInTheDocument();
-  expect(screen.getByTestId("lottie-data")).toBeInTheDocument();
-
-  // screen.debug();
-},1000);
+    // screen.debug();
+  }, 1000);
 });
 
 test("Open Filter Menu", () => {
   renderViewRequest();
-   setTimeout(() => {
-   openFilterMenu();
-  },1000);
+  setTimeout(() => {
+    openFilterMenu();
+  }, 1000);
 });
 
 test("Search Input Functionality", () => {
   renderViewRequest();
 
   setTimeout(() => {
-  const searchBar = screen.getByTestId("searchbar").querySelector("input");
+    const searchBar = screen.getByTestId("searchbar").querySelector("input");
 
-  expect(searchBar.value).toBe("");
+    expect(searchBar.value).toBe("");
 
-  fireEvent.change(searchBar, { target: { value: "user" } });
+    fireEvent.change(searchBar, { target: { value: "user" } });
 
-  expect(searchBar.value).toBe("user");
+    expect(searchBar.value).toBe("user");
 
-  fireEvent.change(searchBar, { target: { value: "User".toLowerCase() } });
+    fireEvent.change(searchBar, { target: { value: "User".toLowerCase() } });
 
-  expect(searchBar.value).toBe("User".toLowerCase());
-},1000);
+    expect(searchBar.value).toBe("User".toLowerCase());
+  }, 1000);
 });
 
 test("From Date Picker Functionality", async () => {
   renderViewRequest();
-   setTimeout(() => {
-  openFilterMenu();
+  changeReadOnly(false);
+  setTimeout(() => {
+    openFilterMenu();
 
-  const fromPicker = screen.getByLabelText("From");
+    const fromPicker = screen.getByLabelText("From");
 
-  expect(fromPicker).toBeInTheDocument();
+    expect(fromPicker).toBeInTheDocument();
 
-  fireEvent.change(fromPicker, { target: { value: "20-08-2024" } });
+    fireEvent.change(fromPicker, { target: { value: "20-08-2024" } });
 
-  expect(fromPicker.value).toBe("20-08-2024");
-  },1000);
+    expect(fromPicker.value).toBe("20-08-2024");
+    changeReadOnly(true);
+  }, 1000);
 });
 
 test("To Date Picker Functionality Check", () => {
   renderViewRequest();
-   setTimeout(() => {
-  openFilterMenu();
-  const toPicker = screen.getByLabelText("To");
+  changeReadOnly(false);
+  setTimeout(() => {
+    openFilterMenu();
+    const toPicker = screen.getByLabelText("To");
 
-  expect(toPicker).toBeInTheDocument();
+    expect(toPicker).toBeInTheDocument();
 
-  fireEvent.change(toPicker, { target: { value: "21-08-2024" } });
+    fireEvent.change(toPicker, { target: { value: "21-08-2024" } });
 
-  expect(toPicker.value).toBe("21-08-2024");
-  },1000);
+    expect(toPicker.value).toBe("21-08-2024");
+    changeReadOnly(true);
+  }, 1000);
 });
 
 test("Routing to View Details Page on clicking Details button Functionality check", () => {
   renderViewRequest();
 
   setTimeout(() => {
+    const viewDetailsButton = screen.queryByTestId("details-page-nav0");
 
-  const viewDetailsButton = screen.queryByTestId("details-page-nav0");
+    fireEvent.click(viewDetailsButton);
 
-  fireEvent.click(viewDetailsButton);
+    expect(renderViewDetails());
 
-  expect(renderViewDetails());
+    const viewDetailsPage = screen.queryByTestId("view-details-page");
 
-  const viewDetailsPage = screen.queryByTestId("view-details-page");
-
-  expect(viewDetailsPage).toBeInTheDocument();
-},1000);
+    expect(viewDetailsPage).toBeInTheDocument();
+  }, 1000);
 });
 
 test("Viewing Mail Draft modal on clicking the E-draft button Functionality check", () => {
   renderViewRequest();
 
   setTimeout(() => {
+    const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
 
-  const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
+    fireEvent.click(viewEmailDraftButton);
 
-  fireEvent.click(viewEmailDraftButton);
+    const draftModal = screen.queryByTestId("email-draft-section");
 
-  const draftModal = screen.queryByTestId("email-draft-section");
-
-  expect(draftModal).toBeInTheDocument();
-},1000);
+    expect(draftModal).toBeInTheDocument();
+  }, 1000);
 });
 
 test("Close Email Draft Modal Button Functionality Check", () => {
   renderViewRequest();
 
   setTimeout(() => {
+    const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
 
-  const viewEmailDraftButton = screen.queryByTestId("details-page-nav0");
+    fireEvent.click(viewEmailDraftButton);
 
-  fireEvent.click(viewEmailDraftButton);
+    const draftSection = screen.queryByTestId("email-draft-section");
+    const draftModal = screen.queryByTestId("email-draft-modal");
 
-  const draftSection = screen.queryByTestId("email-draft-section");
-  const draftModal = screen.queryByTestId("email-draft-modal");
+    expect(draftSection).toBeVisible();
 
-  expect(draftSection).toBeVisible();
+    const closeDraftButton = screen.queryByTestId("close-draft-modal");
 
-  const closeDraftButton = screen.queryByTestId("close-draft-modal");
+    expect(closeDraftButton).toBeInTheDocument();
 
-  expect(closeDraftButton).toBeInTheDocument();
+    fireEvent.click(closeDraftButton);
 
-  fireEvent.click(closeDraftButton);
-
-  expect(draftModal).not.toBeVisible();
-},1000);
+    expect(draftModal).not.toBeVisible();
+  }, 1000);
 });
 
 test("Clear Filter Button Rendering on Date Range Select", () => {
   renderViewRequest();
-   setTimeout(() => {
-  openFilterMenu();
-  },1000);
+  setTimeout(() => {
+    openFilterMenu();
+  }, 1000);
 
   setTimeout(() => {
+    const fromPicker = screen.getByLabelText("From");
 
-  const fromPicker = screen.getByLabelText("From");
+    expect(fromPicker).toBeInTheDocument();
 
-  expect(fromPicker).toBeInTheDocument();
+    fireEvent.change(fromPicker, { target: { value: "20-08-2024" } });
 
-  fireEvent.change(fromPicker, { target: { value: "20-08-2024" } });
+    expect(fromPicker.value).toBe("20-08-2024");
 
-  expect(fromPicker.value).toBe("20-08-2024");
+    const toPicker = screen.getByLabelText("To");
 
-  const toPicker = screen.getByLabelText("To");
+    expect(toPicker).toBeInTheDocument();
 
-  expect(toPicker).toBeInTheDocument();
+    fireEvent.change(toPicker, { target: { value: "21-08-2024" } });
 
-  fireEvent.change(toPicker, { target: { value: "21-08-2024" } });
+    expect(toPicker.value).toBe("21-08-2024");
 
-  expect(toPicker.value).toBe("21-08-2024");
+    const clearFilterButton = screen.queryByTestId("menu-clear-button");
 
-  const clearFilterButton = screen.queryByTestId("menu-clear-button");
-
-  expect(clearFilterButton).toBeInTheDocument();
-},1000);
+    expect(clearFilterButton).toBeInTheDocument();
+  }, 1000);
 });
 
 test("Select Rows Per Page Dropdown Functionality Check", () => {
   renderViewRequest();
 
   setTimeout(() => {
+    const pagination = screen.getByTestId("view-request-pagination");
+    expect(pagination).toBeInTheDocument();
 
-  const pagination = screen.getByTestId("view-request-pagination");
-  expect(pagination).toBeInTheDocument();
+    const rowsDropdown = within(pagination).getByRole("combobox");
+    expect(rowsDropdown).toBeInTheDocument();
 
-  const rowsDropdown = within(pagination).getByRole("combobox");
-  expect(rowsDropdown).toBeInTheDocument();
+    fireEvent.mouseDown(rowsDropdown);
 
-  fireEvent.mouseDown(rowsDropdown);
+    const rowsDisplay = screen.getByTestId("rows-display");
 
-  const rowsDisplay = screen.getByTestId("rows-display");
+    expect(rowsDisplay).toHaveTextContent("10");
 
-  expect(rowsDisplay).toHaveTextContent("10");
+    const rowOptions = screen.getAllByRole("option");
 
-  const rowOptions = screen.getAllByRole("option");
+    fireEvent.click(
+      rowOptions.find((option) => option.getAttribute("data-value") === "5")
+    );
 
-  fireEvent.click(
-    rowOptions.find((option) => option.getAttribute("data-value") === "5")
-  );
+    expect(rowsDisplay).toHaveTextContent("5");
 
-  expect(rowsDisplay).toHaveTextContent("5");
+    fireEvent.click(
+      rowOptions.find((option) => option.getAttribute("data-value") === "10")
+    );
 
-  fireEvent.click(
-    rowOptions.find((option) => option.getAttribute("data-value") === "10")
-  );
+    expect(rowsDisplay).toHaveTextContent("10");
 
-  expect(rowsDisplay).toHaveTextContent("10");
+    fireEvent.click(
+      rowOptions.find((option) => option.getAttribute("data-value") === "25")
+    );
 
-  fireEvent.click(
-    rowOptions.find((option) => option.getAttribute("data-value") === "25")
-  );
+    expect(rowsDisplay).toHaveTextContent("25");
 
-  expect(rowsDisplay).toHaveTextContent("25");
+    fireEvent.click(
+      rowOptions.find((option) => option.getAttribute("data-value") === "40")
+    );
 
-  fireEvent.click(
-    rowOptions.find((option) => option.getAttribute("data-value") === "40")
-  );
-
-  expect(rowsDisplay).toHaveTextContent("40");
-},1000);
+    expect(rowsDisplay).toHaveTextContent("40");
+  }, 1000);
 });
-
 
 test.skip("Latest Menu Checkbox Functionality Check", () => {
   renderViewRequest();
-   setTimeout(() => {
-  openFilterMenu();
-  },1000);
+  setTimeout(() => {
+    openFilterMenu();
+  }, 1000);
 
   const statusMenu = screen.getByTestId("status-unchecked");
 
