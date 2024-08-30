@@ -152,7 +152,6 @@ border-radius: 10px;
 /* cr-tr-td css */
 
 .page {
-  background-color: transparent;
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -280,7 +279,7 @@ input::-webkit-inner-spin-button {
   border-width: 1.5px;
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
-  width: 83%;
+  width: 82.75%;
 }
 
 .selected-report-header {
@@ -297,7 +296,7 @@ input::-webkit-inner-spin-button {
   font-size: 0.85rem;
   vertical-align: middle;
   font-family: Roboto;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .selected-report-details {
@@ -476,7 +475,7 @@ input::-webkit-inner-spin-button {
   font-size: 0.84rem;
   vertical-align: middle;
   font-family: Roboto;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .preview-report-details {
@@ -494,6 +493,7 @@ input::-webkit-inner-spin-button {
   padding: 0.45rem 2.85rem 0.45rem 2.85rem;
   /* padding: 0rem 0rem 0rem 0rem; */
   gap: 2rem;
+  /* justify-content: space-between; */
 }
 
 .detail-input {
@@ -856,4 +856,8 @@ input::-webkit-inner-spin-button {
   align-items: center;
   justify-content: center;
   overflow: auto;
+}
+
+.date-picker {
+  cursor : pointer;
 }

@@ -1,47 +1,45 @@
 import React from "react";
+import { test, expect, vi, describe } from "vitest";
 
-import { render } from "@testing-library/react";
-import App from "../App";
+test("All Component Mocks",() => {
+vi.mock("../Entry.jsx");
 
-jest.mock("../main.jsx");
+vi.mock("../App.jsx");
+vi.mock("../App.css");
 
-jest.mock("../App.jsx");
-jest.mock("../App.css");
+vi.mock("../i18n.js");
 
-jest.mock("../i18n.js");
+vi.mock("../pages/UnifiedDesktop.jsx");
 
-jest.mock("../pages/UnifiedDesktop.jsx");
+vi.mock("../pages/Dashboard/Dashboard.jsx");
 
-jest.mock("../pages/Dashboard/Dashboard.jsx");
+vi.mock("../pages/CreateRequest/CreateRequest.jsx");
 
-jest.mock("../pages/CreateRequest/CreateRequest.jsx");
+vi.mock("../pages/ViewRequest/ViewRequest.jsx");
+vi.mock("../pages/ViewRequest/ViewRequestDetails.jsx");
 
-jest.mock("../pages/ViewRequest/ViewRequest.jsx");
-jest.mock("../pages/ViewRequest/ViewRequestDetails.jsx");
+vi.mock("../components/BreadCrumb.jsx");
+vi.mock("../components/Header.jsx");
+vi.mock("../components/LanguageSelector.jsx");
+vi.mock("../components/Sidebar.jsx");
+vi.mock("../components/Modals/MailDraft.jsx");
+vi.mock("../components/data/FederationData.jsx");
+vi.mock("../components/data/requestsData.jsx");
+vi.mock("../components/data/SidebarData.jsx");
 
-jest.mock("../components/BreadCrumb.jsx");
-jest.mock("../components/Header.jsx");
-jest.mock("../components/LanguageSelector.jsx");
-jest.mock("../components/Sidebar.jsx");
-jest.mock("../components/Modals/MailDraft.jsx");
-jest.mock("../components/data/FederationData.jsx");
-jest.mock("../components/data/requestsData.jsx");
-jest.mock("../components/data/SidebarData.jsx");
+vi.mock("../Layout/SharedLayout.jsx");
+vi.mock("../Layout/WithNav.jsx");
+vi.mock("../Layout/WithoutNav.jsx");
 
-jest.mock("../Layout/SharedLayout.jsx");
-jest.mock("../Layout/WithNav.jsx");
-jest.mock("../Layout/WithoutNav.jsx");
+vi.mock("../locale/English.js");
+vi.mock("../locale/Hindi.js");
 
-jest.mock("../locale/English.js");
-jest.mock("../locale/Hindi.js");
+vi.mock("../Mocks/VitestSetup.js")
 
-jest.mock("../Mocks/Mocker.js");
+vi.mock("../Mocks/Mocker.js");
 
-jest.mock("../Redux/csnsReducers.js");
-jest.mock("../Redux/reduxStore.js");
-
-describe("Succesfull App Render Scenario", () => {
-  test("App Mount", () => {
-    expect(render(<App />));
-  });
+vi.mock("../Redux/csnsReducers.js");
+vi.mock("../Redux/reduxStore.js");
 });
+
+
