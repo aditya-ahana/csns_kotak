@@ -39,7 +39,7 @@ export default function ViewRequestDetails() {
   const current_date = new Date();
   const viewRequestTableHeaders = [
     "Ticket Id",
-    "Requests",
+    "Reports",
     "Status",
     "Created Date",
     "Action",
@@ -107,7 +107,7 @@ export default function ViewRequestDetails() {
                         width:
                           header === "Ticket Id"
                             ? "7.5%"
-                            : header === "Requests"
+                            : header === "Reports"
                               ? "20%"
                               : header === "Status"
                                 ? "10%"

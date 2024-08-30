@@ -174,7 +174,7 @@ export default function ViewRequest() {
 
   const viewRequestTableHeaders = [
     "Ticket Id",
-    "Requests",
+    "Reports",
     "Status",
     "Created Date",
     "Requester",
@@ -882,7 +882,7 @@ export default function ViewRequest() {
                                         width:
                                           header === "Ticket Id"
                                             ? "12%"
-                                            : header === "Requests"
+                                            : header === "Reports"
                                               ? "27%"
                                               : header === "Status"
                                                 ? "15%"
@@ -1031,7 +1031,7 @@ export default function ViewRequest() {
                                           >
                                             <Typography
                                               component="span"
-                                              sx={{ fontSize: "0.88rem" }}
+                                              sx={{ fontSize: "0.88rem",fontWeight : 500 }}
                                             >
                                               {detail.status}
                                             </Typography>

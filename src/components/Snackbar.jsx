@@ -19,11 +19,12 @@ export default function MaterialToast(props) {
         backgroundColor : props.backgroundColor,
         color : props.color,
         fontWeight : props.fontWeight,
+
         borderRadius : "12px",
         // borderWidth : "1.5px",
         // borderStyle : "solid",
         // borderColor : "white",
-        width : "20rem",
+        width : "auto",
         animation : "alternate-reverse"
       },
     }}
