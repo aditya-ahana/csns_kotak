@@ -28,7 +28,8 @@ import { requestDetails } from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
 import IconButton from "@mui/material/IconButton";
 
-import sandBox from "../../static/sandBox.gif";
+// import sandBox from "../../static/sandBox.gif";
+import sandBox from "../../static/sandClock.gif";
 
 import Tooltip from "@mui/material/Tooltip";
 
@@ -39,9 +40,7 @@ export default function ViewRequestDetails() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-
-    },360)
-
+    }, 360);
   });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
@@ -109,11 +108,11 @@ export default function ViewRequestDetails() {
                   style={{ borderColor: "gray", color: "gray" }}
                   className="fw-bold"
                 >
-                  Download All
+                  {t("downloadAll")}
                 </Button>
                 <div className="p-1"></div>
                 <Button variant="contained" color="error" className="fw-bold">
-                  Close Ticket
+                  {t("closeTicket")}
                 </Button>
               </div>
               <div className="p-1"></div>
@@ -379,17 +378,18 @@ export default function ViewRequestDetails() {
                                           <img
                                             src={sandBox}
                                             alt="Sand Box"
-                                            style={{ width: "18%" }}
+                                            style={{
+                                              width: "18%",
+                                              mixBlendMode: "darken",
+                                            }}
                                           />
                                         </Tooltip>
                                       ) : (
                                         <Tooltip title="Download">
-                                          <IconButton>
-                                            <IconButton color="success">
-                                              <MdOutlineFileDownload
-                                                style={{ fontSize: "x-large" }}
-                                              />
-                                            </IconButton>
+                                          <IconButton color="success">
+                                            <MdOutlineFileDownload
+                                              style={{ fontSize: "x-large" }}
+                                            />
                                           </IconButton>
                                         </Tooltip>
 

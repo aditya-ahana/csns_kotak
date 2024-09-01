@@ -59,4 +59,6 @@ export const Hindi = {
 
   // view request
   viewRequestDetails: "विवरण देखें",
+  downloadAll: "सभी डाउनलोड करें",
+  closeTicket: "टिकट बंद करें",
 };

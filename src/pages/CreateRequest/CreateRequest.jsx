@@ -50,8 +50,15 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MaterialToast from "../../components/Snackbar";
 import Skeleton from "@mui/material/Skeleton";
 import { readOnly } from "../../components/data/requestsData";
+import ErrorIcon from "@mui/icons-material/Error";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
+
+function strLength(s) {
+  var length = 0;
+  while (s[length] !== undefined) length++;
+  return length;
+}
 
 const validatedDetail = () => {
   return (
@@ -64,6 +71,26 @@ const validatedDetail = () => {
       <CheckCircleIcon
         sx={{ color: "green", marginTop: "0.05rem", fontSize: "1rem" }}
       />
+    </Box>
+  );
+};
+
+const warningHelperText = (text) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "0.25rem",
+        margin: "0.1rem 0rem 0rem 0rem",
+      }}
+    >
+      <ErrorIcon
+        sx={{ color: "red", marginTop: "0.075rem", fontSize: "1rem" }}
+      />
+      <Typography sx={{ color: "red", fontSize: "0.785rem", fontWeight: 400 }}>
+        {text}
+      </Typography>
     </Box>
   );
 };
@@ -90,10 +117,10 @@ const validatedHelperText = (text) => {
   );
 };
 
-const customFormText = (text, visibility) => {
+const customFormText = (text, color, visibility) => {
   return (
     <FormHelperText
-      sx={{ marginLeft: "0.85rem", color: "red", opacity: visibility }}
+      sx={{ marginLeft: "0.85rem", color: color, opacity: visibility }}
     >
       {text}
     </FormHelperText>
@@ -1112,9 +1139,7 @@ export default function CreateRequest() {
       } else if (reportName === "Device details") {
         newState[reportIndex][detailName] = [
           ...newState[reportIndex][detailName],
-          detailName === "accountNumberDetails"
-            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
-            : {},
+          { name: name, value: "", type: "Excel" },
         ];
       } else {
         newState[reportIndex][detailName] = [
@@ -1151,7 +1176,8 @@ export default function CreateRequest() {
     reportIndex,
     detailIndex,
     detailName,
-    reportName
+    reportName,
+    detailsArray
   ) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -1162,6 +1188,8 @@ export default function CreateRequest() {
       // detailName === "RRNdetails"
       //   ? parseInt(value, 10)
       //   : value;
+      const mapppp = detailsArray.map((detail) => detail.value);
+      console.log("DETT", mapppp);
       return newState;
     });
   };
@@ -1373,7 +1401,7 @@ export default function CreateRequest() {
         <FormControl
           variant="outlined"
           margin="none"
-          sx={{ width: reportName === "IP Logs" ? "25%" : "34.15%" }}
+          sx={{ width: reportName === "IP Logs" ? "24%" : "32%" }}
         >
           <TextField
             sx={
@@ -1394,48 +1422,50 @@ export default function CreateRequest() {
             }
             data-testid={`detail-name-input-${detailIndex}`}
             helperText={
-              detail.value &&
               detail.value.length <
-                (detail.name === "Account number"
-                  ? 16
-                  : detail.name === "Email ID"
-                    ? 320
-                    : detail.name === "PAN"
-                      ? 10
-                      : detail.name === "Credit Card"
-                        ? 16
-                        : detail.name === "Aadhar"
-                          ? 12
-                          : detail.name === "Debit Card"
-                            ? 16
-                            : detail.name === "Mobile No."
-                              ? 10
-                              : detail.name === "RRN"
-                                ? 12
-                                : detail.name === "CRN"
-                                  ? 10
-                                  : 0)
-                ? `${
-                    detail.name === "Account number"
+              (detail.name === "Account number"
+                ? 16
+                : detail.name === "Email ID"
+                  ? 320
+                  : detail.name === "PAN"
+                    ? 10
+                    : detail.name === "Credit Card"
                       ? 16
-                      : detail.name === "Email ID"
-                        ? 320
-                        : detail.name === "PAN"
-                          ? 10
-                          : detail.name === "Credit Card"
-                            ? 16
-                            : detail.name === "Aadhar"
+                      : detail.name === "Aadhar"
+                        ? 12
+                        : detail.name === "Debit Card"
+                          ? 16
+                          : detail.name === "Mobile No."
+                            ? 10
+                            : detail.name === "RRN"
                               ? 12
-                              : detail.name === "Debit Card"
-                                ? 16
-                                : detail.name === "Mobile No."
-                                  ? 10
-                                  : detail.name === "RRN"
-                                    ? 12
-                                    : detail.name === "CRN"
-                                      ? 10
-                                      : 0
-                  } characters only`
+                              : detail.name === "CRN"
+                                ? 10
+                                : 0)
+                ? warningHelperText(
+                    `Only ${
+                      detail.name === "Account number"
+                        ? 16
+                        : detail.name === "Email ID"
+                          ? 320
+                          : detail.name === "PAN"
+                            ? 10
+                            : detail.name === "Credit Card"
+                              ? 16
+                              : detail.name === "Aadhar"
+                                ? 12
+                                : detail.name === "Debit Card"
+                                  ? 16
+                                  : detail.name === "Mobile No."
+                                    ? 10
+                                    : detail.name === "RRN"
+                                      ? 12
+                                      : detail.name === "CRN"
+                                        ? 10
+                                        : 0
+                    } characters`,
+                    1
+                  )
                 : validatedDetail()
             }
             InputLabelProps={
@@ -1536,7 +1566,8 @@ export default function CreateRequest() {
                 reportIndex,
                 detailIndex,
                 detailName,
-                reportName
+                reportName,
+                detailsArray
               )
             }
             // type={
@@ -1678,7 +1709,7 @@ export default function CreateRequest() {
                           (detail.name === "CRN" &&
                             detail.value.length === 10)) &&
                         detail.from === "From"
-                      ? customFormText("If needed, select from date")
+                      ? customFormText("If needed, select from date", "grey", 1)
                       : detail.from !== "From"
                         ? validatedHelperText("Dated")
                         : ""
@@ -1774,7 +1805,7 @@ export default function CreateRequest() {
                           (detail.name === "CRN" &&
                             detail.value.length === 10)) &&
                         detail.to === "To"
-                      ? customFormText("If needed, select to date")
+                      ? customFormText("If needed, select to date", "grey", 1)
                       : detail.to !== "To"
                         ? validatedHelperText("Dated")
                         : ""
@@ -1788,7 +1819,7 @@ export default function CreateRequest() {
           <FormControl
             variant="outlined"
             margin="none"
-            sx={{ width: "23%", marginLeft: "0%" }}
+            sx={{ width: "19.85%", marginLeft: "0%" }}
           >
             <TextField
               sx={
@@ -1823,7 +1854,7 @@ export default function CreateRequest() {
               className="number-box"
               helperText={
                 detail.mobileno.length < 10
-                  ? "(mobile no. must be 10 digits long)"
+                  ? customFormText("Only 10 Characters", "grey", 1)
                   : validatedDetail()
               }
               value={detail.mobileno}
@@ -1967,9 +1998,9 @@ export default function CreateRequest() {
                   {detail.date !== "Date"
                     ? validatedHelperText("Dated")
                     : detail.value.length === 12
-                      ? customFormText("If needed, select date")
+                      ? customFormText("If needed, select date", "grey", 1)
                       : detail.date === "Date" && detail.value.length === 12
-                        ? customFormText("If needed, select date")
+                        ? customFormText("If needed, select date", "grey", 1)
                         : ""}
                 </LocalizationProvider>
               </Box>
@@ -1980,7 +2011,7 @@ export default function CreateRequest() {
           <FormControl
             variant="standard"
             sx={{
-              width: "15%",
+              width: "12%",
               marginLeft: "0%",
               backgroundColor: "transparent",
             }}
@@ -2069,41 +2100,37 @@ export default function CreateRequest() {
               ))}
             </Select>
             {(detail.name === "Account number" && detail.value.length < 16) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "Email ID" &&
               detail.value.length > 12 &&
               detail.value.length <= 320) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "PAN" && detail.value.length < 10) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "Credit Card" && detail.value.length < 16) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "Aadhar" && detail.value.length < 12) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "Debit Card" && detail.value.length < 16) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "Mobile No." && detail.value.length < 10) ||
-            (detail.from !== "From" && detail.to === "To") ||
             (detail.name === "RRN" && detail.value.length < 12) ||
-            (detail.from !== "From" && detail.to === "To") ||
-            (detail.name === "CRN" && detail.value.length < 10) ||
-            (detail.from !== "From" && detail.to === "To")
+            (detail.name === "CRN" && detail.value.length < 10)
               ? customFormText("")
               : detail.type === "Type"
-                ? customFormText("select report type")
+                ? customFormText("select report type", "red", 1)
                 : validatedHelperText("Selected")}
           </FormControl>
         )}
 
-        {/* {detailIndex < reportsState[reportIndex][detailName].length && (
+        {detailIndex < reportsState[reportIndex][detailName].length && (
           <Button
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
+            disabled={
+              reportsState[reportIndex][detailName].length === 1 ? true : false
+            }
             style={{
               marginLeft:
                 reportName === "IP Logs" && detailName === "mobileNoDetails"
                   ? "2%"
                   : "0%",
+              opacity:
+                reportsState[reportIndex][detailName].length === 1 ? 0.25 : 1,
             }}
             onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
           >
@@ -2118,7 +2145,7 @@ export default function CreateRequest() {
           </Button>
         )}
 
-       <Box sx={{ display : "flex",flexDirection : "row",marginLeft : "0.55rem"}}>
+        {/* <Box sx={{ display : "flex",flexDirection : "row",marginLeft : "0.55rem"}}> */}
         {detailIndex === reportsState[reportIndex][detailName].length - 1 && (
           <Button
             className="add-remove-button"
@@ -2132,7 +2159,7 @@ export default function CreateRequest() {
                 detail.value === "" ||
                 detail.value === 0 ||
                 detail.type === "Type"
-                  ? 0.5
+                  ? 0.25
                   : 1,
             }}
             disabled={
@@ -2156,71 +2183,70 @@ export default function CreateRequest() {
             />
           </Button>
         )}
-        </Box>
-      </Box>
-
-    )); */}
-        {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
-        reportsState[reportIndex][detailName].length === 1 ? (
-          <Button
-            className="add-remove-button"
-            data-testid={`add-button-${detailIndex}`}
-            style={{
-              marginLeft:
-                reportName === "IP Logs" && detailName === "mobileNoDetails"
-                  ? "2%"
-                  : "0%",
-              opacity:
-                detail.value === "" ||
-                detail.value === 0 ||
-                detail.type === "Type"
-                  ? 0.5
-                  : 1,
-            }}
-            disabled={
-              detail.value === "" ||
-              detail.value === 0 ||
-              detail.type === "Type"
-                ? true
-                : false
-            }
-            onClick={() =>
-              addDetail(reportIndex, detailName, param, reportName)
-            }
-          >
-            <AddCircleOutlineRoundedIcon
-              sx={{
-                color: "red",
-                alignSelf: "center",
-                justifySelf: "center",
-                fontSize: "2.25rem",
-              }}
-            />
-          </Button>
-        ) : (
-          <Button
-            className="add-remove-button"
-            data-testid={`delete-button-${detailIndex}`}
-            style={{
-              marginLeft:
-                reportName === "IP Logs" && detailName === "mobileNoDetails"
-                  ? "2%"
-                  : "0%",
-            }}
-            onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
-          >
-            <RemoveCircleOutlineRoundedIcon
-              sx={{
-                color: "red",
-                alignSelf: "center",
-                justifySelf: "center",
-                fontSize: "2.35rem",
-              }}
-            />
-          </Button>
-        )}
+        {/* </Box> */}
       </Box>
     ));
+  //     {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
+  //     reportsState[reportIndex][detailName].length === 1 ? (
+  //       <Button
+  //         className="add-remove-button"
+  //         data-testid={`add-button-${detailIndex}`}
+  //         style={{
+  //           marginLeft:
+  //             reportName === "IP Logs" && detailName === "mobileNoDetails"
+  //               ? "2%"
+  //               : "0%",
+  //           opacity:
+  //             detail.value === "" ||
+  //             detail.value === 0 ||
+  //             detail.type === "Type"
+  //               ? 0.5
+  //               : 1,
+  //         }}
+  //         disabled={
+  //           detail.value === "" ||
+  //           detail.value === 0 ||
+  //           detail.type === "Type"
+  //             ? true
+  //             : false
+  //         }
+  //         onClick={() =>
+  //           addDetail(reportIndex, detailName, param, reportName)
+  //         }
+  //       >
+  //         <AddCircleOutlineRoundedIcon
+  //           sx={{
+  //             color: "red",
+  //             alignSelf: "center",
+  //             justifySelf: "center",
+  //             fontSize: "2.25rem",
+  //           }}
+  //         />
+  //       </Button>
+  //     ) : (
+  //       <Button
+  //         className="add-remove-button"
+  //         data-testid={`delete-button-${detailIndex}`}
+  //         style={{
+  //           marginLeft:
+  //             reportName === "IP Logs" && detailName === "mobileNoDetails"
+  //               ? "2%"
+  //               : "0%",
+  //         }}
+  //         onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
+  //       >
+  //         <RemoveCircleOutlineRoundedIcon
+  //           sx={{
+  //             color: "red",
+  //             alignSelf: "center",
+  //             justifySelf: "center",
+  //             fontSize: "2.35rem",
+  //           }}
+  //         />
+  //       </Button>
+  //     )}
+  //   </Box>
+  // ));
 
   const showPreview = (
     detailsArray,
@@ -2231,119 +2257,142 @@ export default function CreateRequest() {
   ) =>
     detailsArray.map((detail, detailIndex) => (
       <Box>
-        {/* { updateDetailed() } */}
-        <Box className="preview-data">
-          <Box
-            className="detail-input"
-            display={
-              detail.value === "" ||
-              detail.value === 0 ||
-              detail.value.length === 0
-                ? "none"
-                : "block"
-            }
-            sx={{ minWidth: "12rem", maxWidth: "12rem" }}
-          >
-            <span className="preview-text" style={{ fontWeight: 500 }}>{`${
-              detail.name === "Account number" ? "Acc no." : detail.name
-            }  : `}</span>
-            <span className="preview-text">{detail.value}</span>
-          </Box>
-
-          {((detailName === "accountNumberDetails" &&
-            reportName !== "Device details") ||
-            (detailName === "CRNdetails" && reportName === "IP Logs") ||
-            reportName === "IP Logs" ||
-            reportName === "Statement in PDF/Excel" ||
-            reportName === "Beneficiary details for Bulk IMPS transactions" ||
-            reportName === "Beneficiary details for Bulk UPI transactions" ||
-            (detailName === "RRNdetails" &&
-              reportName ===
-                "Beneficiary details for Bulk IMPS transactions") ||
-            (detailName === "RRNdetails" &&
-              reportName ===
-                "Beneficiary details for Bulk UPI transactions")) && (
-            <Box
-              className="detail-range"
-              display={detail.from !== "From" || detail.to !== "To"}
-            >
-              {detail.from !== "From" && (
-                <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
-                >
-                  <span className="preview-text" style={{ fontWeight: 500 }}>
-                    Date :{" "}
-                  </span>
-                  <span className="preview-text">{`${detail.from} - `}</span>
-                </Box>
-              )}
-              {detail.to !== "To" && (
-                <span className="preview-text">{detail.to}</span>
-              )}
-            </Box>
-          )}
-
-          {((detailName === "RRNdetails" &&
-            reportName ===
-              "Beneficiary details for Single IMPS transactions") ||
-            (detailName === "RRNdetails" &&
-              reportName ===
-                "Beneficiary details for Single UPI transactions")) && (
-            <Box className="detail-range">
-              {detail.amount !== 0 && detail.amount.length !== 0 && (
-                <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
-                >
-                  <span className="preview-text" style={{ fontWeight: 500 }}>
-                    Amount :{" "}
-                  </span>
-                  <span className="preview-text">{detail.amount}</span>
-                </Box>
-              )}
-
-              {detail.date !== "Date" && (
-                <Box
-                  sx={{ display: "flex", flexDirection: "row", gap: "0.15rem" }}
-                >
-                  <span className="preview-text" style={{ fontWeight: 500 }}>
-                    Date :{" "}
-                  </span>
-                  <span className="preview-text">{detail.date}</span>
-                </Box>
-              )}
-            </Box>
-          )}
-
-          {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
-            <Box
-              display={
-                detail.mobileno === "" || detail.mobileno.length === 0
-                  ? "none"
-                  : "block"
-              }
-            >
-              <span
-                style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                className="preview-text"
+        {detail.value.length > 1 && (
+          <>
+            {/* { updateDetailed() } */}
+            <Box className="preview-data">
+              <Box
+                className="detail-input"
+                display={detail.value.length > 1 ? "block" : "none"}
+                sx={{ minWidth: "12rem", maxWidth: "12rem" }}
               >
-                Mobile No. :{" "}
-              </span>
-              <span className="preview-text">{detail.mobileno}</span>
-            </Box>
-          )}
+                <span className="preview-text" style={{ fontWeight: 500 }}>{`${
+                  detail.name === "Account number" ? "Acc no." : detail.name
+                }  : `}</span>
+                <span className="preview-text">{detail.value}</span>
+              </Box>
 
-          {reportName === "Statement in PDF/Excel" && (
-            <Box display={detail.type === "Type" ? "none" : "block"}>
-              <span
-                style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                className="preview-text"
-              >
-                Type :{" "}
-              </span>
-              <span className="preview-text">{detail.type}</span>
+              {((detailName === "accountNumberDetails" &&
+                reportName !== "Device details") ||
+                (detailName === "CRNdetails" && reportName === "IP Logs") ||
+                reportName === "IP Logs" ||
+                reportName === "Statement in PDF/Excel" ||
+                reportName ===
+                  "Beneficiary details for Bulk IMPS transactions" ||
+                reportName ===
+                  "Beneficiary details for Bulk UPI transactions" ||
+                (detailName === "RRNdetails" &&
+                  reportName ===
+                    "Beneficiary details for Bulk IMPS transactions") ||
+                (detailName === "RRNdetails" &&
+                  reportName ===
+                    "Beneficiary details for Bulk UPI transactions")) && (
+                <Box
+                  className="detail-range"
+                  display={detail.from !== "From" || detail.to !== "To"}
+                >
+                  {detail.from !== "From" && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "0.15rem",
+                      }}
+                    >
+                      <span
+                        className="preview-text"
+                        style={{ fontWeight: 500 }}
+                      >
+                        Date :{" "}
+                      </span>
+                      <span className="preview-text">{`${detail.from} - `}</span>
+                    </Box>
+                  )}
+                  {detail.to !== "To" && (
+                    <span className="preview-text">{detail.to}</span>
+                  )}
+                </Box>
+              )}
+
+              <Box>
+                {((detailName === "RRNdetails" &&
+                  reportName ===
+                    "Beneficiary details for Single IMPS transactions") ||
+                  (detailName === "RRNdetails" &&
+                    reportName ===
+                      "Beneficiary details for Single UPI transactions")) && (
+                  <Box className="detail-range" sx={{ gap: "5rem" }}>
+                    {detail.amount !== 0 && detail.amount.length !== 0 && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "0.15rem",
+                        }}
+                      >
+                        <span
+                          className="preview-text"
+                          style={{ fontWeight: 500 }}
+                        >
+                          Amount :{" "}
+                        </span>
+                        <span className="preview-text">{detail.amount}</span>
+                      </Box>
+                    )}
+
+                    {detail.date !== "Date" && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "0.15rem",
+                        }}
+                      >
+                        <span
+                          className="preview-text"
+                          style={{ fontWeight: 500 }}
+                        >
+                          Date :{" "}
+                        </span>
+                        <span className="preview-text">{detail.date}</span>
+                      </Box>
+                    )}
+                  </Box>
+                )}
+              </Box>
+
+              {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+                <Box
+                  display={
+                    detail.mobileno === "" || detail.mobileno.length === 0
+                      ? "none"
+                      : "block"
+                  }
+                >
+                  <span
+                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                    className="preview-text"
+                  >
+                    Mobile No. :{" "}
+                  </span>
+                  <span className="preview-text">{detail.mobileno}</span>
+                </Box>
+              )}
+
+              {reportName === "Statement in PDF/Excel" && (
+                <Box display={detail.type === "Type" ? "none" : "block"}>
+                  <span
+                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                    className="preview-text"
+                  >
+                    Type :{" "}
+                  </span>
+                  <span className="preview-text">{detail.type}</span>
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
+          </>
+        )}
       </Box>
     ));
 
@@ -2352,10 +2401,11 @@ export default function CreateRequest() {
   const [reportDetails, setReportDetails] = useState([]);
 
   const [deviceDetails, setDeviceDetails] = useState([]);
+  const [ipLogs, setIpLogs] = useState([]);
 
-  const payloadInitiator = () => {
+  const configurePayload = (callback) => {
     setReportDetails((prevState) => {
-      const updatedReportState = reportsState.map((report, index) => {
+      const updatedReportState = reportsState.map((report) => {
         return {
           reportName: report.selectedReport,
           requestDetails: [
@@ -2371,27 +2421,27 @@ export default function CreateRequest() {
           ],
         };
       });
+
+      if (callback) callback(updatedReportState);
+
       return updatedReportState;
     });
   };
 
-  const individualReportHandler = () => {
-    const deviceDetailData = reportDetails.filter(
+  const individualReportHandler = (updatedReportState) => {
+    const deviceDetailData = updatedReportState.filter(
       (report) => report.reportName === "Device details"
     );
     setDeviceDetails(deviceDetailData);
-  };
 
-  const configurePayload = () => {
-    payloadInitiator();
-  };
-
-  const configureIndividualRequests = () => {
-    individualReportHandler();
+    const ipLogData = updatedReportState.filter(
+      (report) => report.reportName === "IP Logs"
+    );
+    setIpLogs(ipLogData);
   };
 
   const isValidDisplay =
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.accountNumberDetails.length >= 1 &&
         state.accountNumberDetails.some(
@@ -2400,7 +2450,7 @@ export default function CreateRequest() {
             state.accountNumberDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.PANdetails.length >= 1 &&
         state.PANdetails.some(
@@ -2409,7 +2459,7 @@ export default function CreateRequest() {
             state.PANdetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.CRNdetails.length >= 1 &&
         state.CRNdetails.some(
@@ -2418,7 +2468,7 @@ export default function CreateRequest() {
             state.CRNdetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.RRNdetails.length >= 1 &&
         state.RRNdetails.some(
@@ -2427,7 +2477,7 @@ export default function CreateRequest() {
             state.RRNdetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.aadharDetails.length >= 1 &&
         state.aadharDetails.some(
@@ -2436,7 +2486,7 @@ export default function CreateRequest() {
             state.aadharDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.mobileNoDetails.length >= 1 &&
         state.mobileNoDetails.some(
@@ -2445,7 +2495,7 @@ export default function CreateRequest() {
             state.mobileNoDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.creditCardDetails.length >= 1 &&
         state.creditCardDetails.some(
@@ -2454,7 +2504,7 @@ export default function CreateRequest() {
             state.creditCardDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.debitCardDetails.length >= 1 &&
         state.debitCardDetails.some(
@@ -2463,7 +2513,7 @@ export default function CreateRequest() {
             state.debitCardDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.some(
+    reportsState.every(
       (state, index) =>
         state.emailDetails.length >= 1 &&
         state.emailDetails.some(
@@ -2473,7 +2523,7 @@ export default function CreateRequest() {
         )
     );
 
-  const isValidReportData = reportsState.some(
+  const isValidReportData = reportsState.every(
     (state, index) =>
       (state.accountNumberDetails.length > 0 &&
         state.accountNumberDetails.every(
@@ -2523,16 +2573,15 @@ export default function CreateRequest() {
   );
 
   const handleSubmit = () => {
-    configurePayload();
-    // setTimeout(() => {
-    configureIndividualRequests();
-    // },1400);
+    configurePayload((updatedReportState) => {
+      individualReportHandler(updatedReportState);
+    });
 
     if (isValidReportData === false) {
       displayToast(
         "All Mandatory Fields must be non-empty!",
         3000,
-        "rgb(254, 236, 179)",
+        "rgb(249, 228, 0)",
         "black",
         500
       );
@@ -2627,7 +2676,7 @@ export default function CreateRequest() {
                       }
                       helperText={
                         ticketNumber.length < 10
-                          ? "10 characters only"
+                          ? warningHelperText("Only 10 characters", 1)
                           : validatedDetail()
                       }
                       InputLabelProps={
@@ -2682,9 +2731,9 @@ export default function CreateRequest() {
                           ? ""
                           : ticketNumber.length === 10 &&
                               ticketDescription.length === 0
-                            ? "10-60 characters only"
+                            ? warningHelperText("Only 10-60 characters", 1)
                             : ticketDescription.length < 10
-                              ? "10-60 characters only"
+                              ? warningHelperText("Only 10-60 characters", 1)
                               : validatedDetail()
                       }
                       required
@@ -3134,7 +3183,11 @@ export default function CreateRequest() {
                                     </Select>
                                     {reportsState[reportIndex].selectedParams
                                       .length === 0
-                                      ? customFormText("select detail input")
+                                      ? customFormText(
+                                          "select details",
+                                          "red",
+                                          1
+                                        )
                                       : validatedHelperText("Selected")}
                                   </FormControl>
                                 </Box>
@@ -3360,6 +3413,10 @@ export default function CreateRequest() {
 
                               <Box
                                 className="preview-report-details"
+                                sx={{
+                                  flex: 1,
+                                  backgroundColor: "rgba(245, 248, 250, 1)",
+                                }}
                                 display={
                                   isValidDisplay === true ? "block" : "none"
                                 }

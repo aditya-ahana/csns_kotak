@@ -1031,7 +1031,10 @@ export default function ViewRequest() {
                                         >
                                           <Typography
                                             component="span"
-                                            sx={{ fontSize: "0.88rem" }}
+                                            sx={{
+                                              fontSize: "0.88rem",
+                                              fontWeight: 500,
+                                            }}
                                           >
                                             {detail.status}
                                           </Typography>
