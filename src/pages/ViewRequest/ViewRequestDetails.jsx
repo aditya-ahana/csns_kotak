@@ -7,40 +7,53 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 // import { MdOutlineFileDownload } from "react-icons/md";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import {
+  Skeleton,
+  Button,
+  Paper,
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
 import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
 import { TbRefresh } from "react-icons/tb";
 
-import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { requestDetails } from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
-import IconButton from "@mui/material/IconButton";
+// import  from "@mui/material/IconButton";
 
 // import sandBox from "../../static/sandBox.gif";
 import sandBox from "../../static/sandClock.gif";
 
-import Tooltip from "@mui/material/Tooltip";
+// import  from "@mui/material/Tooltip";
 
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
+  const [retrieving, setRetrieving] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 360);
+  });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setRetrieving(false);
+    }, 600);
   });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
@@ -158,66 +171,105 @@ export default function ViewRequestDetails() {
                         <TableCell
                           align="center"
                           className="view-table-data-row"
-                          sx={{ borderLeftWidth: "1px", fontSize: "0.88rem" }}
+                          sx={{ borderLeftWidth: "1px" }}
                         >
-                          {row.ticketId}
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography
+                              sx={{
+                                fontSize: "0.88rem",
+                              }}
+                            >
+                              {row.ticketId}
+                            </Typography>
+                          )}
                         </TableCell>
                         <TableCell
                           className="view-table-data-row"
-                          sx={{ fontSize: "0.88rem" }}
+                          // sx={{ fontSize: "0.88rem" }}
                         >
-                          {row.request}
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography sx={{ fontSize: "0.88rem" }}>
+                              {row.request}
+                            </Typography>
+                          )}
                         </TableCell>
                         <TableCell
                           className="view-table-data-row"
                           align="center"
                           sx={{ fontSize: "0.88rem" }}
                         >
-                          <Box
+                          {/* <Box
                             sx={{
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
                             }}
-                          >
+                          > */}
+                          {retrieving ? (
+                            <Skeleton
+                              // className="view-table-status-buttons"
+                              // variant="text"
+                              height={51}
+                              // style={{ borderRadius: "50px" }}
+                            />
+                          ) : (
                             <Box
-                              className="view-table-status-buttons fw-bold"
-                              alignSelf={"center"}
                               sx={{
-                                backgroundColor:
-                                  row.status === "In-progress"
-                                    ? "rgba(255, 238, 207, 1)"
-                                    : row.status === "Completed"
-                                      ? "rgba(205, 252, 229, 1)"
-                                      : row.status === "Failed"
-                                        ? "rgba(255, 220, 222, 1)"
-                                        : "",
-                                color:
-                                  row.status === "In-progress"
-                                    ? "rgba(232, 125, 0, 1)"
-                                    : row.status === "Completed"
-                                      ? "rgba(21, 122, 73, 1)"
-                                      : row.status === "Failed"
-                                        ? "rgba(210, 26, 26, 1)"
-                                        : "",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                               }}
                             >
-                              <span>{row.status}</span>
+                              <Typography
+                                className="view-table-status-buttons fw-bold"
+                                alignSelf={"center"}
+                                sx={{
+                                  backgroundColor:
+                                    row.status === "In-progress"
+                                      ? "rgba(255, 238, 207, 1)"
+                                      : row.status === "Completed"
+                                        ? "rgba(205, 252, 229, 1)"
+                                        : row.status === "Failed"
+                                          ? "rgba(255, 220, 222, 1)"
+                                          : "",
+                                  color:
+                                    row.status === "In-progress"
+                                      ? "rgba(232, 125, 0, 1)"
+                                      : row.status === "Completed"
+                                        ? "rgba(21, 122, 73, 1)"
+                                        : row.status === "Failed"
+                                          ? "rgba(210, 26, 26, 1)"
+                                          : "",
+                                }}
+                              >
+                                {row.status}
+                              </Typography>
                             </Box>
-                          </Box>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          className="view-table-data-row"
-                          sx={{ fontSize: "0.88rem" }}
-                        >
-                          {row.createdDateTime}
+                          )}
+                          {/* </Box> */}
                         </TableCell>
                         <TableCell
                           align="center"
                           className="view-table-data-row"
                         >
-                          <Box>
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography sx={{ fontSize: "0.88rem" }}>
+                              {" "}
+                              {row.createdDateTime}
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="view-table-data-row"
+                        >
+                          <Box className="d-flex align-item-center justify-content-center">
                             {/* {row.status === "Failed" ? (
                           <Button className="retry-button">
                             <TbReload
@@ -228,27 +280,36 @@ export default function ViewRequestDetails() {
                           </Button>
                         ) : ( */}
 
-                            <IconButton
-                              className="expand-button"
-                              onClick={(event) =>
-                                handleSelectedIndex(event, index)
-                              }
-                              data-testid={`accordion-displayer-${index}`}
-                            >
-                              <ExpandCircleDownOutlinedIcon
-                                sx={{
-                                  color: "rgba(95, 99, 104, 0.87)",
-                                  fontSize: "2rem",
-                                  transform:
-                                    viewRequestDetailsAction === index
-                                      ? "rotate(180deg)"
-                                      : "",
-                                }}
-                                color="rgba(95, 99, 104, 1)"
-                                className="expand-icon"
-                                data-testid={`accordion-hider-${index}`}
+                            {retrieving ? (
+                              <Skeleton
+                                variant="circular"
+                                width={40}
+                                height={40}
                               />
-                            </IconButton>
+                            ) : (
+                              <IconButton
+                                className="expand-button"
+                                onClick={(event) =>
+                                  handleSelectedIndex(event, index)
+                                }
+                                data-testid={`accordion-displayer-${index}`}
+                              >
+                                <ExpandCircleDownOutlinedIcon
+                                  sx={{
+                                    color: "rgba(95, 99, 104, 0.87)",
+                                    fontSize: "2rem",
+                                    transform:
+                                      viewRequestDetailsAction === index
+                                        ? "rotate(180deg)"
+                                        : "",
+                                  }}
+                                  color="rgba(95, 99, 104, 1)"
+                                  className="expand-icon"
+                                  data-testid={`accordion-hider-${index}`}
+                                />
+                              </IconButton>
+                            )}
+
                             {/* <Button
                                 className="expand-button"
                                 onClick={(event) =>
