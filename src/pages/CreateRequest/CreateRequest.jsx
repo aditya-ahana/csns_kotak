@@ -2655,274 +2655,273 @@ export default function CreateRequest() {
                   : "1.25rem 1.5rem 1.15rem 1.5rem",
             }}
           >
-            {loading === true ? (
+            {/* {loading === true ? (
               <Loader />
-            ) : (
-              <>
-                <Box className="ticket-type-section">
-                  <FormControl
-                    variant="outlined"
-                    margin="none"
-                    className="ticket-number-container"
-                  >
-                    {/* {loading === true ? (
+            ) : ( */}
+            <>
+              <Box className="ticket-type-section">
+                <FormControl
+                  variant="outlined"
+                  margin="none"
+                  className="ticket-number-container"
+                >
+                  {/* {loading === true ? (
                       <Skeleton height="2.75rem" sx={{ borderRadius : '4px', backgroundColor : "rgb(230, 230, 235)"}} animation="pulse" variant="rectangular" />
                     ) : ( */}
-                    <TextField
-                      sx={
-                        ticketNumber.length === 10
-                          ? inputControl.validatedTextfield
-                          : inputControl.textfield
-                      }
-                      helperText={
-                        ticketNumber.length < 10
-                          ? warningHelperText("Only 10 characters", 1)
-                          : validatedDetail()
-                      }
-                      InputLabelProps={
-                        ticketNumber.length === 10
-                          ? inputControl.validatedInputLabelProps
-                          : inputControl.inputLabelProps
-                      }
-                      FormHelperTextProps={{ sx: { color: "red" } }}
-                      inputProps={{
-                        style: {
-                          fontSize: "0.88rem",
-                          height: "0.6rem",
-                          // backgroundColor : "blue"
-                        },
-                        maxLength: 10,
-                      }}
-                      data-testid="ticket-num-input"
-                      placeholder={t("enterTicketNo")}
-                      className="ticket-number-input"
-                      value={ticketNumber}
-                      autoComplete="off"
-                      size="medium"
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        height: "auto",
-                        fontSize: "0.88rem",
-                      }}
-                      label={t("ticketNo")}
-                      margin="dense"
-                      onChange={(e) => setTicketNumber(e.target.value)}
-                      type="text"
-                      required
-                      inputMode="text"
-                      fullWidth={true}
-                      color="primary"
-                    />
-                  </FormControl>
-
-                  <FormControl
-                    variant="outlined"
-                    margin="none"
-                    className="ticket-description-container"
-                  >
-                    <TextField
-                      placeholder={
-                        descriptionFocused === true ? t("enterTicketDesc") : ""
-                      }
-                      variant="outlined"
-                      FormHelperTextProps={{ sx: { color: "red" } }}
-                      helperText={
-                        ticketNumber.length < 10
-                          ? ""
-                          : ticketNumber.length === 10 &&
-                              ticketDescription.length === 0
-                            ? warningHelperText("Only 10-60 characters", 1)
-                            : ticketDescription.length < 10
-                              ? warningHelperText("Only 10-60 characters", 1)
-                              : validatedDetail()
-                      }
-                      required
-                      label={t("ticketDesc")}
-                      onFocus={() => {
-                        ////console.log('desc length',ticketDescription.length);
-                        ////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
-                        setDescriptionFocused(true);
-                      }}
-                      onBlur={() => setDescriptionFocused(false)}
-                      multiline
-                      // multiline
-                      sx={
-                        ticketDescription.length >= 10
-                          ? inputControl.validatedTextfield
-                          : inputControl.textfield
-                      }
-                      className="ticket-description-input"
-                      autoComplete="off"
-                      rows={Math.ceil(ticketDescription.length / 60)}
-                      size="small"
-                      fullWidth
-                      inputProps={inputControl.textAreaProps}
-                      InputLabelProps={
-                        ticketDescription.length >= 10
-                          ? inputControl.validatedTextAreaLabelProps
-                          : inputControl.textAreaLabelProps
-                      }
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        backgroundColor: "white",
-                        height: "auto",
-                      }}
-                      margin="none"
-                      // InputProps={{
-                      //   inputComponent : 'textarea',
-                      //   sx : {
-                      //      padding : 0,
-                      //      margin : 0
-                      //   }
-                      // }}
-                      type="text"
-                      inputMode="text"
-                      disabled={ticketNumber.length < 10 ? true : false}
-                      color="primary"
-                      value={ticketDescription}
-                      data-testid="ticket-descr-input"
-                      onChange={(e) => setTicketDescription(e.target.value)}
-                    />
-                  </FormControl>
-                </Box>
-
-                <FormControl variant="standard" sx={{ width: "82.75%" }}>
-                  <Select
-                    label="Reports Selection Dropdown"
-                    name="reports-selection-dropdown"
-                    id="reports-selection-dropdown"
-                    data-testid="reports-selection-dropdown"
-                    multiple={true}
-                    value={selectedReports}
-                    displayEmpty
-                    disabled={
-                      ticketNumber.length < 10 || ticketDescription.length < 10
-                        ? true
-                        : false
-                    }
-                    onChange={handleReportSelection}
-                    variant="standard"
-                    input={<OutlinedInput fullWidth={true} />}
-                    IconComponent={(props) => (
-                      <KeyboardArrowDownOutlinedIcon
-                        className="reports-type-dropdownicon"
-                        sx={{
-                          fontSize: "1.4rem",
-                          color: "rgba(115, 115, 115, 1)",
-                        }}
-                        {...props}
-                      />
-                    )}
-                    renderValue={(reports) => {
-                      if (reports.length === 0) {
-                        return (
-                          <span
-                            style={{ opacity: 0.45 }}
-                            data-testid="reports-dropdown-input-initial"
-                          >
-                            {" "}
-                            {t("statementsReportRequire")}
-                          </span>
-                        );
-                      }
-                      return (
-                        <Input
-                          sx={{
-                            width: "99%",
-                            fontSize: "95%",
-                            textOverflow: "ellipsis",
-                            // overflow: "hidden",
-                          }}
-                          disableUnderline={true}
-                          value={reports.join(" , ")}
-                          data-testid="reports-dropdown-input-changed"
-                        ></Input>
-                      );
-                    }}
-                    inputProps={{}}
+                  <TextField
                     sx={
-                      selectedReports.length === 0
-                        ? SelectProps.containerProps
-                        : SelectProps.validatedContainerProps
+                      ticketNumber.length === 10
+                        ? inputControl.validatedTextfield
+                        : inputControl.textfield
                     }
-                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
-                    autoWidth={false}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "2.56rem",
-                      fontSize: "0.88rem",
-                      border: "none",
+                    helperText={
+                      ticketNumber.length < 10
+                        ? warningHelperText("Only 10 characters", 1)
+                        : validatedDetail()
+                    }
+                    InputLabelProps={
+                      ticketNumber.length === 10
+                        ? inputControl.validatedInputLabelProps
+                        : inputControl.inputLabelProps
+                    }
+                    FormHelperTextProps={{ sx: { color: "red" } }}
+                    inputProps={{
+                      style: {
+                        fontSize: "0.88rem",
+                        height: "0.6rem",
+                        // backgroundColor : "blue"
+                      },
+                      maxLength: 10,
                     }}
-                    placeholder={t("statementsReportRequire")}
-                  >
-                    {requiredReportsData.map((report, index) => (
-                      <MenuItem
-                        key={report}
-                        value={report}
-                        data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                    data-testid="ticket-num-input"
+                    placeholder={t("enterTicketNo")}
+                    className="ticket-number-input"
+                    value={ticketNumber}
+                    autoComplete="off"
+                    size="medium"
+                    style={{
+                      margin: "0rem 0rem 0rem 0rem",
+                      height: "auto",
+                      fontSize: "0.88rem",
+                    }}
+                    label={t("ticketNo")}
+                    margin="dense"
+                    onChange={(e) => setTicketNumber(e.target.value)}
+                    type="text"
+                    required
+                    inputMode="text"
+                    fullWidth={true}
+                    color="primary"
+                  />
+                </FormControl>
+
+                <FormControl
+                  variant="outlined"
+                  margin="none"
+                  className="ticket-description-container"
+                >
+                  <TextField
+                    placeholder={
+                      descriptionFocused === true ? t("enterTicketDesc") : ""
+                    }
+                    variant="outlined"
+                    FormHelperTextProps={{ sx: { color: "red" } }}
+                    helperText={
+                      ticketNumber.length < 10
+                        ? ""
+                        : ticketNumber.length === 10 &&
+                            ticketDescription.length === 0
+                          ? warningHelperText("Only 10-60 characters", 1)
+                          : ticketDescription.length < 10
+                            ? warningHelperText("Only 10-60 characters", 1)
+                            : validatedDetail()
+                    }
+                    required
+                    label={t("ticketDesc")}
+                    onFocus={() => {
+                      ////console.log('desc length',ticketDescription.length);
+                      ////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                      setDescriptionFocused(true);
+                    }}
+                    onBlur={() => setDescriptionFocused(false)}
+                    multiline
+                    // multiline
+                    sx={
+                      ticketDescription.length >= 10
+                        ? inputControl.validatedTextfield
+                        : inputControl.textfield
+                    }
+                    className="ticket-description-input"
+                    autoComplete="off"
+                    rows={Math.ceil(ticketDescription.length / 60)}
+                    size="small"
+                    fullWidth
+                    inputProps={inputControl.textAreaProps}
+                    InputLabelProps={
+                      ticketDescription.length >= 10
+                        ? inputControl.validatedTextAreaLabelProps
+                        : inputControl.textAreaLabelProps
+                    }
+                    style={{
+                      margin: "0rem 0rem 0rem 0rem",
+                      backgroundColor: "white",
+                      height: "auto",
+                    }}
+                    margin="none"
+                    // InputProps={{
+                    //   inputComponent : 'textarea',
+                    //   sx : {
+                    //      padding : 0,
+                    //      margin : 0
+                    //   }
+                    // }}
+                    type="text"
+                    inputMode="text"
+                    disabled={ticketNumber.length < 10 ? true : false}
+                    color="primary"
+                    value={ticketDescription}
+                    data-testid="ticket-descr-input"
+                    onChange={(e) => setTicketDescription(e.target.value)}
+                  />
+                </FormControl>
+              </Box>
+
+              <FormControl variant="standard" sx={{ width: "82.75%" }}>
+                <Select
+                  label="Reports Selection Dropdown"
+                  name="reports-selection-dropdown"
+                  id="reports-selection-dropdown"
+                  data-testid="reports-selection-dropdown"
+                  multiple={true}
+                  value={selectedReports}
+                  displayEmpty
+                  disabled={
+                    ticketNumber.length < 10 || ticketDescription.length < 10
+                      ? true
+                      : false
+                  }
+                  onChange={handleReportSelection}
+                  variant="standard"
+                  input={<OutlinedInput fullWidth={true} />}
+                  IconComponent={(props) => (
+                    <KeyboardArrowDownOutlinedIcon
+                      className="reports-type-dropdownicon"
+                      sx={{
+                        fontSize: "1.4rem",
+                        color: "rgba(115, 115, 115, 1)",
+                      }}
+                      {...props}
+                    />
+                  )}
+                  renderValue={(reports) => {
+                    if (reports.length === 0) {
+                      return (
+                        <span
+                          style={{ opacity: 0.45 }}
+                          data-testid="reports-dropdown-input-initial"
+                        >
+                          {" "}
+                          {t("statementsReportRequire")}
+                        </span>
+                      );
+                    }
+                    return (
+                      <Input
+                        sx={{
+                          width: "99%",
+                          fontSize: "95%",
+                          textOverflow: "ellipsis",
+                          // overflow: "hidden",
+                        }}
+                        disableUnderline={true}
+                        value={reports.join(" , ")}
+                        data-testid="reports-dropdown-input-changed"
+                      ></Input>
+                    );
+                  }}
+                  inputProps={{}}
+                  sx={
+                    selectedReports.length === 0
+                      ? SelectProps.containerProps
+                      : SelectProps.validatedContainerProps
+                  }
+                  MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                  autoWidth={false}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    height: "2.56rem",
+                    fontSize: "0.88rem",
+                    border: "none",
+                  }}
+                  placeholder={t("statementsReportRequire")}
+                >
+                  {requiredReportsData.map((report, index) => (
+                    <MenuItem
+                      key={report}
+                      value={report}
+                      data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                      style={{
+                        display: "flex",
+                        border: "1px solid #cdcdcd",
+                        width: "96.25%",
+                        margin: "1rem 0rem 1rem 1.25rem",
+                        height: "2.65rem",
+                        alignItems: "left",
+                        borderRadius: "4px",
+                        backgroundColor: "transparent",
+                        fontSize: "2px",
+                      }}
+                    >
+                      <Checkbox
+                        size="medium"
+                        data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                        icon={
+                          <CheckBoxOutlineBlankIcon
+                            sx={{ fontSize: "1.5rem" }}
+                          />
+                        }
+                        // inputProps={{
+                        //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
+                        // }}
+                        checkedIcon={
+                          <CheckBoxOutlinedIcon
+                            className="check-icon"
+                            sx={{ fontSize: "1.5rem", color: "red" }}
+                          />
+                        }
+                        sx={{ containIntrinsicSize: "2px" }}
+                        checked={selectedReports.indexOf(report) > -1}
+                        color="primary"
                         style={{
-                          display: "flex",
-                          border: "1px solid #cdcdcd",
-                          width: "96.25%",
-                          margin: "1rem 0rem 1rem 1.25rem",
-                          height: "2.65rem",
-                          alignItems: "left",
-                          borderRadius: "4px",
+                          marginLeft: "-0.88rem",
                           backgroundColor: "transparent",
                           fontSize: "2px",
                         }}
-                      >
-                        <Checkbox
-                          size="medium"
-                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
-                          icon={
-                            <CheckBoxOutlineBlankIcon
-                              sx={{ fontSize: "1.5rem" }}
-                            />
-                          }
-                          // inputProps={{
-                          //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
-                          // }}
-                          checkedIcon={
-                            <CheckBoxOutlinedIcon
-                              className="check-icon"
-                              sx={{ fontSize: "1.5rem", color: "red" }}
-                            />
-                          }
-                          sx={{ containIntrinsicSize: "2px" }}
-                          checked={selectedReports.indexOf(report) > -1}
-                          color="primary"
-                          style={{
-                            marginLeft: "-0.88rem",
-                            backgroundColor: "transparent",
-                            fontSize: "2px",
-                          }}
-                        />
-                        <ListItemText
-                          primary={report}
-                          data-testid="reports-selection-dropdown-menu-item-text"
-                          style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                          color="black"
-                          inputMode="text"
-                          primaryTypographyProps={{ fontSize: "0.825rem" }}
-                        />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {selectedReports.length >= 1
-                    ? validatedHelperText("Selected")
-                    : ticketNumber.length === 0 ||
-                        ticketDescription.length === 0
-                      ? () => {}
-                      : ticketNumber.length === 10 &&
-                          ticketDescription.length >= 10 &&
-                          selectedReports.length === 0
-                        ? customFormText("select reports")
-                        : () => {}}
-                </FormControl>
-              </>
-            )}
+                      />
+                      <ListItemText
+                        primary={report}
+                        data-testid="reports-selection-dropdown-menu-item-text"
+                        style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                        color="black"
+                        inputMode="text"
+                        primaryTypographyProps={{ fontSize: "0.825rem" }}
+                      />
+                    </MenuItem>
+                  ))}
+                </Select>
+                {selectedReports.length >= 1
+                  ? validatedHelperText("Selected")
+                  : ticketNumber.length === 0 || ticketDescription.length === 0
+                    ? () => {}
+                    : ticketNumber.length === 10 &&
+                        ticketDescription.length >= 10 &&
+                        selectedReports.length === 0
+                      ? customFormText("select reports")
+                      : () => {}}
+              </FormControl>
+            </>
+            {/* )} */}
           </Box>
 
           {selectedReports.length > 0 && (
