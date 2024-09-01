@@ -25,7 +25,7 @@ export default function BreadCrumb() {
       arr.push(obj);
     }
     setPathItems(arr);
-  }, [pathnames]);
+  }, [location]);
 
   function itemRender(currentRoute, params, pathItems, paths) {
     const isLast = currentRoute?.path === pathItems[pathItems.length - 1]?.path;

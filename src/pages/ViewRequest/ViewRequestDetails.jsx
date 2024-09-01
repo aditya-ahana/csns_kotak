@@ -7,41 +7,53 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 // import { MdOutlineFileDownload } from "react-icons/md";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import {
+  Skeleton,
+  Button,
+  Paper,
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
 import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
 import { TbRefresh } from "react-icons/tb";
 
-import { Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { requestDetails } from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
-import IconButton from "@mui/material/IconButton";
+// import  from "@mui/material/IconButton";
 
-import sandBox from "../../static/sandBox.gif";
+// import sandBox from "../../static/sandBox.gif";
+import sandBox from "../../static/sandClock.gif";
 
-import Tooltip from "@mui/material/Tooltip";
+// import  from "@mui/material/Tooltip";
 
 export default function ViewRequestDetails() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
+  const [retrieving, setRetrieving] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
+    }, 360);
+  });
 
-    },360)
-
+  useEffect(() => {
+    setTimeout(() => {
+      setRetrieving(false);
+    }, 600);
   });
 
   const [viewRequestDetailsAction, setViewRequestDetailsAction] = useState();
@@ -95,85 +107,116 @@ export default function ViewRequestDetails() {
         </Typography>
 
         <Box className="view-details-container">
-          {loading === true ? (
+          {/* {loading === true ? (
             <Loader />
-          ) : (
-            <>
-              <div
-                className="d-flex justify-content-end"
-                style={{ width: "-webkit-fill-available" }}
+          ) : ( */}
+          <>
+            <div
+              className="d-flex justify-content-end"
+              style={{ width: "-webkit-fill-available" }}
+            >
+              <Button
+                variant="outlined"
+                startIcon={<MdOutlineFileDownload />}
+                style={{ borderColor: "gray", color: "gray" }}
+                className="fw-bold"
               >
-                <Button
-                  variant="outlined"
-                  startIcon={<MdOutlineFileDownload />}
-                  style={{ borderColor: "gray", color: "gray" }}
-                  className="fw-bold"
-                >
-                  Download All
-                </Button>
-                <div className="p-1"></div>
-                <Button variant="contained" color="error" className="fw-bold">
-                  Close Ticket
-                </Button>
-              </div>
+                {t("downloadAll")}
+              </Button>
               <div className="p-1"></div>
-              <TableContainer
-                component={Paper}
-                className="view-table-container"
-                sx={{ boxShadow: "none", maxHeight: "33rem" }}
-              >
-                <Table className="details-table" stickyHeader={true}>
-                  <TableHead>
-                    <TableRow>
-                      {viewRequestTableHeaders.map((header, index) => (
-                        <TableCell
-                          component="td"
-                          key={index}
-                          align="center"
-                          sx={{
-                            border: "1px solid rgba(225, 225, 225, 1)",
-                            backgroundColor: "rgb(243, 242, 248)",
-                            fontSize: "0.88rem",
-                            width:
-                              header === "Ticket Id"
-                                ? "7.5%"
-                                : header === "Reports"
-                                  ? "20%"
-                                  : header === "Status"
+              <Button variant="contained" color="error" className="fw-bold">
+                {t("closeTicket")}
+              </Button>
+            </div>
+            <div className="p-1"></div>
+            <TableContainer
+              component={Paper}
+              className="view-table-container"
+              sx={{ boxShadow: "none", maxHeight: "33rem" }}
+            >
+              <Table className="details-table" stickyHeader={true}>
+                <TableHead>
+                  <TableRow>
+                    {viewRequestTableHeaders.map((header, index) => (
+                      <TableCell
+                        component="td"
+                        key={index}
+                        align="center"
+                        sx={{
+                          border: "1px solid rgba(225, 225, 225, 1)",
+                          backgroundColor: "rgb(243, 242, 248)",
+                          fontSize: "0.88rem",
+                          width:
+                            header === "Ticket Id"
+                              ? "7.5%"
+                              : header === "Reports"
+                                ? "20%"
+                                : header === "Status"
+                                  ? "10%"
+                                  : header === "Created Date" ||
+                                      header === "Action"
                                     ? "10%"
-                                    : header === "Created Date" ||
-                                        header === "Action"
-                                      ? "10%"
-                                      : "0%",
-                          }}
+                                    : "0%",
+                        }}
+                      >
+                        {header}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </TableHead>
+                <TableBody className="view-table-body">
+                  {requestDetails.map((row, index) => (
+                    <Fragment key={index}>
+                      <TableRow>
+                        <TableCell
+                          align="center"
+                          className="view-table-data-row"
+                          sx={{ borderLeftWidth: "1px" }}
                         >
-                          {header}
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography
+                              sx={{
+                                fontSize: "0.88rem",
+                              }}
+                            >
+                              {row.ticketId}
+                            </Typography>
+                          )}
                         </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody className="view-table-body">
-                    {requestDetails.map((row, index) => (
-                      <Fragment key={index}>
-                        <TableRow>
-                          <TableCell
-                            align="center"
-                            className="view-table-data-row"
-                            sx={{ borderLeftWidth: "1px", fontSize: "0.88rem" }}
-                          >
-                            {row.ticketId}
-                          </TableCell>
-                          <TableCell
-                            className="view-table-data-row"
-                            sx={{ fontSize: "0.88rem" }}
-                          >
-                            {row.request}
-                          </TableCell>
-                          <TableCell
-                            className="view-table-data-row"
-                            align="center"
-                            sx={{ fontSize: "0.88rem" }}
-                          >
+                        <TableCell
+                          className="view-table-data-row"
+                          // sx={{ fontSize: "0.88rem" }}
+                        >
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography sx={{ fontSize: "0.88rem" }}>
+                              {row.request}
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          className="view-table-data-row"
+                          align="center"
+                          sx={{ fontSize: "0.88rem" }}
+                        >
+                          {/* <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          > */}
+                          {retrieving ? (
+                            <Skeleton
+                              // className="view-table-status-buttons"
+                              // variant="text"
+                              height={51}
+                              // style={{ borderRadius: "50px" }}
+                            />
+                          ) : (
                             <Box
                               sx={{
                                 display: "flex",
@@ -181,7 +224,7 @@ export default function ViewRequestDetails() {
                                 justifyContent: "center",
                               }}
                             >
-                              <Box
+                              <Typography
                                 className="view-table-status-buttons fw-bold"
                                 alignSelf={"center"}
                                 sx={{
@@ -203,23 +246,31 @@ export default function ViewRequestDetails() {
                                           : "",
                                 }}
                               >
-                                <span>{row.status}</span>
-                              </Box>
+                                {row.status}
+                              </Typography>
                             </Box>
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            className="view-table-data-row"
-                            sx={{ fontSize: "0.88rem" }}
-                          >
-                            {row.createdDateTime}
-                          </TableCell>
-                          <TableCell
-                            align="center"
-                            className="view-table-data-row"
-                          >
-                            <Box>
-                              {/* {row.status === "Failed" ? (
+                          )}
+                          {/* </Box> */}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="view-table-data-row"
+                        >
+                          {retrieving ? (
+                            <Skeleton variant="text" />
+                          ) : (
+                            <Typography sx={{ fontSize: "0.88rem" }}>
+                              {" "}
+                              {row.createdDateTime}
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="view-table-data-row"
+                        >
+                          <Box className="d-flex align-item-center justify-content-center">
+                            {/* {row.status === "Failed" ? (
                           <Button className="retry-button">
                             <TbReload
                               size="1.4vw"
@@ -229,6 +280,13 @@ export default function ViewRequestDetails() {
                           </Button>
                         ) : ( */}
 
+                            {retrieving ? (
+                              <Skeleton
+                                variant="circular"
+                                width={40}
+                                height={40}
+                              />
+                            ) : (
                               <IconButton
                                 className="expand-button"
                                 onClick={(event) =>
@@ -250,7 +308,9 @@ export default function ViewRequestDetails() {
                                   data-testid={`accordion-hider-${index}`}
                                 />
                               </IconButton>
-                              {/* <Button
+                            )}
+
+                            {/* <Button
                                 className="expand-button"
                                 onClick={(event) =>
                                   handleSelectedIndex(event, index)
@@ -271,154 +331,155 @@ export default function ViewRequestDetails() {
                                   data-testid={`accordion-hider-${index}`}
                                 />
                               </Button> */}
-                              {/* )} */}
-                            </Box>
-                          </TableCell>
-                        </TableRow>
+                            {/* )} */}
+                          </Box>
+                        </TableCell>
+                      </TableRow>
 
-                        {viewRequestDetailsAction === index ? (
-                          <Fragment key={index}>
-                            {row.subData?.map((subDetails, subIndex) => (
-                              <Fragment key={subIndex}>
-                                <TableRow
-                                  className="expanded-view"
-                                  data-testid={`sub-data-display-${subIndex}`}
-                                  key={subIndex}
-                                  style={{
-                                    backgroundColor: "rgb(243 243 243 / 79%)",
-                                    height: "7vh",
-                                  }}
+                      {viewRequestDetailsAction === index ? (
+                        <Fragment key={index}>
+                          {row.subData?.map((subDetails, subIndex) => (
+                            <Fragment key={subIndex}>
+                              <TableRow
+                                className="expanded-view"
+                                data-testid={`sub-data-display-${subIndex}`}
+                                key={subIndex}
+                                style={{
+                                  backgroundColor: "rgb(243 243 243 / 79%)",
+                                  height: "7vh",
+                                }}
+                              >
+                                <TableCell
+                                  // height="6vh"
+                                  className="border-0 p-0"
                                 >
-                                  <TableCell
-                                    // height="6vh"
-                                    className="border-0 p-0"
+                                  {/* {row.ticketId} */}
+                                </TableCell>
+                                <TableCell className="border-0">
+                                  <Box
+                                    // style={{ alignSelf: "center" }}
+                                    className="d-flex align-items-center justify-content-start"
                                   >
-                                    {/* {row.ticketId} */}
-                                  </TableCell>
-                                  <TableCell className="border-0">
-                                    <Box
-                                      // style={{ alignSelf: "center" }}
-                                      className="d-flex align-items-center justify-content-start"
+                                    <span
+                                    // key={index}
+                                    // style={{ lineHeight: "1.5vh" }}
                                     >
-                                      <span
-                                      // key={index}
-                                      // style={{ lineHeight: "1.5vh" }}
-                                      >
-                                        Acc No:- {subDetails.accNo}
-                                      </span>
+                                      Acc No:- {subDetails.accNo}
+                                    </span>
+                                  </Box>
+                                </TableCell>
+                                <TableCell className="border-0 p-0">
+                                  <Box className="d-flex align-items-center justify-content-center">
+                                    <Box
+                                      // alignSelf={"center"}
+                                      className="view-table-status-buttons fw-bold"
+                                      sx={{
+                                        backgroundColor:
+                                          row.status === "In-progress"
+                                            ? "rgba(255, 238, 207, 1)"
+                                            : row.status === "Completed"
+                                              ? "rgba(205, 252, 229, 1)"
+                                              : row.status === "Failed"
+                                                ? "rgba(255, 220, 222, 1)"
+                                                : "",
+                                        color:
+                                          row.status === "In-progress"
+                                            ? "rgba(232, 125, 0, 1)"
+                                            : row.status === "Completed"
+                                              ? "rgba(21, 122, 73, 1)"
+                                              : row.status === "Failed"
+                                                ? "rgba(210, 26, 26, 1)"
+                                                : "",
+                                      }}
+                                    >
+                                      <span>{row.status}</span>
                                     </Box>
-                                  </TableCell>
-                                  <TableCell className="border-0 p-0">
-                                    <Box className="d-flex align-items-center justify-content-center">
-                                      <Box
-                                        // alignSelf={"center"}
-                                        className="view-table-status-buttons fw-bold"
-                                        sx={{
-                                          backgroundColor:
-                                            row.status === "In-progress"
-                                              ? "rgba(255, 238, 207, 1)"
-                                              : row.status === "Completed"
-                                                ? "rgba(205, 252, 229, 1)"
-                                                : row.status === "Failed"
-                                                  ? "rgba(255, 220, 222, 1)"
-                                                  : "",
-                                          color:
-                                            row.status === "In-progress"
-                                              ? "rgba(232, 125, 0, 1)"
-                                              : row.status === "Completed"
-                                                ? "rgba(21, 122, 73, 1)"
-                                                : row.status === "Failed"
-                                                  ? "rgba(210, 26, 26, 1)"
-                                                  : "",
-                                        }}
-                                      >
-                                        <span>{row.status}</span>
-                                      </Box>
-                                    </Box>
-                                  </TableCell>
-                                  <TableCell className="border-0 p-0">
-                                    <Box className="d-flex align-items-center justify-content-center">
-                                      {row.createdDateTime}
-                                    </Box>
-                                  </TableCell>
-                                  <TableCell className="border-0 p-0">
-                                    <Box className="d-flex align-items-center justify-content-center">
-                                      {row.status === "Failed" ? (
-                                        <Tooltip title="Retry">
-                                          <IconButton color="error">
-                                            <TbRefresh
-                                              style={{ fontSize: "x-large" }}
-                                            />
-                                          </IconButton>
-                                        </Tooltip>
-                                      ) : // <Button
-                                      //   // className="retry-button"
+                                  </Box>
+                                </TableCell>
+                                <TableCell className="border-0 p-0">
+                                  <Box className="d-flex align-items-center justify-content-center">
+                                    {row.createdDateTime}
+                                  </Box>
+                                </TableCell>
+                                <TableCell className="border-0 p-0">
+                                  <Box className="d-flex align-items-center justify-content-center">
+                                    {row.status === "Failed" ? (
+                                      <Tooltip title="Retry">
+                                        <IconButton color="error">
+                                          <TbRefresh
+                                            style={{ fontSize: "x-large" }}
+                                          />
+                                        </IconButton>
+                                      </Tooltip>
+                                    ) : // <Button
+                                    //   // className="retry-button"
+                                    //   variant="outlined"
+                                    //   color="error"
+                                    //   // style={{
+                                    //   //   // backgroundColor: "rgba(0, 56, 116, 1)",
+                                    //   //   // marginLeft: "4.25vw",
+                                    //   //   fontWeight: 420,
+                                    //   // }}
+                                    // >
+                                    //   <RiRepeat2Line
+                                    //     style={{ fontSize: "x-large" }}
+                                    //   />
+                                    //   {/* Retry */}
+                                    //   {/* <Typography className="retry-text">Retry</Typography> */}
+                                    // </Button>
+                                    // <Button className="retry-button">
+                                    //   <TbReload
+                                    //     size="1.4vw"
+                                    //     color="rgba(237, 28, 36, 1)"
+                                    //   />
+                                    //   <Typography className="retry-text">Retry</Typography>
+                                    // </Button>
+                                    row.status === "In-progress" ? (
+                                      <Tooltip title="Loading">
+                                        <img
+                                          src={sandBox}
+                                          alt="Sand Box"
+                                          style={{
+                                            width: "18%",
+                                            mixBlendMode: "darken",
+                                          }}
+                                        />
+                                      </Tooltip>
+                                    ) : (
+                                      <Tooltip title="Download">
+                                        <IconButton color="success">
+                                          <MdOutlineFileDownload
+                                            style={{ fontSize: "x-large" }}
+                                          />
+                                        </IconButton>
+                                      </Tooltip>
+
+                                      // <Button
+                                      //   className="completed-button"
                                       //   variant="outlined"
-                                      //   color="error"
+                                      //   color="success"
                                       //   // style={{
                                       //   //   // backgroundColor: "rgba(0, 56, 116, 1)",
                                       //   //   // marginLeft: "4.25vw",
                                       //   //   fontWeight: 420,
                                       //   // }}
                                       // >
-                                      //   <RiRepeat2Line
+                                      //   <MdOutlineFileDownload
                                       //     style={{ fontSize: "x-large" }}
                                       //   />
-                                      //   {/* Retry */}
-                                      //   {/* <Typography className="retry-text">Retry</Typography> */}
                                       // </Button>
-                                      // <Button className="retry-button">
-                                      //   <TbReload
-                                      //     size="1.4vw"
-                                      //     color="rgba(237, 28, 36, 1)"
-                                      //   />
-                                      //   <Typography className="retry-text">Retry</Typography>
-                                      // </Button>
-                                      row.status === "In-progress" ? (
-                                        <Tooltip title="Loading">
-                                          <img
-                                            src={sandBox}
-                                            alt="Sand Box"
-                                            style={{ width: "18%" }}
-                                          />
-                                        </Tooltip>
-                                      ) : (
-                                        <Tooltip title="Download">
-                                          <IconButton>
-                                            <IconButton color="success">
-                                              <MdOutlineFileDownload
-                                                style={{ fontSize: "x-large" }}
-                                              />
-                                            </IconButton>
-                                          </IconButton>
-                                        </Tooltip>
+                                    )}
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            </Fragment>
+                          ))}
+                        </Fragment>
+                      ) : (
+                        <></>
+                      )}
 
-                                        // <Button
-                                        //   className="completed-button"
-                                        //   variant="outlined"
-                                        //   color="success"
-                                        //   // style={{
-                                        //   //   // backgroundColor: "rgba(0, 56, 116, 1)",
-                                        //   //   // marginLeft: "4.25vw",
-                                        //   //   fontWeight: 420,
-                                        //   // }}
-                                        // >
-                                        //   <MdOutlineFileDownload
-                                        //     style={{ fontSize: "x-large" }}
-                                        //   />
-                                        // </Button>
-                                      )}
-                                    </Box>
-                                  </TableCell>
-                                </TableRow>
-                              </Fragment>
-                            ))}
-                          </Fragment>
-                        ) : (
-                          <></>
-                        )}
-
-                        {/* {viewRequestDetailsAction === index ? (
+                      {/* {viewRequestDetailsAction === index ? (
                     <Box
                       className="d-flex flex-column align-items-center"
                       style={{ background: "#f5f8fa", maxWidth: "73vw" }}
@@ -475,13 +536,13 @@ export default function ViewRequestDetails() {
                   ) : (
                     ""
                   )} */}
-                      </Fragment>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          )}
+                    </Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+          {/* )} */}
         </Box>
       </Box>
     </Box>

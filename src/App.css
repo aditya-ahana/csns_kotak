@@ -251,9 +251,9 @@ input::-webkit-inner-spin-button {
   width: 40.125%;
 }
 
-.ticket-number-input,
+/* .ticket-number-input,
 .ticket-description-input {
-}
+} */
 
 .ticket-number-input::placeholder,
 .ticket-description-input::placeholder {
@@ -283,6 +283,15 @@ input::-webkit-inner-spin-button {
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
   width: 82.75%;
+}
+
+.selected-param-details {
+  margin-top: 1.4rem;
+  display: flex;
+  gap: 0.91rem;
+  flex-direction: row;
+  height: 2.35rem;
+  width: 100%;
 }
 
 .selected-report-header {
@@ -315,15 +324,6 @@ input::-webkit-inner-spin-button {
 .details-subsection {
   /* width: 100%; */
   margin-bottom: 2.25rem;
-}
-
-.selected-param-details {
-  margin-top: 1.4rem;
-  display: flex;
-  gap: 0.91rem;
-  flex-direction: row;
-  height: 2.35rem;
-  width: 100%;
 }
 
 .selected-param-box {
@@ -482,19 +482,26 @@ input::-webkit-inner-spin-button {
 }
 
 .preview-report-details {
-  background-color: rgba(245, 248, 250, 1);
+  display: flex;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
   min-height: fit-content;
   max-height: auto;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+  width: 100%;
   /* padding-bottom: 0.4rem; */
 }
 
 .preview-data {
   display: flex;
   flex-direction: row;
-  padding: 0.45rem 2.85rem 0.45rem 2.85rem;
+  width: 100%;
+  padding: 0.45rem 0rem 0.45rem 7rem;
   /* padding: 0rem 0rem 0rem 0rem; */
+  align-self: center;
+  /* justify-content: center; */
   gap: 2rem;
   /* justify-content: space-between; */
 }
@@ -746,8 +753,8 @@ input::-webkit-inner-spin-button {
   overflow: auto;
 }
 
-.view-table-header {
-}
+/* .view-table-header {
+} */
 
 .view-table-body {
   border-bottom-width: 0px;
@@ -787,8 +794,8 @@ input::-webkit-inner-spin-button {
   border-color: rgba(232, 232, 232, 1);
 }
 
-.date-filter-section {
-}
+/* .date-filter-section {
+} */
 
 .table-pagination {
   height: auto;
@@ -800,8 +807,8 @@ input::-webkit-inner-spin-button {
   align-items: center;
 }
 
-.MuiTablePagination-toolbar {
-}
+/* .MuiTablePagination-toolbar {
+} */
 
 .MuiTablePagination-actions {
   margin-top: 0.25rem;
@@ -821,11 +828,11 @@ input::-webkit-inner-spin-button {
   width: 10%;
 }
 
-.MuiTablePagination-select {
+/* .MuiTablePagination-select {
 }
 
 .MuiTablePagination-menuItem {
-}
+} */
 
 .MuiTablePagination-selectIcon {
   opacity: 0.85;

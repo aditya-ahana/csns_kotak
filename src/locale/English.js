@@ -59,4 +59,6 @@ export const English = {
 
   // view request
   viewRequestDetails: "View Request Details",
+  downloadAll: "Download All",
+  closeTicket: "Close Ticket",
 };
