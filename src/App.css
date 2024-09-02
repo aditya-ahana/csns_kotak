@@ -484,13 +484,14 @@ input::-webkit-inner-spin-button {
 .preview-report-details {
   display: flex;
   align-self: center;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content:space-between; */
   min-height: fit-content;
   max-height: auto;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  width: 100%;
+  background-color: rgb(243, 242, 248);
+  width: 84%;
   /* padding-bottom: 0.4rem; */
 }
 
@@ -498,11 +499,13 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: row;
   width: 100%;
-  padding: 0.45rem 0rem 0.45rem 7rem;
+  padding: 0.45rem 0rem 0.45rem 0rem;
+  /* background-color: red; */
   /* padding: 0rem 0rem 0rem 0rem; */
-  align-self: center;
-  /* justify-content: center; */
-  gap: 2rem;
+  /* align-self:flex-start;
+  justify-self: flex-start; */
+  justify-content:space-evenly;  
+  /* gap: 2rem; */
   /* justify-content: space-between; */
 }
 

@@ -65,7 +65,7 @@ export default function ViewRequest() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 360);
+    }, 220);
   });
 
   useEffect(() => {
@@ -466,15 +466,11 @@ export default function ViewRequest() {
   };
 
   const handleViewDetails = () => {
-    // setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
     route_to("/ViewRequest/ViewRequestDetails", {
       state: {
         //  ticketDetails : ticketDetails
       },
     });
-    // }, 1000);
   };
 
   return (
@@ -488,9 +484,9 @@ export default function ViewRequest() {
             className="view-request-container"
             data-testid="view-request-container"
           >
-            {/* {loading === true ? (
+            {loading === true ? (
               <Loader />
-            ) : ( */}
+            ) : (
             <>
               <Box className="view-request-header">
                 <Box
@@ -520,7 +516,7 @@ export default function ViewRequest() {
                   id="filter-menu-container"
                   data-testid="filter-menu-button"
                   onClick={handleViewFilterMenu}
-                  style={{ opacity: retrieving === true ? 0.25 : 1 }}
+                  style={{ opacity: retrieving === true ? 0.15 : 1 }}
                   aria-controls={viewFilterMenu ? "filter-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={viewFilterMenu ? "true" : undefined}
@@ -1344,7 +1340,7 @@ export default function ViewRequest() {
                 </Box>
               )}
             </>
-            {/* )} */}
+            )}
           </Box>
         </Box>
       </Box>
