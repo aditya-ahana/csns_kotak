@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "antd";
 import noData from "../../static/noData.png";
 import { useTranslation } from "react-i18next";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { RiAddLargeFill } from "react-icons/ri";
 import Loader from "../../components/Loader";
 
@@ -34,26 +33,16 @@ export default function Dashboard() {
           {/* <span style={{ fontWeight: "bold", fontSize: "x-large" }}>
          
           </span> */}
+
           <Button
-            type="primary"
-            // danger
+            variant="contained"
+            startIcon={<RiAddLargeFill />}
             className="logoColorBtn rounded"
             onClick={(e) => {
               createRequestNav();
             }}
-            style={{
-              // width: "24vh",
-              height: "6vh",
-              fontWeight: "bold",
-              fontSize: "medium",
-            }}
           >
-            {/* <span style={{ fontWeight: "bold", fontSize: "medium" }}>
-              <span col> */}
-            <RiAddLargeFill />
             {t("createRequest")}
-            {/* </span> */}
-            {/* </span> */}
           </Button>
         </div>
         {/* space */}
