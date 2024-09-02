@@ -107,7 +107,7 @@ button.ant-btn.css-dev-only-do-not-override-1fumvat.ant-btn-primary.ant-btn-dang
 }
 
 .logoColorBtn {
-  background-color: var(--logoColor);
+  background-color: var(--logoColor) !important;
 }
 .logoColorBtn:hover {
   background-color: var(--logoHoverColor) !important;
@@ -504,7 +504,7 @@ input::-webkit-inner-spin-button {
   /* padding: 0rem 0rem 0rem 0rem; */
   /* align-self:flex-start;
   justify-self: flex-start; */
-  justify-content:space-evenly;  
+  justify-content: space-evenly;
   /* gap: 2rem; */
   /* justify-content: space-between; */
 }
