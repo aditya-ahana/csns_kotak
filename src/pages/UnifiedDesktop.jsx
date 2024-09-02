@@ -8,11 +8,7 @@ function UnifiedDesktop() {
   const [ loading , setLoading ] = useState(true);
 
   const routeDashboard = () => {
-    // setLoading(true)
-    // setTimeout(() => {
       route_to("/Dashboard")
-      // setLoading(false);
-    // },620)
   };
 
   const route_to = useNavigate();
@@ -20,7 +16,7 @@ function UnifiedDesktop() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    },620)
+    },300)
   });
   // return (
   //   <>

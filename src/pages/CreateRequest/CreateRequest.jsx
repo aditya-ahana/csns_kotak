@@ -153,7 +153,7 @@ export default function CreateRequest() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 620);
+    }, 300);
   });
 
   const route_to = useNavigate();
@@ -1154,16 +1154,16 @@ export default function CreateRequest() {
                 type: "Excel",
               }
             : detailName === "accountNumberDetails"
-              ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
-              : detailName === "PANdetails" ||
-                  detailName === "mobileNoDetails" ||
-                  detailName === "CRNdetails" ||
-                  detailName === "emailDetails" ||
-                  detailName === "creditCardDetails" ||
-                  detailName === "debitCardDetails" ||
-                  detailName === "aadharDetails"
-                ? { name: name, value: "", type: "Excel" }
-                : {},
+            ? { name: name, value: "", from: "From", to: "To", type: "Excel" }
+            : detailName === "PANdetails" ||
+              detailName === "mobileNoDetails" ||
+              detailName === "CRNdetails" ||
+              detailName === "emailDetails" ||
+              detailName === "creditCardDetails" ||
+              detailName === "debitCardDetails" ||
+              detailName === "aadharDetails"
+            ? { name: name, value: "", type: "Excel" }
+            : {},
         ];
       }
       // document.querySelector("#selected-reports-section").scrollIntoView();
@@ -1426,43 +1426,43 @@ export default function CreateRequest() {
               (detail.name === "Account number"
                 ? 16
                 : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                    ? 10
-                    : detail.name === "Credit Card"
-                      ? 16
-                      : detail.name === "Aadhar"
-                        ? 12
-                        : detail.name === "Debit Card"
-                          ? 16
-                          : detail.name === "Mobile No."
-                            ? 10
-                            : detail.name === "RRN"
-                              ? 12
-                              : detail.name === "CRN"
-                                ? 10
-                                : 0)
+                ? 320
+                : detail.name === "PAN"
+                ? 10
+                : detail.name === "Credit Card"
+                ? 16
+                : detail.name === "Aadhar"
+                ? 12
+                : detail.name === "Debit Card"
+                ? 16
+                : detail.name === "Mobile No."
+                ? 10
+                : detail.name === "RRN"
+                ? 12
+                : detail.name === "CRN"
+                ? 10
+                : 0)
                 ? warningHelperText(
                     `Only ${
                       detail.name === "Account number"
                         ? 16
                         : detail.name === "Email ID"
-                          ? 320
-                          : detail.name === "PAN"
-                            ? 10
-                            : detail.name === "Credit Card"
-                              ? 16
-                              : detail.name === "Aadhar"
-                                ? 12
-                                : detail.name === "Debit Card"
-                                  ? 16
-                                  : detail.name === "Mobile No."
-                                    ? 10
-                                    : detail.name === "RRN"
-                                      ? 12
-                                      : detail.name === "CRN"
-                                        ? 10
-                                        : 0
+                        ? 320
+                        : detail.name === "PAN"
+                        ? 10
+                        : detail.name === "Credit Card"
+                        ? 16
+                        : detail.name === "Aadhar"
+                        ? 12
+                        : detail.name === "Debit Card"
+                        ? 16
+                        : detail.name === "Mobile No."
+                        ? 10
+                        : detail.name === "RRN"
+                        ? 12
+                        : detail.name === "CRN"
+                        ? 10
+                        : 0
                     } characters`,
                     1
                   )
@@ -1473,22 +1473,22 @@ export default function CreateRequest() {
               (detail.name === "Account number"
                 ? 16
                 : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                    ? 10
-                    : detail.name === "Credit Card"
-                      ? 16
-                      : detail.name === "Aadhar"
-                        ? 12
-                        : detail.name === "Debit Card"
-                          ? 16
-                          : detail.name === "Mobile No."
-                            ? 10
-                            : detail.name === "RRN"
-                              ? 12
-                              : detail.name === "CRN"
-                                ? 10
-                                : 0)
+                ? 320
+                : detail.name === "PAN"
+                ? 10
+                : detail.name === "Credit Card"
+                ? 16
+                : detail.name === "Aadhar"
+                ? 12
+                : detail.name === "Debit Card"
+                ? 16
+                : detail.name === "Mobile No."
+                ? 10
+                : detail.name === "RRN"
+                ? 12
+                : detail.name === "CRN"
+                ? 10
+                : 0)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
@@ -1516,22 +1516,22 @@ export default function CreateRequest() {
                 detail.name === "Account number"
                   ? 16
                   : detail.name === "Email ID"
-                    ? 320
-                    : detail.name === "PAN"
-                      ? 10
-                      : detail.name === "Credit Card"
-                        ? 16
-                        : detail.name === "Aadhar"
-                          ? 12
-                          : detail.name === "Debit Card"
-                            ? 16
-                            : detail.name === "Mobile No."
-                              ? 10
-                              : detail.name === "RRN"
-                                ? 12
-                                : detail.name === "CRN"
-                                  ? 10
-                                  : 0,
+                  ? 320
+                  : detail.name === "PAN"
+                  ? 10
+                  : detail.name === "Credit Card"
+                  ? 16
+                  : detail.name === "Aadhar"
+                  ? 12
+                  : detail.name === "Debit Card"
+                  ? 16
+                  : detail.name === "Mobile No."
+                  ? 10
+                  : detail.name === "RRN"
+                  ? 12
+                  : detail.name === "CRN"
+                  ? 10
+                  : 0,
             }}
             className="selected-param-box"
             // value={
@@ -1690,29 +1690,27 @@ export default function CreateRequest() {
                   detail.From === "From"
                     ? customFormText("")
                     : ((detail.name === "Account number" &&
+                        detail.value.length === 16) ||
+                        (detail.name === "Email ID" &&
+                          detail.value.length >= 12 &&
+                          detail.value.length <= 320) ||
+                        (detail.name === "PAN" && detail.value.length === 10) ||
+                        (detail.name === "Credit Card" &&
                           detail.value.length === 16) ||
-                          (detail.name === "Email ID" &&
-                            detail.value.length >= 12 &&
-                            detail.value.length <= 320) ||
-                          (detail.name === "PAN" &&
-                            detail.value.length === 10) ||
-                          (detail.name === "Credit Card" &&
-                            detail.value.length === 16) ||
-                          (detail.name === "Aadhar" &&
-                            detail.value.length === 12) ||
-                          (detail.name === "Debit Card" &&
-                            detail.value.length === 16) ||
-                          (detail.name === "Mobile No." &&
-                            detail.value.length === 10) ||
-                          (detail.name === "RRN" &&
-                            detail.value.length === 12) ||
-                          (detail.name === "CRN" &&
-                            detail.value.length === 10)) &&
-                        detail.from === "From"
-                      ? customFormText("If needed, select from date", "grey", 1)
-                      : detail.from !== "From"
-                        ? validatedHelperText("Dated")
-                        : ""
+                        (detail.name === "Aadhar" &&
+                          detail.value.length === 12) ||
+                        (detail.name === "Debit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Mobile No." &&
+                          detail.value.length === 10) ||
+                        (detail.name === "RRN" && detail.value.length === 12) ||
+                        (detail.name === "CRN" &&
+                          detail.value.length === 10)) &&
+                      detail.from === "From"
+                    ? customFormText("If needed, select from date", "grey", 1)
+                    : detail.from !== "From"
+                    ? validatedHelperText("Dated")
+                    : ""
                 }
               </LocalizationProvider>
             </Box>
@@ -1786,29 +1784,27 @@ export default function CreateRequest() {
                   detail.to === "To"
                     ? customFormText("")
                     : ((detail.name === "Account number" &&
+                        detail.value.length === 16) ||
+                        (detail.name === "Email ID" &&
+                          detail.value.length >= 12 &&
+                          detail.value.length <= 320) ||
+                        (detail.name === "PAN" && detail.value.length === 10) ||
+                        (detail.name === "Credit Card" &&
                           detail.value.length === 16) ||
-                          (detail.name === "Email ID" &&
-                            detail.value.length >= 12 &&
-                            detail.value.length <= 320) ||
-                          (detail.name === "PAN" &&
-                            detail.value.length === 10) ||
-                          (detail.name === "Credit Card" &&
-                            detail.value.length === 16) ||
-                          (detail.name === "Aadhar" &&
-                            detail.value.length === 12) ||
-                          (detail.name === "Debit Card" &&
-                            detail.value.length === 16) ||
-                          (detail.name === "Mobile No." &&
-                            detail.value.length === 10) ||
-                          (detail.name === "RRN" &&
-                            detail.value.length === 12) ||
-                          (detail.name === "CRN" &&
-                            detail.value.length === 10)) &&
-                        detail.to === "To"
-                      ? customFormText("If needed, select to date", "grey", 1)
-                      : detail.to !== "To"
-                        ? validatedHelperText("Dated")
-                        : ""
+                        (detail.name === "Aadhar" &&
+                          detail.value.length === 12) ||
+                        (detail.name === "Debit Card" &&
+                          detail.value.length === 16) ||
+                        (detail.name === "Mobile No." &&
+                          detail.value.length === 10) ||
+                        (detail.name === "RRN" && detail.value.length === 12) ||
+                        (detail.name === "CRN" &&
+                          detail.value.length === 10)) &&
+                      detail.to === "To"
+                    ? customFormText("If needed, select to date", "grey", 1)
+                    : detail.to !== "To"
+                    ? validatedHelperText("Dated")
+                    : ""
                 }
               </LocalizationProvider>
             </Box>
@@ -1944,8 +1940,8 @@ export default function CreateRequest() {
                     detail.value.length < 12
                       ? ""
                       : detail.value.length === 12 && detail.amount.length === 0
-                        ? "If needed, amount must be 1-6 digits long"
-                        : validatedDetail()
+                      ? "If needed, amount must be 1-6 digits long"
+                      : validatedDetail()
                   }
                   autoComplete="off"
                   FormHelperTextProps={{ sx: { color: "rgb(255, 0, 0)" } }}
@@ -1998,10 +1994,10 @@ export default function CreateRequest() {
                   {detail.date !== "Date"
                     ? validatedHelperText("Dated")
                     : detail.value.length === 12
-                      ? customFormText("If needed, select date", "grey", 1)
-                      : detail.date === "Date" && detail.value.length === 12
-                        ? customFormText("If needed, select date", "grey", 1)
-                        : ""}
+                    ? customFormText("If needed, select date", "grey", 1)
+                    : detail.date === "Date" && detail.value.length === 12
+                    ? customFormText("If needed, select date", "grey", 1)
+                    : ""}
                 </LocalizationProvider>
               </Box>
             </Box>
@@ -2112,8 +2108,8 @@ export default function CreateRequest() {
             (detail.name === "CRN" && detail.value.length < 10)
               ? customFormText("")
               : detail.type === "Type"
-                ? customFormText("select report type", "red", 1)
-                : validatedHelperText("Selected")}
+              ? customFormText("select report type", "red", 1)
+              : validatedHelperText("Selected")}
           </FormControl>
         )}
 
@@ -2257,14 +2253,17 @@ export default function CreateRequest() {
   ) =>
     detailsArray.map((detail, detailIndex) => (
       <Box>
-        {detail.value.length > 1 && (
+        {detail.value.length > 0 && (
           <>
             {/* { updateDetailed() } */}
-            <Box className="preview-data">
+            <Box className="preview-data" sx={{ justifyContent : reportName ===
+                  "Beneficiary details for Single IMPS transactions" ||
+                reportName ===
+                  "Beneficiary details for Single UPI transactions" || (reportName === "IP Logs" && detail.from === "From" && detail.to === "To") || (reportName === "IP Logs" && detail.mobileno.length === 0) || (reportName === "Statement in PDF/Excel" && detail.from === "From" && detail.to === "To")  ? "space-evenly" : "space-between"}}>
               <Box
                 className="detail-input"
-                display={detail.value.length > 1 ? "block" : "none"}
-                sx={{ minWidth: "12rem", maxWidth: "12rem" }}
+                display={detail.value.length > 0 ? "block" : "none"}
+                // sx={{ minWidth: "12rem", maxWidth: "12rem" }}
               >
                 <span className="preview-text" style={{ fontWeight: 500 }}>{`${
                   detail.name === "Account number" ? "Acc no." : detail.name
@@ -2286,12 +2285,15 @@ export default function CreateRequest() {
                     "Beneficiary details for Bulk IMPS transactions") ||
                 (detailName === "RRNdetails" &&
                   reportName ===
-                    "Beneficiary details for Bulk UPI transactions")) && (
-                <Box
-                  className="detail-range"
-                  display={detail.from !== "From" || detail.to !== "To"}
-                >
-                  {detail.from !== "From" && (
+                    "Beneficiary details for Bulk UPI transactions")) &&
+                (detail.from !== "From" || detail.to !== "To") && 
+                (
+                  <Box
+                    className="detail-range"
+                    // // display={detail.from === "From" && detail.to === "To" ? "none" : "block"}
+                    // display="none"
+                  >
+                    {/* {detail.from !== "From" && ( */}
                     <Box
                       sx={{
                         display: "flex",
@@ -2305,89 +2307,94 @@ export default function CreateRequest() {
                       >
                         Date :{" "}
                       </span>
-                      <span className="preview-text">{`${detail.from} - `}</span>
+                      <span className="preview-text">
+                        {detail.from !== "From" ? `${detail.from} - ` : `___________ - `}
+                      </span>
                     </Box>
-                  )}
-                  {detail.to !== "To" && (
-                    <span className="preview-text">{detail.to}</span>
-                  )}
-                </Box>
-              )}
-
-              <Box>
-                {((detailName === "RRNdetails" &&
-                  reportName ===
-                    "Beneficiary details for Single IMPS transactions") ||
-                  (detailName === "RRNdetails" &&
-                    reportName ===
-                      "Beneficiary details for Single UPI transactions")) && (
-                  <Box className="detail-range" sx={{ gap: "5rem" }}>
-                    {detail.amount !== 0 && detail.amount.length !== 0 && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: "0.15rem",
-                        }}
-                      >
-                        <span
-                          className="preview-text"
-                          style={{ fontWeight: 500 }}
-                        >
-                          Amount :{" "}
-                        </span>
-                        <span className="preview-text">{detail.amount}</span>
-                      </Box>
-                    )}
-
-                    {detail.date !== "Date" && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "row",
-                          gap: "0.15rem",
-                        }}
-                      >
-                        <span
-                          className="preview-text"
-                          style={{ fontWeight: 500 }}
-                        >
-                          Date :{" "}
-                        </span>
-                        <span className="preview-text">{detail.date}</span>
-                      </Box>
-                    )}
+                    {/* )} */}
+                    <span className="preview-text">
+                      {detail.to !== "To" ? `${detail.to}` : `___________`}
+                    </span>
                   </Box>
                 )}
-              </Box>
 
-              {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
-                <Box
-                  display={
-                    detail.mobileno === "" || detail.mobileno.length === 0
-                      ? "none"
-                      : "block"
-                  }
-                >
-                  <span
-                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                    className="preview-text"
+              {((detailName === "RRNdetails" &&
+                reportName ===
+                  "Beneficiary details for Single IMPS transactions") ||
+                (detailName === "RRNdetails" &&
+                  reportName ===
+                    "Beneficiary details for Single UPI transactions")) && (
+                <Box className="detail-range" sx={{ gap: "5rem" }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "0.15rem",
+                    }}
                   >
-                    Mobile No. :{" "}
-                  </span>
-                  <span className="preview-text">{detail.mobileno}</span>
+                    <span className="preview-text" style={{ fontWeight: 500 }}>
+                      Amount :{" "}
+                    </span>
+                    <span className="preview-text">
+                      {detail.amount.length === 0 ? "0" : detail.amount}
+                    </span>
+                  </Box>
+
+                  {detail.date !== "Date" && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "0.15rem",
+                      }}
+                    >
+                      <span
+                        className="preview-text"
+                        style={{ fontWeight: 500 }}
+                      >
+                        Date :{" "}
+                      </span>
+                      <span className="preview-text">{detail.date}</span>
+                    </Box>
+                  )}
                 </Box>
               )}
 
+              {reportName === "IP Logs" &&
+                detailName !== "mobileNoDetails" &&
+                detail.mobileno.length > 0 && (
+                  <Box
+                  // display={
+                  //   detail.mobileno === "" || detail.mobileno.length === 0
+                  //     ? "none"
+                  //     : "block"
+                  // }
+                  >
+                    <span
+                      style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                      className="preview-text"
+                    >
+                      Mobile No. :{" "}
+                    </span>
+                    <span className="preview-text">{detail.mobileno}</span>
+                  </Box>
+                )}
+
               {reportName === "Statement in PDF/Excel" && (
-                <Box display={detail.type === "Type" ? "none" : "block"}>
+                <Box
+                //  display={detail.type === "Type" ? "none" : "block"}
+                >
                   <span
                     style={{ marginLeft: "0.92rem", fontWeight: 500 }}
                     className="preview-text"
                   >
                     Type :{" "}
                   </span>
-                  <span className="preview-text">{detail.type}</span>
+                  <span className="preview-text">
+                    {detail.type === "Type"
+                      ? "Yet to be selected"
+                      : detail.type}
+                  </span>
                 </Box>
               )}
             </Box>
@@ -2441,86 +2448,77 @@ export default function CreateRequest() {
   };
 
   const isValidDisplay =
-    reportsState.every(
-      (state, index) =>
-        state.accountNumberDetails.length >= 1 &&
-        state.accountNumberDetails.some(
-          (detail, subIndex) =>
-            state.accountNumberDetails[0].value.length === 16 &&
-            state.accountNumberDetails[0].type !== "Type"
-        )
+    reportsState.every((state, index) =>
+      // state.accountNumberDetails.length > 0 &&
+      state.accountNumberDetails.every(
+        (detail, subIndex) => state.accountNumberDetails[0].value.length > 0
+        // && state.accountNumberDetails[0].type !== "Type"
+      )
+    ) ||
+    reportsState.every((state, index) =>
+      // state.PANdetails.length > 0 &&
+      state.PANdetails.every(
+        (detail, subIndex) => state.PANdetails[0].length > 0
+        // &&
+        //   state.PANdetails[0].type !== "Type"
+      )
+    ) ||
+    reportsState.every((state, index) =>
+      // state.CRNdetails.length > 0 &&
+      state.CRNdetails.every(
+        (detail, subIndex) => state.CRNdetails[0].length > 0
+        // &&
+        //   state.CRNdetails[0].type !== "Type"
+      )
+    ) ||
+    reportsState.every((state, index) =>
+      // state.RRNdetails.length > 0 &&
+      state.RRNdetails.every(
+        (detail, subIndex) => state.RRNdetails[0].length > 0
+        // &&
+        //   state.RRNdetails[0].type !== "Type"
+      )
+    ) ||
+    reportsState.every((state, index) =>
+      // state.aadharDetails.length > 0 &&
+      state.aadharDetails.every(
+        (detail, subIndex) => state.aadharDetails[0].length > 0
+        // &&
+        //   state.aadharDetails[0].type !== "Type"
+      )
     ) ||
     reportsState.every(
       (state, index) =>
-        state.PANdetails.length >= 1 &&
-        state.PANdetails.some(
-          (detail, subIndex) =>
-            state.PANdetails[0].length === 10 &&
-            state.PANdetails[0].type !== "Type"
+        state.mobileNoDetails.length > 0 &&
+        state.mobileNoDetails.every(
+          (detail, subIndex) => state.mobileNoDetails[0].length > 0
+          // &&
+          //   state.mobileNoDetails[0].type !== "Type"
         )
     ) ||
-    reportsState.every(
-      (state, index) =>
-        state.CRNdetails.length >= 1 &&
-        state.CRNdetails.some(
-          (detail, subIndex) =>
-            state.CRNdetails[0].length === 10 &&
-            state.CRNdetails[0].type !== "Type"
-        )
+    reportsState.every((state, index) =>
+      // state.creditCardDetails.length > 0 &&
+      state.creditCardDetails.every(
+        (detail, subIndex) => state.creditCardDetails[0].length > 0
+        // &&
+        //   state.creditCardDetails[0].type !== "Type"
+      )
     ) ||
-    reportsState.every(
-      (state, index) =>
-        state.RRNdetails.length >= 1 &&
-        state.RRNdetails.some(
-          (detail, subIndex) =>
-            state.RRNdetails[0].length === 12 &&
-            state.RRNdetails[0].type !== "Type"
-        )
+    reportsState.every((state, index) =>
+      // state.debitCardDetails.length > 0 &&
+      state.debitCardDetails.every(
+        (detail, subIndex) => state.debitCardDetails[0].length > 0
+        // &&
+        //   state.debitCardDetails[0].type !== "Type"
+      )
     ) ||
-    reportsState.every(
-      (state, index) =>
-        state.aadharDetails.length >= 1 &&
-        state.aadharDetails.some(
-          (detail, subIndex) =>
-            state.aadharDetails[0].length === 12 &&
-            state.aadharDetails[0].type !== "Type"
-        )
-    ) ||
-    reportsState.every(
-      (state, index) =>
-        state.mobileNoDetails.length >= 1 &&
-        state.mobileNoDetails.some(
-          (detail, subIndex) =>
-            state.mobileNoDetails[0].length === 10 &&
-            state.mobileNoDetails[0].type !== "Type"
-        )
-    ) ||
-    reportsState.every(
-      (state, index) =>
-        state.creditCardDetails.length >= 1 &&
-        state.creditCardDetails.some(
-          (detail, subIndex) =>
-            state.creditCardDetails[0].length === 16 &&
-            state.creditCardDetails[0].type !== "Type"
-        )
-    ) ||
-    reportsState.every(
-      (state, index) =>
-        state.debitCardDetails.length >= 1 &&
-        state.debitCardDetails.some(
-          (detail, subIndex) =>
-            state.debitCardDetails[0].length === 16 &&
-            state.debitCardDetails[0].type !== "Type"
-        )
-    ) ||
-    reportsState.every(
-      (state, index) =>
-        state.emailDetails.length >= 1 &&
-        state.emailDetails.some(
-          (detail, subIndex) =>
-            state.emailDetails[0].length > 16 &&
-            state.emailDetails[0].type !== "Type"
-        )
+    reportsState.every((state, index) =>
+      // state.emailDetails.length > 0 &&
+      state.emailDetails.every(
+        (detail, subIndex) => state.emailDetails[0].length > 0
+        // &&
+        //   state.emailDetails[0].type !== "Type"
+      )
     );
 
   const isValidReportData = reportsState.every(
@@ -2655,273 +2653,274 @@ export default function CreateRequest() {
                   : "1.25rem 1.5rem 1.15rem 1.5rem",
             }}
           >
-            {/* {loading === true ? (
+            {loading === true ? (
               <Loader />
-            ) : ( */}
-            <>
-              <Box className="ticket-type-section">
-                <FormControl
-                  variant="outlined"
-                  margin="none"
-                  className="ticket-number-container"
-                >
-                  {/* {loading === true ? (
+            ) : (
+              <>
+                <Box className="ticket-type-section">
+                  <FormControl
+                    variant="outlined"
+                    margin="none"
+                    className="ticket-number-container"
+                  >
+                    {/* {loading === true ? (
                       <Skeleton height="2.75rem" sx={{ borderRadius : '4px', backgroundColor : "rgb(230, 230, 235)"}} animation="pulse" variant="rectangular" />
                     ) : ( */}
-                  <TextField
-                    sx={
-                      ticketNumber.length === 10
-                        ? inputControl.validatedTextfield
-                        : inputControl.textfield
-                    }
-                    helperText={
-                      ticketNumber.length < 10
-                        ? warningHelperText("Only 10 characters", 1)
-                        : validatedDetail()
-                    }
-                    InputLabelProps={
-                      ticketNumber.length === 10
-                        ? inputControl.validatedInputLabelProps
-                        : inputControl.inputLabelProps
-                    }
-                    FormHelperTextProps={{ sx: { color: "red" } }}
-                    inputProps={{
-                      style: {
+                    <TextField
+                      sx={
+                        ticketNumber.length === 10
+                          ? inputControl.validatedTextfield
+                          : inputControl.textfield
+                      }
+                      helperText={
+                        ticketNumber.length < 10
+                          ? warningHelperText("Only 10 characters", 1)
+                          : validatedDetail()
+                      }
+                      InputLabelProps={
+                        ticketNumber.length === 10
+                          ? inputControl.validatedInputLabelProps
+                          : inputControl.inputLabelProps
+                      }
+                      FormHelperTextProps={{ sx: { color: "red" } }}
+                      inputProps={{
+                        style: {
+                          fontSize: "0.88rem",
+                          height: "0.6rem",
+                          // backgroundColor : "blue"
+                        },
+                        maxLength: 10,
+                      }}
+                      data-testid="ticket-num-input"
+                      placeholder={t("enterTicketNo")}
+                      className="ticket-number-input"
+                      value={ticketNumber}
+                      autoComplete="off"
+                      size="medium"
+                      style={{
+                        margin: "0rem 0rem 0rem 0rem",
+                        height: "auto",
                         fontSize: "0.88rem",
-                        height: "0.6rem",
-                        // backgroundColor : "blue"
-                      },
-                      maxLength: 10,
-                    }}
-                    data-testid="ticket-num-input"
-                    placeholder={t("enterTicketNo")}
-                    className="ticket-number-input"
-                    value={ticketNumber}
-                    autoComplete="off"
-                    size="medium"
-                    style={{
-                      margin: "0rem 0rem 0rem 0rem",
-                      height: "auto",
-                      fontSize: "0.88rem",
-                    }}
-                    label={t("ticketNo")}
-                    margin="dense"
-                    onChange={(e) => setTicketNumber(e.target.value)}
-                    type="text"
-                    required
-                    inputMode="text"
-                    fullWidth={true}
-                    color="primary"
-                  />
-                </FormControl>
+                      }}
+                      label={t("ticketNo")}
+                      margin="dense"
+                      onChange={(e) => setTicketNumber(e.target.value)}
+                      type="text"
+                      required
+                      inputMode="text"
+                      fullWidth={true}
+                      color="primary"
+                    />
+                  </FormControl>
 
-                <FormControl
-                  variant="outlined"
-                  margin="none"
-                  className="ticket-description-container"
-                >
-                  <TextField
-                    placeholder={
-                      descriptionFocused === true ? t("enterTicketDesc") : ""
-                    }
+                  <FormControl
                     variant="outlined"
-                    FormHelperTextProps={{ sx: { color: "red" } }}
-                    helperText={
-                      ticketNumber.length < 10
-                        ? ""
-                        : ticketNumber.length === 10 &&
+                    margin="none"
+                    className="ticket-description-container"
+                  >
+                    <TextField
+                      placeholder={
+                        descriptionFocused === true ? t("enterTicketDesc") : ""
+                      }
+                      variant="outlined"
+                      FormHelperTextProps={{ sx: { color: "red" } }}
+                      helperText={
+                        ticketNumber.length < 10
+                          ? ""
+                          : ticketNumber.length === 10 &&
                             ticketDescription.length === 0
                           ? warningHelperText("Only 10-60 characters", 1)
                           : ticketDescription.length < 10
-                            ? warningHelperText("Only 10-60 characters", 1)
-                            : validatedDetail()
-                    }
-                    required
-                    label={t("ticketDesc")}
-                    onFocus={() => {
-                      ////console.log('desc length',ticketDescription.length);
-                      ////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
-                      setDescriptionFocused(true);
-                    }}
-                    onBlur={() => setDescriptionFocused(false)}
-                    multiline
-                    // multiline
-                    sx={
-                      ticketDescription.length >= 10
-                        ? inputControl.validatedTextfield
-                        : inputControl.textfield
-                    }
-                    className="ticket-description-input"
-                    autoComplete="off"
-                    rows={Math.ceil(ticketDescription.length / 60)}
-                    size="small"
-                    fullWidth
-                    inputProps={inputControl.textAreaProps}
-                    InputLabelProps={
-                      ticketDescription.length >= 10
-                        ? inputControl.validatedTextAreaLabelProps
-                        : inputControl.textAreaLabelProps
-                    }
-                    style={{
-                      margin: "0rem 0rem 0rem 0rem",
-                      backgroundColor: "white",
-                      height: "auto",
-                    }}
-                    margin="none"
-                    // InputProps={{
-                    //   inputComponent : 'textarea',
-                    //   sx : {
-                    //      padding : 0,
-                    //      margin : 0
-                    //   }
-                    // }}
-                    type="text"
-                    inputMode="text"
-                    disabled={ticketNumber.length < 10 ? true : false}
-                    color="primary"
-                    value={ticketDescription}
-                    data-testid="ticket-descr-input"
-                    onChange={(e) => setTicketDescription(e.target.value)}
-                  />
-                </FormControl>
-              </Box>
-
-              <FormControl variant="standard" sx={{ width: "82.75%" }}>
-                <Select
-                  label="Reports Selection Dropdown"
-                  name="reports-selection-dropdown"
-                  id="reports-selection-dropdown"
-                  data-testid="reports-selection-dropdown"
-                  multiple={true}
-                  value={selectedReports}
-                  displayEmpty
-                  disabled={
-                    ticketNumber.length < 10 || ticketDescription.length < 10
-                      ? true
-                      : false
-                  }
-                  onChange={handleReportSelection}
-                  variant="standard"
-                  input={<OutlinedInput fullWidth={true} />}
-                  IconComponent={(props) => (
-                    <KeyboardArrowDownOutlinedIcon
-                      className="reports-type-dropdownicon"
-                      sx={{
-                        fontSize: "1.4rem",
-                        color: "rgba(115, 115, 115, 1)",
+                          ? warningHelperText("Only 10-60 characters", 1)
+                          : validatedDetail()
+                      }
+                      required
+                      label={t("ticketDesc")}
+                      onFocus={() => {
+                        ////console.log('desc length',ticketDescription.length);
+                        ////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
+                        setDescriptionFocused(true);
                       }}
-                      {...props}
-                    />
-                  )}
-                  renderValue={(reports) => {
-                    if (reports.length === 0) {
-                      return (
-                        <span
-                          style={{ opacity: 0.45 }}
-                          data-testid="reports-dropdown-input-initial"
-                        >
-                          {" "}
-                          {t("statementsReportRequire")}
-                        </span>
-                      );
-                    }
-                    return (
-                      <Input
-                        sx={{
-                          width: "99%",
-                          fontSize: "95%",
-                          textOverflow: "ellipsis",
-                          // overflow: "hidden",
-                        }}
-                        disableUnderline={true}
-                        value={reports.join(" , ")}
-                        data-testid="reports-dropdown-input-changed"
-                      ></Input>
-                    );
-                  }}
-                  inputProps={{}}
-                  sx={
-                    selectedReports.length === 0
-                      ? SelectProps.containerProps
-                      : SelectProps.validatedContainerProps
-                  }
-                  MenuProps={SelectProps.REPORT_SELECT_PROPS}
-                  autoWidth={false}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: "2.56rem",
-                    fontSize: "0.88rem",
-                    border: "none",
-                  }}
-                  placeholder={t("statementsReportRequire")}
-                >
-                  {requiredReportsData.map((report, index) => (
-                    <MenuItem
-                      key={report}
-                      value={report}
-                      data-testid={`reports-selection-dropdown-menu-item-${index}`}
+                      onBlur={() => setDescriptionFocused(false)}
+                      multiline
+                      // multiline
+                      sx={
+                        ticketDescription.length >= 10
+                          ? inputControl.validatedTextfield
+                          : inputControl.textfield
+                      }
+                      className="ticket-description-input"
+                      autoComplete="off"
+                      rows={Math.ceil(ticketDescription.length / 60)}
+                      size="small"
+                      fullWidth
+                      inputProps={inputControl.textAreaProps}
+                      InputLabelProps={
+                        ticketDescription.length >= 10
+                          ? inputControl.validatedTextAreaLabelProps
+                          : inputControl.textAreaLabelProps
+                      }
                       style={{
-                        display: "flex",
-                        border: "1px solid #cdcdcd",
-                        width: "96.25%",
-                        margin: "1rem 0rem 1rem 1.25rem",
-                        height: "2.65rem",
-                        alignItems: "left",
-                        borderRadius: "4px",
-                        backgroundColor: "transparent",
-                        fontSize: "2px",
+                        margin: "0rem 0rem 0rem 0rem",
+                        backgroundColor: "white",
+                        height: "auto",
                       }}
-                    >
-                      <Checkbox
-                        size="medium"
-                        data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
-                        icon={
-                          <CheckBoxOutlineBlankIcon
-                            sx={{ fontSize: "1.5rem" }}
-                          />
-                        }
-                        // inputProps={{
-                        //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
-                        // }}
-                        checkedIcon={
-                          <CheckBoxOutlinedIcon
-                            className="check-icon"
-                            sx={{ fontSize: "1.5rem", color: "red" }}
-                          />
-                        }
-                        sx={{ containIntrinsicSize: "2px" }}
-                        checked={selectedReports.indexOf(report) > -1}
-                        color="primary"
+                      margin="none"
+                      // InputProps={{
+                      //   inputComponent : 'textarea',
+                      //   sx : {
+                      //      padding : 0,
+                      //      margin : 0
+                      //   }
+                      // }}
+                      type="text"
+                      inputMode="text"
+                      disabled={ticketNumber.length < 10 ? true : false}
+                      color="primary"
+                      value={ticketDescription}
+                      data-testid="ticket-descr-input"
+                      onChange={(e) => setTicketDescription(e.target.value)}
+                    />
+                  </FormControl>
+                </Box>
+
+                <FormControl variant="standard" sx={{ width: "82.75%" }}>
+                  <Select
+                    label="Reports Selection Dropdown"
+                    name="reports-selection-dropdown"
+                    id="reports-selection-dropdown"
+                    data-testid="reports-selection-dropdown"
+                    multiple={true}
+                    value={selectedReports}
+                    displayEmpty
+                    disabled={
+                      ticketNumber.length < 10 || ticketDescription.length < 10
+                        ? true
+                        : false
+                    }
+                    onChange={handleReportSelection}
+                    variant="standard"
+                    input={<OutlinedInput fullWidth={true} />}
+                    IconComponent={(props) => (
+                      <KeyboardArrowDownOutlinedIcon
+                        className="reports-type-dropdownicon"
+                        sx={{
+                          fontSize: "1.4rem",
+                          color: "rgba(115, 115, 115, 1)",
+                        }}
+                        {...props}
+                      />
+                    )}
+                    renderValue={(reports) => {
+                      if (reports.length === 0) {
+                        return (
+                          <span
+                            style={{ opacity: 0.45 }}
+                            data-testid="reports-dropdown-input-initial"
+                          >
+                            {" "}
+                            {t("statementsReportRequire")}
+                          </span>
+                        );
+                      }
+                      return (
+                        <Input
+                          sx={{
+                            width: "99%",
+                            fontSize: "95%",
+                            textOverflow: "ellipsis",
+                            // overflow: "hidden",
+                          }}
+                          disableUnderline={true}
+                          value={reports.join(" , ")}
+                          data-testid="reports-dropdown-input-changed"
+                        ></Input>
+                      );
+                    }}
+                    inputProps={{}}
+                    sx={
+                      selectedReports.length === 0
+                        ? SelectProps.containerProps
+                        : SelectProps.validatedContainerProps
+                    }
+                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                    autoWidth={false}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "2.56rem",
+                      fontSize: "0.88rem",
+                      border: "none",
+                    }}
+                    placeholder={t("statementsReportRequire")}
+                  >
+                    {requiredReportsData.map((report, index) => (
+                      <MenuItem
+                        key={report}
+                        value={report}
+                        data-testid={`reports-selection-dropdown-menu-item-${index}`}
                         style={{
-                          marginLeft: "-0.88rem",
+                          display: "flex",
+                          border: "1px solid #cdcdcd",
+                          width: "96.25%",
+                          margin: "1rem 0rem 1rem 1.25rem",
+                          height: "2.65rem",
+                          alignItems: "left",
+                          borderRadius: "4px",
                           backgroundColor: "transparent",
                           fontSize: "2px",
                         }}
-                      />
-                      <ListItemText
-                        primary={report}
-                        data-testid="reports-selection-dropdown-menu-item-text"
-                        style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                        color="black"
-                        inputMode="text"
-                        primaryTypographyProps={{ fontSize: "0.825rem" }}
-                      />
-                    </MenuItem>
-                  ))}
-                </Select>
-                {selectedReports.length >= 1
-                  ? validatedHelperText("Selected")
-                  : ticketNumber.length === 0 || ticketDescription.length === 0
+                      >
+                        <Checkbox
+                          size="medium"
+                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                          icon={
+                            <CheckBoxOutlineBlankIcon
+                              sx={{ fontSize: "1.5rem" }}
+                            />
+                          }
+                          // inputProps={{
+                          //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
+                          // }}
+                          checkedIcon={
+                            <CheckBoxOutlinedIcon
+                              className="check-icon"
+                              sx={{ fontSize: "1.5rem", color: "red" }}
+                            />
+                          }
+                          sx={{ containIntrinsicSize: "2px" }}
+                          checked={selectedReports.indexOf(report) > -1}
+                          color="primary"
+                          style={{
+                            marginLeft: "-0.88rem",
+                            backgroundColor: "transparent",
+                            fontSize: "2px",
+                          }}
+                        />
+                        <ListItemText
+                          primary={report}
+                          data-testid="reports-selection-dropdown-menu-item-text"
+                          style={{ padding: "0.05rem 0rem 0rem 0rem" }}
+                          color="black"
+                          inputMode="text"
+                          primaryTypographyProps={{ fontSize: "0.825rem" }}
+                        />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {selectedReports.length >= 1
+                    ? validatedHelperText("Selected")
+                    : ticketNumber.length === 0 ||
+                      ticketDescription.length === 0
                     ? () => {}
                     : ticketNumber.length === 10 &&
-                        ticketDescription.length >= 10 &&
-                        selectedReports.length === 0
-                      ? customFormText("select reports")
-                      : () => {}}
-              </FormControl>
-            </>
-            {/* )} */}
+                      ticketDescription.length >= 10 &&
+                      selectedReports.length === 0
+                    ? customFormText("select reports")
+                    : () => {}}
+                </FormControl>
+              </>
+            )}
           </Box>
 
           {selectedReports.length > 0 && (
@@ -3026,7 +3025,14 @@ export default function CreateRequest() {
                                 >
                                   <FormControl
                                     variant="standard"
-                                    sx={{ width: "34%" }}
+                                    sx={{
+                                      width: "34%",
+                                      marginBottom:
+                                        reportsState[reportIndex].selectedParams
+                                          .length === 0
+                                          ? "1.36rem"
+                                          : "0.75rem",
+                                    }}
                                   >
                                     <Select
                                       label="Param Selection Dropdown"
@@ -3182,11 +3188,7 @@ export default function CreateRequest() {
                                     </Select>
                                     {reportsState[reportIndex].selectedParams
                                       .length === 0
-                                      ? customFormText(
-                                          "select details",
-                                          "red",
-                                          1
-                                        )
+                                      ? customFormText("", "red", 1)
                                       : validatedHelperText("Selected")}
                                   </FormControl>
                                 </Box>
@@ -3200,7 +3202,7 @@ export default function CreateRequest() {
                                       request.selectedReport ===
                                         "Beneficiary details for Single UPI transactions"
                                         ? "0rem"
-                                        : "-1rem",
+                                        : "-2rem",
                                     marginBottom:
                                       reportsState[reportIndex].selectedParams
                                         .length === 0
@@ -3411,85 +3413,100 @@ export default function CreateRequest() {
                               </Box>
 
                               <Box
-                                className="preview-report-details"
                                 sx={{
-                                  flex: 1,
                                   backgroundColor: "rgba(245, 248, 250, 1)",
+                                  width: "100%",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  borderBottomLeftRadius : "4px",
+                                  borderBottomRightRadius : "4px"
                                 }}
-                                display={
-                                  isValidDisplay === true ? "block" : "none"
-                                }
                               >
-                                {reportsState[reportIndex] && (
-                                  <>
-                                    {showPreview(
-                                      reportsState[reportIndex]
-                                        .accountNumberDetails,
-                                      reportIndex,
-                                      "accountNumberDetails",
-                                      "Account number",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].PANdetails,
-                                      reportIndex,
-                                      "PANdetails",
-                                      "PAN",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].CRNdetails,
-                                      reportIndex,
-                                      "CRNdetails",
-                                      "CRN",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].RRNdetails,
-                                      reportIndex,
-                                      "RRNdetails",
-                                      "RRN",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].aadharDetails,
-                                      reportIndex,
-                                      "aadharDetails",
-                                      "Aadhar",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].emailDetails,
-                                      reportIndex,
-                                      "emailDetails",
-                                      "Email ID",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex]
-                                        .creditCardDetails,
-                                      reportIndex,
-                                      "creditCardDetails",
-                                      "Credit Card",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex]
-                                        .debitCardDetails,
-                                      reportIndex,
-                                      "debitCardDetails",
-                                      "Debit Card",
-                                      request.selectedReport
-                                    )}
-                                    {showPreview(
-                                      reportsState[reportIndex].mobileNoDetails,
-                                      reportIndex,
-                                      "mobileNoDetails",
-                                      "Mobile No.",
-                                      request.selectedReport
-                                    )}
-                                  </>
-                                )}
+                                <Box
+                                  className="preview-report-details"
+                                  sx={{
+                                    // flex: 1,
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    backgroundColor: "rgba(245, 248, 250, 1)",
+                                  }}
+                                  display={
+                                    isValidDisplay === true ? "block" : "none"
+                                  }
+                                >
+                                  {reportsState[reportIndex] && (
+                                    <>
+                                      {showPreview(
+                                        reportsState[reportIndex]
+                                          .accountNumberDetails,
+                                        reportIndex,
+                                        "accountNumberDetails",
+                                        "Account number",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex].PANdetails,
+                                        reportIndex,
+                                        "PANdetails",
+                                        "PAN",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex].CRNdetails,
+                                        reportIndex,
+                                        "CRNdetails",
+                                        "CRN",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex].RRNdetails,
+                                        reportIndex,
+                                        "RRNdetails",
+                                        "RRN",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex].aadharDetails,
+                                        reportIndex,
+                                        "aadharDetails",
+                                        "Aadhar",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex].emailDetails,
+                                        reportIndex,
+                                        "emailDetails",
+                                        "Email ID",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex]
+                                          .creditCardDetails,
+                                        reportIndex,
+                                        "creditCardDetails",
+                                        "Credit Card",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex]
+                                          .debitCardDetails,
+                                        reportIndex,
+                                        "debitCardDetails",
+                                        "Debit Card",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
+                                        reportsState[reportIndex]
+                                          .mobileNoDetails,
+                                        reportIndex,
+                                        "mobileNoDetails",
+                                        "Mobile No.",
+                                        request.selectedReport
+                                      )}
+                                    </>
+                                  )}
+                                </Box>
                               </Box>
                             </Box>
                           ))}
