@@ -1558,7 +1558,7 @@ export default function CreateRequest() {
                   </InputAdornment>
                 ),
               }}
-              placeholder={`Enter ${detail.name2}`}
+              placeholder="Enter Mobile No."
               className="number-box"
               helperText={
                 detail.mobileNo.length < 10
@@ -1568,7 +1568,7 @@ export default function CreateRequest() {
               value={detail.mobileNo}
               autoComplete="off"
               style={{ fontSize: "0.88rem" }}
-              label={detail.name2}
+              label="Mobile No."
               disabled={
                 (detail.name === "Account number" &&
                   detail.accountNo.length < 16) ||
@@ -1662,7 +1662,7 @@ export default function CreateRequest() {
                     fontSize: "0.88rem",
                     width: "100%",
                   }}
-                  label={detail.name2}
+                  label="Mobile No."
                   margin="none"
                   onChange={(e) =>
                     handleAmountValue(
