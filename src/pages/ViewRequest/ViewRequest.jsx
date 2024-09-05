@@ -59,13 +59,13 @@ export default function ViewRequest() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [retrieving, setRetrieving] = useState(true);
-  const baseTime = 600;
+  const baseTime = 360;
   const [retrieveTime, setRetrieveTime] = useState(100);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 220);
+    }, 180);
   });
 
   useEffect(() => {
@@ -484,9 +484,9 @@ export default function ViewRequest() {
             className="view-request-container"
             data-testid="view-request-container"
           >
-            {/* {loading === true ? (
+            {loading === true ? (
               <Loader />
-            ) : ( */}
+            ) : (
             <>
               <Box className="view-request-header">
                 <Box
@@ -1340,7 +1340,7 @@ export default function ViewRequest() {
                 </Box>
               )}
             </>
-            {/* )} */}
+             )} 
           </Box>
         </Box>
       </Box>

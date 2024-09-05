@@ -53,7 +53,7 @@ test("View Request Page Loader Render Check", () => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Render View Request Page", () => {
@@ -63,14 +63,14 @@ test("Render View Request Page", () => {
     expect(screen.getByTestId("lottie-data")).toBeInTheDocument();
 
     // screen.debug();
-  }, 1000);
+  }, 600);
 });
 
 test("Open Filter Menu", () => {
   renderViewRequest();
   setTimeout(() => {
     openFilterMenu();
-  }, 1000);
+  }, 600);
 });
 
 test("Search Input Functionality", () => {
@@ -88,7 +88,7 @@ test("Search Input Functionality", () => {
     fireEvent.change(searchBar, { target: { value: "User".toLowerCase() } });
 
     expect(searchBar.value).toBe("User".toLowerCase());
-  }, 1000);
+  }, 600);
 });
 
 test("From Date Picker Functionality", async () => {
@@ -105,7 +105,7 @@ test("From Date Picker Functionality", async () => {
 
     expect(fromPicker.value).toBe("20-08-2024");
     changeReadOnly(true);
-  }, 1000);
+  }, 600);
 });
 
 test("To Date Picker Functionality Check", () => {
@@ -121,7 +121,7 @@ test("To Date Picker Functionality Check", () => {
 
     expect(toPicker.value).toBe("21-08-2024");
     changeReadOnly(true);
-  }, 1000);
+  }, 600);
 });
 
 test("Routing to View Details Page on clicking Details button Functionality check", () => {
@@ -137,7 +137,7 @@ test("Routing to View Details Page on clicking Details button Functionality chec
     const viewDetailsPage = screen.queryByTestId("view-details-page");
 
     expect(viewDetailsPage).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Viewing Mail Draft modal on clicking the E-draft button Functionality check", () => {
@@ -151,7 +151,7 @@ test("Viewing Mail Draft modal on clicking the E-draft button Functionality chec
     const draftModal = screen.queryByTestId("email-draft-section");
 
     expect(draftModal).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Close Email Draft Modal Button Functionality Check", () => {
@@ -174,14 +174,14 @@ test("Close Email Draft Modal Button Functionality Check", () => {
     fireEvent.click(closeDraftButton);
 
     expect(draftModal).not.toBeVisible();
-  }, 1000);
+  }, 600);
 });
 
 test("Clear Filter Button Rendering on Date Range Select", () => {
   renderViewRequest();
   setTimeout(() => {
     openFilterMenu();
-  }, 1000);
+  }, 600);
 
   setTimeout(() => {
     const fromPicker = screen.getByLabelText("From");
@@ -203,7 +203,7 @@ test("Clear Filter Button Rendering on Date Range Select", () => {
     const clearFilterButton = screen.queryByTestId("menu-clear-button");
 
     expect(clearFilterButton).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Select Rows Per Page Dropdown Functionality Check", () => {
@@ -247,14 +247,14 @@ test("Select Rows Per Page Dropdown Functionality Check", () => {
     );
 
     expect(rowsDisplay).toHaveTextContent("40");
-  }, 1000);
+  }, 600);
 });
 
 test.skip("Latest Menu Checkbox Functionality Check", () => {
   renderViewRequest();
   setTimeout(() => {
     openFilterMenu();
-  }, 1000);
+  }, 600);
 
   const statusMenu = screen.getByTestId("status-unchecked");
 

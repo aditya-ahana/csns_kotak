@@ -22,7 +22,7 @@ test("Unified Desktop Loader Render Check", () => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Render Unified Desktop component", () => {
@@ -32,5 +32,5 @@ test("Render Unified Desktop component", () => {
     const unifiedDesktopContainer = screen.getByTestId("unified-desktop");
 
     expect(unifiedDesktopContainer).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });

@@ -28,7 +28,7 @@ test("View Details Page Loader Render Check", () => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Render View Details component", () => {
@@ -37,7 +37,7 @@ test("Render View Details component", () => {
     const viewDetailsPage = screen.getByTestId("view-details-page");
 
     expect(viewDetailsPage).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Sub-Request Expand Button Functionality check", async () => {
@@ -55,7 +55,7 @@ test("Sub-Request Expand Button Functionality check", async () => {
 
     const accordion = screen.getByTestId("sub-data-display-0");
     expect(accordion).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Sub-Request Minimize Button Functionality check", () => {
@@ -80,7 +80,7 @@ test("Sub-Request Minimize Button Functionality check", () => {
     fireEvent.click(hideButton);
     expect(accordion).not.toBeInTheDocument();
     cleanup();
-  }, 1000);
+  }, 600);
 });
 
 test("Conditional Render of Show and Hide Accordion buttons", () => {
@@ -98,5 +98,5 @@ test("Conditional Render of Show and Hide Accordion buttons", () => {
 
     expect(expandButton).toBeInTheDocument();
     cleanup();
-  }, 1000);
+  }, 600);
 });

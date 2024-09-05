@@ -43,7 +43,7 @@ test("Dashboard Page Loader Render Check", () => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Dashboard Render", () => {
@@ -52,7 +52,7 @@ test("Dashboard Render", () => {
     const dashMain = screen.getByTestId("dashboard-main");
 
     expect(dashMain).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Create Request Button Functionality", async () => {
@@ -69,5 +69,5 @@ test("Create Request Button Functionality", async () => {
     const createRequestPage = screen.getByTestId("create-request-page");
 
     expect(createRequestPage).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
