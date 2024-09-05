@@ -16,7 +16,7 @@ function Header() {
         className="d-flex justify-content-between align-items-center"
         style={{
           width: "-webkit-fill-available",
-          fontWeight: "500",
+          // fontWeight: "800",
         }}
       >
         <img
@@ -33,7 +33,9 @@ function Header() {
           <div className="p-3"></div>
           <FaRegUserCircle />
           <div className="p-1"></div>
-          <span data-testid="header-username">Admin</span>
+          <span data-testid="header-username" className="fw-bold">
+            Admin
+          </span>
         </div>
       </Typography>
     </Fragment>

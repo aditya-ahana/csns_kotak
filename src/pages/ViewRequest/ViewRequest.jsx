@@ -484,9 +484,9 @@ export default function ViewRequest() {
             className="view-request-container"
             data-testid="view-request-container"
           >
-            {loading === true ? (
+            {/* {loading === true ? (
               <Loader />
-            ) : (
+            ) : ( */}
             <>
               <Box className="view-request-header">
                 <Box
@@ -1340,7 +1340,7 @@ export default function ViewRequest() {
                 </Box>
               )}
             </>
-             )} 
+            {/* )}  */}
           </Box>
         </Box>
       </Box>

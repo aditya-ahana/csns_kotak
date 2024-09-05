@@ -35,6 +35,14 @@ export const English = {
   submit: "Submit",
   preview: "Preview",
 
+  selectReports: "Select Reports",
+  only: "Only",
+  characters: "characters",
+  only10Characters: "Only 10 Characters",
+  ifNeededAmountMustBe: "If needed, amount must be 1-6 digits long",
+  ifNeededSelectDate: "If needed, select date",
+  only1060Characters: "Only 10-60 Characters",
+
   // view request
   viewRequest: "View Request",
   searchByTicketRequester: "Search by Ticket/Requester",
