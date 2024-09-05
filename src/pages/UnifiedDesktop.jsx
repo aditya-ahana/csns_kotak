@@ -16,7 +16,7 @@ function UnifiedDesktop() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    },300)
+    },240)
   });
   // return (
   //   <>
