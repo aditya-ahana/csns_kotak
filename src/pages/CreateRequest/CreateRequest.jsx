@@ -1194,7 +1194,10 @@ export default function CreateRequest() {
               (detail.name === "RRN" && detail.rrn.length < 12) ||
               (detail.name === "CRN" && detail.crnNo.length < 10)
                 ? warningHelperText(
-                    `Only ${
+                    `
+                    ${t("only")} 
+
+                    ${
                       detail.name === "Account number"
                         ? 16
                         : detail.name === "Email ID"
@@ -1214,7 +1217,8 @@ export default function CreateRequest() {
                                       : detail.name === "CRN"
                                         ? 10
                                         : 0
-                    } characters`,
+                    }   ${t("characters")} 
+`,
                     1
                   )
                 : validatedDetail()
@@ -1611,7 +1615,12 @@ export default function CreateRequest() {
               className="number-box"
               helperText={
                 detail.mobileNo.length < 10
-                  ? customFormText("Only 10 Characters", "grey", 1)
+                  ? customFormText(
+                      t("only10Characters"),
+
+                      "grey",
+                      1
+                    )
                   : validatedDetail()
               }
               value={detail.mobileNo}
@@ -1699,7 +1708,7 @@ export default function CreateRequest() {
                     detail.rrn.length < 12
                       ? ""
                       : detail.rrn.length === 12 && detail.amount.length === 0
-                        ? "If needed, amount must be 1-6 digits long"
+                        ? t("ifNeededAmountMustBe")
                         : validatedDetail()
                   }
                   autoComplete="off"
@@ -1753,9 +1762,9 @@ export default function CreateRequest() {
                   {detail.fromDate !== ""
                     ? validatedHelperText("Dated")
                     : detail.rrn.length === 12
-                      ? customFormText("If needed, select date", "grey", 1)
+                      ? customFormText(t("ifNeededSelectDate"), "grey", 1)
                       : detail.fromDate === "" && detail.rrn.length === 12
-                        ? customFormText("If needed, select date", "grey", 1)
+                        ? customFormText(t("ifNeededSelectDate"), "grey", 1)
                         : ""}
                 </LocalizationProvider>
               </Box>
@@ -2053,7 +2062,7 @@ export default function CreateRequest() {
               className="preview-data"
               sx={{
                 // backgroundColor : "blue",
-                flex:1,
+                flex: 1,
                 justifyContent:
                   // reportName ===
                   //   "Beneficiary details for Single IMPS transactions" ||
@@ -2066,16 +2075,15 @@ export default function CreateRequest() {
                   // (reportName === "Statement in PDF/Excel" &&
                   //   detail.fromDate === "" &&
                   //   detail.toDate === "")
-                  //   ? 
+                  //   ?
                   "space-evenly",
-                    // : 
-                    // "space-between",
+                // :
+                // "space-between",
               }}
             >
               <Box
-             
                 className="detail-input"
-                sx={{ minWidth : "12rem",maxWidth : "12rem"}}
+                sx={{ minWidth: "12rem", maxWidth: "12rem" }}
                 display={
                   detail.accountNo.length ||
                   detail.panNo.length > 0 ||
@@ -2117,7 +2125,6 @@ export default function CreateRequest() {
                 </span>
               </Box>
 
-
               {((detailName === "accountNumberDetails" &&
                 reportName !== "Device details") ||
                 (detailName === "CRNdetails" && reportName === "IP Logs") ||
@@ -2132,46 +2139,38 @@ export default function CreateRequest() {
                     "Beneficiary details for Bulk IMPS transactions") ||
                 (detailName === "RRNdetails" &&
                   reportName ===
-                    "Beneficiary details for Bulk UPI transactions")) &&
-                // (detail.fromDate !== "" || detail.toDate !== "") 
-                // && 
-                (
+                    "Beneficiary details for Bulk UPI transactions")) && (
+                // (detail.fromDate !== "" || detail.toDate !== "")
+                // &&
+                <Box
+                  className="detail-range"
+                  sx={{ minWidth: "12.5rem", maxWidth: "12.5rem" }}
+                  // // display={detail.fromDate === "" && detail.toDate === "" ? "none" : "block"}
+                  // display="none"
+                >
                   <Box
-                    className="detail-range"
-                    sx={{ minWidth : "12.5rem",maxWidth : "12.5rem" }}
-                    // // display={detail.fromDate === "" && detail.toDate === "" ? "none" : "block"}
-                    // display="none"
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "0.15rem",
+                    }}
                   >
-  
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "0.15rem",
-                      }}
-                    >
-                      <span
-                        className="preview-text"
-                        style={{ fontWeight: 500 }}
-                      >
-                        Date :{" "}
-                      </span>
-                      </Box>
-
-                      <span className="preview-text">
-                        {detail.fromDate !== ""
-                          ? `${detail.fromDate} - `
-                          : `___________ - `}
-                      </span>
-                   
-        
-                    <span className="preview-text">
-                      {detail.toDate !== ""
-                        ? `${detail.toDate}`
-                        : `____________`}
+                    <span className="preview-text" style={{ fontWeight: 500 }}>
+                      Date :{" "}
                     </span>
                   </Box>
-                )}
+
+                  <span className="preview-text">
+                    {detail.fromDate !== ""
+                      ? `${detail.fromDate} - `
+                      : `___________ - `}
+                  </span>
+
+                  <span className="preview-text">
+                    {detail.toDate !== "" ? `${detail.toDate}` : `____________`}
+                  </span>
+                </Box>
+              )}
 
               {((detailName === "RRNdetails" &&
                 reportName ===
@@ -2184,8 +2183,8 @@ export default function CreateRequest() {
                     sx={{
                       display: "flex",
                       flexDirection: "row",
-                      minWidth : "7.5rem",
-                      maxWidth : "7.5rem",
+                      minWidth: "7.5rem",
+                      maxWidth: "7.5rem",
                       gap: "0.15rem",
                     }}
                   >
@@ -2217,32 +2216,29 @@ export default function CreateRequest() {
                 </Box>
               )}
 
-              {reportName === "IP Logs" &&
-                detailName !== "mobileNoDetails" &&
-               
-                (
-                  <Box
-                   sx={{ minWidth : "11.5rem",maxWidth : "11.5rem"}}
+              {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+                <Box
+                  sx={{ minWidth: "11.5rem", maxWidth: "11.5rem" }}
                   // display={
                   //   detail.mobileNo === "" || detail.mobileNo.length === 0
                   //     ? "none"
                   //     : "block"
                   // }
+                >
+                  <span
+                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
+                    className="preview-text"
                   >
-                    <span
-                      style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                      className="preview-text"
-                    >
-                      Mobile No. :{" "}
-                    </span>
-                    <span className="preview-text">{detail.mobileNo}</span>
-                  </Box>
-                )}
+                    Mobile No. :{" "}
+                  </span>
+                  <span className="preview-text">{detail.mobileNo}</span>
+                </Box>
+              )}
 
               {reportName === "Statement in PDF/Excel" && (
                 <Box
-                sx={{ minWidth : "6.5rem",maxWidth : "6.5rem"}}
-                //  display={detail.type === "" ? "none" : "block"}
+                  sx={{ minWidth: "6.5rem", maxWidth: "6.5rem" }}
+                  //  display={detail.type === "" ? "none" : "block"}
                 >
                   <span
                     style={{ marginLeft: "0.92rem", fontWeight: 500 }}
@@ -2537,7 +2533,7 @@ export default function CreateRequest() {
                     }
                     helperText={
                       ticketNumber.length < 10
-                        ? warningHelperText("Only 10 characters", 1)
+                        ? warningHelperText(t("only10Characters"), 1)
                         : validatedDetail()
                     }
                     InputLabelProps={
@@ -2596,9 +2592,9 @@ export default function CreateRequest() {
                         ? ""
                         : ticketNumber.length === 10 &&
                             ticketDescription.length === 0
-                          ? warningHelperText("Only 10-60 characters", 1)
+                          ? warningHelperText(t("only1060Characters"), 1)
                           : ticketDescription.length < 10
-                            ? warningHelperText("Only 10-60 characters", 1)
+                            ? warningHelperText(t("only1060Characters"), 1)
                             : validatedDetail()
                     }
                     required
@@ -2782,7 +2778,7 @@ export default function CreateRequest() {
                     : ticketNumber.length === 10 &&
                         ticketDescription.length >= 10 &&
                         selectedReports.length === 0
-                      ? customFormText("select reports")
+                      ? customFormText(t("selectReports"))
                       : () => {}}
               </FormControl>
             </>

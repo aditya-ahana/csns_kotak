@@ -35,6 +35,14 @@ export const Hindi = {
   submit: "जमा करना",
   preview: "देखें",
 
+  selectReports: "रिपोर्ट चुनें",
+  only: "केवल",
+  characters: "अक्षर",
+  only10Characters: "केवल 10 अक्षर",
+  ifNeededAmountMustBe: "यदि आवश्यक हो, तो राशि 1-6 अंक लंबी होनी चाहिए",
+  ifNeededSelectDate: "यदि आवश्यक हो तो दिनांक चुनें",
+  only1060Characters: "केवल 10-60 अक्षर",
+
   // view request
   viewRequest: "अनुरोध देखें",
   searchByTicketRequester: "टिकट/अनुरोधकर्ता द्वारा खोजें",
