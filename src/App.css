@@ -154,6 +154,10 @@ border-radius: 10px;
 
 /* cr-tr-td css */
 
+.css-1t7bfi-MuiTypography-root {
+  line-height: inherit !important;
+}
+
 .page {
   display: flex;
   width: 100%;
