@@ -70,7 +70,7 @@ const validatedDetail = () => {
       </Typography> */}
       <CheckCircleIcon
         sx={{
-          color: "rgb(67, 91, 102)",
+          color: "green",
           marginTop: "0.05rem",
           fontSize: "1rem",
         }}
@@ -126,7 +126,7 @@ const validatedHelperText = (text) => {
       </Typography> */}
       <CheckCircleIcon
         sx={{
-          color: "rgb(67, 91, 102)",
+          color: "green",
           marginTop: "0.075rem",
           fontSize: "1rem",
         }}
@@ -216,7 +216,7 @@ export default function CreateRequest() {
     validatedTextfield: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: "1.85px solid rgb(67, 91, 102)",
+          border: "1.85px solid green",
           backgroundColor: "transparent",
         },
         "&:hover fieldset": {
@@ -258,7 +258,7 @@ export default function CreateRequest() {
       sx: {
         fontSize: "0.88rem",
         alignSelf: "center",
-        color: "rgb(67, 91, 102)",
+        color: "green",
         fontWeight: 500,
         display: "flex",
         alignItems: "center",
@@ -296,7 +296,7 @@ export default function CreateRequest() {
         alignItems: "center",
         height: "auto",
         fontWeight: 500,
-        color: "rgb(67, 91, 102)",
+        color: "green",
       },
     },
   };
@@ -324,7 +324,7 @@ export default function CreateRequest() {
     },
     validatedContainerProps: {
       ".MuiOutlinedInput-notchedOutline": {
-        border: "1.85px solid rgb(67, 91, 102)",
+        border: "1.85px solid green",
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         border: "1.65px solid rgb(131, 131, 210)",
@@ -461,7 +461,7 @@ export default function CreateRequest() {
           sx: {
             paddingTop: "0.05rem",
             fontSize: "0.92rem",
-            color: "rgb(67, 91, 102)",
+            color: "green",
             fontWeight: 500,
           },
         },
@@ -480,7 +480,7 @@ export default function CreateRequest() {
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: "1.85px solid rgb(67, 91, 102)",
+              border: "1.85px solid green",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(131, 131, 210)",
@@ -1708,7 +1708,7 @@ export default function CreateRequest() {
                     fontSize: "0.88rem",
                     width: "100%",
                   }}
-                  label="Mobile No."
+                  label="Amount"
                   margin="none"
                   onChange={(e) =>
                     handleAmountValue(
@@ -2050,24 +2050,30 @@ export default function CreateRequest() {
             <Box
               className="preview-data"
               sx={{
+                // backgroundColor : "blue",
+                flex:1,
                 justifyContent:
-                  reportName ===
-                    "Beneficiary details for Single IMPS transactions" ||
-                  reportName ===
-                    "Beneficiary details for Single UPI transactions" ||
-                  (reportName === "IP Logs" &&
-                    detail.fromDate === "" &&
-                    detail.toDate === "") ||
-                  (reportName === "IP Logs" && detail.mobileNo.length === 0) ||
-                  (reportName === "Statement in PDF/Excel" &&
-                    detail.fromDate === "" &&
-                    detail.toDate === "")
-                    ? "space-evenly"
-                    : "space-between",
+                  // reportName ===
+                  //   "Beneficiary details for Single IMPS transactions" ||
+                  // reportName ===
+                  //   "Beneficiary details for Single UPI transactions" ||
+                  // (reportName === "IP Logs" &&
+                  //   detail.fromDate === "" &&
+                  //   detail.toDate === "") ||
+                  // (reportName === "IP Logs" && detail.mobileNo.length === 0) ||
+                  // (reportName === "Statement in PDF/Excel" &&
+                  //   detail.fromDate === "" &&
+                  //   detail.toDate === "")
+                  //   ? 
+                  "space-evenly",
+                    // : 
+                    // "space-between",
               }}
             >
               <Box
+             
                 className="detail-input"
+                sx={{ minWidth : "12rem",maxWidth : "12rem"}}
                 display={
                   detail.accountNo.length ||
                   detail.panNo.length > 0 ||
@@ -2109,6 +2115,7 @@ export default function CreateRequest() {
                 </span>
               </Box>
 
+
               {((detailName === "accountNumberDetails" &&
                 reportName !== "Device details") ||
                 (detailName === "CRNdetails" && reportName === "IP Logs") ||
@@ -2124,13 +2131,16 @@ export default function CreateRequest() {
                 (detailName === "RRNdetails" &&
                   reportName ===
                     "Beneficiary details for Bulk UPI transactions")) &&
-                (detail.fromDate !== "" || detail.toDate !== "") && (
+                // (detail.fromDate !== "" || detail.toDate !== "") 
+                // && 
+                (
                   <Box
                     className="detail-range"
+                    sx={{ minWidth : "12.5rem",maxWidth : "12.5rem" }}
                     // // display={detail.fromDate === "" && detail.toDate === "" ? "none" : "block"}
                     // display="none"
                   >
-                    {/* {detail.fromDate !== "" && ( */}
+  
                     <Box
                       sx={{
                         display: "flex",
@@ -2144,17 +2154,19 @@ export default function CreateRequest() {
                       >
                         Date :{" "}
                       </span>
+                      </Box>
+
                       <span className="preview-text">
-                        {detail.fromDate !== "From"
+                        {detail.fromDate !== ""
                           ? `${detail.fromDate} - `
                           : `___________ - `}
                       </span>
-                    </Box>
-                    {/* )} */}
+                   
+        
                     <span className="preview-text">
                       {detail.toDate !== ""
                         ? `${detail.toDate}`
-                        : `___________`}
+                        : `____________`}
                     </span>
                   </Box>
                 )}
@@ -2170,6 +2182,8 @@ export default function CreateRequest() {
                     sx={{
                       display: "flex",
                       flexDirection: "row",
+                      minWidth : "7.5rem",
+                      maxWidth : "7.5rem",
                       gap: "0.15rem",
                     }}
                   >
@@ -2203,8 +2217,10 @@ export default function CreateRequest() {
 
               {reportName === "IP Logs" &&
                 detailName !== "mobileNoDetails" &&
-                detail.mobileNo.length > 0 && (
+               
+                (
                   <Box
+                   sx={{ minWidth : "11.5rem",maxWidth : "11.5rem"}}
                   // display={
                   //   detail.mobileNo === "" || detail.mobileNo.length === 0
                   //     ? "none"
@@ -2223,6 +2239,7 @@ export default function CreateRequest() {
 
               {reportName === "Statement in PDF/Excel" && (
                 <Box
+                sx={{ minWidth : "6.5rem",maxWidth : "6.5rem"}}
                 //  display={detail.type === "" ? "none" : "block"}
                 >
                   <span
