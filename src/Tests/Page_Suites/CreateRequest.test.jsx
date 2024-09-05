@@ -176,13 +176,13 @@ test("Create Request Page Loader Render Check", () => {
 
   setTimeout(() => {
     expect(loader).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Render Create Request component", () => {
   setTimeout(() => {
     expect(renderCreateRequest());
-  }, 1000);
+  }, 600);
 });
 
 test("Ticket Number Input Field Test", () => {
@@ -202,7 +202,7 @@ test("Ticket Number Input Field Test", () => {
     });
 
     expect(ticketNumberInput.value.slice(0, 10)).toBe("4924924701");
-  }, 1000);
+  }, 600);
 });
 
 test("Ticket Description TextArea Field Test", () => {
@@ -210,7 +210,7 @@ test("Ticket Description TextArea Field Test", () => {
   setTimeout(() => {
     fillTicketDescriptionInput();
     cleanup();
-  }, 1000);
+  }, 600);
 });
 
 describe("Reports Selection Dropdown Functionality Check", () => {
@@ -221,7 +221,7 @@ describe("Reports Selection Dropdown Functionality Check", () => {
       fillTicketDescriptionInput();
       selectReports(0, "Statement in PDF/Excel");
       // screen.debug();
-    }, 1000);
+    }, 600);
   });
 
   test("Multiple Reports Selection Check", () => {
@@ -395,7 +395,7 @@ describe("Reports Selection Dropdown Functionality Check", () => {
       );
 
       // screen.debug();
-    }, 1000);
+    }, 600);
   });
 });
 
@@ -411,7 +411,7 @@ test("Rendering Selected Reports Section", () => {
     );
 
     expect(selectedReportsSection).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 describe("Params Selection Dropdown Functionality Check", () => {
@@ -421,7 +421,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
       fillTicketNumberInput();
       fillTicketDescriptionInput();
       selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
-    }, 1000);
+    }, 600);
   });
 
   test("Multiple Params Selection Check", () => {
@@ -635,7 +635,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
       expect(selectInput.value).toBe(
         "CRN,RRN,Aadhar,Mobile No.,Debit Card,Email ID"
       );
-    }, 1000);
+    }, 600);
   });
 });
 
@@ -649,7 +649,7 @@ test("Rendering Form Fields After Param Selection", () => {
     const formFieldset = screen.queryByTestId("detail-fieldset-0");
 
     expect(formFieldset).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Detail Name Input Render and Functionality Check", () => {
@@ -672,7 +672,7 @@ test("Detail Name Input Render and Functionality Check", () => {
     });
 
     expect(detailNameInput.value).toBe("8510542870441383");
-  }, 1000);
+  }, 600);
 });
 
 test("From Date Picker Functionality Check", () => {
@@ -705,7 +705,7 @@ test("From Date Picker Functionality Check", () => {
 
     expect(fromDatepicker.value).toBe(datePickerTestValue);
     changeReadOnly(true);
-  }, 1000);
+  }, 600);
 });
 
 test("To Date Picker Functionality Check", () => {
@@ -746,7 +746,7 @@ test("To Date Picker Functionality Check", () => {
 
     expect(toDatepicker.value).toBe(datePickerTestValue);
     changeReadOnly(true);
-  }, 1000);
+  }, 600);
 });
 
 test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report", () => {
@@ -793,7 +793,7 @@ test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report
     fireEvent.click(typeMenuItem1);
 
     expect(typeSelectInput.value).toBe("PDF");
-  }, 1000);
+  }, 600);
 });
 
 test("Mobile Number Input Functionality Check for IP Logs", () => {
@@ -830,7 +830,7 @@ test("Mobile Number Input Functionality Check for IP Logs", () => {
     });
 
     expect(mobileNoInput.value).toBe("7359124706");
-  }, 1000);
+  }, 600);
 });
 
 test("RRN Amount Input Functionality Check for Beneficiary Details for Single IMPS Transactions", () => {
@@ -870,7 +870,7 @@ test("RRN Amount Input Functionality Check for Beneficiary Details for Single IM
     expect(amountInput.value).toBe("96480");
 
     cleanup();
-  }, 1000);
+  }, 600);
 });
 
 test("RRN Date Picker Functionality Check for Beneficiary Details for Single Transactions", () => {
@@ -908,7 +908,7 @@ test("RRN Date Picker Functionality Check for Beneficiary Details for Single Tra
 
     expect(rrnDatePicker.value).toBe(datePickerTestValue);
     changeReadOnly(true);
-  }, 1000);
+  }, 600);
 });
 
 test("Add Detail Button Functionality Check", () => {
@@ -954,7 +954,7 @@ test("Add Detail Button Functionality Check", () => {
     const newDetailFieldset = screen.getByTestId("detail-fieldset-1");
 
     expect(newDetailFieldset).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Delete Detail Button Functionality Check", () => {
@@ -1006,7 +1006,7 @@ test("Delete Detail Button Functionality Check", () => {
     fireEvent.click(deleteDetailButton);
 
     expect(newDetailFieldsetIndex).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Preview Open Functionality Check", () => {
@@ -1053,7 +1053,7 @@ test("Preview Open Functionality Check", () => {
     const previewModal = screen.queryByTestId("preview-modal");
 
     expect(previewModal).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Preview Modal Close Button Functionality Check", () => {
@@ -1106,7 +1106,7 @@ test("Preview Modal Close Button Functionality Check", () => {
     fireEvent.click(closePreviewButton);
 
     expect(previewModal).not.toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Submission and Route To View Requests Page on clicking Submit Button Functionlaity Check", () => {
@@ -1163,7 +1163,7 @@ test("Submission and Route To View Requests Page on clicking Submit Button Funct
     const viewRequestPage = screen.getByTestId("view-request-page");
 
     expect(viewRequestPage).toBeInTheDocument();
-  }, 1000);
+  }, 600);
 });
 
 test("Selected Report Detail View Controller Functionality Check", () => {
@@ -1190,7 +1190,7 @@ test("Selected Report Detail View Controller Functionality Check", () => {
     fireEvent.click(viewControllerIcon);
 
     expect(detailView).not.toBeVisible();
-  }, 1000);
+  }, 600);
 });
 
 //// Rejected /////
