@@ -47,7 +47,7 @@ export default function ViewRequestDetails() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 180);
+    }, 200);
   });
 
   useEffect(() => {
@@ -107,9 +107,9 @@ export default function ViewRequestDetails() {
         </Typography>
 
         <Box className="view-details-container">
-          {/* {loading === true ? (
+          {loading === true ? (
             <Loader />
-          ) : ( */}
+          ) : (
           <>
             <div
               className="d-flex justify-content-end"
@@ -542,7 +542,7 @@ export default function ViewRequestDetails() {
               </Table>
             </TableContainer>
           </>
-          {/* )}  */}
+         )}  
         </Box>
       </Box>
     </Box>

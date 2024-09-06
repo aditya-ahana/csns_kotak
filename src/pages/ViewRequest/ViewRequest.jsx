@@ -65,7 +65,7 @@ export default function ViewRequest() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 180);
+    }, 200);
   });
 
   useEffect(() => {
@@ -484,9 +484,9 @@ export default function ViewRequest() {
             className="view-request-container"
             data-testid="view-request-container"
           >
-            {/* {loading === true ? (
+            {loading === true ? (
               <Loader />
-            ) : ( */}
+            ) : (
             <>
               <Box className="view-request-header">
                 <Box
@@ -948,12 +948,13 @@ export default function ViewRequest() {
                                               backgroundColor:
                                                 "rgb(230, 230, 235)",
                                               alignSelf: "center",
-                                              lineHeight: "1.85rem",
+                                              lineHeight: "1.65rem",
                                             }}
                                             animation="pulse"
                                             variant="text"
                                           />
                                         ) : (
+                                         <Box sx={{ lineHeight: "1.65rem" }}>
                                           <Typography
                                             // component=''
                                             key={index}
@@ -964,6 +965,7 @@ export default function ViewRequest() {
                                           >
                                             {`${index + 1}. ${req}`}
                                           </Typography>
+                                          </Box>
                                         )}
                                       </>
                                     ))}
@@ -1340,7 +1342,7 @@ export default function ViewRequest() {
                 </Box>
               )}
             </>
-            {/* )}  */}
+           )}  
           </Box>
         </Box>
       </Box>

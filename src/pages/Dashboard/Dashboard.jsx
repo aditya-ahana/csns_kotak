@@ -13,7 +13,7 @@ export default function Dashboard() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 240);
+    }, 275);
   });
 
   const nav = useNavigate();
@@ -52,9 +52,9 @@ export default function Dashboard() {
           className="d-flex justify-content-center align-items-center bg-white rounded"
           style={{ height: "73vh" }}
         >
-          {/* { loading === true ? (
+          { loading === true ? (
         <Loader />
-      ) : (  */}
+      ) : ( 
           <div
             className="d-flex flex-column justify-content-center align-items-center"
             style={{ cursor: "pointer" }}
@@ -68,7 +68,7 @@ export default function Dashboard() {
               {t("noRequestInDashoard")}
             </span>
           </div>
-          {/* )}  */}
+         )} 
         </div>
       </div>
     </>

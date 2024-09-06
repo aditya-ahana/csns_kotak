@@ -9,6 +9,7 @@ import {
   MenuList,
   AccordionDetails,
   FormHelperText,
+  InputBase,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -171,7 +172,7 @@ export default function CreateRequest() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 240);
+    }, 275);
   });
 
   const route_to = useNavigate();
@@ -2083,7 +2084,7 @@ export default function CreateRequest() {
             >
               <Box
                 className="detail-input"
-                sx={{ minWidth: "12rem", maxWidth: "12rem" }}
+                sx={{ minWidth: "13.5rem", maxWidth: "13.5rem"}}
                 display={
                   detail.accountNo.length ||
                   detail.panNo.length > 0 ||
@@ -2100,29 +2101,35 @@ export default function CreateRequest() {
                 // sx={{ minWidth: "12rem", maxWidth: "12rem" }}
               >
                 <span className="preview-text" style={{ fontWeight: 500 }}>{`${
-                  detail.name === "Account number" ? "Acc no." : detail.name
+                  detail.name === "Account number" ? "Acc no." : detail.name === "Email ID" ? "Email" : detail.name
                 }  : `}</span>
-                <span className="preview-text">
-                  {detail.name === "Account number"
-                    ? detail.accountNo
-                    : detail.name === "Email ID"
-                      ? detail.email
-                      : detail.name === "PAN"
-                        ? detail.panNo
-                        : detail.name === "Credit Card"
-                          ? detail.creditCardNo
-                          : detail.name === "Aadhar"
-                            ? detail.aadhar
-                            : detail.name === "Debit Card"
-                              ? detail.debitCard
-                              : detail.name === "Mobile No."
-                                ? detail.mobileNo
-                                : detail.name === "RRN"
-                                  ? detail.rrn
-                                  : detail.name === "CRN"
-                                    ? detail.crnNo
-                                    : ""}
-                </span>
+                { detail.name === "Email ID" 
+                      ? (            
+                 <InputBase readOnly={true} multiline={true} value={detail.email} sx={{ fontSize : "0.88rem",width : "75.25%" }}               
+                />
+                      ) : (
+                        <span className="preview-text">
+                        {detail.name === "Account number"
+                          ? detail.accountNo
+                          : detail.name === "Email ID"
+                            ? detail.email
+                            : detail.name === "PAN"
+                              ? detail.panNo
+                              : detail.name === "Credit Card"
+                                ? detail.creditCardNo
+                                : detail.name === "Aadhar"
+                                  ? detail.aadhar
+                                  : detail.name === "Debit Card"
+                                    ? detail.debitCard
+                                    : detail.name === "Mobile No."
+                                      ? detail.mobileNo
+                                      : detail.name === "RRN"
+                                        ? detail.rrn
+                                        : detail.name === "CRN"
+                                          ? detail.crnNo
+                                          : ""}
+                      </span>
+)}
               </Box>
 
               {((detailName === "accountNumberDetails" &&
@@ -2512,9 +2519,9 @@ export default function CreateRequest() {
                   : "1.25rem 1.5rem 1.15rem 1.5rem",
             }}
           >
-            {/* {loading === true ? (
+           {loading === true ? (
               <Loader />
-            ) : ( */}
+            ) : ( 
             <>
               <Box className="ticket-type-section">
                 <FormControl
@@ -2782,7 +2789,7 @@ export default function CreateRequest() {
                       : () => {}}
               </FormControl>
             </>
-            {/* )}  */}
+             )}  
           </Box>
 
           {selectedReports.length > 0 && (
