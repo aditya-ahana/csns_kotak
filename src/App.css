@@ -178,6 +178,68 @@ border-radius: 10px;
   margin-bottom: 1.75rem;
 }
 
+.validated-detail-el {display: flex; flex-direction: row; gap: 0.25rem}
+
+.validated-icon {color: green;margin-top: 0.05rem;font-size: 1rem;}
+
+.helper-text-box { display: flex;flex-direction: row;gap: 0.25rem;margin: 0.1rem 0rem 0rem 0rem}
+
+.helper-warning-icon { color: rgb(92, 84, 112);margin-top: 0.075rem;font-size: 1rem}
+
+.date-picker-helper {display: flex;flex-direction: row;gap: 0.25rem;margin: 0.15rem 0rem 0rem 0.85rem}
+
+.primary-input-iplogs { width: 24%}
+
+.primary-input {width: 32%}
+
+.detail-datepickers { display: flex;flex-direction: row;gap: 1rem;width: 43%;background-color:transparent}
+
+.iplogs-mobileno-input {width: 19.85%}
+
+.iplogmobileno-adornment {opacity: 0.92}
+
+.single-rrn-field { width: 57% }
+
+.report-type-dropdown { width: 12%;margin-Left: 0%;background-color: transparent}
+
+.report-type-selectbox { display: flex;align-items: center;height: 2.65rem}
+
+.type-dropdown-menuitem { display: flex; border: 0px solid #cdcdcd;width: 100%;height: 1.8rem;
+align-items: left;border-radius: 4px;background-color: transparent }
+
+.add-icon {color: red;align-self: center;justify-self: center;font-size: 2.25rem}
+
+.remove-icon {color: red;align-self: center;justify-self: center;font-size: 2.35rem}
+
+.preview-detail-section {background-color: rgba(245, 248, 250, 1);width: 100%;display: flex;align-items: center; justify-content: center; border-bottom-left-radius: 4px;border-bottom-right-radius: 4px }
+
+.preview-range {display: flex;flex-direction: row;gap: 0.2rem}
+
+.rrn-preview {display: flex;flex-direction: row;gap: 26%; width: 50%;margin-top: 0.15rem}
+
+.rrn-subfields {display: flex;flex-direction: row;min-width: 7.5rem;max-width: 7.5rem;gap: 0.2rem}
+
+.mobileno-preview {min-width: 11.5rem; max-width: 11.5rem}
+
+.reports-dropdown-input-changed {width: 99%;text-overflow: ellipsis;overflow: hidden}
+
+.reports-dropdown-box { display: flex;align-items: center;height: 2.56rem;font-size: 0.88rem !important;border: none}
+
+.reports-selection-dropdown-menu-item {display: flex !important;border : 1px solid #cdcdcd !important;width: 96.25% !important;
+margin: 1rem 0rem 1rem 1.25rem !important;height: 2.65rem !important;align-items: left !important;border-radius: 4px !important;background-color: transparent !important;font-size: 1rem !important}
+
+.preview-name-text {
+  font-weight: 500 !important;
+  font-size: 0.85rem !important;
+  font-family: Roboto !important;
+}
+
+.preview-value-text {
+  font-weight: 400 !important;
+  font-size: 0.85rem !important;
+  font-family: Roboto !important;;
+}
+                          
 .view-request-screen,
 .view-request-details-screen {
   /* overflow: hidden; */
@@ -221,7 +283,7 @@ input::-webkit-inner-spin-button {
 .rrn-fields {
   display: flex;
   flex-direction: row;
-  gap: 4%;
+  gap: 2.75%;
   width: 52%;
 }
 
@@ -257,6 +319,9 @@ input::-webkit-inner-spin-button {
 
 /* .ticket-number-input,
 .ticket-description-input {
+  margin: 0rem 0rem 0rem 0rem;
+  height: auto;
+  font-size: 0.88rem
 } */
 
 .ticket-number-input::placeholder,
@@ -287,6 +352,7 @@ input::-webkit-inner-spin-button {
   border-color: rgba(128, 128, 128, 0.74);
   border-style: solid;
   width: 82.75%;
+  box-shadow: none !important;
 }
 
 .selected-param-details {
@@ -306,6 +372,14 @@ input::-webkit-inner-spin-button {
   border-width: 0px 0px 1.5px 0px;
   border-color: rgba(128, 128, 128, 0.48);
   border-style: solid;
+  min-height:2.5rem; 
+  max-height: 2.75rem;
+}
+
+.selected-section-heading {
+  font-size: 1.1rem !important;
+  font-family: Roboto !important;
+  font-weight: 500 !important;
 }
 
 .selected-report-heading {
@@ -313,6 +387,14 @@ input::-webkit-inner-spin-button {
   vertical-align: middle;
   font-family: Roboto;
   font-weight: 500;
+}
+
+.selected-reports-content {
+   margin-top: 0.25rem;
+   margin-bottom: 1.65rem
+}
+
+.accordion-details {padding: 0 !important;border: 1px solid rgba(205, 205, 205, 1) !important;border-width: 1px 0px 0px 0px !important
 }
 
 .selected-report-details {
@@ -334,8 +416,23 @@ input::-webkit-inner-spin-button {
   width: auto;
 }
 
+.param-display { align-items: center;justify-content: space-around;justify-items: left }
+
+.selected-params-display {width: 99% !important;font-size: 0.85rem !important;text-overflow: ellipsis !important;overflow: auto !important;padding-right: 0.25rem !important;}
+
+.param-display-placeholder { font-size: 0.85rem !important;opacity: 0.75 !important;font-weight: 400 !important;}
+
+.param-selection-dropdown { display: flex;align-items: center;height: 2.65rem;font-size: 0.88rem}
+
+.param-menu-listext { padding: 0.15rem 0rem 0rem 0rem }
+
+.param-dropdown-checkbox { margin-left: -0.88rem !important; background-color: transparent !important}
+
 .number-box {
   width: 100%;
+}
+
+.param-menu-item { display: flex !important;border-bottom-width: 1.75px !important;height: 2.36rem !important;align-items: left;border-radius: 0px !important;background-color: transparent !important;font-size: 2px !important;border-style: solid !important;border-color:rgba(232, 232, 232, 1) !important;border-bottom-width: 1.75px !important
 }
 
 .selected-param-box-3 {
@@ -389,6 +486,8 @@ input::-webkit-inner-spin-button {
   color: white;
 }
 
+.submit-text { font-family : Roboto !important; font-size:0.92rem !important; font-weight:600 !important}
+
 .preview-button {
   background-color: white;
   color: red;
@@ -421,10 +520,13 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   padding: 0rem 1.25rem 0.45rem 1.5rem;
   border: 1px solid rgba(236, 236, 236, 1);
   border-width: 0px 0px 1.5px 0px;
 }
+
+.preview-main-heading { font-size: 1.25rem !important;font-family: Roboto !important;font-weight: 500 !important}
 
 .preview-heading {
   font-size: 1.4rem;
@@ -473,10 +575,24 @@ input::-webkit-inner-spin-button {
   text-align: center;
 }
 
+.checkbox {
+  margin-left: -0.88rem !important;
+  background-color: transparent !important    
+}
+
 .check-icon {
   margin-top: -0.1rem;
-  color: rgba(115, 115, 115, 1);
+  color: red !important;
+  font-size: 1.5rem !important;
 }
+
+.uncheck-icon {
+  margin-top: -0.1rem;
+  color: rgba(115, 115, 115, 1) !important;
+  font-size: 1.5rem !important;
+}
+
+.reports-menu-listext { padding: 0.05rem 0rem 0rem 0rem }
 
 .preview-title {
   font-size: 0.84rem;
@@ -494,8 +610,10 @@ input::-webkit-inner-spin-button {
   max-height: auto;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  background-color: rgb(243, 242, 248);
   width: 84%;
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(245, 248, 250, 1);
   /* padding-bottom: 0.4rem; */
 }
 
@@ -508,6 +626,7 @@ input::-webkit-inner-spin-button {
   /* padding: 0rem 0rem 0rem 0rem; */
   /* align-self:flex-start;
   justify-self: flex-start; */
+  flex:1;
   justify-content: space-evenly;
   /* gap: 2rem; */
   /* justify-content: space-between; */
@@ -517,12 +636,11 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: row;
   font-weight: 400;
-}
-
-.preview-text {
-  font-weight: 400;
-  font-family: Roboto;
-  font-size: 0.85rem;
+  align-self: flex-start;
+  justify-content: left;
+  justify-self: left;
+  min-width: 13.5rem !important; 
+  max-width: 13.5rem !important;
 }
 
 .detail-range {
@@ -530,10 +648,21 @@ input::-webkit-inner-spin-button {
   flex-direction: row;
   gap: 0.25rem;
   margin-top: 0.19rem;
+  min-width: 12.5rem; 
+  max-width: 12.5rem
 }
 
+.type-preview {
+  min-width: 6.5rem; 
+  max-width: 6.5rem
+}
+
+/* .rrn-fields {display: flex;flex-direction: row;gap: 5rem;margin-top: 0.19rem;} */
+
+.select-icon { color:rgba(115, 115, 115, 1) !important;font-size: 1.4rem !important}
+
 .preview-button:hover,
-.reports-type-dropdownicon:hover,
+.select-icon:hover,
 /* .ticket-number-input:hover, */
 /* .ticket-description-input:hover, */
 .close-preview:hover,
@@ -565,7 +694,13 @@ input::-webkit-inner-spin-button {
   transition: all 0.4s;
 }
 
-.reports-type-dropdownicon:hover,
+.view-icon { color: rgba(95, 99, 104, 0.87) !important; font-size: 1.6rem !important}
+
+.close-preview-button{ font-size: 1.75rem !important;color: rgba(95, 99, 104, 1) !important}
+
+.close-preview-button { background: none;border: none;}
+
+.select-icon:hover,
 .calendar-icon:hover,
 .view-icon:hover,
 .add-remove-button:hover,

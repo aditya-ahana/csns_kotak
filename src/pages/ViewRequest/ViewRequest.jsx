@@ -205,14 +205,14 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color: fromDate === "" ? "red" : "green",
+          color: fromDate === "" ? "" : "green",
         },
       },
       textField: {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: fromDate === "" ? "red" : "green",
+            color: fromDate === "" ? "" : "green",
             fontSize: "0.85rem",
           },
         },
@@ -234,11 +234,11 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 fromDate === ""
-                  ? "1.45px solid rgb(255, 0, 0)"
+                  ? "1.45px solid rgb(67, 91, 102)"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
-              border: "1.5px solid rgb(67, 61, 139)",
+              border: "1.5px solid rgb(131, 131, 210)",
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
@@ -267,14 +267,14 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color: toDate === "" ? "red" : "green",
+          color: toDate === "" ? "" : "green",
         },
       },
       textField: {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: toDate === "" ? "red" : "green",
+            color: toDate === "" ? "" : "green",
             fontSize: "0.85rem",
           },
         },
@@ -296,11 +296,11 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 toDate === ""
-                  ? "1.45px solid rgb(255, 0, 0)"
+                  ? "1.45px solid rgb(67, 91, 102)"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
-              border: "1.5px solid rgb(67, 61, 139)",
+              border: "1.5px solid rgb(131, 131, 210)",
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
