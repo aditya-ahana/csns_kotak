@@ -152,7 +152,11 @@ export default function ViewRequest() {
       .join("-");
 
     callRetrieve();
-    setFromDate(formatted_date);
+    if(formatted_date === "01-01-1970"){
+      setFromDate("");
+    } else {
+      setFromDate(formatted_date);
+    }
     disableInvalidToDates(date);
   };
 
@@ -187,6 +191,9 @@ export default function ViewRequest() {
 
   const datePickerControl = {
     fromSlotProps: {
+      actionBar : {
+       actions : fromDate !== "" ? ['clear'] : []
+      },
       popper: {
         sx: {
           ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
@@ -249,6 +256,9 @@ export default function ViewRequest() {
     },
 
     toSlotProps: {
+      actionBar : {
+        actions : toDate !== "" ? ['clear'] : []
+       },
       popper: {
         sx: {
           ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
@@ -738,7 +748,7 @@ export default function ViewRequest() {
                               data-testid="menu-clear-button"
                               className="filter-clear-button"
                             >
-                              Clear
+                              CLEAR ALL
                             </Button>
                           </Box>
                         )}

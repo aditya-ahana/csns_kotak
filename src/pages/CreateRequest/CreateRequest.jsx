@@ -360,6 +360,9 @@ export default function CreateRequest() {
     },
 
     validatedSlotProps: {
+      actionBar: {
+        actions: ["clear"],
+      },
       popper: {
         sx: {
           ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
@@ -1771,13 +1774,22 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
-
-      if (reportName === "IP Logs") {
-        newState[reportIndex][detail][detailIndex - 1].fromDate =
-          formatted_date;
-        newState[reportIndex][detail][detailIndex - 2].fromDate =
-          formatted_date;
+      if (formatted_date === "01-01-1970") {
+        console.log("Clear Date");
+        newState[reportIndex][detail][detailIndex].fromDate = "";
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detail][detailIndex - 1].fromDate = "";
+          newState[reportIndex][detail][detailIndex - 2].fromDate = "";
+        }
+      } else {
+        console.log("Set Date");
+        newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detail][detailIndex - 1].fromDate =
+            formatted_date;
+          newState[reportIndex][detail][detailIndex - 2].fromDate =
+            formatted_date;
+        }
       }
 
       return newState;
@@ -1833,11 +1845,24 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      if (reportName === "IP Logs") {
-        newState[reportIndex][detail][detailIndex - 1].toDate = formatted_date;
-        newState[reportIndex][detail][detailIndex - 2].toDate = formatted_date;
+      if (formatted_date === "01-01-1970") {
+        console.log("Clear Date");
+        newState[reportIndex][detail][detailIndex].toDate = "";
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detail][detailIndex - 1].toDate = "";
+          newState[reportIndex][detail][detailIndex - 2].toDate = "";
+        }
+      } else {
+        console.log("Set Date");
+        newState[reportIndex][detail][detailIndex].toDate = formatted_date;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detail][detailIndex - 1].toDate =
+            formatted_date;
+          newState[reportIndex][detail][detailIndex - 2].toDate =
+            formatted_date;
+        }
       }
-      newState[reportIndex][detail][detailIndex].toDate = formatted_date;
+
       return newState;
     });
   };
@@ -1872,7 +1897,11 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      newState[reportIndex][detailName][detailIndex].fromDate = formatted_date;
+      if (formatted_date === "01-01-1970") {
+        newState[reportIndex][detail][detailIndex].fromDate = "";
+      } else {
+        newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
+      }
 
       //////console.log("time4", date);
       //////console.log("time4", date);
@@ -1893,12 +1922,12 @@ export default function CreateRequest() {
       <Box
         className="selected-param-details"
         marginTop={
-          (reportName === "Beneficiary details for Single IMPS transactions" ||
-            reportName === "Beneficiary details for Single UPI transactions") &&
           detailIndex === 0
-            ? "0rem"
-            : detailIndex > 0
-            ? "1.75rem"
+            ? reportName ===
+                "Beneficiary details for Single IMPS transactions" ||
+              reportName === "Beneficiary details for Single UPI transactions"
+              ? "0rem"
+              : "2rem"
             : "2.25rem"
         }
         key={detailIndex}
@@ -2715,9 +2744,7 @@ export default function CreateRequest() {
           <>
             <Box
               className="preview-data"
-              justifyContent={
-                reportName === "Device details" ? "flex-start" : "space-evenly"
-              }
+              justifyContent="space-evenly"
               display={
                 (reportName === "IP Logs" &&
                   detail.subRequest === "IPLastLogin") ||
@@ -2725,7 +2752,6 @@ export default function CreateRequest() {
                   ? "none"
                   : "flex"
               }
-              marginLeft={reportName === "Device details" ? "1rem" : "0rem"}
             >
               <Box
                 className="detail-input"
@@ -2744,20 +2770,36 @@ export default function CreateRequest() {
                 }
               >
                 <Typography sx={previewProps.name} component="span">{`${
-                  detail.name === "Account number"
-                    ? "Acc no."
-                    : detail.name === "Email ID"
-                    ? "Email"
-                    : detail.name
+                  detail.name === "Account number" ? "Acc no." : detail.name
                 }  : `}</Typography>
-                {detail.name === "Email ID" ? (
-                  <InputBase
-                    readOnly={true}
-                    multiline={true}
-                    value={detail.email}
-                    className="preview-email"
-                  />
-                ) : (
+                {/* {detail.name === "Email ID" ? ( */}
+                <InputBase
+                  readOnly={true}
+                  multiline={true}
+                  value={
+                    detail.name === "Account number"
+                      ? detail.accountNo
+                      : detail.name === "Email ID"
+                      ? detail.email
+                      : detail.name === "PAN"
+                      ? detail.panNo
+                      : detail.name === "Credit Card"
+                      ? detail.creditCardNo
+                      : detail.name === "Aadhar"
+                      ? detail.aadhar
+                      : detail.name === "Debit Card"
+                      ? detail.debitCard
+                      : detail.name === "Mobile No."
+                      ? detail.mobileNo
+                      : detail.name === "RRN"
+                      ? detail.rrn
+                      : detail.name === "CRN"
+                      ? detail.crnNo
+                      : ""
+                  }
+                  className="preview-email"
+                />
+                {/* ) : (
                   <Typography sx={previewProps.value} component="span">
                     {detail.name === "Account number"
                       ? detail.accountNo
@@ -2779,7 +2821,7 @@ export default function CreateRequest() {
                       ? detail.crnNo
                       : ""}
                   </Typography>
-                )}
+                )} */}
               </Box>
 
               {((detailName === "accountNumberDetails" &&
@@ -2816,14 +2858,22 @@ export default function CreateRequest() {
                 </Box>
               )}
 
+              {reportName === "Device details" && (
+                <Box className="detail-range">
+                  {/* <Box className="preview-range">
+                 
+                 </Box> */}
+                </Box>
+              )}
+
               {((detailName === "RRNdetails" &&
                 reportName ===
                   "Beneficiary details for Single IMPS transactions") ||
                 (detailName === "RRNdetails" &&
                   reportName ===
                     "Beneficiary details for Single UPI transactions")) && (
-                <Box className="rrn-preview">
-                  <Box className="rrn-subfields">
+                <Box className="detail-range">
+                  <Box className="rrn-preview-2">
                     <Typography sx={previewProps.name} component="span">
                       Amount :{" "}
                     </Typography>
@@ -2834,7 +2884,7 @@ export default function CreateRequest() {
                   </Box>
 
                   {/* {detail.fromDate !== "" && ( */}
-                  <Box className="rrn-subfields">
+                  <Box className="type-preview">
                     <Typography sx={previewProps.name} component="span">
                       Date :{" "}
                     </Typography>
@@ -2849,21 +2899,44 @@ export default function CreateRequest() {
                 </Box>
               )}
 
-              {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+              {reportName === "IP Logs" && (
                 <Box className="mobileno-preview">
-                  <Typography
-                    sx={previewProps.name}
-                    marginLeft="1.75rem"
-                    component="span"
-                  >
-                    Mobile No. :{" "}
-                  </Typography>
+                  {detail.name === "Mobile No." ? (
+                    <>
+                      {/* <Typography
+                        marginLeft="1rem"
+                        sx={previewProps.name}
+                        component="span"
+                      >
+                        Mobile No. :{" "}
+                      </Typography>
 
-                  <Typography sx={previewProps.value} component="span">
-                    {detail.mobileNo}
-                  </Typography>
+                      <Typography sx={previewProps.value} component="span">
+                        {detail.mobileNo}
+                      </Typography> */}
+                    </>
+                  ) : (
+                    <>
+                      <Typography
+                        marginLeft="1rem"
+                        sx={previewProps.name}
+                        component="span"
+                      >
+                        Mobile No. :{" "}
+                      </Typography>
+
+                      <Typography sx={previewProps.value} component="span">
+                        {detail.mobileNo}
+                      </Typography>
+                    </>
+                  )}
                 </Box>
               )}
+
+              {reportName !== "IP Logs" &&
+                reportName !== "Statement in PDF/Excel" && (
+                  <Box className="mobileno-preview"></Box>
+                )}
 
               {reportName === "Statement in PDF/Excel" && (
                 <Box className="type-preview">
@@ -3754,7 +3827,7 @@ export default function CreateRequest() {
                         >
                           <CloseOutlinedIcon
                             name="close-preview"
-                            className="close-preview-button"
+                            className="close-preview-icon"
                           />
                         </Button>
                       </Box>
