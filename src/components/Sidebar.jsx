@@ -73,7 +73,7 @@ export default function Sidebar(props) {
   };
   return (
     <div
-      // data-testid="sidebar"
+      data-testid="sidebar"
       onMouseEnter={() => {
         handleDrawer();
       }}
@@ -88,7 +88,7 @@ export default function Sidebar(props) {
           {sidebarData.map((sidebarElement, index) => (
             <ListItem
               key={index}
-              // data-testid={`sidebar-element-${index}`}
+              data-testid={`sidebar-element-${index}`}
               disablePadding
               sx={{ display: "block" }}
               onClick={(e) => {

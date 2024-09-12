@@ -55,97 +55,6 @@ import ErrorIcon from "@mui/icons-material/Error";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
-function strLength(s) {
-  var length = 0;
-  while (s[length] !== undefined) length++;
-  return length;
-}
-
-const validatedDetail = () => {
-  return (
-    <Box sx={{ display: "flex", flexDirection: "row", gap: "0.25rem" }}>
-      {/* <Typography
-        sx={{ color: "rgb(67, 91, 102)", fontSize: "0.785rem", fontWeight: 400 }}
-      >
-        Valid
-      </Typography> */}
-      <CheckCircleIcon
-        sx={{
-          color: "green",
-          marginTop: "0.05rem",
-          fontSize: "1rem",
-        }}
-      />
-    </Box>
-  );
-};
-
-const warningHelperText = (text) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "0.25rem",
-        margin: "0.1rem 0rem 0rem 0rem",
-      }}
-    >
-      <ErrorIcon
-        sx={{
-          color: "rgb(92, 84, 112)",
-          marginTop: "0.075rem",
-          fontSize: "1rem",
-        }}
-      />
-      <Typography
-        sx={{
-          color: "rgb(92, 84, 112)",
-          fontSize: "0.785rem",
-          fontWeight: 400,
-        }}
-      >
-        {text}
-      </Typography>
-    </Box>
-  );
-};
-
-const validatedHelperText = (text) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "0.25rem",
-        margin: "0.1rem 0rem 0rem 0.85rem",
-      }}
-    >
-      {/* <Typography
-        sx={{ color: "rgb(67, 91, 102)", fontSize: "0.785rem", fontWeight: 400 }}
-      >
-        {text}
-      </Typography> */}
-      <CheckCircleIcon
-        sx={{
-          color: "green",
-          marginTop: "0.075rem",
-          fontSize: "1rem",
-        }}
-      />
-    </Box>
-  );
-};
-
-const customFormText = (text, color, visibility) => {
-  return (
-    <FormHelperText
-      sx={{ marginLeft: "0.85rem", color: color, opacity: visibility }}
-    >
-      {text}
-    </FormHelperText>
-  );
-};
-
 export default function CreateRequest() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -153,6 +62,7 @@ export default function CreateRequest() {
   const [toastBackground, setToastBackground] = useState("brown");
   const [toastColor, setToastColor] = useState("");
   const [toastFontWeight, setToastFontWeight] = useState();
+  const [payloadConfigured, setPayloadConfigured] = useState(false);
 
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
@@ -193,6 +103,19 @@ export default function CreateRequest() {
   const currentDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
   const reduxDate = dayjs(new Date()).format("DD-MM-YYYY");
   ////console.log("Current Date", currentDate);
+
+  const previewProps = {
+    name: {
+      fontWeight: 500,
+      fontFamily: "Roboto",
+      fontSize: "0.85rem",
+    },
+    value: {
+      fontWeight: 400,
+      fontFamily: "Roboto",
+      fontSize: "0.85rem",
+    },
+  };
 
   const inputControl = {
     textfield: {
@@ -237,9 +160,8 @@ export default function CreateRequest() {
       style: {
         fontSize: "0.88rem",
         height: "0.6rem",
-        // backgroundColor : "blue"
       },
-      maxLength: 10,
+      // maxLength: 10,
     },
     inputLabelProps: {
       // shrink : true,
@@ -269,7 +191,7 @@ export default function CreateRequest() {
     textAreaProps: {
       style: {
         fontSize: "0.88rem",
-        minHeight: "1.65rem",
+        minHeight: "1.6rem",
       },
       // maxLength : 69
     },
@@ -305,22 +227,24 @@ export default function CreateRequest() {
   const SelectProps = {
     containerProps: {
       ".MuiOutlinedInput-notchedOutline": {
-        border: "1.4px solid red",
+        border: "1.4px solid rgb(67, 91, 102)",
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         border: "1.65px solid rgba(131, 131, 210)",
       },
       "&:hover .MuiOutlinedInput-notchedOutline": {
         border:
-          ticketNumber.length === 0 || ticketDescription.length === 0
-            ? "0.25px solid grey"
-            : "1.5px solid rgb(131, 131, 210)",
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          // ? "0.25px solid grey"
+          // :
+          "1.5px solid rgb(131, 131, 210)",
       },
       ".MuiSvgIcon-root ": {
         fill:
-          ticketNumber.length === 0 || ticketDescription.length === 0
-            ? "silver"
-            : "",
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          //   ? "silver"
+          // :
+          "rgba(95, 99, 104, 1)",
       },
     },
     validatedContainerProps: {
@@ -334,7 +258,7 @@ export default function CreateRequest() {
         border: "1.5px solid rgb(131, 131, 210)",
       },
       ".MuiSvgIcon-root ": {
-        fill: "rgb(67, 91, 102) !important",
+        fill: "rgba(95, 99, 104, 1) !important",
       },
     },
     REPORT_SELECT_PROPS: {
@@ -665,205 +589,820 @@ export default function CreateRequest() {
         typeof value === "string" ? value.split(",") : value;
 
       if (
-        value.some((param) => param === "Account number") &&
+        // value.some((param) => param === "Account number")
+        value.includes("Account number") &&
         report.accountNumberDetails.length === 0
       ) {
-        report.accountNumberDetails.push({
-          name: "Account number",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+        if (reportName === "IP Logs") {
+          report.accountNumberDetails.push({
+            name: "Account number",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.accountNumberDetails.push({
+            name: "Account number",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.accountNumberDetails.push({
+            name: "Account number",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.accountNumberDetails.push({
+            name: "Account number",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
       }
 
-      if (
-        value.some((param) => param === "PAN") &&
-        report.PANdetails.length === 0
-      ) {
-        report.PANdetails.push({
-          name: "PAN",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+      // else {
+      //   report.accountNumberDetails = [];
+      // }
+
+      if (value.includes("PAN") && report.PANdetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.PANdetails.push({
+            name: "PAN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.PANdetails.push({
+            name: "PAN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.PANdetails.push({
+            name: "PAN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.PANdetails.push({
+            name: "PAN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
       }
+      // else {
+      //   report.PANdetails = [];
+      // }
+
+      if (value.includes("CRN") && report.CRNdetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.CRNdetails.push({
+            name: "CRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.CRNdetails.push({
+            name: "CRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.CRNdetails.push({
+            name: "CRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.CRNdetails.push({
+            name: "CRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.CRNdetails = [];
+      // }
+
+      if (value.includes("RRN") && report.RRNdetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.RRNdetails.push({
+            name: "RRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.RRNdetails.push({
+            name: "RRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.RRNdetails.push({
+            name: "RRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.RRNdetails.push({
+            name: "RRN",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.RRNdetails = [];
+      // }
+
+      if (value.includes("Aadhar") && report.aadharDetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.aadharDetails.push({
+            name: "Aadhar",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.aadharDetails.push({
+            name: "Aadhar",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.aadharDetails.push({
+            name: "Aadhar",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.aadharDetails.push({
+            name: "Aadhar",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.aadharDetails = [];
+      // }
+
+      if (value.includes("Email ID") && report.emailDetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.emailDetails.push({
+            name: "Email ID",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.emailDetails.push({
+            name: "Email ID",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.emailDetails.push({
+            name: "Email ID",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.emailDetails.push({
+            name: "Email ID",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.emailDetails = [];
+      // }
 
       if (
-        value.some((param) => param === "CRN") &&
-        report.CRNdetails.length === 0
-      ) {
-        report.CRNdetails.push({
-          name: "CRN",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
-      }
-
-      if (
-        value.some((param) => param === "Aadhar") &&
-        report.aadharDetails.length === 0
-      ) {
-        report.aadharDetails.push({
-          name: "Aadhar",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
-      }
-
-      if (
-        value.some((param) => param === "Email ID") &&
-        report.emailDetails.length === 0
-      ) {
-        report.emailDetails.push({
-          name: "Email ID",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
-      }
-
-      if (
-        value.some((param) => param === "Credit Card") &&
+        value.includes("Credit Card") &&
         report.creditCardDetails.length === 0
       ) {
-        report.creditCardDetails.push({
-          name: "Credit Card",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+        if (reportName === "IP Logs") {
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.creditCardDetails.push({
+            name: "Credit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
       }
+      // else {
+      //   report.creditCardDetails = [];
+      // }
 
       if (
-        value.some((param) => param === "Debit Card") &&
+        value.includes("Debit Card") &&
         report.debitCardDetails.length === 0
       ) {
-        report.debitCardDetails.push({
-          name: "Debit Card",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+        if (reportName === "IP Logs") {
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.debitCardDetails.push({
+            name: "Debit Card",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.debitCardDetails = [];
+      // }
+
+      if (value.includes("Mobile No.") && report.mobileNoDetails.length === 0) {
+        if (reportName === "IP Logs") {
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLastLogin",
+          });
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogTxn",
+          });
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+            subRequest: "IPLogUpi",
+          });
+        } else {
+          report.mobileNoDetails.push({
+            name: "Mobile No.",
+            accountNo: "",
+            aadhar: "",
+            crnNo: "",
+            fromDate: "",
+            toDate: "",
+            rrn: "",
+            panNo: "",
+            debitCard: "",
+            creditCardNo: "",
+            email: "",
+            amount: "",
+            mobileNo: "",
+            req_status: "In-progress",
+            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            filePath: "",
+          });
+        }
+      }
+      // else {
+      //   report.mobileNoDetails = [];
+      // }
+
+      if (!value.includes("Account number")) {
+        report.accountNumberDetails = [];
       }
 
-      if (
-        value.some((param) => param === "Mobile No.") &&
-        report.mobileNoDetails.length === 0
-      ) {
-        report.mobileNoDetails.push({
-          name: "Mobile No.",
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+      if (!value.includes("CRN")) {
+        report.CRNdetails = [];
+      }
+
+      if (!value.includes("RRN")) {
+        report.RRNdetails = [];
+      }
+
+      if (!value.includes("PAN")) {
+        report.PANdetails = [];
+      }
+
+      if (!value.includes("Aadhar")) {
+        report.aadharDetails = [];
+      }
+
+      if (!value.includes("Mobile No.")) {
+        report.mobileNoDetails = [];
+      }
+
+      if (!value.includes("Debit Card")) {
+        report.debitCardDetails = [];
+      }
+
+      if (!value.includes("Credit Card")) {
+        report.creditCardDetails = [];
+      }
+
+      if (!value.includes("Email ID")) {
+        report.emailDetails = [];
       }
 
       return newState;
     });
   };
 
-  const deleteDetail = (reportIndex, detailIndex, details) => {
+  const deleteDetail = (reportIndex, detailIndex, details, reportName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][details].splice(detailIndex, 1);
+      if (reportName === "IP Logs") {
+        newState[reportIndex][details].splice(detailIndex - 1, 1);
+        newState[reportIndex][details].splice(detailIndex - 2, 1);
+      }
       // document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
     });
@@ -874,20 +1413,103 @@ export default function CreateRequest() {
     //////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
+      const report = newState[reportIndex];
 
-      newState[reportIndex][detailName] = [
-        ...newState[reportIndex][detailName],
-        // detailName === "accountNumberDetails" ||
-        // detailName === "PANdetails" ||
-        // detailName === "RRNdetails" ||
-        // detailName === "CRNdetails" ||
-        // detailName === "creditCardDetails" ||
-        // detailName === "debitCardDetails" ||
-        // detailName === "mobileNoDetails" ||
-        // detailName === "emailDetails" ||
-        // detailName === "aadharDetails"
-        // ?
-        {
+      // newState[reportIndex][detailName] = [
+      //   ...newState[reportIndex][detailName],
+      //   // reportName === "IP Logs" ? [{},{},{}] : {}
+      //   // detailName === "accountNumberDetails" ||
+      //   // detailName === "PANdetails" ||
+      //   // detailName === "RRNdetails" ||
+      //   // detailName === "CRNdetails" ||
+      //   // detailName === "creditCardDetails" ||
+      //   // detailName === "debitCardDetails" ||
+      //   // detailName === "mobileNoDetails" ||
+      //   // detailName === "emailDetails" ||
+      //   // detailName === "aadharDetails"
+      //   // ?
+      //   reportName === "IP Logs"
+      //     ? [
+      //         {
+      //           name: name,
+      //           accountNo: "",
+      //           aadhar: "",
+      //           crnNo: "",
+      //           fromDate: "",
+      //           toDate: "",
+      //           rrn: "",
+      //           panNo: "",
+      //           debitCard: "",
+      //           creditCardNo: "",
+      //           email: "",
+      //           amount: "",
+      //           mobileNo: "",
+      //           req_status: "In-progress",
+      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+      //           filePath: "",
+      //           subRequest: "IPLastLogin",
+      //         },
+      //         {
+      //           name: name,
+      //           accountNo: "",
+      //           aadhar: "",
+      //           crnNo: "",
+      //           fromDate: "",
+      //           toDate: "",
+      //           rrn: "",
+      //           panNo: "",
+      //           debitCard: "",
+      //           creditCardNo: "",
+      //           email: "",
+      //           amount: "",
+      //           mobileNo: "",
+      //           req_status: "In-progress",
+      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+      //           filePath: "",
+      //           subRequest: "IPLogTxn",
+      //         },
+      //         {
+      //           name: name,
+      //           accountNo: "",
+      //           aadhar: "",
+      //           crnNo: "",
+      //           fromDate: "",
+      //           toDate: "",
+      //           rrn: "",
+      //           panNo: "",
+      //           debitCard: "",
+      //           creditCardNo: "",
+      //           email: "",
+      //           amount: "",
+      //           mobileNo: "",
+      //           req_status: "In-progress",
+      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+      //           filePath: "",
+      //           subRequest: "IPLogUpi",
+      //         },
+      //       ]
+      //     : {
+      //         name: name,
+      //         accountNo: "",
+      //         aadhar: "",
+      //         crnNo: "",
+      //         fromDate: "",
+      //         toDate: "",
+      //         rrn: "",
+      //         panNo: "",
+      //         debitCard: "",
+      //         creditCardNo: "",
+      //         email: "",
+      //         amount: "",
+      //         mobileNo: "",
+      //         req_status: "In-progress",
+      //         type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+      //         filePath: "",
+      //       },
+      // ];
+
+      if (reportName === "IP Logs") {
+        newState[reportIndex][detailName].push({
           name: name,
           accountNo: "",
           aadhar: "",
@@ -904,9 +1526,68 @@ export default function CreateRequest() {
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
           filePath: "",
-        },
-        // : {},
-      ];
+          subRequest: "IPLastLogin",
+        });
+
+        newState[reportIndex][detailName].push({
+          name: name,
+          accountNo: "",
+          aadhar: "",
+          crnNo: "",
+          fromDate: "",
+          toDate: "",
+          rrn: "",
+          panNo: "",
+          debitCard: "",
+          creditCardNo: "",
+          email: "",
+          amount: "",
+          mobileNo: "",
+          req_status: "In-progress",
+          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          filePath: "",
+          subRequest: "IPLogTxn",
+        });
+
+        newState[reportIndex][detailName].push({
+          name: name,
+          accountNo: "",
+          aadhar: "",
+          crnNo: "",
+          fromDate: "",
+          toDate: "",
+          rrn: "",
+          panNo: "",
+          debitCard: "",
+          creditCardNo: "",
+          email: "",
+          amount: "",
+          mobileNo: "",
+          req_status: "In-progress",
+          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          filePath: "",
+          subRequest: "IPLogUpi",
+        });
+      } else {
+        newState[reportIndex][detailName].push({
+          name: name,
+          accountNo: "",
+          aadhar: "",
+          crnNo: "",
+          fromDate: "",
+          toDate: "",
+          rrn: "",
+          panNo: "",
+          debitCard: "",
+          creditCardNo: "",
+          email: "",
+          amount: "",
+          mobileNo: "",
+          req_status: "In-progress",
+          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          filePath: "",
+        });
+      }
 
       // document.querySelector("#selected-reports-section").scrollIntoView();
       return newState;
@@ -925,39 +1606,77 @@ export default function CreateRequest() {
       const newState = [...prevState];
 
       if (detailName === "accountNumberDetails") {
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].accountNo = value;
+          newState[reportIndex][detailName][detailIndex - 2].accountNo = value;
+        }
         newState[reportIndex][detailName][detailIndex].accountNo = value;
       }
 
       if (detailName === "PANdetails") {
         newState[reportIndex][detailName][detailIndex].panNo = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].panNo = value;
+          newState[reportIndex][detailName][detailIndex - 2].panNo = value;
+        }
       }
 
       if (detailName === "CRNdetails") {
         newState[reportIndex][detailName][detailIndex].crnNo = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].crnNo = value;
+          newState[reportIndex][detailName][detailIndex - 2].crnNo = value;
+        }
       }
 
       if (detailName === "RRNdetails") {
         newState[reportIndex][detailName][detailIndex].rrn = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].rrn = value;
+          newState[reportIndex][detailName][detailIndex - 2].rrn = value;
+        }
       }
 
       if (detailName === "aadharDetails") {
         newState[reportIndex][detailName][detailIndex].aadhar = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].aadhar = value;
+          newState[reportIndex][detailName][detailIndex - 2].aadhar = value;
+        }
       }
 
       if (detailName === "emailDetails") {
         newState[reportIndex][detailName][detailIndex].email = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].email = value;
+          newState[reportIndex][detailName][detailIndex - 2].email = value;
+        }
       }
 
       if (detailName === "creditCardDetails") {
         newState[reportIndex][detailName][detailIndex].creditCardNo = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].creditCardNo =
+            value;
+          newState[reportIndex][detailName][detailIndex - 2].creditCardNo =
+            value;
+        }
       }
 
       if (detailName === "debitCardDetails") {
         newState[reportIndex][detailName][detailIndex].debitCard = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].debitCard = value;
+          newState[reportIndex][detailName][detailIndex - 2].debitCard = value;
+        }
       }
 
       if (detailName === "mobileNoDetails") {
         newState[reportIndex][detailName][detailIndex].mobileNo = value;
+        if (reportName === "IP Logs") {
+          newState[reportIndex][detailName][detailIndex - 1].mobileNo = value;
+          newState[reportIndex][detailName][detailIndex - 2].mobileNo = value;
+        }
       }
       // detailName === "creditCardDetails" ||
       // detailName === "aadharDetails" ||
@@ -974,6 +1693,8 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
       newState[reportIndex][detail][detailIndex].mobileNo = value;
+      newState[reportIndex][detail][detailIndex - 1].mobileNo = value;
+      newState[reportIndex][detail][detailIndex - 2].mobileNo = value;
       return newState;
     });
   };
@@ -1001,7 +1722,14 @@ export default function CreateRequest() {
 
   //////console.log('ULTIMATE',reportsState);
 
-  const handleFromDate = (date, reportIndex, detailIndex, detail, to) => {
+  const handleFromDate = (
+    date,
+    reportIndex,
+    detailIndex,
+    detail,
+    to,
+    reportName
+  ) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -1044,11 +1772,26 @@ export default function CreateRequest() {
       }
 
       newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
+
+      if (reportName === "IP Logs") {
+        newState[reportIndex][detail][detailIndex - 1].fromDate =
+          formatted_date;
+        newState[reportIndex][detail][detailIndex - 2].fromDate =
+          formatted_date;
+      }
+
       return newState;
     });
   };
 
-  const handleToDate = (date, reportIndex, detailIndex, detail, from) => {
+  const handleToDate = (
+    date,
+    reportIndex,
+    detailIndex,
+    detail,
+    from,
+    reportName
+  ) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -1090,6 +1833,10 @@ export default function CreateRequest() {
         return prevState;
       }
 
+      if (reportName === "IP Logs") {
+        newState[reportIndex][detail][detailIndex - 1].toDate = formatted_date;
+        newState[reportIndex][detail][detailIndex - 2].toDate = formatted_date;
+      }
       newState[reportIndex][detail][detailIndex].toDate = formatted_date;
       return newState;
     });
@@ -1150,9 +1897,17 @@ export default function CreateRequest() {
             reportName === "Beneficiary details for Single UPI transactions") &&
           detailIndex === 0
             ? "0rem"
-            : "2.65rem"
+            : detailIndex > 0
+            ? "1.75rem"
+            : "2.25rem"
         }
         key={detailIndex}
+        display={
+          (reportName === "IP Logs" && detail.subRequest === "IPLastLogin") ||
+          (reportName === "IP Logs" && detail.subRequest === "IPLogTxn")
+            ? "none"
+            : "flex"
+        }
         data-testid={`detail-fieldset-${detailIndex}`}
       >
         {/* {//////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
@@ -1160,82 +1915,81 @@ export default function CreateRequest() {
         <FormControl
           variant="outlined"
           margin="none"
-          sx={{ width: reportName === "IP Logs" ? "24%" : "32%" }}
+          className={
+            reportName === "IP Logs" ? "primary-input-iplogs" : "primary-input"
+          }
         >
           <TextField
             sx={
               (detail.name === "Account number" &&
-                detail.accountNo.length === 16) ||
-              (detail.name === "Email ID" &&
-                detail.email.length >= 12 &&
-                detail.email.length <= 320) ||
-              (detail.name === "PAN" && detail.panNo.length === 10) ||
+                detail.accountNo.length > 0) ||
+              (detail.name === "Email ID" && detail.email.length > 0) ||
+              (detail.name === "PAN" && detail.panNo.length > 0) ||
               (detail.name === "Credit Card" &&
-                detail.creditCardNo.length === 16) ||
-              (detail.name === "Aadhar" && detail.aadhar.length === 12) ||
-              (detail.name === "Debit Card" &&
-                detail.debitCard.length === 16) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length === 10) ||
-              (detail.name === "RRN" && detail.rrn.length === 12) ||
-              (detail.name === "CRN" && detail.crnNo.length === 10)
+                detail.creditCardNo.length > 0) ||
+              (detail.name === "Aadhar" && detail.aadhar.length > 0) ||
+              (detail.name === "Debit Card" && detail.debitCard.length > 0) ||
+              (detail.name === "Mobile No." && detail.mobileNo.length > 0) ||
+              (detail.name === "RRN" && detail.rrn.length > 0) ||
+              (detail.name === "CRN" && detail.crnNo.length > 0)
                 ? inputControl.validatedTextfield
                 : inputControl.textfield
             }
             data-testid={`detail-name-input-${detailIndex}`}
-            helperText={
-              (detail.name === "Account number" &&
-                detail.accountNo.length < 16) ||
-              (detail.name === "Email ID" && detail.email.length < 12) ||
-              (detail.name === "PAN" && detail.panNo.length < 10) ||
-              (detail.name === "Credit Card" &&
-                detail.creditCardNo.length < 16) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-              (detail.name === "RRN" && detail.rrn.length < 12) ||
-              (detail.name === "CRN" && detail.crnNo.length < 10)
-                ? warningHelperText(
-                    `
-                    ${t("only")} 
+            //             helperText={
+            //               (detail.name === "Account number" &&
+            //                 detail.accountNo.length < 16) ||
+            //               (detail.name === "Email ID" && detail.email.length < 12) ||
+            //               (detail.name === "PAN" && detail.panNo.length < 10) ||
+            //               (detail.name === "Credit Card" &&
+            //                 detail.creditCardNo.length < 16) ||
+            //               (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
+            //               (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
+            //               (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
+            //               (detail.name === "RRN" && detail.rrn.length < 12) ||
+            //               (detail.name === "CRN" && detail.crnNo.length < 10)
+            //                 ? warningHelperText(
+            //                     `
+            //                     ${t("only")}
 
-                    ${
-                      detail.name === "Account number"
-                        ? 16
-                        : detail.name === "Email ID"
-                        ? "12-320"
-                        : detail.name === "PAN"
-                        ? 10
-                        : detail.name === "Credit Card"
-                        ? 16
-                        : detail.name === "Aadhar"
-                        ? 12
-                        : detail.name === "Debit Card"
-                        ? 16
-                        : detail.name === "Mobile No."
-                        ? 10
-                        : detail.name === "RRN"
-                        ? 12
-                        : detail.name === "CRN"
-                        ? 10
-                        : 0
-                    }   ${t("characters")} 
-`,
-                    1
-                  )
-                : validatedDetail()
-            }
+            //                     ${
+            //                       detail.name === "Account number"
+            //                         ? 16
+            //                         : detail.name === "Email ID"
+            //                         ? "12-320"
+            //                         : detail.name === "PAN"
+            //                         ? 10
+            //                         : detail.name === "Credit Card"
+            //                         ? 16
+            //                         : detail.name === "Aadhar"
+            //                         ? 12
+            //                         : detail.name === "Debit Card"
+            //                         ? 16
+            //                         : detail.name === "Mobile No."
+            //                         ? 10
+            //                         : detail.name === "RRN"
+            //                         ? 12
+            //                         : detail.name === "CRN"
+            //                         ? 10
+            //                         : 0
+            //                     }   ${t("characters")}
+            // `,
+            //                     1
+            //                   )
+            //                 : validatedDetail()
+            //             }
             InputLabelProps={
               (detail.name === "Account number" &&
-                detail.accountNo.length < 16) ||
-              (detail.name === "Email ID" && detail.email.length < 12) ||
-              (detail.name === "PAN" && detail.panNo.length < 10) ||
+                detail.accountNo.length < 1) ||
+              (detail.name === "Email ID" && detail.email.length < 1) ||
+              (detail.name === "PAN" && detail.panNo.length < 1) ||
               (detail.name === "Credit Card" &&
-                detail.creditCardNo.length < 16) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-              (detail.name === "RRN" && detail.rrn.length < 12) ||
-              (detail.name === "CRN" && detail.crnNo.length < 10)
+                detail.creditCardNo.length < 1) ||
+              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
+              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
+              (detail.name === "RRN" && detail.rrn.length < 1) ||
+              (detail.name === "CRN" && detail.crnNo.length < 1)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
@@ -1246,7 +2000,7 @@ export default function CreateRequest() {
                   component="text"
                   position="start"
                 >
-                  <Typography sx={{ fontSize: "0.92rem" }} component="span">
+                  <Typography fontSize="0.92rem" component="span">
                     +91
                   </Typography>
                 </InputAdornment>
@@ -1257,28 +2011,27 @@ export default function CreateRequest() {
               style: {
                 fontSize: "0.88rem",
                 height: "0.6rem",
-                // backgroundColor : "blue"
               },
-              maxLength:
-                detail.name === "Account number"
-                  ? 16
-                  : detail.name === "Email ID"
-                  ? 320
-                  : detail.name === "PAN"
-                  ? 10
-                  : detail.name === "Credit Card"
-                  ? 16
-                  : detail.name === "Aadhar"
-                  ? 12
-                  : detail.name === "Debit Card"
-                  ? 16
-                  : detail.name === "Mobile No."
-                  ? 10
-                  : detail.name === "RRN"
-                  ? 12
-                  : detail.name === "CRN"
-                  ? 10
-                  : 0,
+              //   maxLength:
+              //     detail.name === "Account number"
+              //       ? 16
+              //       : detail.name === "Email ID"
+              //       ? 320
+              //       : detail.name === "PAN"
+              //       ? 10
+              //       : detail.name === "Credit Card"
+              //       ? 16
+              //       : detail.name === "Aadhar"
+              //       ? 12
+              //       : detail.name === "Debit Card"
+              //       ? 16
+              //       : detail.name === "Mobile No."
+              //       ? 10
+              //       : detail.name === "RRN"
+              //       ? 12
+              //       : detail.name === "CRN"
+              //       ? 10
+              //       : 0,
             }}
             className="selected-param-box"
             // value={
@@ -1320,12 +2073,12 @@ export default function CreateRequest() {
             id="paramvalue"
             placeholder={`Enter ${detail.name}`}
             autoComplete="off"
-            style={{
-              margin: "0rem 0rem 0rem 0rem",
-              fontSize: "0.88rem",
-            }}
+            // style={{
+            //   margin: "0rem 0rem 0rem 0rem",
+            //   fontSize: "0.88rem",
+            // }}
             label={detail.name}
-            FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
+            // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
             margin="none"
             onChange={(e) =>
               handleInputValue(
@@ -1376,16 +2129,8 @@ export default function CreateRequest() {
           (detailName === "RRNdetails" &&
             reportName ===
               "Beneficiary details for Bulk UPI transactions")) && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "1rem",
-              width: "43%",
-              backgroundColor: "transparent",
-            }}
-          >
-            <Box flex={1} sx={{ cursor: "pointer" }}>
+          <Box className="detail-datepickers">
+            <Box flex={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
@@ -1395,23 +2140,23 @@ export default function CreateRequest() {
                     disableInvalidDates(day, detail.toDate, detail.toDate)
                   }
                   label={t("from")}
-                  disabled={
-                    (detail.name === "Account number" &&
-                      detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
-                      detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
-                      detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
-                      detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)
-                      ? true
-                      : false
-                  }
+                  // disabled={
+                  //   (detail.name === "Account number" &&
+                  //     detail.accountNo.length < 1) ||
+                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.name === "Credit Card" &&
+                  //     detail.creditCardNo.length < 1) ||
+                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.name === "Debit Card" &&
+                  //     detail.debitCard.length < 1) ||
+                  //   (detail.name === "Mobile No." &&
+                  //     detail.mobileNo.length < 1) ||
+                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //     ? true
+                  //     : false
+                  // }
                   value={
                     detail.fromDate === ""
                       ? null
@@ -1431,12 +2176,13 @@ export default function CreateRequest() {
                       reportIndex,
                       detailIndex,
                       detailName,
-                      detail.toDate
+                      detail.toDate,
+                      reportName
                     )
                   }
                 />
-                {
-                  // detail.fromDate !== "" ? validatedHelperText("Dated") :
+                {/* {
+                  // detail.fromDate !== "" ? datePickerHelper("Dated") :
                   ((detail.name === "Account number" &&
                     detail.accountNo.length < 16) ||
                     (detail.name === "Email ID" && detail.email.length < 12) ||
@@ -1455,7 +2201,7 @@ export default function CreateRequest() {
                     : ((detail.name === "Account number" &&
                         detail.accountNo.length === 16) ||
                         (detail.name === "Email ID" &&
-                          detail.email.length >= 12 &&
+                          detail.email.length > 02 &&
                           detail.email.length <= 320) ||
                         (detail.name === "PAN" && detail.panNo.length === 10) ||
                         (detail.name === "Credit Card" &&
@@ -1472,35 +2218,35 @@ export default function CreateRequest() {
                       detail.fromDate === ""
                     ? customFormText("If needed, select from date", "grey", 1)
                     : detail.fromDate !== ""
-                    ? validatedHelperText("Dated")
+                    ? datePickerHelper()
                     : ""
-                }
+                } */}
               </LocalizationProvider>
             </Box>
 
-            <Box flex={1} sx={{ cursor: "pointer" }}>
+            <Box flex={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
                   className="date-picker"
                   label={t("to")}
-                  disabled={
-                    (detail.name === "Account number" &&
-                      detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
-                      detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
-                      detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
-                      detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)
-                      ? true
-                      : false
-                  }
+                  // disabled={
+                  //   (detail.name === "Account number" &&
+                  //     detail.accountNo.length < 1) ||
+                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.name === "Credit Card" &&
+                  //     detail.creditCardNo.length < 1) ||
+                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.name === "Debit Card" &&
+                  //     detail.debitCard.length < 1) ||
+                  //   (detail.name === "Mobile No." &&
+                  //     detail.mobileNo.length < 1) ||
+                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //     ? true
+                  //     : false
+                  // }
                   value={
                     detail.toDate === ""
                       ? null
@@ -1526,12 +2272,13 @@ export default function CreateRequest() {
                       reportIndex,
                       detailIndex,
                       detailName,
-                      detail.fromDate
+                      detail.fromDate,
+                      reportName
                     )
                   }
                 />
-                {
-                  // detail.fromDate !== "" ? validatedHelperText("Dated") :
+                {/* {
+                  // detail.fromDate !== "" ? datePickerHelper("Dated") :
                   ((detail.name === "Account number" &&
                     detail.accountNo.length < 16) ||
                     (detail.name === "Email ID" && detail.email.length < 12) ||
@@ -1550,7 +2297,7 @@ export default function CreateRequest() {
                     : ((detail.name === "Account number" &&
                         detail.accountNo.length === 16) ||
                         (detail.name === "Email ID" &&
-                          detail.email.length >= 12 &&
+                          detail.email.length > 02 &&
                           detail.email.length <= 320) ||
                         (detail.name === "PAN" && detail.panNo.length === 10) ||
                         (detail.name === "Credit Card" &&
@@ -1567,9 +2314,9 @@ export default function CreateRequest() {
                       detail.toDate === ""
                     ? customFormText("If needed, select to date", "grey", 1)
                     : detail.toDate !== ""
-                    ? validatedHelperText("Dated")
+                    ? datePickerHelper("Dated")
                     : ""
-                }
+                } */}
               </LocalizationProvider>
             </Box>
           </Box>
@@ -1579,17 +2326,17 @@ export default function CreateRequest() {
           <FormControl
             variant="outlined"
             margin="none"
-            sx={{ width: "19.85%", marginLeft: "0%" }}
+            className="iplogs-mobileno-input"
           >
             <TextField
               sx={
-                detail.mobileNo.length === 10
+                detail.mobileNo.length > 1
                   ? inputControl.validatedTextfield
                   : inputControl.textfield
               }
               data-testid={`mobileno-input-${detailIndex}`}
               InputLabelProps={
-                detail.mobileNo.length === 10
+                detail.mobileNo.length > 1
                   ? inputControl.validatedInputLabelProps
                   : inputControl.inputLabelProps
               }
@@ -1597,14 +2344,16 @@ export default function CreateRequest() {
                 style: {
                   fontSize: "0.88rem",
                   height: "0.6rem",
-                  // backgroundColor : "blue"
                 },
-                maxLength: 10,
+                // maxLength: 10,
               }}
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start" sx={{ opacity: 0.85 }}>
-                    <Typography sx={{ fontSize: "0.88rem" }} component="span">
+                  <InputAdornment
+                    position="start"
+                    className="iplogmobileno-adornment"
+                  >
+                    <Typography fontSize="0.88rem" component="span">
                       +91
                     </Typography>
                   </InputAdornment>
@@ -1612,36 +2361,36 @@ export default function CreateRequest() {
               }}
               placeholder="Enter Mobile No."
               className="number-box"
-              helperText={
-                detail.mobileNo.length < 10
-                  ? customFormText(
-                      t("only10Characters"),
+              // helperText={
+              //   detail.mobileNo.length < 10
+              //     ? customFormText(
+              //         t("only10Characters"),
 
-                      "grey",
-                      1
-                    )
-                  : validatedDetail()
-              }
+              //         "grey",
+              //         1
+              //       )
+              //     : validatedDetail()
+              // }
               value={detail.mobileNo}
+              // value={`${detailIndex} - ${detail.subRequest}`}
               autoComplete="off"
-              style={{ fontSize: "0.88rem" }}
               label="Mobile No."
-              disabled={
-                (detail.name === "Account number" &&
-                  detail.accountNo.length < 16) ||
-                (detail.name === "Email ID" && detail.email.length < 12) ||
-                (detail.name === "PAN" && detail.panNo.length < 10) ||
-                (detail.name === "Credit Card" &&
-                  detail.creditCardNo.length < 16) ||
-                (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                (detail.name === "Debit Card" &&
-                  detail.debitCard.length < 16) ||
-                (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-                (detail.name === "RRN" && detail.rrn.length < 12) ||
-                (detail.name === "CRN" && detail.crnNo.length < 10)
-                  ? true
-                  : false
-              }
+              // disabled={
+              //   (detail.name === "Account number" &&
+              //     detail.accountNo.length < 1) ||
+              //   (detail.name === "Email ID" && detail.email.length < 1) ||
+              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
+              //   (detail.name === "Credit Card" &&
+              //     detail.creditCardNo.length < 1) ||
+              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+              //   (detail.name === "Debit Card" &&
+              //     detail.debitCard.length < 1) ||
+              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
+              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
+              //   (detail.name === "CRN" && detail.crnNo.length < 1)
+              //     ? true
+              //     : false
+              // }
               margin="none"
               onChange={(e) =>
                 handleMobileNoValue(
@@ -1652,16 +2401,10 @@ export default function CreateRequest() {
                   reportName
                 )
               }
-              // sx={{ borderStyle: "solid",
-              //   borderColor:
-              //     detail.mobileNo === ''
-              //       ? "rgba(128, 128, 128, 0.36)"
-              //       : "rgba(128, 128, 128, 0.74)",
-              //   borderWidth: "1px"}}
-              // type="tel"
-              // inputMode="tel"
-              type="text"
-              inputMode="text"
+              type="tel"
+              inputMode="tel"
+              // type="text"
+              // inputMode="text"
               color="primary"
             />
           </FormControl>
@@ -1675,17 +2418,17 @@ export default function CreateRequest() {
               <FormControl
                 variant="outlined"
                 margin="none"
-                sx={{ width: "57%" }}
+                className="single-rrn-field"
               >
                 <TextField
                   sx={
-                    detail.amount.length >= 1
+                    detail.amount.length > 0
                       ? inputControl.validatedTextfield
                       : inputControl.textfield
                   }
                   data-testid={`amount-detail-${detailIndex}`}
                   InputLabelProps={
-                    detail.amount.length >= 1
+                    detail.amount.length > 0
                       ? inputControl.validatedInputLabelProps
                       : inputControl.inputLabelProps
                   }
@@ -1693,31 +2436,24 @@ export default function CreateRequest() {
                     style: {
                       fontSize: "0.88rem",
                       height: "0.6rem",
-                      // backgroundColor : "blue"
                     },
-                    maxLength: 6,
+                    // maxLength: 6,
                   }}
                   placeholder="Enter Amount"
-                  disabled={
-                    detail.rrn === "" || detail.rrn.length === 0 ? true : false
-                  }
+                  // disabled={
+                  //   detail.rrn === "" || detail.rrn.length === 0 ? true : false
+                  // }
                   className="selected-param-box-3"
                   value={detail.amount.length === 0 ? "" : detail.amount}
-                  helperText={
-                    detail.rrn.length < 12
-                      ? ""
-                      : detail.rrn.length === 12 && detail.amount.length === 0
-                      ? t("ifNeededAmountMustBe")
-                      : validatedDetail()
-                  }
+                  // helperText={
+                  //   detail.rrn.length < 12
+                  //     ? ""
+                  //     : detail.rrn.length === 12 && detail.amount.length === 0
+                  //     ? t("ifNeededAmountMustBe")
+                  //     : validatedDetail()
+                  // }
                   autoComplete="off"
-                  FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
-                  style={{
-                    margin: "0rem 0rem 0rem 0rem",
-                    // height: "5.5vh",
-                    fontSize: "0.88rem",
-                    width: "100%",
-                  }}
+                  // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
                   label="Amount"
                   margin="none"
                   onChange={(e) =>
@@ -1734,17 +2470,17 @@ export default function CreateRequest() {
                 />
               </FormControl>
 
-              <Box sx={{ width: "40%" }}>
+              <Box flex={1}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     format="DD-MM-YYYY"
                     label={t("date")}
                     data-testid={`rrn-datepicker-${detailIndex}`}
-                    disabled={
-                      detail.rrn === "" || detail.rrn.length === 0
-                        ? true
-                        : false
-                    }
+                    // disabled={
+                    //   detail.rrn === "" || detail.rrn.length === 0
+                    //     ? true
+                    //     : false
+                    // }
                     value={
                       detail.fromDate === ""
                         ? null
@@ -1752,55 +2488,52 @@ export default function CreateRequest() {
                     }
                     defaultValue={dayjs.Dayjs}
                     maxDate={currentDate}
-                    slotProps={datePickerControl.slotProps}
+                    slotProps={
+                      detail.fromDate === ""
+                        ? datePickerControl.slotProps
+                        : datePickerControl.validatedSlotProps
+                    }
                     sx={datePickerControl.sx}
                     onChange={(date) =>
                       handleDate(date, reportIndex, detailIndex, detailName)
                     }
                   />
-                  {detail.fromDate !== ""
-                    ? validatedHelperText("Dated")
+                  {/* {detail.fromDate !== ""
+                    ? datePickerHelper()
                     : detail.rrn.length === 12
                     ? customFormText(t("ifNeededSelectDate"), "grey", 1)
                     : detail.fromDate === "" && detail.rrn.length === 12
                     ? customFormText(t("ifNeededSelectDate"), "grey", 1)
-                    : ""}
+                    : ""} */}
                 </LocalizationProvider>
               </Box>
             </Box>
           )}
 
         {reportName === "Statement in PDF/Excel" && (
-          <FormControl
-            variant="standard"
-            sx={{
-              width: "12%",
-              marginLeft: "0%",
-              backgroundColor: "transparent",
-            }}
-          >
+          <FormControl className="report-type-dropdown" size="medium">
             <Select
               id="report-type-dropdown"
               value={detail.type}
               label="Type"
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
-              disabled={
-                (detail.name === "Account number" &&
-                  detail.accountNo.length < 16) ||
-                (detail.name === "Email ID" && detail.email.length < 12) ||
-                (detail.name === "PAN" && detail.panNo.length < 10) ||
-                (detail.name === "Credit Card" &&
-                  detail.creditCardNo.length < 16) ||
-                (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                (detail.name === "Debit Card" &&
-                  detail.debitCard.length < 16) ||
-                (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-                (detail.name === "RRN" && detail.rrn.length < 12) ||
-                (detail.name === "CRN" && detail.crnNo.length < 10)
-                  ? true
-                  : false
-              }
+              // disabled={
+              //   (detail.name === "Account number" &&
+              //     detail.accountNo.length < 1) ||
+              //   (detail.name === "Email ID" && detail.email.length < 1) ||
+              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
+              //   (detail.name === "Credit Card" &&
+              //     detail.creditCardNo.length < 1) ||
+              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+              //   (detail.name === "Debit Card" &&
+              //     detail.debitCard.length < 1) ||
+              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
+              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
+              //   (detail.name === "CRN" && detail.crnNo.length < 1)
+              //     ? true
+              //     : false
+              // }
               onChange={(e) =>
                 handleReportType(
                   e.target.value.toLowerCase(),
@@ -1809,7 +2542,6 @@ export default function CreateRequest() {
                   detailName
                 )
               }
-              variant="standard"
               sx={
                 detail.type === ""
                   ? SelectProps.containerProps
@@ -1817,11 +2549,7 @@ export default function CreateRequest() {
               }
               input={<OutlinedInput fullWidth={true} />}
               IconComponent={(props) => (
-                <KeyboardArrowDownOutlinedIcon
-                  className="reports-type-dropdownicon"
-                  sx={{ fontSize: "1.4rem", color: "rgba(115, 115, 115, 1)" }}
-                  {...props}
-                />
+                <KeyboardArrowDownOutlinedIcon {...props} />
               )}
               renderValue={(type) =>
                 type.toLowerCase() !== "pdf" && type.toLowerCase() !== "excel"
@@ -1833,15 +2561,13 @@ export default function CreateRequest() {
                   : ""
               }
               MenuProps={SelectProps.TYPE_SELECT_PROPS}
-              inputProps={{ "aria-label": "Without label" }}
+              inputProps={{ "aria-label": "Report Type Dropdown" }}
               autoWidth={false}
               style={{
-                display: "flex",
-                alignItems: "center",
-                height: "2.65rem",
-                fontSize: "0.88rem",
+                // fontSize: "0.88rem",
                 color: detail.type === "" ? "rgba(0, 0, 0, 0.49)" : "black",
               }}
+              className="report-type-selectbox"
               placeholder={t("type")}
             >
               {availableReportTypes.map((type, typeIndex) => (
@@ -1849,19 +2575,10 @@ export default function CreateRequest() {
                   key={type}
                   data-testid={`type-dropdown-menuitem-${typeIndex}`}
                   value={type}
-                  style={{
-                    display: "flex",
-                    border: "0px solid #cdcdcd",
-                    width: "100%",
-                    height: "1.8rem",
-                    alignItems: "left",
-                    borderRadius: "4px",
-                    backgroundColor: "transparent",
-                  }}
+                  className="type-dropdown-menuitem"
                 >
                   <ListItemText
                     primary={type}
-                    style={{ padding: "0rem" }}
                     color="black"
                     inputMode="text"
                     primaryTypographyProps={{ fontSize: "0.825rem" }}
@@ -1869,7 +2586,7 @@ export default function CreateRequest() {
                 </MenuItem>
               ))}
             </Select>
-            {(detail.name === "Account number" &&
+            {/* {(detail.name === "Account number" &&
               detail.accountNo.length < 16) ||
             (detail.name === "Email ID" && detail.email.length < 12) ||
             (detail.name === "PAN" && detail.panNo.length < 10) ||
@@ -1882,8 +2599,12 @@ export default function CreateRequest() {
             (detail.name === "CRN" && detail.crnNo.length < 10)
               ? customFormText("")
               : detail.type === ""
-              ? customFormText("select report type", "rgb(92, 84, 112)", 1)
-              : validatedHelperText("Selected")}
+              ? customFormText(
+                  "select report type",
+                  "rgba(92, 84, 112, 0.75)",
+                  1
+                )
+              : datePickerHelper()} */}
           </FormControl>
         )}
 
@@ -1892,68 +2613,70 @@ export default function CreateRequest() {
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
             disabled={
-              reportsState[reportIndex][detailName].length === 1 ? true : false
+              reportName === "IP Logs" && detailIndex < 3
+                ? true
+                : reportsState[reportIndex][detailName].length === 1
+                ? true
+                : false
             }
             style={{
               marginLeft:
-                reportName === "IP Logs" && detailName === "mobileNoDetails"
-                  ? "2%"
+                reportName ===
+                  "Beneficiary details for Single IMPS transactions" ||
+                reportName === "Beneficiary details for Single UPI transactions"
+                  ? "4.4%"
                   : "0%",
               opacity:
-                reportsState[reportIndex][detailName].length === 1 ? 0.25 : 1,
+                reportName === "IP Logs" && detailIndex < 3
+                  ? 0.25
+                  : reportsState[reportIndex][detailName].length === 1
+                  ? 0.25
+                  : 1,
             }}
-            onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
+            onClick={() =>
+              deleteDetail(reportIndex, detailIndex, detailName, reportName)
+            }
           >
             <RemoveCircleOutlineRoundedIcon
-              sx={{
-                color: "red",
-                alignSelf: "center",
-                justifySelf: "center",
-                fontSize: "2.35rem",
-              }}
+              className="remove-icon"
+              fontSize="2.35rem"
             />
           </Button>
         )}
 
-        {/* <Box sx={{ display : "flex",flexDirection : "row",marginLeft : "0.55rem"}}> */}
         {detailIndex === reportsState[reportIndex][detailName].length - 1 && (
           <Button
             className="add-remove-button"
             data-testid={`add-button-${detailIndex}`}
             style={{
-              marginLeft:
-                reportName === "IP Logs" && detailName === "mobileNoDetails"
-                  ? "2%"
-                  : "0%",
               opacity:
                 (detail.name === "Account number" &&
-                  detail.accountNo.length < 16) ||
-                (detail.name === "Email ID" && detail.email.length < 12) ||
-                (detail.name === "PAN" && detail.panNo.length < 10) ||
+                  detail.accountNo.length < 1) ||
+                (detail.name === "Email ID" && detail.email.length < 1) ||
+                (detail.name === "PAN" && detail.panNo.length < 1) ||
                 (detail.name === "Credit Card" &&
-                  detail.creditCardNo.length < 16) ||
-                (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                (detail.name === "Debit Card" &&
-                  detail.debitCard.length < 16) ||
-                (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-                (detail.name === "RRN" && detail.rrn.length < 12) ||
-                (detail.name === "CRN" && detail.crnNo.length < 10) ||
+                  detail.creditCardNo.length < 1) ||
+                (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+                (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
+                (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
+                (detail.name === "RRN" && detail.rrn.length < 1) ||
+                (detail.name === "CRN" && detail.crnNo.length < 1) ||
                 detail.type === ""
                   ? 0.25
                   : 1,
             }}
             disabled={
               (detail.name === "Account number" &&
-                detail.accountNo.length < 16) ||
-              (detail.name === "Email ID" && detail.email.length < 12) ||
-              (detail.name === "PAN" && detail.panNo.length < 10) ||
+                detail.accountNo.length < 1) ||
+              (detail.name === "Email ID" && detail.email.length < 1) ||
+              (detail.name === "PAN" && detail.panNo.length < 1) ||
               (detail.name === "Credit Card" &&
-                detail.creditCardNo.length < 16) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-              (detail.name === "RRN" && detail.rrn.length < 12) ||
-              (detail.name === "CRN" && detail.crnNo.length < 10) ||
+                detail.creditCardNo.length < 1) ||
+              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
+              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
+              (detail.name === "RRN" && detail.rrn.length < 1) ||
+              (detail.name === "CRN" && detail.crnNo.length < 1) ||
               detail.type === ""
                 ? true
                 : false
@@ -1963,79 +2686,13 @@ export default function CreateRequest() {
             }
           >
             <AddCircleOutlineRoundedIcon
-              sx={{
-                color: "red",
-                alignSelf: "center",
-                justifySelf: "center",
-                fontSize: "2.25rem",
-              }}
+              className="add-icon"
+              fontSize="2.25rem"
             />
           </Button>
         )}
-        {/* </Box> */}
       </Box>
     ));
-  //     {detailIndex === reportsState[reportIndex][detailName].length - 1 ||
-  //     reportsState[reportIndex][detailName].length === 1 ? (
-  //       <Button
-  //         className="add-remove-button"
-  //         data-testid={`add-button-${detailIndex}`}
-  //         style={{
-  //           marginLeft:
-  //             reportName === "IP Logs" && detailName === "mobileNoDetails"
-  //               ? "2%"
-  //               : "0%",
-  //           opacity:
-  //             detail.value === "" ||
-  //             detail.value === 0 ||
-  //             detail.type === ""
-  //               ? 0.5
-  //               : 1,
-  //         }}
-  //         disabled={
-  //           detail.value === "" ||
-  //           detail.value === 0 ||
-  //           detail.type === ""
-  //             ? true
-  //             : false
-  //         }
-  //         onClick={() =>
-  //           addDetail(reportIndex, detailName, param, reportName)
-  //         }
-  //       >
-  //         <AddCircleOutlineRoundedIcon
-  //           sx={{
-  //             color: "red",
-  //             alignSelf: "center",
-  //             justifySelf: "center",
-  //             fontSize: "2.25rem",
-  //           }}
-  //         />
-  //       </Button>
-  //     ) : (
-  //       <Button
-  //         className="add-remove-button"
-  //         data-testid={`delete-button-${detailIndex}`}
-  //         style={{
-  //           marginLeft:
-  //             reportName === "IP Logs" && detailName === "mobileNoDetails"
-  //               ? "2%"
-  //               : "0%",
-  //         }}
-  //         onClick={() => deleteDetail(reportIndex, detailIndex, detailName)}
-  //       >
-  //         <RemoveCircleOutlineRoundedIcon
-  //           sx={{
-  //             color: "red",
-  //             alignSelf: "center",
-  //             justifySelf: "center",
-  //             fontSize: "2.35rem",
-  //           }}
-  //         />
-  //       </Button>
-  //     )}
-  //   </Box>
-  // ));
 
   const showPreview = (
     detailsArray,
@@ -2056,33 +2713,22 @@ export default function CreateRequest() {
           detail.debitCard.length > 0 ||
           detail.aadhar.length > 0) && (
           <>
-            {/* { updateDetailed() } */}
             <Box
               className="preview-data"
-              sx={{
-                // backgroundColor : "blue",
-                flex: 1,
-                justifyContent:
-                  // reportName ===
-                  //   "Beneficiary details for Single IMPS transactions" ||
-                  // reportName ===
-                  //   "Beneficiary details for Single UPI transactions" ||
-                  // (reportName === "IP Logs" &&
-                  //   detail.fromDate === "" &&
-                  //   detail.toDate === "") ||
-                  // (reportName === "IP Logs" && detail.mobileNo.length === 0) ||
-                  // (reportName === "Statement in PDF/Excel" &&
-                  //   detail.fromDate === "" &&
-                  //   detail.toDate === "")
-                  //   ?
-                  "space-evenly",
-                // :
-                // "space-between",
-              }}
+              justifyContent={
+                reportName === "Device details" ? "flex-start" : "space-evenly"
+              }
+              display={
+                (reportName === "IP Logs" &&
+                  detail.subRequest === "IPLastLogin") ||
+                (reportName === "IP Logs" && detail.subRequest === "IPLogTxn")
+                  ? "none"
+                  : "flex"
+              }
+              marginLeft={reportName === "Device details" ? "1rem" : "0rem"}
             >
               <Box
                 className="detail-input"
-                sx={{ minWidth: "13.5rem", maxWidth: "13.5rem" }}
                 display={
                   detail.accountNo.length ||
                   detail.panNo.length > 0 ||
@@ -2096,24 +2742,23 @@ export default function CreateRequest() {
                     ? "block"
                     : "none"
                 }
-                // sx={{ minWidth: "12rem", maxWidth: "12rem" }}
               >
-                <span className="preview-text" style={{ fontWeight: 500 }}>{`${
+                <Typography sx={previewProps.name} component="span">{`${
                   detail.name === "Account number"
                     ? "Acc no."
                     : detail.name === "Email ID"
                     ? "Email"
                     : detail.name
-                }  : `}</span>
+                }  : `}</Typography>
                 {detail.name === "Email ID" ? (
                   <InputBase
                     readOnly={true}
                     multiline={true}
                     value={detail.email}
-                    sx={{ fontSize: "0.88rem", width: "75.25%" }}
+                    className="preview-email"
                   />
                 ) : (
-                  <span className="preview-text">
+                  <Typography sx={previewProps.value} component="span">
                     {detail.name === "Account number"
                       ? detail.accountNo
                       : detail.name === "Email ID"
@@ -2133,7 +2778,7 @@ export default function CreateRequest() {
                       : detail.name === "CRN"
                       ? detail.crnNo
                       : ""}
-                  </span>
+                  </Typography>
                 )}
               </Box>
 
@@ -2152,35 +2797,22 @@ export default function CreateRequest() {
                 (detailName === "RRNdetails" &&
                   reportName ===
                     "Beneficiary details for Bulk UPI transactions")) && (
-                // (detail.fromDate !== "" || detail.toDate !== "")
-                // &&
-                <Box
-                  className="detail-range"
-                  sx={{ minWidth: "12.5rem", maxWidth: "12.5rem" }}
-                  // // display={detail.fromDate === "" && detail.toDate === "" ? "none" : "block"}
-                  // display="none"
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      gap: "0.15rem",
-                    }}
-                  >
-                    <span className="preview-text" style={{ fontWeight: 500 }}>
+                <Box className="detail-range">
+                  <Box className="preview-range">
+                    <Typography sx={previewProps.name} component="span">
                       Date :{" "}
-                    </span>
+                    </Typography>
                   </Box>
 
-                  <span className="preview-text">
+                  <Typography sx={previewProps.value} component="span">
                     {detail.fromDate !== ""
                       ? `${detail.fromDate} - `
                       : `___________ - `}
-                  </span>
+                  </Typography>
 
-                  <span className="preview-text">
+                  <Typography sx={previewProps.value} component="span">
                     {detail.toDate !== "" ? `${detail.toDate}` : `____________`}
-                  </span>
+                  </Typography>
                 </Box>
               )}
 
@@ -2190,75 +2822,59 @@ export default function CreateRequest() {
                 (detailName === "RRNdetails" &&
                   reportName ===
                     "Beneficiary details for Single UPI transactions")) && (
-                <Box className="detail-range" sx={{ gap: "5rem" }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      minWidth: "7.5rem",
-                      maxWidth: "7.5rem",
-                      gap: "0.15rem",
-                    }}
-                  >
-                    <span className="preview-text" style={{ fontWeight: 500 }}>
+                <Box className="rrn-preview">
+                  <Box className="rrn-subfields">
+                    <Typography sx={previewProps.name} component="span">
                       Amount :{" "}
-                    </span>
-                    <span className="preview-text">
+                    </Typography>
+
+                    <Typography sx={previewProps.value} component="span">
                       {detail.amount.length === 0 ? "0" : detail.amount}
-                    </span>
+                    </Typography>
                   </Box>
 
-                  {detail.fromDate !== "" && (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "0.15rem",
-                      }}
-                    >
-                      <span
-                        className="preview-text"
-                        style={{ fontWeight: 500 }}
-                      >
-                        Date :{" "}
-                      </span>
-                      <span className="preview-text">{detail.fromDate}</span>
-                    </Box>
-                  )}
+                  {/* {detail.fromDate !== "" && ( */}
+                  <Box className="rrn-subfields">
+                    <Typography sx={previewProps.name} component="span">
+                      Date :{" "}
+                    </Typography>
+
+                    <Typography sx={previewProps.value} component="span">
+                      {detail.fromDate !== ""
+                        ? `${detail.fromDate}`
+                        : `___________`}
+                    </Typography>
+                  </Box>
+                  {/* )} */}
                 </Box>
               )}
 
               {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
-                <Box
-                  sx={{ minWidth: "11.5rem", maxWidth: "11.5rem" }}
-                  // display={
-                  //   detail.mobileNo === "" || detail.mobileNo.length === 0
-                  //     ? "none"
-                  //     : "block"
-                  // }
-                >
-                  <span
-                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                    className="preview-text"
+                <Box className="mobileno-preview">
+                  <Typography
+                    sx={previewProps.name}
+                    marginLeft="1.75rem"
+                    component="span"
                   >
                     Mobile No. :{" "}
-                  </span>
-                  <span className="preview-text">{detail.mobileNo}</span>
+                  </Typography>
+
+                  <Typography sx={previewProps.value} component="span">
+                    {detail.mobileNo}
+                  </Typography>
                 </Box>
               )}
 
               {reportName === "Statement in PDF/Excel" && (
-                <Box
-                  sx={{ minWidth: "6.5rem", maxWidth: "6.5rem" }}
-                  //  display={detail.type === "" ? "none" : "block"}
-                >
-                  <span
-                    style={{ marginLeft: "0.92rem", fontWeight: 500 }}
-                    className="preview-text"
+                <Box className="type-preview">
+                  <Typography
+                    sx={previewProps.name}
+                    marginLeft="1rem"
+                    component="span"
                   >
                     Type :{" "}
-                  </span>
-                  <span className="preview-text">
+                  </Typography>
+                  <Typography sx={previewProps.value} component="span">
                     {detail.type === ""
                       ? ""
                       : detail.type === "pdf"
@@ -2266,7 +2882,7 @@ export default function CreateRequest() {
                       : detail.type === "excel"
                       ? "Excel"
                       : ""}
-                  </span>
+                  </Typography>
                 </Box>
               )}
             </Box>
@@ -2282,7 +2898,7 @@ export default function CreateRequest() {
   const [deviceDetails, setDeviceDetails] = useState([]);
   const [ipLogs, setIpLogs] = useState([]);
 
-  const configurePayload = (callback) => {
+  useEffect(() => {
     setReportDetails((prevState) => {
       const updatedReportState = reportsState.map((report) => {
         return {
@@ -2302,23 +2918,13 @@ export default function CreateRequest() {
         };
       });
 
-      if (callback) callback(updatedReportState);
-
       return updatedReportState;
     });
-  };
+  }, [reportsState]);
 
-  const individualReportHandler = (updatedReportState) => {
-    const deviceDetailData = updatedReportState.filter(
-      (report) => report.reportName === "Device details"
-    );
-    setDeviceDetails(deviceDetailData);
+  // const individualReportHandler = (updatedReportState) => {
 
-    const ipLogData = updatedReportState.filter(
-      (report) => report.reportName === "IP Logs"
-    );
-    setIpLogs(ipLogData);
-  };
+  // };
 
   const isValidDisplay =
     reportsState.every((state, index) =>
@@ -2399,60 +3005,76 @@ export default function CreateRequest() {
       (state.accountNumberDetails.length > 0 &&
         state.accountNumberDetails.every(
           (detail, subIndex) =>
-            detail.accountNo.length === 16 && detail.type !== ""
+            detail.accountNo.length > 1 && detail.type !== ""
         )) ||
       (state.PANdetails.length > 0 &&
         state.PANdetails.every(
-          (detail, subIndex) => detail.panNo.length === 10 && detail.type !== ""
+          (detail, subIndex) => detail.panNo.length > 1 && detail.type !== ""
         )) ||
       (state.CRNdetails.length > 0 &&
         state.CRNdetails.every(
-          (detail, subIndex) => detail.crnNo.length === 10 && detail.type !== ""
+          (detail, subIndex) => detail.crnNo.length > 1 && detail.type !== ""
         )) ||
       (state.RRNdetails.length > 0 &&
         state.RRNdetails.every(
-          (detail, subIndex) => detail.rrn.length === 12 && detail.type !== ""
+          (detail, subIndex) => detail.rrn.length > 1 && detail.type !== ""
         )) ||
       (state.aadharDetails.length > 0 &&
         state.aadharDetails.every(
-          (detail, subIndex) =>
-            detail.aadhar.length === 12 && detail.type !== ""
+          (detail, subIndex) => detail.aadhar.length > 1 && detail.type !== ""
         )) ||
       (state.mobileNoDetails.length > 0 &&
         state.mobileNoDetails.every(
-          (detail, subIndex) =>
-            detail.mobileNo.length === 10 && detail.type !== ""
+          (detail, subIndex) => detail.mobileNo.length > 1 && detail.type !== ""
         )) ||
       (state.creditCardDetails.length > 0 &&
         state.creditCardDetails.every(
           (detail, subIndex) =>
-            detail.creditCardNo.length === 16 && detail.type !== ""
+            detail.creditCardNo.length > 1 && detail.type !== ""
         )) ||
       (state.debitCardDetails.length > 0 &&
         state.debitCardDetails.every(
           (detail, subIndex) =>
-            detail.debitCard.length === 16 && detail.type !== ""
+            detail.debitCard.length > 1 && detail.type !== ""
         )) ||
       (state.emailDetails.length > 0 &&
         state.emailDetails.every(
-          (detail, subIndex) => detail.email.length > 16 && detail.type !== ""
+          (detail, subIndex) => detail.email.length > 1 && detail.type !== ""
         ))
   );
 
-  const handleSubmit = () => {
-    configurePayload((updatedReportState) => {
-      individualReportHandler(updatedReportState);
-    });
+  // const deviceDetailsPayload = {
+  //   // ticketId: "",
+  //   ticketNumber: ticketNumber,
+  //   ticketDescription: ticketDescription,
+  //   status: "In-progress",
+  //   createdDate: reduxDate,
+  //   createdBy: Creator,
+  //   reportDetails: deviceDetails,
+  // };
 
+  const createRequestPayload = {
+    // ticketId: "",
+    ticketNumber: ticketNumber,
+    ticketDescription: ticketDescription,
+    status: "In-progress",
+    createdDate: reduxDate,
+    // createdBy: Creator,
+    createdBy: "User",
+    reportDetails: reportDetails,
+  };
+
+  const handleSubmit = () => {
     if (isValidReportData === false) {
       displayToast(
         "All Mandatory Fields must be non-empty!",
         3000,
-        "rgb(249, 228, 0)",
+        "aquamarine",
         "black",
         500
       );
     } else {
+      console.log("Payload", createRequestPayload);
       //Submit API Function
 
       //Error Block
@@ -2476,32 +3098,11 @@ export default function CreateRequest() {
   };
 
   // ////console.log("Valid Report Data", isValidReportData);
-  ////console.log("Spring Boot Payload", reportDetails);
-
-  const createRequestPayload = {
-    // ticketId: "",
-    ticketNumber: ticketNumber,
-    ticketDescription: ticketDescription,
-    status: "In-progress",
-    createdDate: reduxDate,
-    createdBy: Creator,
-    reportDetails: reportDetails,
-  };
-
-  // const deviceDetailsPayload = {
-  //   // ticketId: "",
-  //   ticketNumber: ticketNumber,
-  //   ticketDescription: ticketDescription,
-  //   status: "In-progress",
-  //   createdDate: reduxDate,
-  //   createdBy: Creator,
-  //   reportDetails: deviceDetails,
-  // };
+  //console.log("Spring Boot Payload", reportDetails);
+  console.log("Triple Reports State", reportsState);
 
   //console.log("Create Request Details array", createRequestPayload);
   //console.log("Device Details Array", deviceDetails);
-
-  console.log("New State", reportsState);
 
   return (
     <Provider store={store}>
@@ -2510,19 +3111,9 @@ export default function CreateRequest() {
       </Typography>
       <Box className="page" data-testid="create-request-page">
         <Box className="create-request-screen">
-          {/* <span style={{ fontWeight: "420", fontSize: "1.36rem" }}>
-          {t("createRequest")}
-        </span> */}
-
           <Box
             className="ticket-entry-section"
-            sx={{
-              minHeight: loading === true ? "10.275rem" : "auto",
-              padding:
-                ticketNumber.length === 10 && ticketDescription.length >= 10
-                  ? "1.25rem 1.5rem 0.6rem 1.5rem"
-                  : "1.25rem 1.5rem 1.15rem 1.5rem",
-            }}
+            minHeight={loading === true ? "10.275rem" : "auto"}
           >
             {loading === true ? (
               <Loader />
@@ -2539,30 +3130,29 @@ export default function CreateRequest() {
                     ) : ( */}
                     <TextField
                       sx={
-                        ticketNumber.length === 10
+                        ticketNumber.length > 1
                           ? inputControl.validatedTextfield
                           : inputControl.textfield
                       }
-                      helperText={
-                        ticketNumber.length < 10
-                          ? warningHelperText(t("only10Characters"), 1)
-                          : validatedDetail()
-                      }
+                      // helperText={
+                      //   ticketNumber.length < 10
+                      //     ? warningHelperText(t("only10Characters"), 1)
+                      //     : validatedDetail()
+                      // }
                       InputLabelProps={
-                        ticketNumber.length === 10
+                        ticketNumber.length > 1
                           ? inputControl.validatedInputLabelProps
                           : inputControl.inputLabelProps
                       }
-                      FormHelperTextProps={{
-                        sx: { color: "rgb(92, 84, 112)" },
-                      }}
+                      // FormHelperTextProps={{
+                      //   sx: { color: "rgb(92, 84, 112)" },
+                      // }}
                       inputProps={{
                         style: {
                           fontSize: "0.88rem",
                           height: "0.6rem",
-                          // backgroundColor : "blue"
                         },
-                        maxLength: 10,
+                        // maxLength: 10,
                       }}
                       data-testid="ticket-num-input"
                       placeholder={t("enterTicketNo")}
@@ -2570,13 +3160,13 @@ export default function CreateRequest() {
                       value={ticketNumber}
                       autoComplete="off"
                       size="medium"
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        height: "auto",
-                        fontSize: "0.88rem",
-                      }}
+                      // style={{
+                      //   margin: "0rem 0rem 0rem 0rem",
+                      //   height: "auto",
+                      //   fontSize: "0.88rem",
+                      // }}
                       label={t("ticketNo")}
-                      margin="dense"
+                      margin="none"
                       onChange={(e) => setTicketNumber(e.target.value)}
                       type="text"
                       required
@@ -2596,31 +3186,29 @@ export default function CreateRequest() {
                         descriptionFocused === true ? t("enterTicketDesc") : ""
                       }
                       variant="outlined"
-                      FormHelperTextProps={{
-                        sx: { color: "rgb(92, 84, 112)" },
-                      }}
-                      helperText={
-                        ticketNumber.length < 10
-                          ? ""
-                          : ticketNumber.length === 10 &&
-                            ticketDescription.length === 0
-                          ? warningHelperText(t("only1060Characters"), 1)
-                          : ticketDescription.length < 10
-                          ? warningHelperText(t("only1060Characters"), 1)
-                          : validatedDetail()
-                      }
+                      // FormHelperTextProps={{
+                      //   sx: { color: "rgb(92, 84, 112)" },
+                      // }}
+                      // helperText={
+                      //   ticketNumber.length < 10
+                      //     ? ""
+                      //     : ticketNumber.length === 10 &&
+                      //       ticketDescription.length === 0
+                      //     ?
+                      //     warningHelperText(t("only1060Characters"), 1)
+                      //     : ticketDescription.length < 10
+                      //     ? warningHelperText(t("only1060Characters"), 1)
+                      //     : validatedDetail()
+                      // }
                       required
                       label={t("ticketDesc")}
                       onFocus={() => {
-                        //////console.log('desc length',ticketDescription.length);
-                        //////console.log('desc rows',Math.ceil(ticketDescription.length / 59));
                         setDescriptionFocused(true);
                       }}
                       onBlur={() => setDescriptionFocused(false)}
                       multiline
-                      // multiline
                       sx={
-                        ticketDescription.length >= 10
+                        ticketDescription.length > 1
                           ? inputControl.validatedTextfield
                           : inputControl.textfield
                       }
@@ -2631,15 +3219,10 @@ export default function CreateRequest() {
                       fullWidth
                       inputProps={inputControl.textAreaProps}
                       InputLabelProps={
-                        ticketDescription.length >= 10
+                        ticketDescription.length > 1
                           ? inputControl.validatedTextAreaLabelProps
                           : inputControl.textAreaLabelProps
                       }
-                      style={{
-                        margin: "0rem 0rem 0rem 0rem",
-                        backgroundColor: "white",
-                        height: "auto",
-                      }}
                       margin="none"
                       // InputProps={{
                       //   inputComponent : 'textarea',
@@ -2650,7 +3233,7 @@ export default function CreateRequest() {
                       // }}
                       type="text"
                       inputMode="text"
-                      disabled={ticketNumber.length < 10 ? true : false}
+                      // disabled={ticketNumber.length < 1 ? true : false}
                       color="primary"
                       value={ticketDescription}
                       data-testid="ticket-descr-input"
@@ -2659,7 +3242,7 @@ export default function CreateRequest() {
                   </FormControl>
                 </Box>
 
-                <FormControl variant="standard" sx={{ width: "82.75%" }}>
+                <FormControl className="reports-box">
                   <Select
                     label="Reports Selection Dropdown"
                     name="reports-selection-dropdown"
@@ -2668,44 +3251,37 @@ export default function CreateRequest() {
                     multiple={true}
                     value={selectedReports}
                     displayEmpty
-                    disabled={
-                      ticketNumber.length < 10 || ticketDescription.length < 10
-                        ? true
-                        : false
-                    }
+                    // disabled={
+                    //   ticketNumber.length < 1 || ticketDescription.length < 1
+                    //     ? true
+                    //     : false
+                    // }
                     onChange={handleReportSelection}
-                    variant="standard"
+                    // variant="standard"
                     input={<OutlinedInput fullWidth={true} />}
                     IconComponent={(props) => (
                       <KeyboardArrowDownOutlinedIcon
-                        className="reports-type-dropdownicon"
-                        sx={{
-                          fontSize: "1.4rem",
-                          color: "rgba(115, 115, 115, 1)",
-                        }}
+                        className="select-icon"
                         {...props}
                       />
                     )}
                     renderValue={(reports) => {
                       if (reports.length === 0) {
                         return (
-                          <span
-                            style={{ opacity: 0.45 }}
+                          <Typography
+                            component="span"
+                            fontSize="95%"
+                            color="grey"
                             data-testid="reports-dropdown-input-initial"
                           >
                             {" "}
                             {t("statementsReportRequire")}
-                          </span>
+                          </Typography>
                         );
                       }
                       return (
                         <Input
-                          sx={{
-                            width: "99%",
-                            fontSize: "95%",
-                            textOverflow: "ellipsis",
-                            // overflow: "hidden",
-                          }}
+                          className="reports-dropdown-input-changed"
                           disableUnderline={true}
                           value={reports.join(" , ")}
                           data-testid="reports-dropdown-input-changed"
@@ -2720,13 +3296,7 @@ export default function CreateRequest() {
                     }
                     MenuProps={SelectProps.REPORT_SELECT_PROPS}
                     autoWidth={false}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "2.56rem",
-                      fontSize: "0.88rem",
-                      border: "none",
-                    }}
+                    className="reports-dropdown-box"
                     placeholder={t("statementsReportRequire")}
                   >
                     {requiredReportsData.map((report, index) => (
@@ -2734,65 +3304,42 @@ export default function CreateRequest() {
                         key={report}
                         value={report}
                         data-testid={`reports-selection-dropdown-menu-item-${index}`}
-                        style={{
-                          display: "flex",
-                          border: "1px solid #cdcdcd",
-                          width: "96.25%",
-                          margin: "1rem 0rem 1rem 1.25rem",
-                          height: "2.65rem",
-                          alignItems: "left",
-                          borderRadius: "4px",
-                          backgroundColor: "transparent",
-                          fontSize: "2px",
-                        }}
+                        className="reports-selection-dropdown-menu-item"
                       >
                         <Checkbox
                           size="medium"
+                          className="checkbox"
                           data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
                           icon={
-                            <CheckBoxOutlineBlankIcon
-                              sx={{ fontSize: "1.5rem" }}
-                            />
+                            <CheckBoxOutlineBlankIcon className="uncheck-icon" />
                           }
-                          // inputProps={{
-                          //   'data-testid' : `reports-selection-dropdown-menu-item-checkbox-${index}`
-                          // }}
                           checkedIcon={
-                            <CheckBoxOutlinedIcon
-                              className="check-icon"
-                              sx={{ fontSize: "1.5rem", color: "red" }}
-                            />
+                            <CheckBoxOutlinedIcon className="check-icon" />
                           }
-                          sx={{ containIntrinsicSize: "2px" }}
                           checked={selectedReports.indexOf(report) > -1}
                           color="primary"
-                          style={{
-                            marginLeft: "-0.88rem",
-                            backgroundColor: "transparent",
-                            fontSize: "2px",
-                          }}
                         />
                         <ListItemText
                           primary={report}
-                          data-testid="reports-selection-dropdown-menu-item-text"
-                          style={{ padding: "0.05rem 0rem 0rem 0rem" }}
-                          color="black"
+                          data-testid="reports-menu-listext"
+                          className="reports-menu-listext"
+                          // color="black"
                           inputMode="text"
                           primaryTypographyProps={{ fontSize: "0.825rem" }}
                         />
                       </MenuItem>
                     ))}
                   </Select>
-                  {selectedReports.length >= 1
-                    ? validatedHelperText("Selected")
+                  {/* {selectedReports.length > 0
+                    ? datePickerHelper("Selected")
                     : ticketNumber.length === 0 ||
                       ticketDescription.length === 0
                     ? () => {}
-                    : ticketNumber.length === 10 &&
-                      ticketDescription.length >= 10 &&
+                    : ticketNumber.length > 1 &&
+                      ticketDescription.length > 1 &&
                       selectedReports.length === 0
                     ? customFormText(t("selectReports"))
-                    : () => {}}
+                    : () => {}} */}
                 </FormControl>
               </>
             )}
@@ -2804,15 +3351,7 @@ export default function CreateRequest() {
               id="selected-reports-section"
               data-testid="selected-reports-section"
             >
-              <Typography
-                component="span"
-                sx={{
-                  fontSize: "1.1rem",
-                  fontFamily: "Roboto",
-                  fontWeight: "500",
-                }}
-                className="selected-reports-heading"
-              >
+              <Typography component="span" className="selected-section-heading">
                 {" "}
                 {t("selectedRequest")}
               </Typography>
@@ -2820,10 +3359,7 @@ export default function CreateRequest() {
               <Box>
                 {reportsState.length > 0 &&
                   reportsState.map((request, reportIndex) => (
-                    <Box
-                      key={reportIndex}
-                      sx={{ marginTop: "0.25rem", marginBottom: "1.65rem" }}
-                    >
+                    <Box key={reportIndex} className="selected-reports-content">
                       <Accordion
                         className="selected-report-view"
                         //  defaultExpanded={true}
@@ -2835,7 +3371,6 @@ export default function CreateRequest() {
                         //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
                         // }}
                         disableGutters
-                        sx={{ boxShadow: "none" }}
                         expanded={
                           reportsState[reportIndex]?.viewState === "Minimized"
                             ? false
@@ -2843,13 +3378,9 @@ export default function CreateRequest() {
                         }
                       >
                         <AccordionSummary
-                          sx={{ minHeight: "2.5rem", maxHeight: "2.75rem" }}
+                          className="selected-report-header"
                           expandIcon={
                             <ExpandCircleDownOutlinedIcon
-                              sx={{
-                                color: "rgba(95, 99, 104, 0.87)",
-                                fontSize: "1.6rem",
-                              }}
                               className="view-icon"
                               data-testid={`selected-report-detail-control-${reportIndex}`}
                               onClick={() => {
@@ -2864,11 +3395,13 @@ export default function CreateRequest() {
                               }}
                             />
                           }
-                          className="selected-report-header"
                         >
-                          <span className="selected-report-heading">
+                          <Typography
+                            className="selected-report-heading"
+                            component="span"
+                          >
                             {request.selectedReport}
-                          </span>
+                          </Typography>
                         </AccordionSummary>
 
                         <AccordionDetails
@@ -2878,17 +3411,13 @@ export default function CreateRequest() {
                               : false
                           }
                           data-testid={`selected-report-detail-${reportIndex}`}
-                          sx={{
-                            padding: 0,
-                            border: "1px solid rgba(205, 205, 205, 1)",
-                            borderWidth: "1px 0px 0px 0px",
-                          }}
+                          className="accordion-details"
                         >
                           <Box className="selected-report-details">
                             {reportsState[reportIndex] && (
                               <>
                                 <Box
-                                  sx={{ width: "100%" }}
+                                  width="100%"
                                   display={
                                     request.selectedReport ===
                                       "Beneficiary details for Single IMPS transactions" ||
@@ -2899,9 +3428,12 @@ export default function CreateRequest() {
                                   }
                                 >
                                   <FormControl
-                                    variant="standard"
+                                    // variant="standard"
                                     sx={{
-                                      width: "34%",
+                                      width:
+                                        request.selectedReport === "IP Logs"
+                                          ? "24%"
+                                          : "32%",
                                       marginBottom:
                                         reportsState[reportIndex].selectedParams
                                           .length === 0
@@ -2912,6 +3444,7 @@ export default function CreateRequest() {
                                     <Select
                                       label="Param Selection Dropdown"
                                       name="param-selection-dropdown"
+                                      className="param-selection-dropdown"
                                       role="combobox"
                                       id="param-selection-dropdown"
                                       data-testid={`param-dropdown-${reportIndex}`}
@@ -2939,44 +3472,34 @@ export default function CreateRequest() {
                                           request.selectedReport
                                         )
                                       }
-                                      variant="standard"
+                                      // variant="standard"
                                       input={
                                         <OutlinedInput
-                                          sx={{
-                                            alignItems: "center",
-                                            justifyContent: "space-around",
-                                            justifyItems: "left",
-                                          }}
+                                          className="param-display"
                                           role="combobox"
                                           fullWidth={false}
                                         />
                                       }
                                       IconComponent={(props) => (
                                         <KeyboardArrowDownOutlinedIcon
-                                          className="reports-type-dropdownicon"
-                                          sx={{
-                                            fontSize: "1.36rem",
-                                            color: "rgba(115, 115, 115, 1)",
-                                          }}
+                                          className="select-icon"
                                           {...props}
                                         />
                                       )}
                                       renderValue={(params) => {
                                         if (params.length === 0) {
                                           return (
-                                            <span style={{ opacity: 0.45 }}>
+                                            <Typography
+                                              component="span"
+                                              className="param-display-placeholder"
+                                            >
                                               {t("selectDetails")}
-                                            </span>
+                                            </Typography>
                                           );
                                         }
                                         return (
                                           <Input
-                                            sx={{
-                                              width: "99%",
-                                              fontSize: "95%",
-                                              textOverflow: "ellipsis",
-                                              // overflow: "hidden",
-                                            }}
+                                            className="selected-params-display"
                                             disableUnderline={true}
                                             data-testid={`param-dropdown-input-${reportIndex}`}
                                             value={params.join(" , ")}
@@ -2988,12 +3511,6 @@ export default function CreateRequest() {
                                         "aria-label": "Select Parameters",
                                       }}
                                       autoWidth={false}
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        height: "2.65rem",
-                                        fontSize: "0.88rem",
-                                      }}
                                       placeholder={t("selectDetails")}
                                     >
                                       {availableParameters.map(
@@ -3002,18 +3519,7 @@ export default function CreateRequest() {
                                             key={param}
                                             value={param}
                                             data-testid={`param-dropdown-menu-item-${paramIndex}`}
-                                            style={{
-                                              display: "flex",
-                                              borderStyle: "solid",
-                                              borderColor:
-                                                "rgba(232, 232, 232, 1)",
-                                              borderBottomWidth: "1.75px",
-                                              height: "2.36rem",
-                                              alignItems: "left",
-                                              borderRadius: "0px",
-                                              backgroundColor: "transparent",
-                                              fontSize: "2px",
-                                            }}
+                                            className="param-menu-item"
                                           >
                                             <Checkbox
                                               checked={
@@ -3025,31 +3531,17 @@ export default function CreateRequest() {
                                               }
                                               color="primary"
                                               data-testid={`param-dropdown-checkbox-${paramIndex}`}
-                                              style={{
-                                                marginLeft: "-0.88rem",
-                                                backgroundColor: "transparent",
-                                              }}
+                                              className="param-dropdown-checkbox"
                                               icon={
-                                                <CheckBoxOutlineBlankIcon
-                                                  sx={{ fontSize: "1.4rem" }}
-                                                />
+                                                <CheckBoxOutlineBlankIcon className="uncheck-icon" />
                                               }
                                               checkedIcon={
-                                                <CheckBoxOutlinedIcon
-                                                  className="check-icon"
-                                                  sx={{
-                                                    fontSize: "1.4rem",
-                                                    color: "red",
-                                                  }}
-                                                />
+                                                <CheckBoxOutlinedIcon className="check-icon" />
                                               }
                                             />
                                             <ListItemText
                                               primary={param}
-                                              style={{
-                                                padding:
-                                                  "0.15rem 0rem 0rem 0rem",
-                                              }}
+                                              className="param-menu-listext"
                                               data-testid={`param-dropdown-listitemtext-${paramIndex}`}
                                               color="black"
                                               inputMode="text"
@@ -3061,14 +3553,14 @@ export default function CreateRequest() {
                                         )
                                       )}
                                     </Select>
-                                    {reportsState[reportIndex].selectedParams
+                                    {/* {reportsState[reportIndex].selectedParams
                                       .length === 0
                                       ? customFormText(
                                           "",
                                           "rgb(92, 84, 112)",
                                           1
                                         )
-                                      : validatedHelperText("Selected")}
+                                      : datePickerHelper("")} */}
                                   </FormControl>
                                 </Box>
 
@@ -3082,11 +3574,11 @@ export default function CreateRequest() {
                                         "Beneficiary details for Single UPI transactions"
                                         ? "0rem"
                                         : "-2rem",
-                                    marginBottom:
-                                      reportsState[reportIndex].selectedParams
-                                        .length === 0
-                                        ? "1.5rem"
-                                        : "2.25rem",
+                                    // marginBottom:
+                                    //   reportsState[reportIndex].selectedParams
+                                    //     .length === 0
+                                    //     ? "1.5rem"
+                                    //     : "2.25rem",
                                   }}
                                 >
                                   {reportsState[
@@ -3220,9 +3712,7 @@ export default function CreateRequest() {
                   >
                     {" "}
                     <Typography
-                      fontFamily="Roboto"
-                      fontSize="0.92rem"
-                      fontWeight={600}
+                      className="submit-text"
                       color={isValidReportData === true ? "white" : "black"}
                     >
                       {t("submit")}
@@ -3252,27 +3742,19 @@ export default function CreateRequest() {
                     <Box className="preview-box">
                       <Box className="preview-header">
                         <Typography
-                          sx={{
-                            fontSize: "1.125rem",
-                            fontFamily: "Roboto",
-                            fontWeight: "500",
-                          }}
+                          className="preview-main-heading"
                           component="span"
                         >
                           {t("preview")}
                         </Typography>
                         <Button
                           title="Close Preview"
-                          style={{ background: "none", border: "none" }}
+                          className="close-preview-button"
                           onClick={() => setViewPreview(false)}
                         >
                           <CloseOutlinedIcon
                             name="close-preview"
                             className="close-preview-button"
-                            sx={{
-                              fontSize: "1.75rem",
-                              color: "rgba(95, 99, 104, 1)",
-                            }}
                           />
                         </Button>
                       </Box>
@@ -3284,32 +3766,14 @@ export default function CreateRequest() {
                           reportsState.map((request, reportIndex) => (
                             <Box className="preview-report" key={reportIndex}>
                               <Box className="preview-report-header">
-                                {/* <CheckBoxOutlinedIcon */}
-                                <CheckBoxOutlinedIcon className="check-icon" />
                                 <h3 className="preview-title">
                                   {request.selectedReport}
                                 </h3>
                               </Box>
 
-                              <Box
-                                sx={{
-                                  backgroundColor: "rgba(245, 248, 250, 1)",
-                                  width: "100%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  borderBottomLeftRadius: "4px",
-                                  borderBottomRightRadius: "4px",
-                                }}
-                              >
+                              <Box className="preview-detail-section">
                                 <Box
                                   className="preview-report-details"
-                                  sx={{
-                                    // flex: 1,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    backgroundColor: "rgba(245, 248, 250, 1)",
-                                  }}
                                   display={
                                     isValidDisplay === true ? "block" : "none"
                                   }

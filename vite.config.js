@@ -1,9 +1,15 @@
 import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
 import react from '@vitejs/plugin-react';
+import { config } from 'dotenv';
+
+config();
 
 export default defineConfig(() => {
   return {
+    define:{
+     'process.env': process.env
+    },
     plugins: [react()],
     build: {
       outDir: 'build',

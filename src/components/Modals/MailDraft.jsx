@@ -143,7 +143,7 @@ export default function MailDraft(props) {
               >
                 <FaRegCopy />
                 <div className="p-1"></div>
-                <span>Copy text</span>
+                <Typography component="span" fontWeight={500}>Copy text</Typography>
               </Button>
             </div>
           {/* </Typography> */}
