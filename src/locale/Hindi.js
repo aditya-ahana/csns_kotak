@@ -41,7 +41,7 @@ export const Hindi = {
   only10Characters: "केवल 10 अक्षर",
   ifNeededAmountMustBe: "यदि आवश्यक हो, तो राशि 1-6 अंक लंबी होनी चाहिए",
   ifNeededSelectDate: "यदि आवश्यक हो तो दिनांक चुनें",
-  only1060Characters: "केवल 10-60 अक्षर",
+  // only1060Characters: "केवल 10-60 अक्षर",
 
   // view request
   viewRequest: "अनुरोध देखें",

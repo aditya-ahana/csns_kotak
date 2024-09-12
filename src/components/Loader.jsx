@@ -16,17 +16,13 @@ export default function Loader(props) {
      }}
      data-testid="loader-modal"
     >
-      <Box sx={{  display:"flex",
-           backgroundColor :"rgba(248, 248, 253, 0.4)",
-           flex : 1,
-           height:"100vh",
-          alignItems: "center",
-          justifyContent : "center" }}>
+      <Box 
+        className="loader-container"
+      >
       <Lottie 
        animationData={LoadingAnimation}
        autoPlay
        className='loader-modal'
-       style={{ height : '27rem',display : "flex",alignSelf : "center",justifyContent : "center",backgroundColor : 'transparent',marginBottom : "3.6rem",}}
        open
        loop
       //  style={}     

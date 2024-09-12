@@ -6,6 +6,7 @@ import { Button, Typography } from "@mui/material";
 import { RiAddLargeFill } from "react-icons/ri";
 import Loader from "../../components/Loader";
 
+
 export default function Dashboard() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);

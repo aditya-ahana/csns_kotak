@@ -33,9 +33,9 @@ function Header() {
           <div className="p-3"></div>
           <FaRegUserCircle />
           <div className="p-1"></div>
-          <span data-testid="header-username" className="fw-bold">
+          <Typography component="span" data-testid="header-username" className="fw-bold">
             Admin
-          </span>
+          </Typography>
         </div>
       </Typography>
     </Fragment>
