@@ -5,7 +5,7 @@ import "./App.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-// import Login from "./pages/Login/Login";
+import Login from "./pages/Login/Login";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import CreateRequest from "./pages/CreateRequest/CreateRequest";
@@ -31,7 +31,7 @@ export default function App() {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ToastContainer autoClose={3000} />
       <Routes>
-        {/* <Route element={<Login />} path="/" /> */}
+        <Route element={<Login />} path="/Login" />
 
         {/* <Route element={<WithoutNav />}>
           <Route element={<Header />} />
