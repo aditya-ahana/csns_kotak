@@ -10,6 +10,7 @@ import {
   AccordionDetails,
   FormHelperText,
   InputBase,
+  Autocomplete,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -37,32 +38,49 @@ import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOu
 import dayjs, { Dayjs } from "dayjs";
 import Accordion from "@mui/material/Accordion";
 import InputAdornment from "@mui/material/InputAdornment";
-import { setRequestPayloads } from "../../Redux/csnsReducers";
 import Fade from "@mui/material/Fade";
 import { Provider } from "react-redux";
 import store from "../../Redux/reduxStore";
 import { useTranslation } from "react-i18next";
-import {
-  requiredReportsData,
-  availableParameters,
-} from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MaterialToast from "../../components/Snackbar";
 import Skeleton from "@mui/material/Skeleton";
-import { readOnly } from "../../components/data/requestsData";
+import { readOnly } from "../../Redux/reducedData";
 import ErrorIcon from "@mui/icons-material/Error";
+import SearchIcon from "@mui/icons-material/Search";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
+  const availableReportTypes = useSelector(
+    (state) => state.csns.availableReportTypes
+  );
+  const availableParameters = useSelector(
+    (state) => state.csns.availableParameters
+  );
+  const requiredReportsData = useSelector(
+    (state) => state.csns.requiredReportsData
+  );
+
+  const countries = useSelector((state) =>
+    state.csns.countryCodeData.map((code) => code)
+  );
+
+  const countryCodes = countries.sort((array, sortedArray) =>
+    array.phone.localeCompare(sortedArray.phone)
+  );
+
   const [showToast, setShowToast] = useState(false);
+  const [searchedReports, setSearchedReports] = useState([]);
   const [toastMessage, setToastMessage] = useState("");
   const [toastDuration, setToastDuration] = useState(0);
   const [toastBackground, setToastBackground] = useState("brown");
   const [toastColor, setToastColor] = useState("");
   const [toastFontWeight, setToastFontWeight] = useState();
   const [payloadConfigured, setPayloadConfigured] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [selected, setSelected] = useState(true);
 
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
@@ -86,7 +104,6 @@ export default function CreateRequest() {
   });
 
   const route_to = useNavigate();
-  const dispatch = useDispatch();
 
   const [ticketNumber, setTicketNumber] = useState("");
   const [ticketDescription, setTicketDescription] = useState("");
@@ -102,7 +119,8 @@ export default function CreateRequest() {
 
   const currentDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
   const reduxDate = dayjs(new Date()).format("DD-MM-YYYY");
-  ////console.log("Current Date", currentDate);
+
+  ////////console.log("Current Date", currentDate);
 
   const previewProps = {
     name: {
@@ -121,7 +139,7 @@ export default function CreateRequest() {
     textfield: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: "1.45px solid rgb(67, 91, 102)",
+          border: "1.45px solid rgb(103, 125, 106)",
           backgroundColor: "transparent",
         },
         "&:hover fieldset": {
@@ -170,7 +188,7 @@ export default function CreateRequest() {
         fontSize: "0.88rem",
         alignSelf: "center",
         display: "flex",
-        color: "rgb(92, 84, 112)",
+        color: "rgb(95, 105, 91)",
         alignItems: "center",
         marginTop: "0.125rem",
       },
@@ -203,7 +221,7 @@ export default function CreateRequest() {
         paddingTop: "0.15rem",
         alignSelf: "center",
         display: "flex",
-        color: "rgb(92, 84, 112)",
+        color: "rgb(95, 105, 91)",
         alignItems: "center",
         height: "auto",
       },
@@ -227,7 +245,29 @@ export default function CreateRequest() {
   const SelectProps = {
     containerProps: {
       ".MuiOutlinedInput-notchedOutline": {
-        border: "1.4px solid rgb(67, 91, 102)",
+        border: "1.4px solid rgb(103, 125, 106)",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        border: "1.65px solid rgba(131, 131, 210)",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        border:
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          // ? "0.25px solid grey"
+          // :
+          "1.5px solid rgb(131, 131, 210)",
+      },
+      ".MuiSvgIcon-root ": {
+        fill:
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          //   ? "silver"
+          // :
+          "rgba(95, 99, 104, 1)",
+      },
+    },
+    mobileNoProps: {
+      ".MuiOutlinedInput-notchedOutline": {
+        border: "1.4px solid rgb(103, 125, 106)",
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         border: "1.65px solid rgba(131, 131, 210)",
@@ -264,7 +304,7 @@ export default function CreateRequest() {
     REPORT_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "19.6rem",
+          maxHeight: "21.75rem",
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
         },
@@ -273,7 +313,7 @@ export default function CreateRequest() {
     PARAM_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "9.36rem",
+          maxHeight: "14rem",
           marginTop: "-0.15rem",
           overflow: "auto",
         },
@@ -282,7 +322,6 @@ export default function CreateRequest() {
         sx: {
           border: "1.5px solid rgba(161, 161, 161, 1)",
           borderWidth: "1.5px 0px 1.5px 1.5px",
-          margin: 0,
           borderTopLeftRadius: "0px",
           borderTopRightRadius: "0px",
           borderBottomLeftRadius: "4px",
@@ -296,6 +335,16 @@ export default function CreateRequest() {
         style: {
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
+    CC_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+          maxHeight: "27.6rem",
+          overflow: "auto",
         },
       },
     },
@@ -315,9 +364,9 @@ export default function CreateRequest() {
           },
         },
       },
-      field: {
-        readOnly: true,
-      },
+      // field: {
+      //   readOnly: true,
+      // },
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
@@ -327,7 +376,7 @@ export default function CreateRequest() {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: "rgb(92, 84, 112)",
+            color: "rgb(95, 105, 91)",
             fontSize: "0.92rem",
           },
         },
@@ -346,7 +395,7 @@ export default function CreateRequest() {
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: "1.45px solid rgb(67, 91, 102)",
+              border: "1.45px solid rgb(103, 125, 106)",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(131, 131, 210)",
@@ -381,7 +430,7 @@ export default function CreateRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
-          color: "rgb(67, 91, 102)",
+          color: "rgb(103, 125, 106)",
         },
       },
       textField: {
@@ -472,6 +521,7 @@ export default function CreateRequest() {
               debitCardDetails: [],
               mobileNoDetails: [],
               viewState: "Expanded",
+              searchQuery: "",
             }
           );
         } else {
@@ -489,6 +539,7 @@ export default function CreateRequest() {
               debitCardDetails: [],
               mobileNoDetails: [],
               viewState: "Expanded",
+              searchQuery: "",
             }
           );
         }
@@ -497,12 +548,10 @@ export default function CreateRequest() {
     });
   }, [selectedReports]);
 
-  // //////console.log('Selected REPORTS : ',selectedReports);
-  // //////console.log('Selected REPORTS : ',selectedReports);
+  // //////////console.log('Selected REPORTS : ',selectedReports);
+  // //////////console.log('Selected REPORTS : ',selectedReports);
 
-  // //////console.log('selected reports : ',selectedReports);
-
-  const availableReportTypes = ["PDF", "Excel"];
+  // //////////console.log('selected reports : ',selectedReports);
 
   // const autoScrollDown = (scrollingSpace) => {
   //   var height = 0;
@@ -539,7 +588,7 @@ export default function CreateRequest() {
   //   }
   // };
 
-  // //////console.log('Final Selected',selectedParams);
+  // //////////console.log('Final Selected',selectedParams);
 
   const handleMinimizedView = (reportIndex) => {
     setReportsState((prevState) => {
@@ -557,11 +606,26 @@ export default function CreateRequest() {
     });
   };
 
+  const handleParamSearch = (value, reportIndex) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      newState[reportIndex].searchQuery = value;
+      return newState;
+    });
+  };
+
   const handleReportSelection = (event) => {
     const {
       target: { value },
     } = event;
-    setSelectedReports(typeof value === "string" ? value.split(",") : value);
+
+    ////console.log("event",event)
+    // ////console.log("Value first length",value[0] );
+    if (event.target.value.length > 0 && event.target.value[0] !== undefined) {
+      setSelectedReports(typeof value === "string" ? value.split(",") : value);
+    } else {
+      setSelectedReports([]);
+    }
   };
 
   // useEffect(() => {
@@ -588,8 +652,15 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      report.selectedParams =
-        typeof value === "string" ? value.split(",") : value;
+      if (
+        event.target.value.length > 0 &&
+        event.target.value[0] !== undefined
+      ) {
+        report.selectedParams =
+          typeof value === "string" ? value.split(",") : value;
+      } else {
+        report.selectedParams = [];
+      }
 
       if (
         // value.some((param) => param === "Account number")
@@ -610,6 +681,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -629,6 +701,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -648,6 +721,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -695,6 +769,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -714,6 +789,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -733,6 +809,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -779,6 +856,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -798,6 +876,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -817,6 +896,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -863,6 +943,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -882,6 +963,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -901,6 +983,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -947,6 +1030,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -966,6 +1050,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -985,6 +1070,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1031,6 +1117,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1050,6 +1137,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1069,6 +1157,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1118,6 +1207,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1137,6 +1227,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1156,6 +1247,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1205,6 +1297,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1224,6 +1317,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1243,6 +1337,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1289,6 +1384,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1308,6 +1404,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1327,6 +1424,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1398,6 +1496,8 @@ export default function CreateRequest() {
     });
   };
 
+  //console.log("device log", searchInput);
+
   const deleteDetail = (reportIndex, detailIndex, details, reportName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -1412,8 +1512,8 @@ export default function CreateRequest() {
   };
 
   const addDetail = (reportIndex, detailName, name, reportName) => {
-    //////console.log("for detail", reportIndex, detailName);
-    //////console.log("for detail", reportIndex, detailName);
+    //////////console.log("for detail", reportIndex, detailName);
+    //////////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
       const report = newState[reportIndex];
@@ -1525,6 +1625,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1545,6 +1646,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1565,6 +1667,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1692,15 +1795,94 @@ export default function CreateRequest() {
     });
   };
 
-  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+  const handleCountryCode = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].mobileNo = value;
-      newState[reportIndex][detail][detailIndex - 1].mobileNo = value;
-      newState[reportIndex][detail][detailIndex - 2].mobileNo = value;
+      const report = newState[reportIndex][detail];
+
+      const newMobileNum0 = report[detailIndex].mobileNo.replace(
+        report[detailIndex].countryCode,
+        ""
+      );
+      const newMobileNum1 = report[detailIndex].mobileNo.replace(
+        report[detailIndex - 1].countryCode,
+        ""
+      );
+      const newMobileNum2 = report[detailIndex].mobileNo.replace(
+        report[detailIndex - 2].countryCode,
+        ""
+      );
+
+      report[detailIndex].countryCode = value;
+      report[detailIndex - 1].countryCode = value;
+      report[detailIndex - 2].countryCode = value;
+
+      // if (report[detailIndex].mobileNo.length >= 10) {
+      report[detailIndex].mobileNo = value + newMobileNum0;
+      report[detailIndex - 1].mobileNo = value + newMobileNum1;
+      report[detailIndex - 2].mobileNo = value + newMobileNum2;
+      // }
       return newState;
     });
   };
+
+  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      const report = newState[reportIndex][detail];
+
+      report[detailIndex].mobileNo = value;
+      report[detailIndex - 1].mobileNo = value;
+      report[detailIndex - 2].mobileNo = value;
+
+      // if (value.length >= 10) {
+      report[detailIndex].mobileNo =
+        report[detailIndex].countryCode +
+        value.replace(report[detailIndex].countryCode, "");
+      report[detailIndex - 1].mobileNo =
+        report[detailIndex - 1].countryCode +
+        value.replace(report[detailIndex - 1].countryCode, "");
+      report[detailIndex - 2].mobileNo =
+        report[detailIndex - 2].countryCode +
+        value.replace(report[detailIndex - 2].countryCode, "");
+      // }
+      return newState;
+    });
+  };
+
+  const handleNewMobileNo = (reportIndex, detailIndex, detail) => {
+    console.log("New params", reportIndex, detailIndex, detail);
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      const report = newState[reportIndex][detail];
+
+      // if (value.length >= 10) {
+      report[detailIndex].mobileNo =
+        report[detailIndex].countryCode + report[detailIndex].mobileNo;
+      report[detailIndex - 1].mobileNo =
+        report[detailIndex - 1].countryCode + report[detailIndex].mobileNo;
+      report[detailIndex - 2].mobileNo =
+        report[detailIndex - 2].countryCode + report[detailIndex].mobileNo;
+      // }
+      return newState;
+    });
+  };
+
+  // const completeMobileNo = (value, reportIndex, detailIndex, detail) => {
+  //   setReportsState((prevState) => {
+  //     const newState = [...prevState];
+  //     const report = newState[reportIndex][detail];
+
+  //     report[detailIndex].mobileNo =
+  //       report[detailIndex].countryCode + report[detailIndex].mobileNo;
+  //     report[detailIndex - 1].mobileNo =
+  //       report[detailIndex - 1].countryCode + report[detailIndex - 1].mobileNo;
+  //     report[detailIndex - 2].mobileNo =
+  //       report[detailIndex - 2].countryCode + report[detailIndex - 2].mobileNo;
+
+  //     return newState;
+  //   });
+  // };
 
   const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
@@ -1723,7 +1905,7 @@ export default function CreateRequest() {
     return dayjs(day).isAfter(dayjs(to, "DD-MM-YYYY"), "day");
   };
 
-  //////console.log('ULTIMATE',reportsState);
+  //////////console.log('ULTIMATE',reportsState);
 
   const handleFromDate = (
     date,
@@ -1746,43 +1928,43 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //////console.log("time2");
-        //////console.log("time2");
+        //////////console.log("time2");
+        //////////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         return prevState;
       }
 
       if (formatted_date === "01-01-1970") {
-        console.log("Clear Date");
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate = "";
           newState[reportIndex][detail][detailIndex - 2].fromDate = "";
         }
       } else {
-        console.log("Set Date");
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate =
@@ -1817,43 +1999,43 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    // //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    // //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //////console.log("time2");
-        //////console.log("time2");
+        //////////console.log("time2");
+        //////////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         return prevState;
       }
 
       if (formatted_date === "01-01-1970") {
-        console.log("Clear Date");
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].toDate = "";
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate = "";
           newState[reportIndex][detail][detailIndex - 2].toDate = "";
         }
       } else {
-        console.log("Set Date");
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].toDate = formatted_date;
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate =
@@ -1867,15 +2049,14 @@ export default function CreateRequest() {
     });
   };
 
-  const handleDate = (date, reportIndex, detailIndex, detailName) => {
-    //////console.log("RRN date", date);
-    //////console.log("RRN reportIndex", reportIndex);
-    //////console.log("RRN detailIndex", detailIndex);
-    //////console.log("RRN Detail", detailName);
-    //////console.log("RRN date", date);
-    //////console.log("RRN reportIndex", reportIndex);
-    //////console.log("RRN detailIndex", detailIndex);
-    //////console.log("RRN Detail", detailName);
+  const handleDate = (
+    date,
+    reportIndex,
+    detailIndex,
+    detail,
+    to,
+    reportName
+  ) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -1889,25 +2070,68 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
+      if (!newState[reportIndex]) {
+        //console.error("Report is undefined for index:", reportIndex);
+        //////////console.log("time1");
+        //console.error("Report is undefined for index:", reportIndex);
+        //////////console.log("time1");
+        return prevState;
+      }
+      if (!newState[reportIndex][detail]) {
+        //////////console.log("time2");
+        //////////console.log("time2");
+        newState[reportIndex][detail] = [];
+      }
+      if (!newState[reportIndex][detail][detailIndex]) {
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //////////console.log("time3");
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //////////console.log("time3");
+        return prevState;
+      }
+
       if (formatted_date === "01-01-1970") {
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
       } else {
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
       }
 
-      //////console.log("time4", date);
-      //////console.log("time4", date);
       return newState;
     });
   };
+
+  useEffect(() => {
+    if (searchInput.length > 0) {
+      const queried_reports = requiredReportsData.filter((report) =>
+        report.toLowerCase().includes(searchInput.toLowerCase().trim())
+      );
+      setSearchedReports(queried_reports);
+    }
+  }, [searchInput]);
+
+  // useEffect(() => {
+  //   setReportsState(prevState => {
+  //     const newState = [...prevState]
+  //     const IPLOGS = newState.filter(state => state.selectedReport === "IP Logs");
+
+  //     //console.log("NEW STATE",IPLOGS);
+
+  //     IPLOGS
+
+  //     return newState;
+  //   })
+
+  // },[reportsState]);
 
   // const accountNumberDetailsValid =
 
@@ -1928,7 +2152,7 @@ export default function CreateRequest() {
               reportName === "Beneficiary details for Single UPI transactions"
               ? "0rem"
               : "2rem"
-            : "2.25rem"
+            : "2.35rem"
         }
         key={detailIndex}
         display={
@@ -1939,13 +2163,16 @@ export default function CreateRequest() {
         }
         data-testid={`detail-fieldset-${detailIndex}`}
       >
-        {/* {//////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
+        {/* {//////////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
 
         <FormControl
           variant="outlined"
           margin="none"
           className={
-            reportName === "IP Logs" ? "primary-input-iplogs" : "primary-input"
+            reportName === "IP Logs"
+              ? // (detail.name === "Mobile No." ? "mobile-input-iplogs" :
+                "primary-input-iplogs"
+              : "primary-input"
           }
         >
           <TextField
@@ -2023,17 +2250,94 @@ export default function CreateRequest() {
                 : inputControl.validatedInputLabelProps
             }
             InputProps={{
-              startAdornment: detail.name === "Mobile No." && (
-                <InputAdornment
-                  variant="standard"
-                  component="text"
-                  position="start"
-                >
-                  <Typography fontSize="0.92rem" component="span">
-                    +91
-                  </Typography>
-                </InputAdornment>
-              ),
+              startAdornment: reportName === "IP Logs" &&
+                detail.name === "Mobile No." && (
+                  <>
+                    <InputLabel
+                      htmlFor="cc-selectbox"
+                      variant="outlined"
+                      className={
+                        detail.mobileNo === ""
+                          ? "mobile-label"
+                          : "valid-mobile-label"
+                      }
+                    >
+                      {detail.name}
+                    </InputLabel>
+                    <FormControl
+                      className="cc-dropdown"
+                      sx={{
+                        width:
+                          detail.countryCode.length === 5
+                            ? "51%"
+                            : detail.countryCode.length === 3
+                            ? "42%"
+                            : detail.countryCode.length === 2
+                            ? "36%"
+                            : "32%",
+                      }}
+                      size="medium"
+                    >
+                      <Select
+                        id="cc-dropdown"
+                        value={detail.countryCode}
+                        label="Code"
+                        data-testid={`cc-dropdown-${detailIndex}`}
+                        displayEmpty
+                        onChange={(e) =>
+                          handleCountryCode(
+                            e.target.value,
+                            reportIndex,
+                            detailIndex,
+                            detailName
+                          )
+                        }
+                        // sx={
+                        //   detail.countryCode === ""
+                        //     ? SelectProps.countryProps
+                        //     : SelectProps.validatedCountryProps
+                        // }
+                        input={<OutlinedInput fullWidth={true} />}
+                        IconComponent={(props) => (
+                          <KeyboardArrowDownOutlinedIcon {...props} />
+                        )}
+                        renderValue={(code) => `+${code}`}
+                        MenuProps={SelectProps.CC_SELECT_PROPS}
+                        inputProps={{ "aria-label": "Country Code Dropdown" }}
+                        autoWidth={false}
+                        variant="outlined"
+                        style={{
+                          // fontSize: "0.88rem",
+                          color:
+                            // detail.countryCode === ""
+                            //   ? "rgba(0, 0, 0, 0.49)"
+
+                            // :
+                            "black",
+                          boxShadow: "none",
+                        }}
+                        className="cc-selectbox"
+                        placeholder="CC"
+                      >
+                        {countryCodes.map((code, codeIndex) => (
+                          <MenuItem
+                            key={codeIndex}
+                            data-testid={`cc-menuitem`}
+                            value={code.phone}
+                            className="cc-menuitem"
+                          >
+                            <ListItemText
+                              primary={`${code.phone} ${code.name}`}
+                              color="black"
+                              inputMode="text"
+                              primaryTypographyProps={{ fontSize: "0.825rem" }}
+                            />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </>
+                ),
             }}
             required
             inputProps={{
@@ -2092,7 +2396,9 @@ export default function CreateRequest() {
                 : detail.name === "Debit Card"
                 ? detail.debitCard
                 : detail.name === "Mobile No."
-                ? detail.mobileNo
+                ? reportName === "IP Logs"
+                  ? detail.mobileNo.replace(detail.countryCode, "")
+                  : detail.mobileNo
                 : detail.name === "RRN"
                 ? detail.rrn
                 : detail.name === "CRN"
@@ -2100,25 +2406,45 @@ export default function CreateRequest() {
                 : ""
             }
             id="paramvalue"
-            placeholder={`Enter ${detail.name}`}
+            placeholder={
+              // reportName === "IP Logs" &&
+              // detail.name === "Mobile No." &&
+              // detail.countryCode === ""
+              //   ? "Select Country Code"
+              //   :
+              `Enter ${detail.name}`
+            }
             autoComplete="off"
             // style={{
             //   margin: "0rem 0rem 0rem 0rem",
             //   fontSize: "0.88rem",
             // }}
-            label={detail.name}
-            // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
-            margin="none"
-            onChange={(e) =>
-              handleInputValue(
-                e.target.value,
-                reportIndex,
-                detailIndex,
-                detailName,
-                reportName,
-                detailsArray
-              )
+            label={
+              reportName === "IP Logs" && detail.name === "Mobile No."
+                ? ""
+                : detail.name
             }
+            // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
+            margin="none"
+            onChange={(e) => {
+              if (reportName === "IP Logs" && detail.name === "Mobile No.") {
+                handleMobileNoValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName
+                );
+              } else {
+                handleInputValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  reportName,
+                  detailsArray
+                );
+              }
+            }}
             // type={
             //   detail.name === "Account number"
             //     ? "text"
@@ -2148,7 +2474,6 @@ export default function CreateRequest() {
 
         {((detailName === "accountNumberDetails" &&
           reportName !== "Device details") ||
-          (detailName === "CRNdetails" && reportName === "IP Logs") ||
           reportName === "IP Logs" ||
           reportName === "Statement in PDF/Excel" ||
           reportName === "Beneficiary details for Bulk IMPS transactions" ||
@@ -2163,8 +2488,9 @@ export default function CreateRequest() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
+                  index={detailIndex}
                   className="date-picker"
-                  data-testid={`from-date-picker-${detailIndex}`}
+                  data-testid={`from-date-${detailIndex}`}
                   shouldDisableDate={(day) =>
                     disableInvalidDates(day, detail.toDate, detail.toDate)
                   }
@@ -2351,91 +2677,174 @@ export default function CreateRequest() {
           </Box>
         )}
 
-        {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+        {reportName === "IP Logs" && (
           <FormControl
             variant="outlined"
             margin="none"
+            size="small"
             className="iplogs-mobileno-input"
+            data-testid={`iplogs-mobileno-input-${detailIndex}`}
           >
-            <TextField
-              sx={
-                detail.mobileNo.length > 1
-                  ? inputControl.validatedTextfield
-                  : inputControl.textfield
-              }
-              data-testid={`mobileno-input-${detailIndex}`}
-              InputLabelProps={
-                detail.mobileNo.length > 1
-                  ? inputControl.validatedInputLabelProps
-                  : inputControl.inputLabelProps
-              }
-              inputProps={{
-                style: {
-                  fontSize: "0.88rem",
-                  height: "0.6rem",
-                },
-                // maxLength: 10,
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    className="iplogmobileno-adornment"
-                  >
-                    <Typography fontSize="0.88rem" component="span">
-                      +91
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="Enter Mobile No."
-              className="number-box"
-              // helperText={
-              //   detail.mobileNo.length < 10
-              //     ? customFormText(
-              //         t("only10Characters"),
+            {detail.name === "Mobile No." ? (
+              <></>
+            ) : (
+              <TextField
+                // disabled={detail.countryCode === ""}
+                size="small"
+                sx={
+                  detail.mobileNo.length > 1
+                    ? inputControl.validatedTextfield
+                    : inputControl.textfield
+                }
+                data-testid={`mobileno-input-${detailIndex}`}
+                InputLabelProps={
+                  detail.mobileNo.length > 1
+                    ? inputControl.validatedInputLabelProps
+                    : inputControl.inputLabelProps
+                }
+                fullWidth={false}
+                inputProps={{
+                  style: {
+                    fontSize: "0.88rem",
+                    height: "0.6rem",
 
-              //         "grey",
-              //         1
-              //       )
-              //     : validatedDetail()
-              // }
-              value={detail.mobileNo}
-              // value={`${detailIndex} - ${detail.subRequest}`}
-              autoComplete="off"
-              label="Mobile No."
-              // disabled={
-              //   (detail.name === "Account number" &&
-              //     detail.accountNo.length < 1) ||
-              //   (detail.name === "Email ID" && detail.email.length < 1) ||
-              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-              //   (detail.name === "Credit Card" &&
-              //     detail.creditCardNo.length < 1) ||
-              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              //   (detail.name === "Debit Card" &&
-              //     detail.debitCard.length < 1) ||
-              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-              //   (detail.name === "CRN" && detail.crnNo.length < 1)
-              //     ? true
-              //     : false
-              // }
-              margin="none"
-              onChange={(e) =>
-                handleMobileNoValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  reportName
-                )
-              }
-              type="tel"
-              inputMode="tel"
-              // type="text"
-              // inputMode="text"
-              color="primary"
-            />
+                    // marginLeft : "3rem"
+                  },
+                  // maxLength: 10,
+                }}
+                placeholder={
+                  // detail.countryCode === ""
+                  //   ? "Select Country Code"
+                  //   :
+                  "Enter Mobile No."
+                }
+                className="number-box"
+                value={detail.mobileNo.replace(detail.countryCode, "")}
+                autoComplete="off"
+                // label="Mobile No."
+
+                margin="none"
+                onChange={(e) => {
+                  handleMobileNoValue(
+                    e.target.value,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    reportName
+                  );
+                }}
+                type="tel"
+                inputMode="tel"
+                // type="text"
+                // inputMode="text"
+                color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <>
+                      <InputLabel
+                        htmlFor="cc-selectbox"
+                        variant="outlined"
+                        className={
+                          detail.mobileNo === ""
+                            ? "mobile-label"
+                            : "valid-mobile-label"
+                        }
+                        // color={detail.mobileNo === "" ? "grey" : "green"}
+                      >
+                        Mobile No.
+                      </InputLabel>
+                      <FormControl
+                        className="cc-dropdown"
+                        sx={{
+                          width:
+                            detail.countryCode.length === 5
+                              ? "80%"
+                              : detail.countryCode.length === 3
+                              ? "62%"
+                              : detail.countryCode.length === 2
+                              ? "54%"
+                              : "48%",
+                        }}
+                        size="medium"
+                      >
+                        <Select
+                          id="cc-dropdown"
+                          value={detail.countryCode}
+                          label="Code"
+                          data-testid={`cc-dropdown-${detailIndex}`}
+                          displayEmpty
+                          onChange={(e) => {
+                            handleCountryCode(
+                              e.target.value,
+                              reportIndex,
+                              detailIndex,
+                              detailName
+                            );
+
+                            // if(detail.mobileNo.length === 10){
+                            // handleNewMobileNo(
+                            //   reportIndex,
+                            //   detailIndex,
+                            //   detailName,
+                            // )
+                            // }
+                          }}
+                          sx={SelectProps.validatedContainerProps}
+                          input={<OutlinedInput fullWidth={true} />}
+                          IconComponent={(props) => (
+                            <KeyboardArrowDownOutlinedIcon {...props} />
+                          )}
+                          renderValue={(code) =>
+                            // detail.countryCode === "" ? "CC"
+                            // :
+                            `+${code}`
+                          }
+                          MenuProps={SelectProps.CC_SELECT_PROPS}
+                          inputProps={{ "aria-label": "Country Code Dropdown" }}
+                          autoWidth={false}
+                          variant="outlined"
+                          style={{
+                            // fontSize: "0.88rem",
+                            color:
+                              // detail.countryCode === ""
+                              //   ? "rgba(0, 0, 0, 0.49)"
+                              //   :
+                              "black",
+                            boxShadow: "none",
+                            paddingLeft: 0,
+                          }}
+                          className="cc-selectbox"
+                          placeholder="CC"
+                        >
+                          {countryCodes.map((code, codeIndex) => (
+                            <MenuItem
+                              key={codeIndex}
+                              data-testid={`cc-menuitem`}
+                              value={code.phone}
+                              className="cc-menuitem"
+                            >
+                              <ListItemText
+                                primary={`${code.phone} ${code.name}`}
+                                color="black"
+                                inputMode="text"
+                                primaryTypographyProps={{
+                                  fontSize: "0.825rem",
+                                }}
+                              />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  ),
+                }}
+              />
+            )}
+            {/* {handleNewMobileNo(
+            reportIndex,
+            detailIndex,
+            detailName
+          )} */}
           </FormControl>
         )}
 
@@ -2482,7 +2891,7 @@ export default function CreateRequest() {
                   //     : validatedDetail()
                   // }
                   autoComplete="off"
-                  // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
+                  // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
                   label="Amount"
                   margin="none"
                   onChange={(e) =>
@@ -2524,7 +2933,14 @@ export default function CreateRequest() {
                     }
                     sx={datePickerControl.sx}
                     onChange={(date) =>
-                      handleDate(date, reportIndex, detailIndex, detailName)
+                      handleDate(
+                        date,
+                        reportIndex,
+                        detailIndex,
+                        detailName,
+                        detail.toDate,
+                        reportName
+                      )
                     }
                   />
                   {/* {detail.fromDate !== ""
@@ -2635,6 +3051,10 @@ export default function CreateRequest() {
                 )
               : datePickerHelper()} */}
           </FormControl>
+        )}
+
+        {reportName === "IP Logs" && detailIndex === 2 && (
+          <Box className="iplog-void-button"></Box>
         )}
 
         {detailIndex < reportsState[reportIndex][detailName].length && (
@@ -2884,7 +3304,7 @@ export default function CreateRequest() {
                   </Box>
 
                   {/* {detail.fromDate !== "" && ( */}
-                  <Box className="type-preview">
+                  <Box className="rrn-preview-2">
                     <Typography sx={previewProps.name} component="span">
                       Date :{" "}
                     </Typography>
@@ -2964,7 +3384,7 @@ export default function CreateRequest() {
       </Box>
     ));
 
-  //////console.log("ticket number length", ticketNumber);
+  //////////console.log("ticket number length", ticketNumber);
 
   const [reportDetails, setReportDetails] = useState([]);
 
@@ -2994,6 +3414,13 @@ export default function CreateRequest() {
       return updatedReportState;
     });
   }, [reportsState]);
+
+  // useEffect(() => {
+  //   setReportDetails(prevState => )
+  //   const ipLogReport = reportDetails.filter(reportDetail => reportDetail.reportType === "IP Logs")
+  //   console.log("IP LOG filter",ipLogReport);
+
+  // });
 
   // const individualReportHandler = (updatedReportState) => {
 
@@ -3147,7 +3574,7 @@ export default function CreateRequest() {
         500
       );
     } else {
-      console.log("Payload", createRequestPayload);
+      ////console.log("Payload", createRequestPayload);
       //Submit API Function
 
       //Error Block
@@ -3156,7 +3583,6 @@ export default function CreateRequest() {
       // SuccessBlock
 
       setSubmitted(true);
-      // dispatch(setRequestPayloads(responsePayload));
       displayToast(
         "Successfully Submitted Request",
         2000,
@@ -3170,12 +3596,17 @@ export default function CreateRequest() {
     }
   };
 
-  // ////console.log("Valid Report Data", isValidReportData);
-  //console.log("Spring Boot Payload", reportDetails);
-  console.log("Triple Reports State", reportsState);
+  // ////////console.log("Valid Report Data", isValidReportData);
+  console.log("Spring Boot Payload", reportDetails);
+  //console.log("Triple Reports State", reportsState);
 
-  //console.log("Create Request Details array", createRequestPayload);
-  //console.log("Device Details Array", deviceDetails);
+  //////console.log("Create Request Details array", createRequestPayload);
+  //////console.log("Device Details Array", deviceDetails);
+
+  const dynamicReports =
+    searchInput.length === 0 ? requiredReportsData : searchedReports;
+
+  ////console.log("Selected Reports", selectedReports, selectedReports.length);
 
   return (
     <Provider store={store}>
@@ -3218,7 +3649,7 @@ export default function CreateRequest() {
                           : inputControl.inputLabelProps
                       }
                       // FormHelperTextProps={{
-                      //   sx: { color: "rgb(92, 84, 112)" },
+                      //   sx: { color: "rgb(95, 105, 91)" },
                       // }}
                       inputProps={{
                         style: {
@@ -3260,7 +3691,7 @@ export default function CreateRequest() {
                       }
                       variant="outlined"
                       // FormHelperTextProps={{
-                      //   sx: { color: "rgb(92, 84, 112)" },
+                      //   sx: { color: "rgb(95, 105, 91)" },
                       // }}
                       // helperText={
                       //   ticketNumber.length < 10
@@ -3329,9 +3760,16 @@ export default function CreateRequest() {
                     //     ? true
                     //     : false
                     // }
-                    onChange={handleReportSelection}
+                    onChange={(event) => {
+                      if (
+                        event.target.value !== undefined ||
+                        event.target.value !== ""
+                      ) {
+                        handleReportSelection(event);
+                      }
+                    }}
                     // variant="standard"
-                    input={<OutlinedInput fullWidth={true} />}
+                    input={<OutlinedInput fullWidth />}
                     IconComponent={(props) => (
                       <KeyboardArrowDownOutlinedIcon
                         className="select-icon"
@@ -3344,7 +3782,7 @@ export default function CreateRequest() {
                           <Typography
                             component="span"
                             fontSize="95%"
-                            color="grey"
+                            color="silver"
                             data-testid="reports-dropdown-input-initial"
                           >
                             {" "}
@@ -3356,7 +3794,9 @@ export default function CreateRequest() {
                         <Input
                           className="reports-dropdown-input-changed"
                           disableUnderline={true}
-                          value={reports.join(" , ")}
+                          value={reports
+                            .filter((report) => report !== undefined)
+                            .join(" , ")}
                           data-testid="reports-dropdown-input-changed"
                         ></Input>
                       );
@@ -3367,12 +3807,41 @@ export default function CreateRequest() {
                         ? SelectProps.containerProps
                         : SelectProps.validatedContainerProps
                     }
-                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                    MenuProps={{
+                      autoFocus: false,
+                      ...SelectProps.REPORT_SELECT_PROPS,
+                    }}
                     autoWidth={false}
                     className="reports-dropdown-box"
                     placeholder={t("statementsReportRequire")}
                   >
-                    {requiredReportsData.map((report, index) => (
+                    {/* <MenuItem> */}
+                    <Box
+                      className="reports-search"
+                      data-testid="reports-search"
+                    >
+                      <SearchIcon className="request-search-icon" />
+                      <FormControl fullWidth variant="outlined">
+                        <InputBase
+                          disableUnderline
+                          type="search"
+                          autoFocus
+                          fullWidth
+                          inputMode="text"
+                          data-testid="reports-search-input"
+                          value={searchInput}
+                          placeholder="Search Report"
+                          className="request-search-input"
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                        ></InputBase>
+                      </FormControl>
+                    </Box>
+                    {/* </MenuItem> */}
+
+                    {dynamicReports.map((report, index) => (
                       <MenuItem
                         key={report}
                         value={report}
@@ -3382,7 +3851,7 @@ export default function CreateRequest() {
                         <Checkbox
                           size="medium"
                           className="checkbox"
-                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                          data-testid={`reports-checkbox`}
                           icon={
                             <CheckBoxOutlineBlankIcon className="uncheck-icon" />
                           }
@@ -3391,6 +3860,7 @@ export default function CreateRequest() {
                           }
                           checked={selectedReports.indexOf(report) > -1}
                           color="primary"
+                          value={report}
                         />
                         <ListItemText
                           primary={report}
@@ -3431,348 +3901,416 @@ export default function CreateRequest() {
 
               <Box>
                 {reportsState.length > 0 &&
-                  reportsState.map((request, reportIndex) => (
-                    <Box key={reportIndex} className="selected-reports-content">
-                      <Accordion
-                        className="selected-report-view"
-                        //  defaultExpanded={true}
-                        //  slots={{ transition : Fade }}
-                        //  slotProps={{ transition: { timeout: 10000 } }}
-                        //  sx={{
-                        //    boxShadow : "none",
-                        //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
-                        //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
-                        // }}
-                        disableGutters
-                        expanded={
-                          reportsState[reportIndex]?.viewState === "Minimized"
-                            ? false
-                            : true
-                        }
+                  reportsState
+                    .filter((request) => request.selectedReport !== undefined)
+                    .map((request, reportIndex) => (
+                      <Box
+                        key={reportIndex}
+                        className="selected-reports-content"
                       >
-                        <AccordionSummary
-                          className="selected-report-header"
-                          expandIcon={
-                            <ExpandCircleDownOutlinedIcon
-                              className="view-icon"
-                              data-testid={`selected-report-detail-control-${reportIndex}`}
-                              onClick={() => {
-                                if (
-                                  reportsState[reportIndex].viewState ===
-                                  "Minimized"
-                                ) {
-                                  handleExpandedView(reportIndex);
-                                } else {
-                                  handleMinimizedView(reportIndex);
-                                }
-                              }}
-                            />
-                          }
-                        >
-                          <Typography
-                            className="selected-report-heading"
-                            component="span"
-                          >
-                            {request.selectedReport}
-                          </Typography>
-                        </AccordionSummary>
-
-                        <AccordionDetails
-                          hidden={
+                        <Accordion
+                          className="selected-report-view"
+                          //  defaultExpanded={true}
+                          //  slots={{ transition : Fade }}
+                          //  slotProps={{ transition: { timeout: 10000 } }}
+                          //  sx={{
+                          //    boxShadow : "none",
+                          //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
+                          //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
+                          // }}
+                          disableGutters
+                          expanded={
                             reportsState[reportIndex]?.viewState === "Minimized"
-                              ? true
-                              : false
+                              ? false
+                              : true
                           }
-                          data-testid={`selected-report-detail-${reportIndex}`}
-                          className="accordion-details"
                         >
-                          <Box className="selected-report-details">
-                            {reportsState[reportIndex] && (
-                              <>
-                                <Box
-                                  width="100%"
-                                  display={
-                                    request.selectedReport ===
-                                      "Beneficiary details for Single IMPS transactions" ||
-                                    request.selectedReport ===
-                                      "Beneficiary details for Single UPI transactions"
-                                      ? "none"
-                                      : "block"
+                          <AccordionSummary
+                            className="selected-report-header"
+                            expandIcon={
+                              <ExpandCircleDownOutlinedIcon
+                                className="view-icon"
+                                data-testid={`selected-report-detail-control-${reportIndex}`}
+                                onClick={() => {
+                                  if (
+                                    reportsState[reportIndex].viewState ===
+                                    "Minimized"
+                                  ) {
+                                    handleExpandedView(reportIndex);
+                                  } else {
+                                    handleMinimizedView(reportIndex);
                                   }
-                                >
-                                  <FormControl
-                                    // variant="standard"
-                                    sx={{
-                                      width:
-                                        request.selectedReport === "IP Logs"
-                                          ? "24%"
-                                          : "32%",
-                                      marginBottom:
-                                        reportsState[reportIndex].selectedParams
-                                          .length === 0
-                                          ? "1.36rem"
-                                          : "0.75rem",
-                                    }}
-                                  >
-                                    <Select
-                                      label="Param Selection Dropdown"
-                                      name="param-selection-dropdown"
-                                      className="param-selection-dropdown"
-                                      role="combobox"
-                                      id="param-selection-dropdown"
-                                      data-testid={`param-dropdown-${reportIndex}`}
-                                      multiple={true}
-                                      sx={
-                                        reportsState[reportIndex].selectedParams
-                                          .length === 0
-                                          ? SelectProps.containerProps
-                                          : SelectProps.validatedContainerProps
-                                      }
-                                      SelectDisplayProps={{
-                                        "data-testid": `param-dropdown-sas-${reportIndex}`,
-                                        role: "combobox",
-                                      }}
-                                      aria-labelledby="param-selection-dropdown-label"
-                                      value={
-                                        reportsState[reportIndex]
-                                          .selectedParams || []
-                                      }
-                                      displayEmpty
-                                      onChange={(event) =>
-                                        handleParamSelection(
-                                          event,
-                                          reportIndex,
-                                          request.selectedReport
-                                        )
-                                      }
-                                      // variant="standard"
-                                      input={
-                                        <OutlinedInput
-                                          className="param-display"
-                                          role="combobox"
-                                          fullWidth={false}
-                                        />
-                                      }
-                                      IconComponent={(props) => (
-                                        <KeyboardArrowDownOutlinedIcon
-                                          className="select-icon"
-                                          {...props}
-                                        />
-                                      )}
-                                      renderValue={(params) => {
-                                        if (params.length === 0) {
-                                          return (
-                                            <Typography
-                                              component="span"
-                                              className="param-display-placeholder"
-                                            >
-                                              {t("selectDetails")}
-                                            </Typography>
-                                          );
-                                        }
-                                        return (
-                                          <Input
-                                            className="selected-params-display"
-                                            disableUnderline={true}
-                                            data-testid={`param-dropdown-input-${reportIndex}`}
-                                            value={params.join(" , ")}
-                                          ></Input>
-                                        );
-                                      }}
-                                      MenuProps={SelectProps.PARAM_SELECT_PROPS}
-                                      inputProps={{
-                                        "aria-label": "Select Parameters",
-                                      }}
-                                      autoWidth={false}
-                                      placeholder={t("selectDetails")}
-                                    >
-                                      {availableParameters.map(
-                                        (param, paramIndex) => (
-                                          <MenuItem
-                                            key={param}
-                                            value={param}
-                                            data-testid={`param-dropdown-menu-item-${paramIndex}`}
-                                            className="param-menu-item"
-                                          >
-                                            <Checkbox
-                                              checked={
-                                                reportsState[
-                                                  reportIndex
-                                                ].selectedParams.indexOf(
-                                                  param
-                                                ) > -1
-                                              }
-                                              color="primary"
-                                              data-testid={`param-dropdown-checkbox-${paramIndex}`}
-                                              className="param-dropdown-checkbox"
-                                              icon={
-                                                <CheckBoxOutlineBlankIcon className="uncheck-icon" />
-                                              }
-                                              checkedIcon={
-                                                <CheckBoxOutlinedIcon className="check-icon" />
-                                              }
-                                            />
-                                            <ListItemText
-                                              primary={param}
-                                              className="param-menu-listext"
-                                              data-testid={`param-dropdown-listitemtext-${paramIndex}`}
-                                              color="black"
-                                              inputMode="text"
-                                              primaryTypographyProps={{
-                                                fontSize: "0.85rem",
-                                              }}
-                                            />
-                                          </MenuItem>
-                                        )
-                                      )}
-                                    </Select>
-                                    {/* {reportsState[reportIndex].selectedParams
-                                      .length === 0
-                                      ? customFormText(
-                                          "",
-                                          "rgb(92, 84, 112)",
-                                          1
-                                        )
-                                      : datePickerHelper("")} */}
-                                  </FormControl>
-                                </Box>
+                                }}
+                              />
+                            }
+                          >
+                            <Typography
+                              className="selected-report-heading"
+                              component="span"
+                            >
+                              {request.selectedReport}
+                            </Typography>
+                          </AccordionSummary>
 
-                                <Box
-                                  className="details-subsection"
-                                  style={{
-                                    marginTop:
+                          <AccordionDetails
+                            hidden={
+                              reportsState[reportIndex]?.viewState ===
+                              "Minimized"
+                                ? true
+                                : false
+                            }
+                            data-testid={`selected-report-detail-${reportIndex}`}
+                            className="accordion-details"
+                          >
+                            <Box className="selected-report-details">
+                              {reportsState[reportIndex] && (
+                                <>
+                                  <Box
+                                    width="100%"
+                                    display={
                                       request.selectedReport ===
                                         "Beneficiary details for Single IMPS transactions" ||
                                       request.selectedReport ===
                                         "Beneficiary details for Single UPI transactions"
-                                        ? "0rem"
-                                        : "-2rem",
-                                    // marginBottom:
-                                    //   reportsState[reportIndex].selectedParams
-                                    //     .length === 0
-                                    //     ? "1.5rem"
-                                    //     : "2.25rem",
-                                  }}
-                                >
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Account number"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .accountNumberDetails,
-                                      reportIndex,
-                                      "accountNumberDetails",
-                                      "Account number",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "PAN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].PANdetails,
-                                      reportIndex,
-                                      "PANdetails",
-                                      "PAN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "CRN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].CRNdetails,
-                                      reportIndex,
-                                      "CRNdetails",
-                                      "CRN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "RRN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].RRNdetails,
-                                      reportIndex,
-                                      "RRNdetails",
-                                      "RRN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Aadhar"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].aadharDetails,
-                                      reportIndex,
-                                      "aadharDetails",
-                                      "Aadhar",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Email ID"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].emailDetails,
-                                      reportIndex,
-                                      "emailDetails",
-                                      "Email ID",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Credit Card"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .creditCardDetails,
-                                      reportIndex,
-                                      "creditCardDetails",
-                                      "Credit Card",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Debit Card"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .debitCardDetails,
-                                      reportIndex,
-                                      "debitCardDetails",
-                                      "Debit Card",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Mobile No."
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].mobileNoDetails,
-                                      reportIndex,
-                                      "mobileNoDetails",
-                                      "Mobile No.",
-                                      request.selectedReport
-                                    )}
-                                </Box>
-                              </>
-                            )}
-                          </Box>
-                        </AccordionDetails>
-                      </Accordion>
-                    </Box>
-                  ))}
+                                        ? "none"
+                                        : "block"
+                                    }
+                                  >
+                                    <FormControl
+                                      // variant="standard"
+                                      sx={{
+                                        width:
+                                          request.selectedReport === "IP Logs"
+                                            ? "26.6%"
+                                            : "28%",
+                                        marginBottom:
+                                          reportsState[reportIndex]
+                                            .selectedParams.length === 0
+                                            ? "1.36rem"
+                                            : "0.75rem",
+                                      }}
+                                    >
+                                      <Select
+                                        label="Param Selection Dropdown"
+                                        name="param-selection-dropdown"
+                                        className="param-selection-dropdown"
+                                        role="combobox"
+                                        id="param-selection-dropdown"
+                                        data-testid={`param-dropdown-${reportIndex}`}
+                                        multiple={true}
+                                        sx={
+                                          reportsState[reportIndex]
+                                            .selectedParams.length === 0
+                                            ? SelectProps.containerProps
+                                            : SelectProps.validatedContainerProps
+                                        }
+                                        SelectDisplayProps={{
+                                          "data-testid": `param-dropdown-sas-${reportIndex}`,
+                                          role: "combobox",
+                                        }}
+                                        aria-labelledby="param-selection-dropdown-label"
+                                        value={
+                                          reportsState[reportIndex]
+                                            .selectedParams || []
+                                        }
+                                        displayEmpty
+                                        onChange={(event) => {
+                                          if (
+                                            event.target.value !== undefined ||
+                                            event.target.value !== ""
+                                          ) {
+                                            handleParamSelection(
+                                              event,
+                                              reportIndex,
+                                              request.selectedReport
+                                            );
+                                          }
+                                        }}
+                                        // variant="standard"
+                                        input={
+                                          <OutlinedInput
+                                            className="param-display"
+                                            role="combobox"
+                                            fullWidth={false}
+                                          />
+                                        }
+                                        IconComponent={(props) => (
+                                          <KeyboardArrowDownOutlinedIcon
+                                            className="select-icon"
+                                            {...props}
+                                          />
+                                        )}
+                                        renderValue={(params) => {
+                                          if (params.length === 0) {
+                                            return (
+                                              <Typography
+                                                component="span"
+                                                className="param-display-placeholder"
+                                              >
+                                                {t("selectDetails")}
+                                              </Typography>
+                                            );
+                                          }
+                                          return (
+                                            <Input
+                                              className="selected-params-display"
+                                              disableUnderline={true}
+                                              data-testid={`param-dropdown-input-${reportIndex}`}
+                                              value={params
+                                                .filter(
+                                                  (param) => param !== undefined
+                                                )
+                                                .join(" , ")}
+                                            ></Input>
+                                          );
+                                        }}
+                                        MenuProps={{
+                                          disableAutoFocus: true,
+                                          ...SelectProps.PARAM_SELECT_PROPS,
+                                        }}
+                                        inputProps={{
+                                          "aria-label": "Select Parameters",
+                                        }}
+                                        autoWidth={false}
+                                        placeholder={t("selectDetails")}
+                                      >
+                                        {/* <MenuItem> */}
+                                        <Box
+                                          className="param-search"
+                                          data-testid={`param-search-${reportIndex}`}
+                                        >
+                                          <SearchIcon className="param-search-icon" />
+                                          <FormControl
+                                            fullWidth
+                                            variant="outlined"
+                                          >
+                                            <InputBase
+                                              disableUnderline
+                                              autoFocus
+                                              type="search"
+                                              fullWidth
+                                              inputMode="text"
+                                              data-testid={`param-search-input-${reportIndex}`}
+                                              value={
+                                                reportsState[reportIndex]
+                                                  .searchQuery
+                                              }
+                                              placeholder="Search Parameter"
+                                              className="param-search-input"
+                                              onChange={(e) =>
+                                                handleParamSearch(
+                                                  e.target.value,
+                                                  reportIndex
+                                                )
+                                              }
+                                              onKeyDown={(e) =>
+                                                e.stopPropagation()
+                                              }
+                                            ></InputBase>
+                                          </FormControl>
+                                        </Box>
+                                        {/* </MenuItem> */}
+
+                                        {availableParameters
+                                          .filter((param) =>
+                                            param
+                                              .toLowerCase()
+                                              .includes(
+                                                reportsState[
+                                                  reportIndex
+                                                ].searchQuery
+                                                  .toLowerCase()
+                                                  .trim()
+                                              )
+                                          )
+                                          .map((param, paramIndex) => (
+                                            <MenuItem
+                                              key={param}
+                                              value={param}
+                                              data-testid={`param-menuitem`}
+                                              className="param-menu-item"
+                                              role="option"
+                                            >
+                                              <Checkbox
+                                                checked={
+                                                  reportsState[
+                                                    reportIndex
+                                                  ].selectedParams.indexOf(
+                                                    param
+                                                  ) > -1
+                                                }
+                                                color="primary"
+                                                data-testid={`param-checkbox`}
+                                                className="param-checkbox"
+                                                icon={
+                                                  <CheckBoxOutlineBlankIcon className="uncheck-icon" />
+                                                }
+                                                checkedIcon={
+                                                  <CheckBoxOutlinedIcon className="check-icon" />
+                                                }
+                                                value={param}
+                                              />
+                                              <ListItemText
+                                                primary={param}
+                                                className="param-menu-listext"
+                                                data-testid={`param-listitemtext}`}
+                                                color="black"
+                                                inputMode="text"
+                                                primaryTypographyProps={{
+                                                  fontSize: "0.85rem",
+                                                }}
+                                              />
+                                            </MenuItem>
+                                          ))}
+                                      </Select>
+                                      {/* {reportsState[reportIndex].selectedParams
+                                      .length === 0
+                                      ? customFormText(
+                                          "",
+                                          "rgb(95, 105, 91)",
+                                          1
+                                        )
+                                      : datePickerHelper("")} */}
+                                    </FormControl>
+                                  </Box>
+
+                                  <Box
+                                    className="details-subsection"
+                                    style={{
+                                      marginTop:
+                                        request.selectedReport ===
+                                          "Beneficiary details for Single IMPS transactions" ||
+                                        request.selectedReport ===
+                                          "Beneficiary details for Single UPI transactions"
+                                          ? "0rem"
+                                          : "-2rem",
+                                      // marginBottom:
+                                      //   reportsState[reportIndex].selectedParams
+                                      //     .length === 0
+                                      //     ? "1.5rem"
+                                      //     : "2.25rem",
+                                    }}
+                                  >
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Account number"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .accountNumberDetails,
+                                        reportIndex,
+                                        "accountNumberDetails",
+                                        "Account number",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "PAN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].PANdetails,
+                                        reportIndex,
+                                        "PANdetails",
+                                        "PAN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "CRN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].CRNdetails,
+                                        reportIndex,
+                                        "CRNdetails",
+                                        "CRN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "RRN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].RRNdetails,
+                                        reportIndex,
+                                        "RRNdetails",
+                                        "RRN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Aadhar"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].aadharDetails,
+                                        reportIndex,
+                                        "aadharDetails",
+                                        "Aadhar",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Email ID"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].emailDetails,
+                                        reportIndex,
+                                        "emailDetails",
+                                        "Email ID",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Credit Card"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .creditCardDetails,
+                                        reportIndex,
+                                        "creditCardDetails",
+                                        "Credit Card",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Debit Card"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .debitCardDetails,
+                                        reportIndex,
+                                        "debitCardDetails",
+                                        "Debit Card",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Mobile No."
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .mobileNoDetails,
+                                        reportIndex,
+                                        "mobileNoDetails",
+                                        "Mobile No.",
+                                        request.selectedReport
+                                      )}
+                                  </Box>
+                                </>
+                              )}
+                            </Box>
+                          </AccordionDetails>
+                        </Accordion>
+                      </Box>
+                    ))}
 
                 <Box className="action-buttons">
                   <Button

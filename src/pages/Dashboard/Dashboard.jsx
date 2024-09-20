@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Button, Typography } from "@mui/material";
 import { RiAddLargeFill } from "react-icons/ri";
 import Loader from "../../components/Loader";
-
+import { Provider } from "react-redux";
+import store from "../../Redux/reduxStore";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export default function Dashboard() {
   }
 
   return (
-    <>
+    <Provider store={store}>
       <div data-testid="dashboard-main">
         {/* heading */}
         <div className="d-flex justify-content-between align-items-end">
@@ -53,26 +54,26 @@ export default function Dashboard() {
           className="d-flex justify-content-center align-items-center bg-white rounded"
           style={{ height: "73vh" }}
         >
-          { loading === true ? (
-        <Loader />
-      ) : ( 
-          <div
-            className="d-flex flex-column justify-content-center align-items-center"
-            style={{ cursor: "pointer" }}
-            data-testid="create-request-button"
-            onClick={(e) => {
-              createRequestNav();
-            }}
-          >
-            <img src={noData} alt="No data found" style={{ width: "33vh" }} />
-            <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
-              {t("noRequestInDashoard")}
-            </span>
-          </div>
-         )} 
+          {loading === true ? (
+            <Loader />
+          ) : (
+            <div
+              className="d-flex flex-column justify-content-center align-items-center"
+              style={{ cursor: "pointer" }}
+              data-testid="create-request-button"
+              onClick={(e) => {
+                createRequestNav();
+              }}
+            >
+              <img src={noData} alt="No data found" style={{ width: "33vh" }} />
+              <span style={{ color: "rgba(96, 96, 96, 1)", fontWeight: "600" }}>
+                {t("noRequestInDashoard")}
+              </span>
+            </div>
+          )}
         </div>
       </div>
-    </>
+    </Provider>
   );
 }
 

@@ -5,22 +5,33 @@ import {
   screen,
   within,
   waitFor,
+  act,
 } from "@testing-library/react";
 import { cleanup } from "@testing-library/react";
-import { test, expect,vi,describe } from "vitest";
+import { test, expect, vi, describe, beforeEach, afterEach } from "vitest";
 import { BrowserRouter } from "react-router-dom";
 import store from "../../Redux/reduxStore";
 import CreateRequest from "../../pages/CreateRequest/CreateRequest";
 import userEvent from "@testing-library/user-event";
-import { requiredReportsData } from "../../components/data/requestsData";
 import dayjs from "dayjs";
 import Dashboard from "../../pages/Dashboard/Dashboard";
 import { Provider } from "react-redux";
 
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
+
 const renderDashboard = () => {
   return render(
     <BrowserRouter>
-      <Dashboard />
+      <Provider store={store}>
+        <Dashboard />
+      </Provider>
     </BrowserRouter>
   );
 };
@@ -35,39 +46,42 @@ const renderCreateRequest = () => {
   );
 };
 
+const advanceTimer = () => {
+  act(() => {
+    vi.advanceTimersByTime(1000);
+  });
+};
+
 test("Dashboard Page Loader Render Check", () => {
   renderDashboard();
 
   const loader = screen.getByTestId("loader-modal");
   expect(loader).toBeInTheDocument();
 
-  setTimeout(() => {
-    expect(loader).not.toBeInTheDocument();
-  }, 600);
+  advanceTimer();
+  expect(loader).not.toBeInTheDocument();
 });
 
 test("Dashboard Render", () => {
   renderDashboard();
-  setTimeout(() => {
-    const dashMain = screen.getByTestId("dashboard-main");
+  advanceTimer();
+  const dashMain = screen.getByTestId("dashboard-main");
 
-    expect(dashMain).toBeInTheDocument();
-  }, 600);
+  expect(dashMain).toBeInTheDocument();
 });
 
 test("Create Request Button Functionality", async () => {
   renderDashboard();
-  setTimeout(() => {
-    const createRequestButton = screen.getByTestId("create-request-button");
+  advanceTimer();
+  const createRequestButton = screen.getByTestId("create-request-button");
 
-    expect(createRequestButton).toBeInTheDocument();
+  expect(createRequestButton).toBeInTheDocument();
 
-    fireEvent.click(createRequestButton);
+  fireEvent.click(createRequestButton);
 
-    expect(renderCreateRequest());
+  expect(renderCreateRequest());
 
-    const createRequestPage = screen.getByTestId("create-request-page");
+  const createRequestPage = screen.getByTestId("create-request-page");
 
-    expect(createRequestPage).toBeInTheDocument();
-  }, 600);
+  expect(createRequestPage).toBeInTheDocument();
 });

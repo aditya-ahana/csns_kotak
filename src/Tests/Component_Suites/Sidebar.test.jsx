@@ -6,7 +6,7 @@ import {
   within,
   waitFor,
 } from "@testing-library/react";
-import { test, expect,vi,describe } from "vitest";
+import { test, expect, vi, describe } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -48,9 +48,11 @@ const renderCreateRequest = () => {
 const renderViewRequest = () => {
   return render(
     <BrowserRouter>
-      <ViewRequest>
-        <MailDraft />
-      </ViewRequest>
+      <Provider store={store}>
+        <ViewRequest>
+          <MailDraft />
+        </ViewRequest>
+      </Provider>
     </BrowserRouter>
   );
 };

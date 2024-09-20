@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   render,
@@ -6,21 +6,36 @@ import {
   screen,
   within,
   waitFor,
+  act,
 } from "@testing-library/react";
-import { test, expect,vi,describe } from "vitest";
+import { test, expect, vi, describe, afterEach, beforeEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import CreateRequest from "../../pages/CreateRequest/CreateRequest";
 import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "../../Redux/reduxStore";
 import userEvent from "@testing-library/user-event";
-import { requiredReportsData } from "../../components/data/requestsData";
 import dayjs from "dayjs";
 import ViewRequest from "../../pages/ViewRequest/ViewRequest";
 import MailDraft from "../../components/Modals/MailDraft";
-import { changeReadOnly } from "../../components/data/requestsData";
+import {
+  availableReportTypes,
+  changeReadOnly,
+  countryCodeData,
+} from "../../Redux/reducedData";
 
 const datePickerTestValue = dayjs(new Date()).format("DD-MM-YYYY");
+
+const countryCodes = countryCodeData.map((code) => code.phone);
+
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+});
 
 const renderCreateRequest = () => {
   return render(
@@ -35,11 +50,19 @@ const renderCreateRequest = () => {
 const renderViewRequest = () => {
   return render(
     <BrowserRouter>
-      <ViewRequest>
-        <MailDraft />
-      </ViewRequest>
+      <Provider store={store}>
+        <ViewRequest>
+          <MailDraft />
+        </ViewRequest>
+      </Provider>
     </BrowserRouter>
   );
+};
+
+const advanceTimer = () => {
+  act(() => {
+    vi.advanceTimersByTime(1000);
+  });
 };
 
 const fillTicketNumberInput = () => {
@@ -62,7 +85,6 @@ const fillTicketNumberInput = () => {
 
 const fillTicketDescriptionInput = () => {
   const ticketDescriptionField = screen.getByTestId("ticket-descr-input");
-  screen.get;
   expect(ticketDescriptionField).toBeInTheDocument();
 
   const ticketDescriptionInput =
@@ -82,24 +104,28 @@ const fillTicketDescriptionInput = () => {
   );
 };
 
-const selectReports = (index, selectedReport) => {
+const selectReports = (selectedReport) => {
   const dropdown = screen.getByTestId("reports-selection-dropdown");
   const dropdownBox = within(dropdown).getByRole("combobox");
 
   fireEvent.mouseDown(dropdownBox);
 
-  const menuItem = screen.getByTestId(
-    `reports-selection-dropdown-menu-item-${index}`
+  const menuItems = screen.getAllByRole("option");
+
+  screen.debug(menuItems);
+
+  // expect(menuItem).toBeInTheDocument();
+
+  const menuItem = menuItems.find(
+    (report) => report.getAttribute("data-value") === selectedReport
   );
 
-  expect(menuItem).toBeInTheDocument();
-
-  const checkBox = screen.getByTestId(
-    `reports-selection-dropdown-menu-item-checkbox-${index}`
-  );
+  const checkBox = within(menuItem).getByTestId(`reports-checkbox`);
   expect(checkBox).toBeInTheDocument();
 
   const checkerBox = within(checkBox).getByRole("checkbox");
+
+  screen.debug(checkerBox);
 
   fireEvent.click(checkerBox);
 
@@ -108,6 +134,7 @@ const selectReports = (index, selectedReport) => {
   const selectInput = dropdown.querySelector("input");
 
   expect(selectInput.value).toBe(selectedReport);
+
   // expect(checkerBox).toHaveProperty('checked', true);
 
   // const selectedReportsSection = screen.getByTestId("selected-reports-section");
@@ -115,22 +142,15 @@ const selectReports = (index, selectedReport) => {
   // expect(selectedReportsSection).toBeInTheDocument();
 };
 
-const selectParams = (
-  reportIndex,
-  report,
-  paramSelectIndex,
-  paramIndex,
-  param
-) => {
-  selectReports(reportIndex, report);
+const selectParams = (report, param) => {
+  // console.log(reportIndex, report, paramSelectIndex, paramIndex, param);
+  selectReports(report);
 
   // const selectedReportsSection = screen.getByTestId("selected-reports-section");
 
   // expect(selectedReportsSection).toBeInTheDocument();
 
-  const paramDropdown = screen.getByTestId(
-    `param-dropdown-${paramSelectIndex}`
-  );
+  const paramDropdown = screen.getByTestId(`param-dropdown-0`);
 
   const paramdropdownBox = within(paramDropdown).getByRole("combobox", {
     hidden: true,
@@ -138,30 +158,32 @@ const selectParams = (
 
   fireEvent.mouseDown(paramdropdownBox);
 
-  const paramMenuItem = screen.getByTestId(
-    `param-dropdown-menu-item-${paramIndex}`
+  const menuItems = screen.getAllByRole("option");
+
+  // expect(menuItems).toBeInTheDocument();
+
+  screen.debug(menuItems);
+
+  const menuItem = menuItems.find(
+    (input) => input.getAttribute("data-value") === param
   );
 
-  expect(paramMenuItem).toBeInTheDocument();
+  // // expect(menuItem).toBeInTheDocument();
 
-  screen.debug(paramMenuItem);
+  // screen.debug(menuItem);
 
-  const paramCheckBox = screen.getByTestId(
-    `param-dropdown-checkbox-${paramIndex}`
-  );
+  const checkBox = within(menuItem).getByTestId(`param-checkbox`);
 
-  expect(paramCheckBox).toBeInTheDocument();
+  // // expect(paramCheckBox).toBeInTheDocument();
 
-  const paramCheckerBox = within(paramCheckBox).getByRole("checkbox", {
-    hidden: true,
-  });
+  const paramCheckerBox = within(checkBox).getByRole("checkbox");
 
-  expect(paramCheckerBox).toBeInTheDocument();
+  // // expect(paramCheckerBox).toBeInTheDocument();
 
   fireEvent.click(paramCheckerBox);
 
   expect(paramCheckerBox).toBeChecked();
-  // expect(paramCheckerBox).toHaveProperty('checked', true);
+  // // // expect(paramCheckerBox).toHaveProperty('checked', true);
 
   const paramSelectInput = paramDropdown.querySelector("input");
 
@@ -174,587 +196,603 @@ test("Create Request Page Loader Render Check", () => {
   const loader = screen.getByTestId("loader-modal");
   expect(loader).toBeInTheDocument();
 
-  setTimeout(() => {
-    expect(loader).not.toBeInTheDocument();
-  }, 600);
+  advanceTimer();
+
+  expect(loader).not.toBeInTheDocument();
+});
+
+test("Reports Search Functionality Check", async () => {
+  renderCreateRequest();
+  advanceTimer();
+
+  const dropdown = screen.getByTestId("reports-selection-dropdown");
+  const dropdownBox = within(dropdown).getByRole("combobox");
+
+  fireEvent.mouseDown(dropdownBox);
+
+  const searchBar = screen.getByTestId("reports-search");
+
+  const searchInput = screen
+    .getByTestId("reports-search-input")
+    .querySelector("input");
+
+  screen.debug(searchBar);
+
+  const value = " DeviCe ";
+
+  fireEvent.change(searchInput, {
+    target: {
+      value: value.toLowerCase().trim(),
+    },
+  });
+
+  expect(searchInput.value).toBe("device");
+
+  vi.useRealTimers();
 });
 
 test("Render Create Request component", () => {
-  setTimeout(() => {
-    expect(renderCreateRequest());
-  }, 600);
+  expect(renderCreateRequest());
 });
 
 test("Ticket Number Input Field Test", () => {
   renderCreateRequest();
+  advanceTimer();
 
-  setTimeout(() => {
-    const ticketNumberField = screen.getByTestId("ticket-num-input");
+  const ticketNumberField = screen.getByTestId("ticket-num-input");
 
-    expect(ticketNumberField).toBeInTheDocument();
+  expect(ticketNumberField).toBeInTheDocument();
 
-    const ticketNumberInput = ticketNumberField.querySelector("input");
+  const ticketNumberInput = ticketNumberField.querySelector("input");
 
-    fireEvent.change(ticketNumberInput, {
-      target: {
-        value: "49249247012",
-      },
-    });
+  fireEvent.change(ticketNumberInput, {
+    target: {
+      value: "49249247012",
+    },
+  });
 
-    expect(ticketNumberInput.value.slice(0, 10)).toBe("4924924701");
-  }, 600);
+  expect(ticketNumberInput.value.slice(0, 10)).toBe("4924924701");
 });
 
 test("Ticket Description TextArea Field Test", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketDescriptionInput();
-    cleanup();
-  }, 600);
+  advanceTimer();
+
+  fillTicketDescriptionInput();
 });
 
 describe("Reports Selection Dropdown Functionality Check", () => {
   test("Mock Selection Check", () => {
     renderCreateRequest();
-    setTimeout(() => {
-      fillTicketNumberInput();
-      fillTicketDescriptionInput();
-      selectReports(0, "Statement in PDF/Excel");
-      // screen.debug();
-    }, 600);
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectReports("IP Logs");
+    // screen.debug();
   });
 
   test("Multiple Reports Selection Check", () => {
     renderCreateRequest();
-    setTimeout(() => {
-      fillTicketNumberInput();
-      fillTicketDescriptionInput();
+    advanceTimer();
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
 
-      const dropdown = screen.getByTestId("reports-selection-dropdown");
+    const dropdown = screen.getByTestId("reports-selection-dropdown");
 
-      const selectInput = dropdown.querySelector("input");
+    const selectInput = dropdown.querySelector("input");
 
-      expect(selectInput.value).toBe("");
+    expect(selectInput.value).toBe("");
 
-      const dropdownBox = within(dropdown).getByRole("combobox");
+    const dropdownBox = within(dropdown).getByRole("combobox");
 
-      fireEvent.mouseDown(dropdownBox);
+    fireEvent.mouseDown(dropdownBox);
 
-      const menuItem0 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-0`
-      );
-      const menuItem1 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-1`
-      );
-      const menuItem2 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-2`
-      );
-      const menuItem3 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-3`
-      );
-      const menuItem4 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-4`
-      );
-      const menuItem5 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-5`
-      );
-      const menuItem6 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-6`
-      );
+    const menuItems = screen.getAllByRole("option");
 
-      expect(menuItem0).toBeInTheDocument();
-      expect(menuItem1).toBeInTheDocument();
-      expect(menuItem2).toBeInTheDocument();
-      expect(menuItem3).toBeInTheDocument();
-      expect(menuItem4).toBeInTheDocument();
-      expect(menuItem5).toBeInTheDocument();
-      expect(menuItem6).toBeInTheDocument();
+    const menuItemMap1 = menuItems.find(
+      (item) =>
+        item.getAttribute("data-value") ===
+        "Beneficiary details for Bulk IMPS transactions"
+    );
+    const menuItemMap2 = menuItems.find(
+      (item) =>
+        item.getAttribute("data-value") ===
+        "Beneficiary details for Single UPI transactions"
+    );
+    const menuItemMap3 = menuItems.find(
+      (item) => item.getAttribute("data-value") === "Device details"
+    );
+    const menuItemMap4 = menuItems.find(
+      (item) => item.getAttribute("data-value") === "IP Logs"
+    );
+    const menuItemMap5 = menuItems.find(
+      (item) => item.getAttribute("data-value") === "Statement in PDF/Excel"
+    );
 
-      const checkBox0 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-0`
-      );
-      const checkBox1 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-1`
-      );
-      const checkBox2 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-2`
-      );
-      const checkBox3 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-3`
-      );
-      const checkBox4 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-4`
-      );
-      const checkBox5 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-5`
-      );
-      const checkBox6 = screen.getByTestId(
-        `reports-selection-dropdown-menu-item-checkbox-6`
-      );
+    const checkBox1 = within(menuItemMap1).getByTestId(`reports-checkbox`);
+    const checkBox2 = within(menuItemMap2).getByTestId(`reports-checkbox`);
+    const checkBox3 = within(menuItemMap3).getByTestId(`reports-checkbox`);
+    const checkBox4 = within(menuItemMap4).getByTestId(`reports-checkbox`);
+    const checkBox5 = within(menuItemMap5).getByTestId(`reports-checkbox`);
 
-      const checkerBox0 = within(checkBox0).getByRole("checkbox");
-      const checkerBox1 = within(checkBox1).getByRole("checkbox");
-      const checkerBox2 = within(checkBox2).getByRole("checkbox");
-      const checkerBox3 = within(checkBox3).getByRole("checkbox");
-      const checkerBox4 = within(checkBox4).getByRole("checkbox");
-      const checkerBox5 = within(checkBox5).getByRole("checkbox");
-      const checkerBox6 = within(checkBox6).getByRole("checkbox");
+    const checkerBox1 = within(checkBox1).getByRole("checkbox");
+    const checkerBox2 = within(checkBox2).getByRole("checkbox");
+    const checkerBox3 = within(checkBox3).getByRole("checkbox");
+    const checkerBox4 = within(checkBox4).getByRole("checkbox");
+    const checkerBox5 = within(checkBox5).getByRole("checkbox");
 
-      fireEvent.click(checkerBox0);
+    fireEvent.click(checkerBox1);
+    expect(checkerBox1).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(selectInput.value).toBe("Statement in PDF/Excel");
+    fireEvent.click(checkerBox2);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions"
+    );
 
-      fireEvent.click(checkerBox1);
+    fireEvent.click(checkerBox3);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Device details"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions"
-      );
+    fireEvent.click(checkerBox4);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Device details,IP Logs"
+    );
 
-      fireEvent.click(checkerBox2);
+    fireEvent.click(checkerBox5);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Device details,IP Logs,Statement in PDF/Excel"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Bulk IMPS transactions"
-      );
+    fireEvent.click(checkerBox2);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).not.toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Device details,IP Logs,Statement in PDF/Excel"
+    );
 
-      fireEvent.click(checkerBox3);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions"
-      );
-
-      fireEvent.click(checkerBox4);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Beneficiary details for Bulk UPI transactions"
-      );
-
-      fireEvent.click(checkerBox5);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Beneficiary details for Bulk UPI transactions,IP Logs"
-      );
-
-      fireEvent.click(checkerBox6);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Bulk IMPS transactions,Beneficiary details for Single UPI transactions,Beneficiary details for Bulk UPI transactions,IP Logs,Device details"
-      );
-
-      fireEvent.click(checkerBox2);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).not.toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Single UPI transactions,Beneficiary details for Bulk UPI transactions,IP Logs,Device details"
-      );
-
-      fireEvent.click(checkerBox4);
-
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).not.toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).not.toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Statement in PDF/Excel,Beneficiary details for Single IMPS transactions,Beneficiary details for Single UPI transactions,IP Logs,Device details"
-      );
-
-      // screen.debug();
-    }, 600);
+    fireEvent.click(checkerBox4);
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).not.toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).not.toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Beneficiary details for Bulk IMPS transactions,Device details,Statement in PDF/Excel"
+    );
   });
 });
 
 test("Rendering Selected Reports Section", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectReports(0, "Statement in PDF/Excel");
+  advanceTimer();
 
-    const selectedReportsSection = screen.getByTestId(
-      "selected-reports-section"
-    );
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectReports("Statement in PDF/Excel");
 
-    expect(selectedReportsSection).toBeInTheDocument();
-  }, 600);
+  const selectedReportsSection = screen.getByTestId("selected-reports-section");
+
+  expect(selectedReportsSection).toBeInTheDocument();
 });
 
 describe("Params Selection Dropdown Functionality Check", () => {
+  test("Param Search Functionality check", () => {
+    renderCreateRequest();
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+
+    selectReports("Statement in PDF/Excel");
+
+    const paramDropdown = screen.getByTestId(`param-dropdown-0`);
+
+    const paramdropdownBox = within(paramDropdown).getByRole("combobox", {
+      hidden: true,
+    });
+
+    fireEvent.mouseDown(paramdropdownBox);
+
+    const searchBar = screen.getByTestId("param-search-0");
+
+    const searchInput = screen
+      .getByTestId("param-search-input-0")
+      .querySelector("input");
+
+    screen.debug(searchBar);
+
+    const value = "      AadhaR ";
+
+    fireEvent.change(searchInput, {
+      target: {
+        value: value.toLowerCase().trim(),
+      },
+    });
+
+    expect(searchInput.value).toBe("aadhar");
+
+    vi.useRealTimers();
+  });
   test("Mock Params Selection Check", () => {
     renderCreateRequest();
-    setTimeout(() => {
-      fillTicketNumberInput();
-      fillTicketDescriptionInput();
-      selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
-    }, 600);
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("Beneficiary details for Bulk IMPS transactions", "Aadhar");
   });
 
   test("Multiple Params Selection Check", () => {
     renderCreateRequest();
-    setTimeout(() => {
-      fillTicketNumberInput();
-      fillTicketDescriptionInput();
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
 
-      selectReports(0, "Statement in PDF/Excel");
+    selectReports("Beneficiary details for Bulk IMPS transactions");
 
-      const dropdown = screen.getByTestId("param-dropdown-0");
+    const dropdown = screen.getByTestId("param-dropdown-0");
 
-      const selectInput = dropdown.querySelector("input");
+    const selectInput = dropdown.querySelector("input");
 
-      expect(selectInput.value).toBe("");
+    expect(selectInput.value).toBe("");
 
-      const dropdownBox = within(dropdown).getByRole("combobox", {
-        hidden: true,
-      });
+    const dropdownBox = within(dropdown).getByRole("combobox", {
+      hidden: true,
+    });
 
-      fireEvent.mouseDown(dropdownBox);
+    fireEvent.mouseDown(dropdownBox);
 
-      const menuItem0 = screen.getByTestId(`param-dropdown-menu-item-0`);
-      const menuItem1 = screen.getByTestId(`param-dropdown-menu-item-1`);
-      const menuItem2 = screen.getByTestId(`param-dropdown-menu-item-2`);
-      const menuItem3 = screen.getByTestId(`param-dropdown-menu-item-3`);
-      const menuItem4 = screen.getByTestId(`param-dropdown-menu-item-4`);
-      const menuItem5 = screen.getByTestId(`param-dropdown-menu-item-5`);
-      const menuItem6 = screen.getByTestId(`param-dropdown-menu-item-6`);
-      const menuItem7 = screen.getByTestId(`param-dropdown-menu-item-7`);
-      const menuItem8 = screen.getByTestId(`param-dropdown-menu-item-8`);
+    const menuItems = screen.getAllByRole("option");
 
-      expect(menuItem0).toBeInTheDocument();
-      expect(menuItem1).toBeInTheDocument();
-      expect(menuItem2).toBeInTheDocument();
-      expect(menuItem3).toBeInTheDocument();
-      expect(menuItem4).toBeInTheDocument();
-      expect(menuItem5).toBeInTheDocument();
-      expect(menuItem6).toBeInTheDocument();
-      expect(menuItem7).toBeInTheDocument();
-      expect(menuItem8).toBeInTheDocument();
+    const menuItem0 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Aadhar"
+    );
 
-      const checkBox0 = screen.getByTestId(`param-dropdown-checkbox-0`);
-      const checkBox1 = screen.getByTestId(`param-dropdown-checkbox-1`);
-      const checkBox2 = screen.getByTestId(`param-dropdown-checkbox-2`);
-      const checkBox3 = screen.getByTestId(`param-dropdown-checkbox-3`);
-      const checkBox4 = screen.getByTestId(`param-dropdown-checkbox-4`);
-      const checkBox5 = screen.getByTestId(`param-dropdown-checkbox-5`);
-      const checkBox6 = screen.getByTestId(`param-dropdown-checkbox-6`);
-      const checkBox7 = screen.getByTestId(`param-dropdown-checkbox-7`);
-      const checkBox8 = screen.getByTestId(`param-dropdown-checkbox-8`);
+    const menuItem1 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Account number"
+    );
 
-      const checkerBox0 = within(checkBox0).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox1 = within(checkBox1).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox2 = within(checkBox2).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox3 = within(checkBox3).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox4 = within(checkBox4).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox5 = within(checkBox5).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox6 = within(checkBox6).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox7 = within(checkBox7).getByRole("checkbox", {
-        hidden: true,
-      });
-      const checkerBox8 = within(checkBox8).getByRole("checkbox", {
-        hidden: true,
-      });
+    const menuItem2 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "CRN"
+    );
 
-      fireEvent.click(checkerBox0);
+    const menuItem3 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Credit Card"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(selectInput.value).toBe("Account number");
+    const menuItem4 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Debit Card"
+    );
 
-      fireEvent.click(checkerBox1);
+    const menuItem5 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Email ID"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(selectInput.value).toBe("Account number,CRN");
+    const menuItem6 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "Mobile No."
+    );
 
-      fireEvent.click(checkerBox2);
+    const menuItem7 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "PAN"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(selectInput.value).toBe("Account number,CRN,RRN");
+    const menuItem8 = menuItems.find(
+      (input) => input.getAttribute("data-value") === "RRN"
+    );
 
-      fireEvent.click(checkerBox3);
+    const checkBox0 = within(menuItem0).getByTestId("param-checkbox");
+    const checkBox1 = within(menuItem1).getByTestId("param-checkbox");
+    const checkBox2 = within(menuItem2).getByTestId("param-checkbox");
+    const checkBox3 = within(menuItem3).getByTestId("param-checkbox");
+    const checkBox4 = within(menuItem4).getByTestId("param-checkbox");
+    const checkBox5 = within(menuItem5).getByTestId("param-checkbox");
+    const checkBox6 = within(menuItem6).getByTestId("param-checkbox");
+    const checkBox7 = within(menuItem7).getByTestId("param-checkbox");
+    const checkBox8 = within(menuItem8).getByTestId("param-checkbox");
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(selectInput.value).toBe("Account number,CRN,RRN,PAN");
+    const checkerBox0 = within(checkBox0).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox1 = within(checkBox1).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox2 = within(checkBox2).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox3 = within(checkBox3).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox4 = within(checkBox4).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox5 = within(checkBox5).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox6 = within(checkBox6).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox7 = within(checkBox7).getByRole("checkbox", {
+      hidden: true,
+    });
+    const checkerBox8 = within(checkBox8).getByRole("checkbox", {
+      hidden: true,
+    });
 
-      fireEvent.click(checkerBox4);
+    fireEvent.click(checkerBox0);
+    expect(checkerBox0).toBeChecked();
+    expect(selectInput.value).toBe("Aadhar");
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(selectInput.value).toBe("Account number,CRN,RRN,PAN,Aadhar");
+    fireEvent.click(checkerBox1);
 
-      fireEvent.click(checkerBox5);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(selectInput.value).toBe("Aadhar,Account number");
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,PAN,Aadhar,Mobile No."
-      );
+    fireEvent.click(checkerBox2);
 
-      fireEvent.click(checkerBox6);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(selectInput.value).toBe("Aadhar,Account number,CRN");
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,PAN,Aadhar,Mobile No.,Debit Card"
-      );
+    fireEvent.click(checkerBox3);
 
-      fireEvent.click(checkerBox7);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(selectInput.value).toBe("Aadhar,Account number,CRN,Credit Card");
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(checkerBox7).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,PAN,Aadhar,Mobile No.,Debit Card,Credit Card"
-      );
+    fireEvent.click(checkerBox4);
 
-      fireEvent.click(checkerBox8);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Credit Card,Debit Card"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(checkerBox7).toBeChecked();
-      expect(checkerBox8).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,PAN,Aadhar,Mobile No.,Debit Card,Credit Card,Email ID"
-      );
+    fireEvent.click(checkerBox5);
 
-      fireEvent.click(checkerBox3);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID"
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).not.toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(checkerBox7).toBeChecked();
-      expect(checkerBox8).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,Aadhar,Mobile No.,Debit Card,Credit Card,Email ID"
-      );
+    fireEvent.click(checkerBox6);
 
-      fireEvent.click(checkerBox7);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No."
+    );
 
-      expect(checkerBox0).toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).not.toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(checkerBox7).not.toBeChecked();
-      expect(checkerBox8).toBeChecked();
-      expect(selectInput.value).toBe(
-        "Account number,CRN,RRN,Aadhar,Mobile No.,Debit Card,Email ID"
-      );
+    fireEvent.click(checkerBox7);
 
-      fireEvent.click(checkerBox0);
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(checkerBox7).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN"
+    );
 
-      expect(checkerBox0).not.toBeChecked();
-      expect(checkerBox1).toBeChecked();
-      expect(checkerBox2).toBeChecked();
-      expect(checkerBox3).not.toBeChecked();
-      expect(checkerBox4).toBeChecked();
-      expect(checkerBox5).toBeChecked();
-      expect(checkerBox6).toBeChecked();
-      expect(checkerBox7).not.toBeChecked();
-      expect(checkerBox8).toBeChecked();
-      expect(selectInput.value).toBe(
-        "CRN,RRN,Aadhar,Mobile No.,Debit Card,Email ID"
-      );
-    }, 600);
+    fireEvent.click(checkerBox8);
+
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(checkerBox7).toBeChecked();
+    expect(checkerBox8).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN,RRN"
+    );
+
+    fireEvent.click(checkerBox3);
+
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).not.toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(checkerBox7).toBeChecked();
+    expect(checkerBox8).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,PAN,RRN"
+    );
+
+    fireEvent.click(checkerBox7);
+
+    expect(checkerBox0).toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).not.toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(checkerBox7).not.toBeChecked();
+    expect(checkerBox8).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+    );
+
+    fireEvent.click(checkerBox0);
+
+    expect(checkerBox0).not.toBeChecked();
+    expect(checkerBox1).toBeChecked();
+    expect(checkerBox2).toBeChecked();
+    expect(checkerBox3).not.toBeChecked();
+    expect(checkerBox4).toBeChecked();
+    expect(checkerBox5).toBeChecked();
+    expect(checkerBox6).toBeChecked();
+    expect(checkerBox7).not.toBeChecked();
+    expect(checkerBox8).toBeChecked();
+    expect(selectInput.value).toBe(
+      "Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+    );
   });
 });
 
 test("Rendering Form Fields After Param Selection", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const formFieldset = screen.queryByTestId("detail-fieldset-0");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    expect(formFieldset).toBeInTheDocument();
-  }, 600);
+  const formFieldset = screen.queryByTestId("detail-fieldset-0");
+
+  expect(formFieldset).toBeInTheDocument();
 });
 
 test("Detail Name Input Render and Functionality Check", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameField = screen.getByTestId("detail-name-input-0");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    expect(detailNameField).toBeInTheDocument();
+  const detailNameField = screen.getByTestId("detail-name-input-0");
 
-    const detailNameInput = detailNameField.querySelector("input");
+  expect(detailNameField).toBeInTheDocument();
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "8510542870441383",
-      },
-    });
+  const detailNameInput = detailNameField.querySelector("input");
 
-    expect(detailNameInput.value).toBe("8510542870441383");
-  }, 600);
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "8510542870441383",
+    },
+  });
+
+  expect(detailNameInput.value).toBe("8510542870441383");
 });
 
 test("From Date Picker Functionality Check", () => {
   renderCreateRequest();
+  advanceTimer();
   changeReadOnly(false);
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "25705428704477890",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("25705428704477890");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "25705428704477890",
+    },
+  });
 
-    const fromDatepicker = screen.getByLabelText("from");
+  expect(detailNameInput.value).toBe("25705428704477890");
 
-    expect(fromDatepicker).toBeInTheDocument();
+  const fromDatepicker = screen.getByLabelText("from");
 
-    fireEvent.change(fromDatepicker, {
-      target: { value: datePickerTestValue },
-    });
+  expect(fromDatepicker).toBeInTheDocument();
 
-    expect(fromDatepicker.value).toBe(datePickerTestValue);
-    changeReadOnly(true);
-  }, 600);
+  fireEvent.change(fromDatepicker, {
+    target: { value: datePickerTestValue },
+  });
+
+  expect(fromDatepicker.value).toBe(datePickerTestValue);
+  changeReadOnly(true);
 });
 
 test("To Date Picker Functionality Check", () => {
   renderCreateRequest();
+  advanceTimer();
   changeReadOnly(false);
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "16325456314470578",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("16325456314470578");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "16325456314470578",
+    },
+  });
 
-    const fromDatepicker = screen.getByLabelText("from");
+  expect(detailNameInput.value).toBe("16325456314470578");
 
-    expect(fromDatepicker).toBeInTheDocument();
+  const fromDatepicker = screen.getByLabelText("from");
 
-    fireEvent.change(fromDatepicker, {
-      target: { value: datePickerTestValue },
-    });
+  expect(fromDatepicker).toBeInTheDocument();
 
-    expect(fromDatepicker.value).toBe(datePickerTestValue);
+  fireEvent.change(fromDatepicker, {
+    target: { value: datePickerTestValue },
+  });
 
-    const toDatepicker = screen.getByLabelText("to");
+  expect(fromDatepicker.value).toBe(datePickerTestValue);
 
-    expect(toDatepicker).toBeInTheDocument();
+  const toDatepicker = screen.getByLabelText("to");
 
-    fireEvent.change(toDatepicker, { target: { value: datePickerTestValue } });
+  expect(toDatepicker).toBeInTheDocument();
 
-    expect(toDatepicker.value).toBe(datePickerTestValue);
-    changeReadOnly(true);
-  }, 600);
+  fireEvent.change(toDatepicker, { target: { value: datePickerTestValue } });
+
+  expect(toDatepicker.value).toBe(datePickerTestValue);
+  changeReadOnly(true);
 });
 
 test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report", () => {
-  renderCreateRequest();
-  setTimeout(() => {
+  availableReportTypes.forEach((type) => {
+    renderCreateRequest();
+    advanceTimer();
+
     fillTicketNumberInput();
     fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+    selectParams("Statement in PDF/Excel", "Account number");
 
     const detailNameInput = screen
       .getByTestId("detail-name-input-0")
@@ -778,419 +816,627 @@ test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report
 
     fireEvent.mouseDown(typedropdownBox);
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+    const typeMenuItems = screen.getAllByRole("option");
+
+    const typeMenuItem1 = typeMenuItems.find(
+      (item) => item.getAttribute("data-value") === type
+    );
+    // const typeMenuItem2 = typeMenuItems.find(
+    //   (type) => type.getAttribute("data-value") === "PDF"
+    // );
 
     fireEvent.click(typeMenuItem1);
 
-    expect(typeSelectInput.value).toBe("PDF");
+    expect(typeSelectInput.value).toBe(type.toLowerCase());
+    cleanup();
 
-    const typeMenuItem2 = screen.getByTestId(`type-dropdown-menuitem-1`);
+    // fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(typeMenuItem2);
+    // expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    expect(typeSelectInput.value).toBe("Excel");
+    // fireEvent.click(typeMenuItem1);
 
-    fireEvent.click(typeMenuItem1);
+    // expect(typeSelectInput.value).toBe("Excel".toLowerCase());
+  });
+});
 
-    expect(typeSelectInput.value).toBe("PDF");
-  }, 600);
+describe("Triple Detail Render and Change for IP Logs", () => {
+  test("Triple Detailset render check", () => {
+    renderCreateRequest();
+    advanceTimer();
+
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("IP Logs", "Aadhar");
+
+    const detailSet0 = screen.getByTestId("detail-fieldset-0");
+    const detailSet1 = screen.getByTestId("detail-fieldset-1");
+    const detailSet2 = screen.getByTestId("detail-fieldset-2");
+
+    expect(detailSet0).toBeInTheDocument();
+    expect(detailSet1).toBeInTheDocument();
+    expect(detailSet2).toBeInTheDocument();
+  });
+
+  test("Triple Input Change Functionality check", () => {
+    renderCreateRequest();
+    advanceTimer();
+
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("IP Logs", "PAN");
+
+    const detailField0 = screen.getByTestId("detail-name-input-0");
+    const detailField1 = screen.getByTestId("detail-name-input-1");
+    const detailField2 = screen.getByTestId("detail-name-input-2");
+
+    const detailInput0 = detailField0.querySelector("input");
+    const detailInput1 = detailField1.querySelector("input");
+    const detailInput2 = detailField2.querySelector("input");
+
+    fireEvent.change(detailInput2, {
+      target: {
+        value: "6424789013",
+      },
+    });
+
+    expect(detailInput2.value).toBe("6424789013");
+    expect(detailInput1.value).toBe("6424789013");
+    expect(detailInput0.value).toBe("6424789013");
+  });
+
+  test("Triple From Date Input change check", () => {
+    renderCreateRequest();
+    advanceTimer();
+    changeReadOnly(false);
+
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("IP Logs", "Account number");
+
+    const fromDatepickers = screen.getAllByLabelText("from");
+
+    const fromDate0 = fromDatepickers.find((picker, index) => index === 0);
+    const fromDate1 = fromDatepickers.find((picker, index) => index === 1);
+    const fromDate2 = fromDatepickers.find((picker, index) => index === 2);
+
+    // fromDatepickers.forEach((picker, index) => {
+    //   expect(picker).toBeInTheDocument();
+    //   console.log("PICKER INDEX", index);
+    // });
+
+    fireEvent.change(fromDate2, {
+      target: { value: datePickerTestValue },
+    });
+
+    expect(fromDate2.value).toBe(datePickerTestValue);
+    expect(fromDate1.value).toBe(datePickerTestValue);
+    expect(fromDate0.value).toBe(datePickerTestValue);
+
+    changeReadOnly(true);
+  });
+
+  test("Triple To Date Input change check", () => {
+    renderCreateRequest();
+    advanceTimer();
+    changeReadOnly(false);
+
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("IP Logs", "Debit Card");
+
+    const toDatepickers = screen.getAllByLabelText("to");
+
+    const toDate0 = toDatepickers.find((picker, index) => index === 0);
+    const toDate1 = toDatepickers.find((picker, index) => index === 1);
+    const toDate2 = toDatepickers.find((picker, index) => index === 2);
+
+    fireEvent.change(toDate2, {
+      target: { value: datePickerTestValue },
+    });
+
+    expect(toDate2.value).toBe(datePickerTestValue);
+    expect(toDate1.value).toBe(datePickerTestValue);
+    expect(toDate0.value).toBe(datePickerTestValue);
+
+    changeReadOnly(true);
+  });
+
+  test("Triple Country Code Select Functionality Check for Primary Mobile Number", () => {
+    countryCodes.forEach((code) => {
+      renderCreateRequest();
+      advanceTimer();
+
+      fillTicketNumberInput();
+      fillTicketDescriptionInput();
+      selectParams("IP Logs", "Mobile No.");
+
+      const ccDropdown0 = screen.getByTestId(`cc-dropdown-0`);
+      const ccDropdown1 = screen.getByTestId(`cc-dropdown-1`);
+      const ccDropdown2 = screen.getByTestId(`cc-dropdown-2`);
+
+      const ccSelectInput0 = ccDropdown0.querySelector("input");
+      const ccSelectInput1 = ccDropdown1.querySelector("input");
+      const ccSelectInput2 = ccDropdown2.querySelector("input");
+
+      const ccDropdownBox = within(ccDropdown2).getByRole("combobox", {
+        hidden: true,
+      });
+
+      fireEvent.mouseDown(ccDropdownBox);
+
+      const ccMenuItems = screen.getAllByTestId(`cc-menuitem`);
+
+      const ccMenuItem1 = ccMenuItems.find(
+        (cc) => cc.getAttribute("data-value") === code
+      );
+
+      fireEvent.click(ccMenuItem1);
+
+      expect(ccSelectInput2.value).toBe(code);
+      expect(ccSelectInput1.value).toBe(code);
+      expect(ccSelectInput0.value).toBe(code);
+      cleanup();
+    });
+  });
+
+  test("Triple Country Code Select Functionality Check for Secondary Mobile Number", () => {
+    renderCreateRequest();
+    advanceTimer();
+
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+    selectParams("IP Logs", "Aadhar");
+
+    const ccDropdown0 = screen.getByTestId(`cc-dropdown-0`);
+    const ccDropdown1 = screen.getByTestId(`cc-dropdown-1`);
+    const ccDropdown2 = screen.getByTestId(`cc-dropdown-2`);
+
+    const ccSelectInput0 = ccDropdown0.querySelector("input");
+    const ccSelectInput1 = ccDropdown1.querySelector("input");
+    const ccSelectInput2 = ccDropdown2.querySelector("input");
+
+    expect(ccSelectInput0.value).toBe("91");
+    expect(ccSelectInput1.value).toBe("91");
+    expect(ccSelectInput2.value).toBe("91");
+
+    const ccDropdownBox = within(ccDropdown2).getByRole("combobox", {
+      hidden: true,
+    });
+
+    fireEvent.mouseDown(ccDropdownBox);
+
+    const ccMenuItems = screen.getAllByTestId(`cc-menuitem`);
+
+    const ccMenuItem1 = ccMenuItems.find(
+      (cc) => cc.getAttribute("data-value") === "1"
+    );
+
+    fireEvent.click(ccMenuItem1);
+
+    expect(ccSelectInput2.value).toBe("1");
+    expect(ccSelectInput1.value).toBe("1");
+    expect(ccSelectInput0.value).toBe("1");
+
+    const ccMenuItem2 = ccMenuItems.find(
+      (cc) => cc.getAttribute("data-value") === "1-242"
+    );
+
+    fireEvent.click(ccMenuItem2);
+
+    expect(ccSelectInput2.value).toBe("1-242");
+    expect(ccSelectInput1.value).toBe("1-242");
+    expect(ccSelectInput0.value).toBe("1-242");
+  });
 });
 
 test("Mobile Number Input Functionality Check for IP Logs", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(5, "IP Logs", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameField = screen.getByTestId("detail-name-input-0");
+  act(() => {
+    vi.advanceTimersByTime(1000);
+  });
 
-    expect(detailNameField).toBeInTheDocument();
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("IP Logs", "Aadhar");
 
-    const detailNameInput = detailNameField.querySelector("input");
+  const detailNameField = screen.getByTestId("detail-name-input-2");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "8510542870441383",
-      },
-    });
+  expect(detailNameField).toBeInTheDocument();
 
-    expect(detailNameInput.value).toBe("8510542870441383");
+  const detailNameInput = detailNameField.querySelector("input");
 
-    const mobileNoField = screen.getByTestId("mobileno-input-0");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "8510542870441383",
+    },
+  });
 
-    expect(mobileNoField).toBeInTheDocument();
+  expect(detailNameInput.value).toBe("8510542870441383");
 
-    const mobileNoInput = detailNameField.querySelector("input");
+  const mobileNoField = screen.getByTestId("mobileno-input-2");
 
-    fireEvent.change(mobileNoInput, {
-      target: {
-        value: "7359124706",
-      },
-    });
+  // screen.debug(mobileNoField)
 
-    expect(mobileNoInput.value).toBe("7359124706");
-  }, 600);
+  expect(mobileNoField).toBeInTheDocument();
+
+  const mobileNoInput = detailNameField.querySelector("input");
+
+  fireEvent.change(mobileNoInput, {
+    target: {
+      value: "4359124706",
+    },
+  });
+
+  expect(mobileNoInput.value).toBe("4359124706");
 });
 
 test("RRN Amount Input Functionality Check for Beneficiary Details for Single IMPS Transactions", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
+  advanceTimer();
 
-    selectReports(3, "Beneficiary details for Single UPI transactions");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
 
-    const RRNField = screen.getByTestId("detail-name-input-0");
+  selectReports("Beneficiary details for Single UPI transactions");
 
-    expect(RRNField).toBeInTheDocument();
+  const RRNField = screen.getByTestId("detail-name-input-0");
 
-    const RRNInput = RRNField.querySelector("input");
+  expect(RRNField).toBeInTheDocument();
 
-    fireEvent.change(RRNInput, {
-      target: {
-        value: "6726921083",
-      },
-    });
+  const RRNInput = RRNField.querySelector("input");
 
-    expect(RRNInput.value).toBe("6726921083");
+  fireEvent.change(RRNInput, {
+    target: {
+      value: "6726921083",
+    },
+  });
 
-    const amountField = screen.getByTestId("amount-detail-0");
+  expect(RRNInput.value).toBe("6726921083");
 
-    expect(amountField).toBeInTheDocument();
+  const amountField = screen.getByTestId("amount-detail-0");
 
-    const amountInput = amountField.querySelector("input");
+  expect(amountField).toBeInTheDocument();
 
-    fireEvent.change(amountInput, {
-      target: {
-        value: "96480",
-      },
-    });
+  const amountInput = amountField.querySelector("input");
 
-    expect(amountInput.value).toBe("96480");
+  fireEvent.change(amountInput, {
+    target: {
+      value: "96480",
+    },
+  });
 
-    cleanup();
-  }, 600);
+  expect(amountInput.value).toBe("96480");
 });
 
 test("RRN Date Picker Functionality Check for Beneficiary Details for Single Transactions", () => {
   renderCreateRequest();
+  advanceTimer();
   changeReadOnly(false);
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
 
-    selectReports(3, "Beneficiary details for Single UPI transactions");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
 
-    const RRNField = screen.getByTestId("detail-name-input-0");
+  selectReports("Beneficiary details for Single UPI transactions");
 
-    expect(RRNField).toBeInTheDocument();
+  const RRNField = screen.getByTestId("detail-name-input-0");
 
-    const RRNInput = RRNField.querySelector("input");
+  expect(RRNField).toBeInTheDocument();
 
-    fireEvent.change(RRNInput, {
-      target: {
-        value: "6726921083",
-      },
-    });
+  const RRNInput = RRNField.querySelector("input");
 
-    expect(RRNInput.value).toBe("6726921083");
+  fireEvent.change(RRNInput, {
+    target: {
+      value: "6726921083",
+    },
+  });
 
-    const rrnDatePicker = screen.getByLabelText("date");
+  expect(RRNInput.value).toBe("6726921083");
 
-    expect(rrnDatePicker).toBeInTheDocument();
+  const rrnDatePicker = screen.getByLabelText("date");
 
-    fireEvent.change(rrnDatePicker, {
-      target: {
-        value: datePickerTestValue,
-      },
-    });
+  expect(rrnDatePicker).toBeInTheDocument();
 
-    expect(rrnDatePicker.value).toBe(datePickerTestValue);
-    changeReadOnly(true);
-  }, 600);
+  fireEvent.change(rrnDatePicker, {
+    target: {
+      value: datePickerTestValue,
+    },
+  });
+
+  expect(rrnDatePicker.value).toBe(datePickerTestValue);
+  changeReadOnly(true);
 });
 
 test("Add Detail Button Functionality Check", () => {
   window.HTMLElement.prototype.scrollIntoView = function () {};
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "46723451314474097",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("46723451314474097");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "46723451314474097",
+    },
+  });
 
-    const typeDropdown = screen.getByTestId(`type-dropdown-0`);
+  expect(detailNameInput.value).toBe("46723451314474097");
 
-    const typeSelectInput = typeDropdown.querySelector("input");
+  const typeDropdown = screen.getByTestId(`type-dropdown-0`);
 
-    const typedropdownBox = within(typeDropdown).getByRole("combobox", {
-      hidden: true,
-    });
+  const typeSelectInput = typeDropdown.querySelector("input");
 
-    fireEvent.mouseDown(typedropdownBox);
+  const typedropdownBox = within(typeDropdown).getByRole("combobox", {
+    hidden: true,
+  });
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+  fireEvent.mouseDown(typedropdownBox);
 
-    fireEvent.click(typeMenuItem1);
+  const typeMenuItems = screen.getAllByRole("option");
 
-    expect(typeSelectInput.value).toBe("PDF");
+  const typeMenuItem2 = typeMenuItems.find(
+    (type) => type.getAttribute("data-value") === "PDF"
+  );
 
-    const addDetailButton = screen.getByTestId("add-button-0");
+  fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(addDetailButton);
+  expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    const newDetailFieldset = screen.getByTestId("detail-fieldset-1");
+  const addDetailButton = screen.getByTestId("add-button-0");
 
-    expect(newDetailFieldset).toBeInTheDocument();
-  }, 600);
+  fireEvent.click(addDetailButton);
+
+  const newDetailFieldset = screen.getByTestId("detail-fieldset-1");
+
+  expect(newDetailFieldset).toBeInTheDocument();
 });
 
 test("Delete Detail Button Functionality Check", () => {
   window.HTMLElement.prototype.scrollIntoView = function () {};
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "46723451314474097",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("46723451314474097");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "46723451314474097",
+    },
+  });
 
-    const typeDropdown = screen.getByTestId(`type-dropdown-0`);
+  expect(detailNameInput.value).toBe("46723451314474097");
 
-    const typeSelectInput = typeDropdown.querySelector("input");
+  const typeDropdown = screen.getByTestId(`type-dropdown-0`);
 
-    const typedropdownBox = within(typeDropdown).getByRole("combobox", {
-      hidden: true,
-    });
+  const typeSelectInput = typeDropdown.querySelector("input");
 
-    fireEvent.mouseDown(typedropdownBox);
+  const typedropdownBox = within(typeDropdown).getByRole("combobox", {
+    hidden: true,
+  });
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+  fireEvent.mouseDown(typedropdownBox);
 
-    fireEvent.click(typeMenuItem1);
+  const typeMenuItems = screen.getAllByRole("option");
 
-    expect(typeSelectInput.value).toBe("PDF");
+  const typeMenuItem2 = typeMenuItems.find(
+    (type) => type.getAttribute("data-value") === "PDF"
+  );
 
-    const addDetailButton = screen.getByTestId("add-button-0");
+  fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(addDetailButton);
+  expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    const newDetailFieldsetIndex = screen.getByTestId("detail-fieldset-1");
+  const addDetailButton = screen.getByTestId("add-button-0");
 
-    expect(newDetailFieldsetIndex).toBeInTheDocument();
+  fireEvent.click(addDetailButton);
 
-    const deleteDetailButton = screen.getByTestId("delete-button-0");
+  const newDetailFieldsetIndex = screen.getByTestId("detail-fieldset-1");
 
-    fireEvent.click(deleteDetailButton);
+  expect(newDetailFieldsetIndex).toBeInTheDocument();
 
-    expect(newDetailFieldsetIndex).not.toBeInTheDocument();
-  }, 600);
+  const deleteDetailButton = screen.getByTestId("delete-button-0");
+
+  fireEvent.click(deleteDetailButton);
+
+  expect(newDetailFieldsetIndex).not.toBeInTheDocument();
 });
 
 test("Preview Open Functionality Check", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "46723451314474097",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("46723451314474097");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "46723451314474097",
+    },
+  });
 
-    const typeDropdown = screen.getByTestId(`type-dropdown-0`);
+  expect(detailNameInput.value).toBe("46723451314474097");
 
-    const typeSelectInput = typeDropdown.querySelector("input");
+  const typeDropdown = screen.getByTestId(`type-dropdown-0`);
 
-    const typedropdownBox = within(typeDropdown).getByRole("combobox", {
-      hidden: true,
-    });
+  const typeSelectInput = typeDropdown.querySelector("input");
 
-    fireEvent.mouseDown(typedropdownBox);
+  const typedropdownBox = within(typeDropdown).getByRole("combobox", {
+    hidden: true,
+  });
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+  fireEvent.mouseDown(typedropdownBox);
 
-    fireEvent.click(typeMenuItem1);
+  const typeMenuItems = screen.getAllByRole("option");
 
-    expect(typeSelectInput.value).toBe("PDF");
+  const typeMenuItem2 = typeMenuItems.find(
+    (type) => type.getAttribute("data-value") === "PDF"
+  );
 
-    const previewButton = screen.getByTestId("preview-button");
+  fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(previewButton);
+  expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    expect(previewButton).toBeInTheDocument();
+  const previewButton = screen.getByTestId("preview-button");
 
-    const previewModal = screen.queryByTestId("preview-modal");
+  fireEvent.click(previewButton);
 
-    expect(previewModal).toBeInTheDocument();
-  }, 600);
+  expect(previewButton).toBeInTheDocument();
+
+  const previewModal = screen.queryByTestId("preview-modal");
+
+  expect(previewModal).toBeInTheDocument();
 });
 
 test("Preview Modal Close Button Functionality Check", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "46723451314474097",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("46723451314474097");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "46723451314474097",
+    },
+  });
 
-    const typeDropdown = screen.getByTestId(`type-dropdown-0`);
+  expect(detailNameInput.value).toBe("46723451314474097");
 
-    const typeSelectInput = typeDropdown.querySelector("input");
+  const typeDropdown = screen.getByTestId(`type-dropdown-0`);
 
-    const typedropdownBox = within(typeDropdown).getByRole("combobox", {
-      hidden: true,
-    });
+  const typeSelectInput = typeDropdown.querySelector("input");
 
-    fireEvent.mouseDown(typedropdownBox);
+  const typedropdownBox = within(typeDropdown).getByRole("combobox", {
+    hidden: true,
+  });
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+  fireEvent.mouseDown(typedropdownBox);
 
-    fireEvent.click(typeMenuItem1);
+  const typeMenuItems = screen.getAllByRole("option");
 
-    expect(typeSelectInput.value).toBe("PDF");
+  const typeMenuItem2 = typeMenuItems.find(
+    (type) => type.getAttribute("data-value") === "PDF"
+  );
 
-    const previewButton = screen.getByTestId("preview-button");
+  fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(previewButton);
+  expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    expect(previewButton).toBeInTheDocument();
+  const previewButton = screen.getByTestId("preview-button");
 
-    const previewModal = screen.queryByTestId("preview-modal");
+  fireEvent.click(previewButton);
 
-    expect(previewModal).toBeInTheDocument();
+  expect(previewButton).toBeInTheDocument();
 
-    const closePreviewButton = screen.getByTitle("Close Preview");
+  const previewModal = screen.queryByTestId("preview-modal");
 
-    fireEvent.click(closePreviewButton);
+  expect(previewModal).toBeInTheDocument();
 
-    expect(previewModal).not.toBeInTheDocument();
-  }, 600);
+  const closePreviewButton = screen.getByTitle("Close Preview");
+
+  fireEvent.click(closePreviewButton);
+
+  expect(previewModal).not.toBeInTheDocument();
 });
 
 test("Submission and Route To View Requests Page on clicking Submit Button Functionlaity Check", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectParams(0, "Statement in PDF/Excel", 0, 0, "Account number");
+  advanceTimer();
 
-    const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
-      .querySelector("input");
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectParams("Statement in PDF/Excel", "Account number");
 
-    fireEvent.change(detailNameInput, {
-      target: {
-        value: "46723451314474097",
-      },
-    });
+  const detailNameInput = screen
+    .getByTestId("detail-name-input-0")
+    .querySelector("input");
 
-    expect(detailNameInput.value).toBe("46723451314474097");
+  fireEvent.change(detailNameInput, {
+    target: {
+      value: "46723451314474097",
+    },
+  });
 
-    const typeDropdown = screen.getByTestId(`type-dropdown-0`);
+  expect(detailNameInput.value).toBe("46723451314474097");
 
-    const typeSelectInput = typeDropdown.querySelector("input");
+  const typeDropdown = screen.getByTestId(`type-dropdown-0`);
 
-    const typedropdownBox = within(typeDropdown).getByRole("combobox", {
-      hidden: true,
-    });
+  const typeSelectInput = typeDropdown.querySelector("input");
 
-    fireEvent.mouseDown(typedropdownBox);
+  const typedropdownBox = within(typeDropdown).getByRole("combobox", {
+    hidden: true,
+  });
 
-    const typeMenuItem1 = screen.getByTestId(`type-dropdown-menuitem-0`);
+  fireEvent.mouseDown(typedropdownBox);
 
-    fireEvent.click(typeMenuItem1);
+  const typeMenuItems = screen.getAllByRole("option");
 
-    expect(typeSelectInput.value).toBe("PDF");
+  const typeMenuItem2 = typeMenuItems.find(
+    (type) => type.getAttribute("data-value") === "PDF"
+  );
 
-    const typeMenuItem2 = screen.getByTestId(`type-dropdown-menuitem-1`);
+  fireEvent.click(typeMenuItem2);
 
-    fireEvent.click(typeMenuItem2);
+  expect(typeSelectInput.value).toBe("PDF".toLowerCase());
 
-    expect(typeSelectInput.value).toBe("Excel");
+  const submitButton = screen.getByTestId("submit-button");
 
-    fireEvent.click(typeMenuItem1);
+  fireEvent.click(submitButton);
 
-    expect(typeSelectInput.value).toBe("PDF");
+  expect(renderViewRequest());
 
-    const submitButton = screen.getByTestId("submit-button");
+  const viewRequestPage = screen.getByTestId("view-request-page");
 
-    fireEvent.click(submitButton);
-
-    expect(renderViewRequest());
-
-    const viewRequestPage = screen.getByTestId("view-request-page");
-
-    expect(viewRequestPage).toBeInTheDocument();
-  }, 600);
+  expect(viewRequestPage).toBeInTheDocument();
 });
 
 test("Selected Report Detail View Controller Functionality Check", () => {
   renderCreateRequest();
-  setTimeout(() => {
-    fillTicketNumberInput();
-    fillTicketDescriptionInput();
-    selectReports(0, "Statement in PDF/Excel");
+  advanceTimer();
 
-    const selectedReportsSection = screen.getByTestId(
-      "selected-reports-section"
-    );
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+  selectReports("Statement in PDF/Excel");
 
-    expect(selectedReportsSection).toBeInTheDocument();
+  const selectedReportsSection = screen.getByTestId("selected-reports-section");
 
-    const detailView = screen.getByTestId("selected-report-detail-0");
+  expect(selectedReportsSection).toBeInTheDocument();
 
-    expect(detailView).toBeVisible();
+  const detailView = screen.getByTestId("selected-report-detail-0");
 
-    const viewControllerIcon = screen.getByTestId(
-      "selected-report-detail-control-0"
-    );
+  expect(detailView).toBeVisible();
 
-    fireEvent.click(viewControllerIcon);
+  const viewControllerIcon = screen.getByTestId(
+    "selected-report-detail-control-0"
+  );
 
-    expect(detailView).not.toBeVisible();
-  }, 600);
+  fireEvent.click(viewControllerIcon);
+
+  expect(detailView).not.toBeVisible();
 });
 
 //// Rejected /////

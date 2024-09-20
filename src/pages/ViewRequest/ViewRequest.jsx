@@ -46,16 +46,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
-import {
-  readOnly,
-  requestList,
-  requestPhases,
-} from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
+import { readOnly } from "../../Redux/reducedData";
 import Lottie from "lottie-react";
 import zeroDataAnimation from "../../Dynamic/ktk_no_data.json";
+import { useSelector } from "react-redux";
+import { Provider } from "react-redux";
+import store from "../../Redux/reduxStore";
 
 export default function ViewRequest() {
+  const requestPhases = useSelector((state) => state.csns.requestPhases);
+  const rowOptions = useSelector((state) => state.csns.rowOptions);
+  const requestList = useSelector((state) => state.csns.requestList);
+
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [retrieving, setRetrieving] = useState(true);
@@ -88,7 +91,7 @@ export default function ViewRequest() {
   const viewFilterMenu = Boolean(filterAnchor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const rowOptions = [5, 10, 25, 40];
+
   const [checkedStates, setCheckedStates] = useState([
     { "In-progress": false },
     { Completed: false },
@@ -152,7 +155,7 @@ export default function ViewRequest() {
       .join("-");
 
     callRetrieve();
-    if(formatted_date === "01-01-1970"){
+    if (formatted_date === "01-01-1970") {
       setFromDate("");
     } else {
       setFromDate(formatted_date);
@@ -191,8 +194,8 @@ export default function ViewRequest() {
 
   const datePickerControl = {
     fromSlotProps: {
-      actionBar : {
-       actions : fromDate !== "" ? ['clear'] : []
+      actionBar: {
+        actions: fromDate !== "" ? ["clear"] : [],
       },
       popper: {
         sx: {
@@ -206,9 +209,9 @@ export default function ViewRequest() {
           },
         },
       },
-      field: {
-        readOnly: readOnly,
-      },
+      // field: {
+      //   readOnly: readOnly,
+      // },
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
@@ -256,9 +259,9 @@ export default function ViewRequest() {
     },
 
     toSlotProps: {
-      actionBar : {
-        actions : toDate !== "" ? ['clear'] : []
-       },
+      actionBar: {
+        actions: toDate !== "" ? ["clear"] : [],
+      },
       popper: {
         sx: {
           ".MuiPaper-root": { borderRadius: "10px", padding: 0 },
@@ -271,9 +274,9 @@ export default function ViewRequest() {
           },
         },
       },
-      field: {
-        readOnly: readOnly,
-      },
+      // field: {
+      //   readOnly: readOnly,
+      // },
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
@@ -339,7 +342,7 @@ export default function ViewRequest() {
   //console.log("TICKET", ticketDetails);
 
   const handleSearchQuery = (e) => {
-    const searched = e.target.value.toLowerCase();
+    const searched = e.target.value.toLowerCase().trim();
     setSearchInput(searched);
     const queried_data = ticketDetails.filter(
       (ticket) =>
@@ -495,7 +498,7 @@ export default function ViewRequest() {
   };
 
   return (
-    <>
+    <Provider store={store}>
       <Box className="table-page" data-testid="view-request-page">
         <Box className="view-request-screen">
           <Typography component="span" className="page-heading">
@@ -589,11 +592,12 @@ export default function ViewRequest() {
                       </Box>
 
                       <Box
-                        data-testid={
-                          selectedStatus.length === 0
-                            ? "status-unchecked"
-                            : "checked-box"
-                        }
+                        // data-testid={
+                        //   selectedStatus.length === 0
+                        //     ? "status-unchecked"
+                        //     : "checked-box"
+                        // }
+                        data-testid="view-menu"
                         padding="0.6rem 0rem 0.6rem 0rem"
                         // data-testid="status-menu"
                       >
@@ -603,27 +607,27 @@ export default function ViewRequest() {
                             role="option"
                             value={status}
                             tabIndex={statusIndex}
-                            data-value={status}
-                            onClick={(event) =>
-                              handleStatusCheck(event, status)
-                            }
-                            data-testid={`status-menu-item-${statusIndex}`}
+                            // data-value={status}
+                            onChange={(event) => {
+                              event.stopPropagation();
+                              handleStatusCheck(event, status);
+                            }}
+                            data-testid={`status-menu-item`}
                             className="status-menuitem"
                           >
                             <Checkbox
+                              size="medium"
                               // checked={selectedStatus.includes(status)}
                               checked={selectedStatus.indexOf(status) > -1}
                               value={status}
-                              inputProps={{
-                                "aria-label": `checkbox-x-${statusIndex}`,
-                              }}
+                              // tabIndex={statusIndex - 1}
+                              // inputProps={{
+                              //   "aria-label": `checkbox-x-${statusIndex}`,
+                              // }}
                               color="primary"
-                              name={`status-checkbox-${statusIndex}`}
-                              // role="checkbox"
-                              data-testid={`status-checkbox-${statusIndex}`}
-                              onChange={(event) =>
-                                handleStatusCheck(event, status)
-                              }
+                              // name={`status-checkbox-${statusIndex}`}
+                              role="checkbox"
+                              data-testid={`status-checkbox`}
                               icon={
                                 <CheckBoxOutlineBlank className="uncheck-icon" />
                               }
@@ -1170,6 +1174,6 @@ export default function ViewRequest() {
         setMailDraftModal={setMailDraftModal}
         mailDraftModal={mailDraftModal}
       />
-    </>
+    </Provider>
   );
 }

@@ -3,10 +3,10 @@ import slicedDataConfig from "./csnsReducers";
 
 const store = configureStore({
   reducer: {
-    // csns: slicedDataConfig,
+    csns: slicedDataConfig,
   },
 });
 
-// console.log('STORY',slicedDataConfig);
+// console.log("CSNS-REDUX", slicedDataConfig);
 
 export default store;
