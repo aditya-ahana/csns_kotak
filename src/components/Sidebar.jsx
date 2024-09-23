@@ -64,8 +64,12 @@ export default function Sidebar(props) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleDrawer = () => {
-    setSidebarOpen(!sidebarOpen);
+  const handleOpenDrawer = () => {
+    setSidebarOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setSidebarOpen(false);
   };
 
   const redirectTo = (linkKey) => {
@@ -75,13 +79,13 @@ export default function Sidebar(props) {
     <div
       data-testid="sidebar"
       onMouseEnter={() => {
-        handleDrawer();
+        handleOpenDrawer();
       }}
       onMouseLeave={() => {
-        handleDrawer();
+        handleCloseDrawer();
       }}
     >
-      <Drawer variant="permanent" open={sidebarOpen}>
+      <Drawer variant="permanent" open={sidebarOpen === true}>
         <Toolbar />
         <div className="p-2"></div>
         <List>
@@ -98,7 +102,7 @@ export default function Sidebar(props) {
               <ListItemButton
                 sx={{
                   minHeight: 42,
-                  justifyContent: sidebarOpen ? "initial" : "center",
+                  justifyContent: sidebarOpen === true ? "initial" : "center",
                   px: 2,
                 }}
                 className="d-flex justify-content-center align-items-center mb-2 rounded"
@@ -123,7 +127,7 @@ export default function Sidebar(props) {
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: sidebarOpen ? 1 : "auto",
+                    mr: sidebarOpen === true ? 1 : "auto",
                     justifyContent: "center",
                     fontSize: "21px",
                     color: "inherit",
@@ -142,7 +146,7 @@ export default function Sidebar(props) {
                           ? t("viewUpdateRequest")
                           : sidebarElement.label
                   }
-                  sx={{ opacity: sidebarOpen ? 1 : 0, fontWeight: "inherit" }}
+                  sx={{ opacity: sidebarOpen === true ? 1 : 0, fontWeight: "inherit" }}
                   className="m-0 mt-1"
                 />
               </ListItemButton>
