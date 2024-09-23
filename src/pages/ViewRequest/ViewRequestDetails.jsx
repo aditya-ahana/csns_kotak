@@ -6,9 +6,7 @@ import { MdOutlineFilterAlt } from "react-icons/md";
 import { IoMdArrowDropdown } from "react-icons/io";
 import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
-
 // import { MdOutlineFileDownload } from "react-icons/md";
-
 import {
   Skeleton,
   Button,
@@ -24,28 +22,24 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
-
 import { useLocation, useNavigate } from "react-router-dom";
 import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOutlined";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { RiRepeat2Line } from "react-icons/ri";
 import { TbRefresh } from "react-icons/tb";
-
 import { useTranslation } from "react-i18next";
-
 import Loader from "../../components/Loader";
-// import  from "@mui/material/IconButton";
-
 // import sandBox from "../../static/sandBox.gif";
 import sandBox from "../../static/sandClock.gif";
 import { Provider, useSelector } from "react-redux";
 import store from "../../Redux/reduxStore";
 
-// import  from "@mui/material/Tooltip";
-
 export default function ViewRequestDetails() {
-  const requestDetails = useSelector((state) => state.csns.requestDetails);
-  const requestList = useSelector((state) => state.csns.requestList);
+  const viewDetailsData = useSelector((state) => state.csns.viewDetailsData);
+  const viewRequestData = useSelector((state) => state.csns.viewRequestData);
+  const viewDetailHeaders = useSelector(
+    (state) => state.csns.viewDetailHeaders
+  );
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [retrieving, setRetrieving] = useState(true);
@@ -66,17 +60,9 @@ export default function ViewRequestDetails() {
 
   const location = useLocation();
   //  const { ticketDetails } = location.state;
-  const current_date = new Date();
-  const viewRequestTableHeaders = [
-    "Ticket Id",
-    "Reports",
-    "Status",
-    "Created Date",
-    "Action",
-  ];
   const route_to = useNavigate();
 
-  const ticketDetails = requestDetails.map((request, index) => ({
+  const ticketDetails = viewDetailsData.map((request, index) => ({
     ticketid: request.ticketId,
     request: request.request,
     status: request.status,
@@ -101,7 +87,7 @@ export default function ViewRequestDetails() {
     }
   };
 
-  const excelDetails = requestList.map((request, index) => ({
+  const excelDetails = viewRequestData.map((request, index) => ({
     ticketid: request.ticketId,
     requests: request.requests[0],
     status: request.status,
@@ -177,7 +163,7 @@ export default function ViewRequestDetails() {
                   <Table className="details-table" stickyHeader={true}>
                     <TableHead>
                       <TableRow>
-                        {viewRequestTableHeaders.map((header, index) => (
+                        {viewDetailHeaders.map((header, index) => (
                           <TableCell
                             component="td"
                             key={index}
@@ -210,7 +196,7 @@ export default function ViewRequestDetails() {
                       </TableRow>
                     </TableHead>
                     <TableBody className="view-table-body">
-                      {requestDetails.map((row, index) => (
+                      {viewDetailsData.map((row, index) => (
                         <Fragment key={index}>
                           <TableRow>
                             <TableCell align="center" className="vr-ticketid">

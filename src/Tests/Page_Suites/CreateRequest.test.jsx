@@ -22,9 +22,8 @@ import {
   availableReportTypes,
   changeReadOnly,
   countryCodeData,
+  currentDate,
 } from "../../Redux/reducedData";
-
-const datePickerTestValue = dayjs(new Date()).format("DD-MM-YYYY");
 
 const countryCodes = countryCodeData.map((code) => code.phone);
 
@@ -737,10 +736,10 @@ test("From Date Picker Functionality Check", () => {
   expect(fromDatepicker).toBeInTheDocument();
 
   fireEvent.change(fromDatepicker, {
-    target: { value: datePickerTestValue },
+    target: { value: currentDate },
   });
 
-  expect(fromDatepicker.value).toBe(datePickerTestValue);
+  expect(fromDatepicker.value).toBe(currentDate);
   changeReadOnly(true);
 });
 
@@ -770,18 +769,18 @@ test("To Date Picker Functionality Check", () => {
   expect(fromDatepicker).toBeInTheDocument();
 
   fireEvent.change(fromDatepicker, {
-    target: { value: datePickerTestValue },
+    target: { value: currentDate },
   });
 
-  expect(fromDatepicker.value).toBe(datePickerTestValue);
+  expect(fromDatepicker.value).toBe(currentDate);
 
   const toDatepicker = screen.getByLabelText("to");
 
   expect(toDatepicker).toBeInTheDocument();
 
-  fireEvent.change(toDatepicker, { target: { value: datePickerTestValue } });
+  fireEvent.change(toDatepicker, { target: { value: currentDate } });
 
-  expect(toDatepicker.value).toBe(datePickerTestValue);
+  expect(toDatepicker.value).toBe(currentDate);
   changeReadOnly(true);
 });
 
@@ -906,12 +905,12 @@ describe("Triple Detail Render and Change for IP Logs", () => {
     // });
 
     fireEvent.change(fromDate2, {
-      target: { value: datePickerTestValue },
+      target: { value: currentDate },
     });
 
-    expect(fromDate2.value).toBe(datePickerTestValue);
-    expect(fromDate1.value).toBe(datePickerTestValue);
-    expect(fromDate0.value).toBe(datePickerTestValue);
+    expect(fromDate2.value).toBe(currentDate);
+    expect(fromDate1.value).toBe(currentDate);
+    expect(fromDate0.value).toBe(currentDate);
 
     changeReadOnly(true);
   });
@@ -932,12 +931,12 @@ describe("Triple Detail Render and Change for IP Logs", () => {
     const toDate2 = toDatepickers.find((picker, index) => index === 2);
 
     fireEvent.change(toDate2, {
-      target: { value: datePickerTestValue },
+      target: { value: currentDate },
     });
 
-    expect(toDate2.value).toBe(datePickerTestValue);
-    expect(toDate1.value).toBe(datePickerTestValue);
-    expect(toDate0.value).toBe(datePickerTestValue);
+    expect(toDate2.value).toBe(currentDate);
+    expect(toDate1.value).toBe(currentDate);
+    expect(toDate0.value).toBe(currentDate);
 
     changeReadOnly(true);
   });
@@ -1141,11 +1140,11 @@ test("RRN Date Picker Functionality Check for Beneficiary Details for Single Tra
 
   fireEvent.change(rrnDatePicker, {
     target: {
-      value: datePickerTestValue,
+      value: currentDate,
     },
   });
 
-  expect(rrnDatePicker.value).toBe(datePickerTestValue);
+  expect(rrnDatePicker.value).toBe(currentDate);
   changeReadOnly(true);
 });
 

@@ -46,13 +46,13 @@ import Loader from "../../components/Loader";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MaterialToast from "../../components/Snackbar";
 import Skeleton from "@mui/material/Skeleton";
-import { readOnly } from "../../Redux/reducedData";
 import ErrorIcon from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
+  const readOnly = useSelector((state) => state.csns.readOnly);
   const availableReportTypes = useSelector(
     (state) => state.csns.availableReportTypes
   );
@@ -117,8 +117,8 @@ export default function CreateRequest() {
   // const new_date = new Date();
   // new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
 
-  const currentDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
-  const reduxDate = dayjs(new Date()).format("DD-MM-YYYY");
+  const maxDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
+  const currentDate = useSelector((state) => state.csns.currentDate);
 
   ////////console.log("Current Date", currentDate);
 
@@ -2517,7 +2517,7 @@ export default function CreateRequest() {
                       ? null
                       : dayjs(detail.fromDate, "DD-MM-YYYY")
                   }
-                  maxDate={currentDate}
+                  maxDate={maxDate}
                   defaultValue={dayjs.Dayjs}
                   slotProps={
                     detail.fromDate === ""
@@ -2608,7 +2608,7 @@ export default function CreateRequest() {
                       : dayjs(detail.toDate, "DD-MM-YYYY")
                   }
                   defaultValue={dayjs.Dayjs}
-                  maxDate={currentDate}
+                  maxDate={maxDate}
                   shouldDisableDate={(day) =>
                     dayjs(day).isBefore(
                       dayjs(detail.fromDate, "DD-MM-YYYY"),
@@ -2925,7 +2925,7 @@ export default function CreateRequest() {
                         : dayjs(detail.fromDate, "DD-MM-YYYY")
                     }
                     defaultValue={dayjs.Dayjs}
-                    maxDate={currentDate}
+                    maxDate={maxDate}
                     slotProps={
                       detail.fromDate === ""
                         ? datePickerControl.slotProps
@@ -3388,8 +3388,8 @@ export default function CreateRequest() {
 
   const [reportDetails, setReportDetails] = useState([]);
 
-  const [deviceDetails, setDeviceDetails] = useState([]);
-  const [ipLogs, setIpLogs] = useState([]);
+  // const [deviceDetails, setDeviceDetails] = useState([]);
+  // const [ipLogs, setIpLogs] = useState([]);
 
   useEffect(() => {
     setReportDetails((prevState) => {
@@ -3548,7 +3548,7 @@ export default function CreateRequest() {
   //   ticketNumber: ticketNumber,
   //   ticketDescription: ticketDescription,
   //   status: "In-progress",
-  //   createdDate: reduxDate,
+  //   createdDate: currentDate,
   //   createdBy: Creator,
   //   reportDetails: deviceDetails,
   // };
@@ -3558,7 +3558,7 @@ export default function CreateRequest() {
     ticketNumber: ticketNumber,
     ticketDescription: ticketDescription,
     status: "In-progress",
-    createdDate: reduxDate,
+    createdDate: currentDate,
     // createdBy: Creator,
     createdBy: "User",
     reportDetails: reportDetails,

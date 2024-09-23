@@ -11,6 +11,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import { viewRequestHeaders } from "../../Redux/reducedData";
 import {
   DatePicker,
   DesktopDatePicker,
@@ -47,7 +48,6 @@ import { FormControl, Input } from "@mui/material";
 import CheckBoxOutlineBlank from "@mui/icons-material/CheckBoxOutlineBlank";
 import { useTranslation } from "react-i18next";
 import Loader from "../../components/Loader";
-import { readOnly } from "../../Redux/reducedData";
 import Lottie from "lottie-react";
 import zeroDataAnimation from "../../Dynamic/ktk_no_data.json";
 import { useSelector } from "react-redux";
@@ -55,9 +55,14 @@ import { Provider } from "react-redux";
 import store from "../../Redux/reduxStore";
 
 export default function ViewRequest() {
+  const readOnly = useSelector((state) => state.csns.readOnly);
   const requestPhases = useSelector((state) => state.csns.requestPhases);
   const rowOptions = useSelector((state) => state.csns.rowOptions);
-  const requestList = useSelector((state) => state.csns.requestList);
+  const viewRequestData = useSelector((state) => state.csns.viewRequestData);
+  const viewRequestHeaders = useSelector(
+    (state) => state.csns.viewRequestHeaders
+  );
+  const maxDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
 
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -183,15 +188,6 @@ export default function ViewRequest() {
     callRetrieve();
   };
 
-  const viewRequestTableHeaders = [
-    "Ticket Id",
-    "Reports",
-    "Status",
-    "Created Date",
-    "Requester",
-    "Action",
-  ];
-
   const datePickerControl = {
     fromSlotProps: {
       actionBar: {
@@ -215,14 +211,14 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color: fromDate === "" ? "" : "green",
+          color: fromDate === "" ? "rgb(95, 105, 91)" : "green",
         },
       },
       textField: {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: fromDate === "" ? "" : "green",
+            color: fromDate === "" ? "rgb(95, 105, 91)" : "green",
             fontSize: "0.85rem",
           },
         },
@@ -244,7 +240,7 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 fromDate === ""
-                  ? "1.45px solid rgb(67, 91, 102)"
+                  ? "1.45px solid rgb(103, 125, 106)"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
@@ -280,14 +276,14 @@ export default function ViewRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.25rem",
-          color: toDate === "" ? "" : "green",
+          color: toDate === "" ? "rgb(95, 105, 91)" : "green",
         },
       },
       textField: {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: toDate === "" ? "" : "green",
+            color: toDate === "" ? "rgb(95, 105, 91)" : "green",
             fontSize: "0.85rem",
           },
         },
@@ -309,7 +305,7 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 toDate === ""
-                  ? "1.45px solid rgb(67, 91, 102)"
+                  ? "1.45px solid rgb(103, 125, 106)"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
@@ -331,7 +327,7 @@ export default function ViewRequest() {
   // //console.log('ticketId' , ticketId);
   // //console.log('ticket status : ',ticketStatus);
 
-  const ticketDetails = requestList.map((request, index) => ({
+  const ticketDetails = viewRequestData.map((request, index) => ({
     ticketid: request.ticketId,
     requests: request.requests,
     status: request.status,
@@ -693,10 +689,7 @@ export default function ViewRequest() {
                                     : dayjs(fromDate, "DD-MM-YYYY")
                                 }
                                 // defaultValue=''
-                                maxDate={dayjs(
-                                  dayjs().format("DD-MM-YYYY"),
-                                  "DD-MM-YYYY"
-                                )}
+                                maxDate={maxDate}
                                 defaultValue={null}
                                 slotProps={datePickerControl.fromSlotProps}
                                 sx={datePickerControl.sx}
@@ -727,10 +720,7 @@ export default function ViewRequest() {
                                     : dayjs(toDate, "DD-MM-YYYY")
                                 }
                                 // defaultValue=''
-                                maxDate={dayjs(
-                                  dayjs().format("DD-MM-YYYY"),
-                                  "DD-MM-YYYY"
-                                )}
+                                maxDate={maxDate}
                                 defaultValue={null}
                                 slotProps={datePickerControl.toSlotProps}
                                 sx={datePickerControl.sx}
@@ -786,7 +776,7 @@ export default function ViewRequest() {
                         >
                           <TableHead>
                             <TableRow>
-                              {viewRequestTableHeaders.map((header, index) => (
+                              {viewRequestHeaders.map((header, index) => (
                                 <TableCell
                                   align="center"
                                   key={index}
@@ -823,14 +813,14 @@ export default function ViewRequest() {
                           <TableBody className="view-table-body">
                             {requestData
                               .slice(topRowIndex, nthRowIndex)
-                              .map((detail, i) => (
-                                <TableRow key={i} className="table-body-row">
+                              .map((request, index) => (
+                                <TableRow key={index} className="table-body-row">
                                   <TableCell
-                                    key={i}
+                                    key={index}
                                     className="vr-ticketid"
                                     sx={{
                                       borderBottomLeftRadius:
-                                        nthRowIndex === i + 1 ? "4px" : "0px",
+                                        nthRowIndex === index + 1 ? "4px" : "0px",
                                     }}
                                     align="center"
                                   >
@@ -843,14 +833,14 @@ export default function ViewRequest() {
                                         />
                                       ) : (
                                         <Typography fontSize="0.88rem">
-                                          {detail.ticketid}
+                                          {request.ticketid}
                                         </Typography>
                                       )}
                                     </Box>
                                   </TableCell>
                                   <TableCell className="vr-reports">
                                     <Box alignSelf="center">
-                                      {detail.requests.map((req, index) => (
+                                      {request.requests.map((req, subIndex) => (
                                         <>
                                           {retrieving === true ? (
                                             <Skeleton
@@ -861,11 +851,11 @@ export default function ViewRequest() {
                                           ) : (
                                             <Box lineHeight="1.65rem">
                                               <Typography
-                                                key={index}
+                                                key={subIndex}
                                                 fontSize="0.88rem"
                                                 lineHeight="1.85rem"
                                               >
-                                                {`${index + 1}. ${req}`}
+                                                {`${subIndex + 1}. ${req}`}
                                               </Typography>
                                             </Box>
                                           )}
@@ -891,19 +881,19 @@ export default function ViewRequest() {
                                           className="view-table-status-buttons"
                                           sx={{
                                             backgroundColor:
-                                              detail.status === "In-progress"
+                                              request.status === "In-progress"
                                                 ? "rgba(255, 238, 207, 1)"
-                                                : detail.status === "Completed"
+                                                : request.status === "Completed"
                                                 ? "rgba(205, 252, 229, 1)"
-                                                : detail.status === "Failed"
+                                                : request.status === "Failed"
                                                 ? "rgba(255, 220, 222, 1)"
                                                 : "",
                                             color:
-                                              detail.status === "In-progress"
+                                              request.status === "In-progress"
                                                 ? "rgba(232, 125, 0, 1)"
-                                                : detail.status === "Completed"
+                                                : request.status === "Completed"
                                                 ? "rgba(21, 122, 73, 1)"
-                                                : detail.status === "Failed"
+                                                : request.status === "Failed"
                                                 ? "rgba(210, 26, 26, 1)"
                                                 : "",
                                           }}
@@ -913,7 +903,7 @@ export default function ViewRequest() {
                                             fontSize="0.88rem"
                                             fontWeight={600}
                                           >
-                                            {detail.status}
+                                            {request.status}
                                           </Typography>
                                         </Box>
                                       )}
@@ -933,7 +923,7 @@ export default function ViewRequest() {
                                         />
                                       ) : (
                                         <Typography fontSize="0.88rem">
-                                          {detail.createdDate}
+                                          {request.createdDate}
                                         </Typography>
                                       )}
                                     </Box>
@@ -951,7 +941,7 @@ export default function ViewRequest() {
                                         />
                                       ) : (
                                         <Typography fontSize="0.88rem">
-                                          {detail.requester}
+                                          {request.requester}
                                         </Typography>
                                       )}
                                     </Box>
@@ -960,7 +950,7 @@ export default function ViewRequest() {
                                     className="view-table-data-row"
                                     sx={{
                                       borderBottomRightRadius:
-                                        nthRowIndex === i + 1 ? "4px" : "0px",
+                                        nthRowIndex === index + 1 ? "4px" : "0px",
                                     }}
                                   >
                                     <Box className="detail-buttons">
@@ -976,7 +966,7 @@ export default function ViewRequest() {
                                           // title="view-details-button"
                                           className="view-details-button"
                                           color="darkblue"
-                                          data-testid={`details-page-nav${i}`}
+                                          data-testid={`details-page-nav${index}`}
                                           style={{ alignSelf: "center" }}
                                           onClick={handleViewDetails}
                                         >
@@ -1006,8 +996,8 @@ export default function ViewRequest() {
                                       ) : (
                                         <Button
                                           data-testid={
-                                            detail.status === "Completed"
-                                              ? `email-draft-button-${i}`
+                                            request.status === "Completed"
+                                              ? `email-draft-button-${index}`
                                               : ""
                                           }
                                           variant="outlined"
@@ -1015,27 +1005,27 @@ export default function ViewRequest() {
                                           style={{
                                             alignSelf: "center",
                                             backgroundColor:
-                                              detail.status === "In-progress" ||
-                                              detail.status === "Failed"
+                                              request.status === "In-progress" ||
+                                              request.status === "Failed"
                                                 ? "rgb(236, 236, 236)"
                                                 : "transparent",
                                             color:
-                                              detail.status === "In-progress" ||
-                                              detail.status === "Failed"
+                                              request.status === "In-progress" ||
+                                              request.status === "Failed"
                                                 ? "rgba(165, 165, 165, 1)"
                                                 : "rgba(96, 96, 96, 1)",
                                             borderColor:
                                               "rgba(161, 161, 161, 1)",
                                           }}
                                           onClick={(e) => {
-                                            if (detail.status === "Completed") {
+                                            if (request.status === "Completed") {
                                               setMailDraftModal(true);
                                             }
                                           }}
                                         >
                                           <AttachEmailOutlinedIcon
                                             color={
-                                              detail.status === "Completed"
+                                              request.status === "Completed"
                                                 ? "rgba(96, 96, 96, 1)"
                                                 : "rgba(161, 161, 161, 0.6)"
                                             }
