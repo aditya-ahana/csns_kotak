@@ -23,9 +23,13 @@ import {
   changeReadOnly,
   countryCodeData,
   currentDate,
+  ticketTypeData,
 } from "../../Redux/reducedData";
 
+
 const countryCodes = countryCodeData.map((code) => code.phone);
+
+const ticketTypes = ticketTypeData.filter(ticketType => ticketType !== "Other");
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -82,9 +86,57 @@ const fillTicketNumberInput = () => {
   expect(ticketNumberInput.value.slice(0, 10)).toBe("2455481780");
 };
 
+const selectTicketType = () => {
+  ticketTypeData.forEach(ticketType => {
+  renderCreateRequest();
+  advanceTimer();
+
+  fillTicketNumberInput();
+
+  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
+
+  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+    hidden: true,
+  });
+
+  fireEvent.mouseDown(ticketDropdownBox);
+
+  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+
+
+
+  const ticketItem1 = ticketItems.find(
+    (cc) => cc.getAttribute("data-value") === ticketType
+  );
+
+  fireEvent.click(ticketItem1);
+
+  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
+  cleanup();
+});
+}
+
 const fillTicketDescriptionInput = () => {
+
+  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
+
+  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+    hidden: true,
+  });
+
+  fireEvent.mouseDown(ticketDropdownBox);
+
+  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+
+  const ticketItem1 = ticketItems.find(
+    (cc) => cc.getAttribute("data-value") === "Other"
+  );
+
+  fireEvent.click(ticketItem1);
+
+  expect(ticketDropdown.querySelector('input').value).toBe("Other");
+
   const ticketDescriptionField = screen.getByTestId("ticket-descr-input");
-  expect(ticketDescriptionField).toBeInTheDocument();
 
   const ticketDescriptionInput =
     ticketDescriptionField.querySelector("textarea");
@@ -102,6 +154,57 @@ const fillTicketDescriptionInput = () => {
     "Vite is a build tool that aims to provide a faster and leaner development experience for modern web projects. It consists of two major parts : A dev server that provides rich feature enhancements and a build command that bundles your code with highly optimized static assets for production"
   );
 };
+
+describe("Ticket Type Check",() => {
+test("Ticket Type Selection Check",() => {
+  selectTicketType();
+});
+
+test("Ticket Description Input Render Check",() => {
+
+  ticketTypeData.forEach(ticketType => {
+  renderCreateRequest();
+  advanceTimer();
+  fillTicketNumberInput();
+
+  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
+
+  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+    hidden: true,
+  });
+
+  fireEvent.mouseDown(ticketDropdownBox);
+
+  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+
+  const ticketItem1 = ticketItems.find(
+    (cc) => cc.getAttribute("data-value") === ticketType
+  );
+
+  fireEvent.click(ticketItem1);
+
+  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
+
+  const ticketDescriptionField = screen.queryByTestId("ticket-descr-input");
+
+  if(ticketType === "Other"){
+  expect(ticketDescriptionField).toBeInTheDocument();
+  } else {
+    expect(ticketDescriptionField).not.toBeInTheDocument();
+  }
+  cleanup();
+});
+})
+
+test("Ticket Description Input Check",() => {
+  renderCreateRequest();
+  advanceTimer();
+  fillTicketNumberInput();
+  fillTicketDescriptionInput();
+})
+});
+
+
 
 const selectReports = (selectedReport) => {
   const dropdown = screen.getByTestId("reports-selection-dropdown");
@@ -695,7 +798,7 @@ test("Detail Name Input Render and Functionality Check", () => {
   fillTicketDescriptionInput();
   selectParams("Statement in PDF/Excel", "Account number");
 
-  const detailNameField = screen.getByTestId("detail-name-input-0");
+  const detailNameField = screen.getByTestId("search-type-input-0");
 
   expect(detailNameField).toBeInTheDocument();
 
@@ -720,7 +823,7 @@ test("From Date Picker Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -753,7 +856,7 @@ test("To Date Picker Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -794,7 +897,7 @@ test("Report Type Dropdown Functionality Check for Statement in PDF/Excel Report
     selectParams("Statement in PDF/Excel", "Account number");
 
     const detailNameInput = screen
-      .getByTestId("detail-name-input-0")
+      .getByTestId("search-type-input-0")
       .querySelector("input");
 
     fireEvent.change(detailNameInput, {
@@ -865,9 +968,9 @@ describe("Triple Detail Render and Change for IP Logs", () => {
     fillTicketDescriptionInput();
     selectParams("IP Logs", "PAN");
 
-    const detailField0 = screen.getByTestId("detail-name-input-0");
-    const detailField1 = screen.getByTestId("detail-name-input-1");
-    const detailField2 = screen.getByTestId("detail-name-input-2");
+    const detailField0 = screen.getByTestId("search-type-input-0");
+    const detailField1 = screen.getByTestId("search-type-input-1");
+    const detailField2 = screen.getByTestId("search-type-input-2");
 
     const detailInput0 = detailField0.querySelector("input");
     const detailInput1 = detailField1.querySelector("input");
@@ -1041,7 +1144,7 @@ test("Mobile Number Input Functionality Check for IP Logs", () => {
   fillTicketDescriptionInput();
   selectParams("IP Logs", "Aadhar");
 
-  const detailNameField = screen.getByTestId("detail-name-input-2");
+  const detailNameField = screen.getByTestId("search-type-input-2");
 
   expect(detailNameField).toBeInTheDocument();
 
@@ -1081,7 +1184,7 @@ test("RRN Amount Input Functionality Check for Beneficiary Details for Single IM
 
   selectReports("Beneficiary details for Single UPI transactions");
 
-  const RRNField = screen.getByTestId("detail-name-input-0");
+  const RRNField = screen.getByTestId("search-type-input-0");
 
   expect(RRNField).toBeInTheDocument();
 
@@ -1120,7 +1223,7 @@ test("RRN Date Picker Functionality Check for Beneficiary Details for Single Tra
 
   selectReports("Beneficiary details for Single UPI transactions");
 
-  const RRNField = screen.getByTestId("detail-name-input-0");
+  const RRNField = screen.getByTestId("search-type-input-0");
 
   expect(RRNField).toBeInTheDocument();
 
@@ -1158,7 +1261,7 @@ test("Add Detail Button Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -1208,7 +1311,7 @@ test("Delete Detail Button Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -1263,7 +1366,7 @@ test("Preview Open Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -1314,7 +1417,7 @@ test("Preview Modal Close Button Functionality Check", () => {
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {
@@ -1371,7 +1474,7 @@ test("Submission and Route To View Requests Page on clicking Submit Button Funct
   selectParams("Statement in PDF/Excel", "Account number");
 
   const detailNameInput = screen
-    .getByTestId("detail-name-input-0")
+    .getByTestId("search-type-input-0")
     .querySelector("input");
 
   fireEvent.change(detailNameInput, {

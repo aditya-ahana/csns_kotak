@@ -268,13 +268,13 @@ border-radius: 10px;
   width: 57%;
 }
 
-.report-type-dropdown {
+.request-type-dropdown {
   width: 12%;
   margin-left: 0%;
   background-color: transparent !important;
 }
 
-.report-type-selectbox {
+.request-type-selectbox {
   display: flex;
   align-items: center;
   height: 2.65rem;
@@ -288,7 +288,7 @@ border-radius: 10px;
   height: 1.8rem;
   align-items: left;
   border-radius: 4px;
-  background-color: transparent;
+  /* background-color: transparent; */
 }
 
 .add-icon {
@@ -342,14 +342,14 @@ border-radius: 10px;
   gap: 0.2rem;
 }
 
-.reports-dropdown-input-changed {
+.reports-dropdown-input-changed,.ticket-type-input-changed {
   width: 99%;
   text-overflow: ellipsis;
   overflow: hidden;
   font-size: 95% !important;
 }
 
-.reports-dropdown-box {
+.reports-dropdown-box,.ticket-type-box {
   display: flex;
   align-items: center;
   height: 2.56rem;
@@ -471,6 +471,7 @@ input::-webkit-inner-spin-button {
 }
 
 .ticket-number-container,
+.ticket-type-cont,
 .ticket-description-container {
   max-height: fit-content;
   flex: 1;
@@ -511,6 +512,21 @@ input::-webkit-inner-spin-button {
   flex: 1;
 }
 
+.ticket-menu-sel-item,.ticket-menu-item {
+  font-family: Roboto !important;
+  font-weight: 500 !important;
+}
+
+.ticket-menu-sel-item {
+  background-color: rgb(61, 255, 255) !important;
+}
+
+.ticket-desc-cont {
+  display: flex;
+  width: 43.85%;
+  margin-bottom: 1.3rem !important;
+}
+
 .selected-report-view {
   max-height: auto;
   border-radius: 5px;
@@ -521,11 +537,10 @@ input::-webkit-inner-spin-button {
 }
 
 .selected-param-details {
-  margin-top: 1.4rem;
   display: flex;
   gap: 0.91rem;
   flex-direction: row;
-  height: 2.35rem;
+  height: 1.85rem;
   width: 100%;
 }
 
@@ -573,11 +588,6 @@ input::-webkit-inner-spin-button {
   border-width: 1px;
   border-color: grey;
   width: 100%;
-}
-
-.details-subsection {
-  /* width: 100%; */
-  margin-bottom: 1.5rem;
 }
 
 .selected-param-box {
@@ -1539,11 +1549,11 @@ input::-webkit-inner-spin-button {
 }
 
 .mobile-label {
-  margin: -0.75rem 0rem 0rem -0.75rem;
+  margin: -0.6rem 0rem 0rem -0.75rem;
 }
 
 .valid-mobile-label {
-  margin: -0.75rem 0rem 0rem -0.75rem;
+  margin: -0.6rem 0rem 0rem -0.75rem;
   color: green !important;
 }
 

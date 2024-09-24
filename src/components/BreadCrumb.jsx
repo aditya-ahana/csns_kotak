@@ -16,7 +16,7 @@ export default function BreadCrumb() {
       const element = pathnames[i];
       let obj = {};
       if (element === "") {
-        obj.path = "/";
+        obj.path = "/Dashboard";
         obj.title = "Home";
       } else {
         obj.path = `/${element}`;
@@ -61,7 +61,7 @@ export default function BreadCrumb() {
       // style={{ height: "3vh" }}
       >
         {pathnames[0].toLowerCase() === "" &&
-        pathnames[1].toLowerCase() === "" ? (
+        pathnames[1].toLowerCase() === "dashboard" ? (
           <></>
         ) : (
           <Breadcrumb

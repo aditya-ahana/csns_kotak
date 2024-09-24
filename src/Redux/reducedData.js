@@ -14,6 +14,11 @@ export const availableReportTypes = ["PDF", "Excel"].sort();
 
 export const rowOptions = [5, 10, 25, 40];
 
+export const ticketTypeData = [
+  "ED",
+  "Police",
+].sort();
+
 export const requiredReportsData = [
   "Statement in PDF/Excel",
   "Beneficiary details for Single IMPS transactions",

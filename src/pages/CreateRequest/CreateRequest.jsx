@@ -48,10 +48,12 @@ import MaterialToast from "../../components/Snackbar";
 import Skeleton from "@mui/material/Skeleton";
 import ErrorIcon from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
+import { ticketTypeData } from "../../Redux/reducedData";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
+  const ticketDescTypes = [...ticketTypeData, "Other"];
   const readOnly = useSelector((state) => state.csns.readOnly);
   const availableReportTypes = useSelector(
     (state) => state.csns.availableReportTypes
@@ -72,6 +74,7 @@ export default function CreateRequest() {
   );
 
   const [showToast, setShowToast] = useState(false);
+  const [ticketType, setTicketType] = useState("");
   const [searchedReports, setSearchedReports] = useState([]);
   const [toastMessage, setToastMessage] = useState("");
   const [toastDuration, setToastDuration] = useState(0);
@@ -122,8 +125,11 @@ export default function CreateRequest() {
 
   ////////console.log("Current Date", currentDate);
 
+  const primaryTextProps = {
+    fontSize: "0.825rem",
+  };
   const previewProps = {
-    name: {
+    searchType: {
       fontWeight: 500,
       fontFamily: "Roboto",
       fontSize: "0.85rem",
@@ -177,7 +183,7 @@ export default function CreateRequest() {
     inputProps: {
       style: {
         fontSize: "0.88rem",
-        height: "0.6rem",
+        height: "0.48rem",
       },
       // maxLength: 10,
     },
@@ -310,6 +316,15 @@ export default function CreateRequest() {
         },
       },
     },
+    TICKET_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          maxHeight: "21.75rem",
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
     PARAM_SELECT_PROPS: {
       PaperProps: {
         style: {
@@ -388,7 +403,7 @@ export default function CreateRequest() {
           width: "100%",
 
           "& .MuiInputBase-input": {
-            height: "1.575rem",
+            height: "1.5rem",
             //  width : '100%',
             width: "100%",
             fontSize: "0.85rem",
@@ -497,7 +512,7 @@ export default function CreateRequest() {
               CRNdetails: [],
               RRNdetails: [
                 {
-                  name: "RRN",
+                  searchType: "RRN",
                   accountNo: "",
                   aadhar: "",
                   crnNo: "",
@@ -614,6 +629,10 @@ export default function CreateRequest() {
     });
   };
 
+  const handleTicketType = (event) => {
+    setTicketType(event.target.value);
+  };
+
   const handleReportSelection = (event) => {
     const {
       target: { value },
@@ -669,7 +688,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -689,7 +708,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -709,7 +728,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -730,7 +749,7 @@ export default function CreateRequest() {
           });
         } else {
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -757,7 +776,7 @@ export default function CreateRequest() {
       if (value.includes("PAN") && report.PANdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -777,7 +796,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -797,7 +816,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -818,7 +837,7 @@ export default function CreateRequest() {
           });
         } else {
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -844,7 +863,7 @@ export default function CreateRequest() {
       if (value.includes("CRN") && report.CRNdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -864,7 +883,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -884,7 +903,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -905,7 +924,7 @@ export default function CreateRequest() {
           });
         } else {
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -931,7 +950,7 @@ export default function CreateRequest() {
       if (value.includes("RRN") && report.RRNdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -951,7 +970,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -971,7 +990,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -992,7 +1011,7 @@ export default function CreateRequest() {
           });
         } else {
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1018,7 +1037,7 @@ export default function CreateRequest() {
       if (value.includes("Aadhar") && report.aadharDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1038,7 +1057,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1058,7 +1077,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1079,7 +1098,7 @@ export default function CreateRequest() {
           });
         } else {
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1105,7 +1124,7 @@ export default function CreateRequest() {
       if (value.includes("Email ID") && report.emailDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1125,7 +1144,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1145,7 +1164,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1166,7 +1185,7 @@ export default function CreateRequest() {
           });
         } else {
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1195,7 +1214,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1215,7 +1234,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1235,7 +1254,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1256,7 +1275,7 @@ export default function CreateRequest() {
           });
         } else {
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1285,7 +1304,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1305,7 +1324,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1325,7 +1344,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1346,7 +1365,7 @@ export default function CreateRequest() {
           });
         } else {
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1372,7 +1391,7 @@ export default function CreateRequest() {
       if (value.includes("Mobile No.") && report.mobileNoDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1392,7 +1411,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1412,7 +1431,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1433,7 +1452,7 @@ export default function CreateRequest() {
           });
         } else {
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1511,7 +1530,7 @@ export default function CreateRequest() {
     });
   };
 
-  const addDetail = (reportIndex, detailName, name, reportName) => {
+  const addDetail = (reportIndex, detailName, searchType, reportName) => {
     //////////console.log("for detail", reportIndex, detailName);
     //////////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
@@ -1534,7 +1553,7 @@ export default function CreateRequest() {
       //   reportName === "IP Logs"
       //     ? [
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1553,7 +1572,7 @@ export default function CreateRequest() {
       //           subRequest: "IPLastLogin",
       //         },
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1572,7 +1591,7 @@ export default function CreateRequest() {
       //           subRequest: "IPLogTxn",
       //         },
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1592,7 +1611,7 @@ export default function CreateRequest() {
       //         },
       //       ]
       //     : {
-      //         name: name,
+      //         searchType: searchType,
       //         accountNo: "",
       //         aadhar: "",
       //         crnNo: "",
@@ -1613,7 +1632,7 @@ export default function CreateRequest() {
 
       if (reportName === "IP Logs") {
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1634,7 +1653,7 @@ export default function CreateRequest() {
         });
 
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1655,7 +1674,7 @@ export default function CreateRequest() {
         });
 
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1676,7 +1695,7 @@ export default function CreateRequest() {
         });
       } else {
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -2152,7 +2171,7 @@ export default function CreateRequest() {
               reportName === "Beneficiary details for Single UPI transactions"
               ? "0rem"
               : "2rem"
-            : "2.35rem"
+            : "2rem"
         }
         key={detailIndex}
         display={
@@ -2176,56 +2195,59 @@ export default function CreateRequest() {
           }
         >
           <TextField
+            // size="medium"
             sx={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length > 0) ||
-              (detail.name === "Email ID" && detail.email.length > 0) ||
-              (detail.name === "PAN" && detail.panNo.length > 0) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length > 0) ||
+              (detail.searchType === "PAN" && detail.panNo.length > 0) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length > 0) ||
-              (detail.name === "Aadhar" && detail.aadhar.length > 0) ||
-              (detail.name === "Debit Card" && detail.debitCard.length > 0) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length > 0) ||
-              (detail.name === "RRN" && detail.rrn.length > 0) ||
-              (detail.name === "CRN" && detail.crnNo.length > 0)
+              (detail.searchType === "Aadhar" && detail.aadhar.length > 0) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length > 0) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length > 0) ||
+              (detail.searchType === "RRN" && detail.rrn.length > 0) ||
+              (detail.searchType === "CRN" && detail.crnNo.length > 0)
                 ? inputControl.validatedTextfield
                 : inputControl.textfield
             }
-            data-testid={`detail-name-input-${detailIndex}`}
+            data-testid={`search-type-input-${detailIndex}`}
             //             helperText={
-            //               (detail.name === "Account number" &&
+            //               (detail.searchType === "Account number" &&
             //                 detail.accountNo.length < 16) ||
-            //               (detail.name === "Email ID" && detail.email.length < 12) ||
-            //               (detail.name === "PAN" && detail.panNo.length < 10) ||
-            //               (detail.name === "Credit Card" &&
+            //               (detail.searchType === "Email ID" && detail.email.length < 12) ||
+            //               (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+            //               (detail.searchType === "Credit Card" &&
             //                 detail.creditCardNo.length < 16) ||
-            //               (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-            //               (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-            //               (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-            //               (detail.name === "RRN" && detail.rrn.length < 12) ||
-            //               (detail.name === "CRN" && detail.crnNo.length < 10)
+            //               (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+            //               (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
+            //               (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            //               (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+            //               (detail.searchType === "CRN" && detail.crnNo.length < 10)
             //                 ? warningHelperText(
             //                     `
             //                     ${t("only")}
 
             //                     ${
-            //                       detail.name === "Account number"
+            //                       detail.searchType === "Account number"
             //                         ? 16
-            //                         : detail.name === "Email ID"
+            //                         : detail.searchType === "Email ID"
             //                         ? "12-320"
-            //                         : detail.name === "PAN"
+            //                         : detail.searchType === "PAN"
             //                         ? 10
-            //                         : detail.name === "Credit Card"
+            //                         : detail.searchType === "Credit Card"
             //                         ? 16
-            //                         : detail.name === "Aadhar"
+            //                         : detail.searchType === "Aadhar"
             //                         ? 12
-            //                         : detail.name === "Debit Card"
+            //                         : detail.searchType === "Debit Card"
             //                         ? 16
-            //                         : detail.name === "Mobile No."
+            //                         : detail.searchType === "Mobile No."
             //                         ? 10
-            //                         : detail.name === "RRN"
+            //                         : detail.searchType === "RRN"
             //                         ? 12
-            //                         : detail.name === "CRN"
+            //                         : detail.searchType === "CRN"
             //                         ? 10
             //                         : 0
             //                     }   ${t("characters")}
@@ -2235,25 +2257,27 @@ export default function CreateRequest() {
             //                 : validatedDetail()
             //             }
             InputLabelProps={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length < 1) ||
-              (detail.name === "Email ID" && detail.email.length < 1) ||
-              (detail.name === "PAN" && detail.panNo.length < 1) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length < 1) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              (detail.name === "RRN" && detail.rrn.length < 1) ||
-              (detail.name === "CRN" && detail.crnNo.length < 1)
+              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length < 1) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length < 1) ||
+              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              (detail.searchType === "CRN" && detail.crnNo.length < 1)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
             InputProps={{
               startAdornment: reportName === "IP Logs" &&
-                detail.name === "Mobile No." && (
+                detail.searchType === "Mobile No." && (
                   <>
-                    <InputLabel
+                    {/* <InputLabel
                       htmlFor="cc-selectbox"
                       variant="outlined"
                       className={
@@ -2262,8 +2286,8 @@ export default function CreateRequest() {
                           : "valid-mobile-label"
                       }
                     >
-                      {detail.name}
-                    </InputLabel>
+                      {detail.searchType}
+                    </InputLabel> */}
                     <FormControl
                       className="cc-dropdown"
                       sx={{
@@ -2315,6 +2339,7 @@ export default function CreateRequest() {
                             // :
                             "black",
                           boxShadow: "none",
+                          height: "2.55rem",
                         }}
                         className="cc-selectbox"
                         placeholder="CC"
@@ -2330,7 +2355,7 @@ export default function CreateRequest() {
                               primary={`${code.phone} ${code.name}`}
                               color="black"
                               inputMode="text"
-                              primaryTypographyProps={{ fontSize: "0.825rem" }}
+                              primaryTypographyProps={primaryTextProps}
                             />
                           </MenuItem>
                         ))}
@@ -2343,76 +2368,76 @@ export default function CreateRequest() {
             inputProps={{
               style: {
                 fontSize: "0.88rem",
-                height: "0.6rem",
+                height: "0.48rem",
               },
               //   maxLength:
-              //     detail.name === "Account number"
+              //     detail.searchType === "Account number"
               //       ? 16
-              //       : detail.name === "Email ID"
+              //       : detail.searchType === "Email ID"
               //       ? 320
-              //       : detail.name === "PAN"
+              //       : detail.searchType === "PAN"
               //       ? 10
-              //       : detail.name === "Credit Card"
+              //       : detail.searchType === "Credit Card"
               //       ? 16
-              //       : detail.name === "Aadhar"
+              //       : detail.searchType === "Aadhar"
               //       ? 12
-              //       : detail.name === "Debit Card"
+              //       : detail.searchType === "Debit Card"
               //       ? 16
-              //       : detail.name === "Mobile No."
+              //       : detail.searchType === "Mobile No."
               //       ? 10
-              //       : detail.name === "RRN"
+              //       : detail.searchType === "RRN"
               //       ? 12
-              //       : detail.name === "CRN"
+              //       : detail.searchType === "CRN"
               //       ? 10
               //       : 0,
             }}
             className="selected-param-box"
             // value={
-            //   (detail.name === "Credit Card" ||
-            //     detail.name === "Aadhar" ||
-            //     detail.name === "Debit Card" ||
-            //     detail.name === "RRN") &&
+            //   (detail.searchType === "Credit Card" ||
+            //     detail.searchType === "Aadhar" ||
+            //     detail.searchType === "Debit Card" ||
+            //     detail.searchType === "RRN") &&
             //   (detail.value === 0 || detail.value.length === 0)
             //     ? ""
-            //     : (detail.name === "Credit Card" ||
-            //           detail.name === "Aadhar" ||
-            //           detail.name === "Debit Card" ||
-            //           detail.name === "RRN") &&
+            //     : (detail.searchType === "Credit Card" ||
+            //           detail.searchType === "Aadhar" ||
+            //           detail.searchType === "Debit Card" ||
+            //           detail.searchType === "RRN") &&
             //         (detail.value !== 0 || detail.value.length !== 0)
             //       ? parseInt(detail.value, 10)
             //       : detail.value
             // }
             value={
-              detail.name === "Account number"
+              detail.searchType === "Account number"
                 ? detail.accountNo
-                : detail.name === "Email ID"
+                : detail.searchType === "Email ID"
                 ? detail.email
-                : detail.name === "PAN"
+                : detail.searchType === "PAN"
                 ? detail.panNo
-                : detail.name === "Credit Card"
+                : detail.searchType === "Credit Card"
                 ? detail.creditCardNo
-                : detail.name === "Aadhar"
+                : detail.searchType === "Aadhar"
                 ? detail.aadhar
-                : detail.name === "Debit Card"
+                : detail.searchType === "Debit Card"
                 ? detail.debitCard
-                : detail.name === "Mobile No."
+                : detail.searchType === "Mobile No."
                 ? reportName === "IP Logs"
                   ? detail.mobileNo.replace(detail.countryCode, "")
                   : detail.mobileNo
-                : detail.name === "RRN"
+                : detail.searchType === "RRN"
                 ? detail.rrn
-                : detail.name === "CRN"
+                : detail.searchType === "CRN"
                 ? detail.crnNo
                 : ""
             }
             id="paramvalue"
             placeholder={
               // reportName === "IP Logs" &&
-              // detail.name === "Mobile No." &&
+              // detail.searchType === "Mobile No." &&
               // detail.countryCode === ""
               //   ? "Select Country Code"
               //   :
-              `Enter ${detail.name}`
+              `Enter ${detail.searchType}`
             }
             autoComplete="off"
             // style={{
@@ -2420,14 +2445,17 @@ export default function CreateRequest() {
             //   fontSize: "0.88rem",
             // }}
             label={
-              reportName === "IP Logs" && detail.name === "Mobile No."
+              reportName === "IP Logs" && detail.searchType === "Mobile No."
                 ? ""
-                : detail.name
+                : detail.searchType
             }
             // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
             margin="none"
             onChange={(e) => {
-              if (reportName === "IP Logs" && detail.name === "Mobile No.") {
+              if (
+                reportName === "IP Logs" &&
+                detail.searchType === "Mobile No."
+              ) {
                 handleMobileNoValue(
                   e.target.value,
                   reportIndex,
@@ -2446,23 +2474,23 @@ export default function CreateRequest() {
               }
             }}
             // type={
-            //   detail.name === "Account number"
+            //   detail.searchType === "Account number"
             //     ? "text"
-            //     : detail.name === "CRN"
+            //     : detail.searchType === "CRN"
             //       ? "text"
-            //       : detail.name === "Email ID"
+            //       : detail.searchType === "Email ID"
             //         ? "email"
-            //         : detail.name === "PAN"
+            //         : detail.searchType === "PAN"
             //           ? "text"
-            //           : detail.name === "Mobile No."
+            //           : detail.searchType === "Mobile No."
             //             ? "tel"
-            //             : detail.name === "Credit Card"
+            //             : detail.searchType === "Credit Card"
             //               ? "number"
-            //               : detail.name === "Aadhar"
+            //               : detail.searchType === "Aadhar"
             //                 ? "number"
-            //                 : detail.name === "Debit Card"
+            //                 : detail.searchType === "Debit Card"
             //                   ? "number"
-            //                   : detail.name === "RRN"
+            //                   : detail.searchType === "RRN"
             //                     ? "number"
             //                     : "text"
             // }
@@ -2496,19 +2524,19 @@ export default function CreateRequest() {
                   }
                   label={t("from")}
                   // disabled={
-                  //   (detail.name === "Account number" &&
+                  //   (detail.searchType === "Account number" &&
                   //     detail.accountNo.length < 1) ||
-                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.name === "Credit Card" &&
+                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.searchType === "Credit Card" &&
                   //     detail.creditCardNo.length < 1) ||
-                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.name === "Debit Card" &&
+                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.name === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No." &&
                   //     detail.mobileNo.length < 1) ||
-                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
@@ -2538,37 +2566,37 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.name === "Account number" &&
+                  ((detail.searchType === "Account number" &&
                     detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
+                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
+                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+                    (detail.searchType === "Credit Card" &&
                       detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
+                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+                    (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
+                    (detail.searchType === "Mobile No." &&
                       detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)) &&
+                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
                   detail.fromDate === ""
                     ? customFormText("")
-                    : ((detail.name === "Account number" &&
+                    : ((detail.searchType === "Account number" &&
                         detail.accountNo.length === 16) ||
-                        (detail.name === "Email ID" &&
+                        (detail.searchType === "Email ID" &&
                           detail.email.length > 02 &&
                           detail.email.length <= 320) ||
-                        (detail.name === "PAN" && detail.panNo.length === 10) ||
-                        (detail.name === "Credit Card" &&
+                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
+                        (detail.searchType === "Credit Card" &&
                           detail.creditCardNo.length === 16) ||
-                        (detail.name === "Aadhar" &&
+                        (detail.searchType === "Aadhar" &&
                           detail.aadhar.length === 12) ||
-                        (detail.name === "Debit Card" &&
+                        (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.name === "Mobile No." &&
+                        (detail.searchType === "Mobile No." &&
                           detail.mobileNo.length === 10) ||
-                        (detail.name === "RRN" && detail.rrn.length === 12) ||
-                        (detail.name === "CRN" &&
+                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
+                        (detail.searchType === "CRN" &&
                           detail.crnNo.length === 10)) &&
                       detail.fromDate === ""
                     ? customFormText("If needed, select from date", "grey", 1)
@@ -2586,19 +2614,19 @@ export default function CreateRequest() {
                   className="date-picker"
                   label={t("to")}
                   // disabled={
-                  //   (detail.name === "Account number" &&
+                  //   (detail.searchType === "Account number" &&
                   //     detail.accountNo.length < 1) ||
-                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.name === "Credit Card" &&
+                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.searchType === "Credit Card" &&
                   //     detail.creditCardNo.length < 1) ||
-                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.name === "Debit Card" &&
+                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.name === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No." &&
                   //     detail.mobileNo.length < 1) ||
-                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
@@ -2634,37 +2662,37 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.name === "Account number" &&
+                  ((detail.searchType === "Account number" &&
                     detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
+                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
+                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+                    (detail.searchType === "Credit Card" &&
                       detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
+                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+                    (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
+                    (detail.searchType === "Mobile No." &&
                       detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)) &&
+                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
                   detail.toDate === ""
                     ? customFormText("")
-                    : ((detail.name === "Account number" &&
+                    : ((detail.searchType === "Account number" &&
                         detail.accountNo.length === 16) ||
-                        (detail.name === "Email ID" &&
+                        (detail.searchType === "Email ID" &&
                           detail.email.length > 02 &&
                           detail.email.length <= 320) ||
-                        (detail.name === "PAN" && detail.panNo.length === 10) ||
-                        (detail.name === "Credit Card" &&
+                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
+                        (detail.searchType === "Credit Card" &&
                           detail.creditCardNo.length === 16) ||
-                        (detail.name === "Aadhar" &&
+                        (detail.searchType === "Aadhar" &&
                           detail.aadhar.length === 12) ||
-                        (detail.name === "Debit Card" &&
+                        (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.name === "Mobile No." &&
+                        (detail.searchType === "Mobile No." &&
                           detail.mobileNo.length === 10) ||
-                        (detail.name === "RRN" && detail.rrn.length === 12) ||
-                        (detail.name === "CRN" &&
+                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
+                        (detail.searchType === "CRN" &&
                           detail.crnNo.length === 10)) &&
                       detail.toDate === ""
                     ? customFormText("If needed, select to date", "grey", 1)
@@ -2685,7 +2713,7 @@ export default function CreateRequest() {
             className="iplogs-mobileno-input"
             data-testid={`iplogs-mobileno-input-${detailIndex}`}
           >
-            {detail.name === "Mobile No." ? (
+            {detail.searchType === "Mobile No." ? (
               <></>
             ) : (
               <TextField
@@ -2706,7 +2734,7 @@ export default function CreateRequest() {
                 inputProps={{
                   style: {
                     fontSize: "0.88rem",
-                    height: "0.6rem",
+                    height: "0.48rem",
 
                     // marginLeft : "3rem"
                   },
@@ -2741,7 +2769,7 @@ export default function CreateRequest() {
                 InputProps={{
                   startAdornment: (
                     <>
-                      <InputLabel
+                      {/* <InputLabel
                         htmlFor="cc-selectbox"
                         variant="outlined"
                         className={
@@ -2752,7 +2780,7 @@ export default function CreateRequest() {
                         // color={detail.mobileNo === "" ? "grey" : "green"}
                       >
                         Mobile No.
-                      </InputLabel>
+                      </InputLabel> */}
                       <FormControl
                         className="cc-dropdown"
                         sx={{
@@ -2765,10 +2793,11 @@ export default function CreateRequest() {
                               ? "54%"
                               : "48%",
                         }}
-                        size="medium"
+                        size="small"
                       >
                         <Select
                           id="cc-dropdown"
+                          size="small"
                           value={detail.countryCode}
                           label="Code"
                           data-testid={`cc-dropdown-${detailIndex}`}
@@ -2811,6 +2840,7 @@ export default function CreateRequest() {
                               //   :
                               "black",
                             boxShadow: "none",
+                            height: "2.55rem",
                             paddingLeft: 0,
                           }}
                           className="cc-selectbox"
@@ -2827,9 +2857,7 @@ export default function CreateRequest() {
                                 primary={`${code.phone} ${code.name}`}
                                 color="black"
                                 inputMode="text"
-                                primaryTypographyProps={{
-                                  fontSize: "0.825rem",
-                                }}
+                                primaryTypographyProps={primaryTextProps}
                               />
                             </MenuItem>
                           ))}
@@ -2873,7 +2901,7 @@ export default function CreateRequest() {
                   inputProps={{
                     style: {
                       fontSize: "0.88rem",
-                      height: "0.6rem",
+                      height: "0.48rem",
                     },
                     // maxLength: 6,
                   }}
@@ -2956,26 +2984,26 @@ export default function CreateRequest() {
           )}
 
         {reportName === "Statement in PDF/Excel" && (
-          <FormControl className="report-type-dropdown" size="medium">
+          <FormControl className="request-type-dropdown" size="medium">
             <Select
-              id="report-type-dropdown"
+              id="request-type-dropdown"
               value={detail.type}
               label="Type"
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
               // disabled={
-              //   (detail.name === "Account number" &&
+              //   (detail.searchType === "Account number" &&
               //     detail.accountNo.length < 1) ||
-              //   (detail.name === "Email ID" && detail.email.length < 1) ||
-              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-              //   (detail.name === "Credit Card" &&
+              //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              //   (detail.searchType === "Credit Card" &&
               //     detail.creditCardNo.length < 1) ||
-              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              //   (detail.name === "Debit Card" &&
+              //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              //   (detail.searchType === "Debit Card" &&
               //     detail.debitCard.length < 1) ||
-              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-              //   (detail.name === "CRN" && detail.crnNo.length < 1)
+              //   (detail.searchType === "Mobile No." && detail.mobileNo.length < 1) ||
+              //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
               //     ? true
               //     : false
               // }
@@ -3012,7 +3040,7 @@ export default function CreateRequest() {
                 // fontSize: "0.88rem",
                 color: detail.type === "" ? "rgba(0, 0, 0, 0.49)" : "black",
               }}
-              className="report-type-selectbox"
+              className="request-type-selectbox"
               placeholder={t("type")}
             >
               {availableReportTypes.map((type, typeIndex) => (
@@ -3020,28 +3048,32 @@ export default function CreateRequest() {
                   key={type}
                   data-testid={`type-dropdown-menuitem-${typeIndex}`}
                   value={type}
-                  className="type-dropdown-menuitem"
+                  className={
+                    type === detail.type
+                      ? "type-sel-menuitem"
+                      : "type-dropdown-menuitem"
+                  }
                 >
                   <ListItemText
                     primary={type}
                     color="black"
                     inputMode="text"
-                    primaryTypographyProps={{ fontSize: "0.825rem" }}
+                    primaryTypographyProps={primaryTextProps}
                   />
                 </MenuItem>
               ))}
             </Select>
-            {/* {(detail.name === "Account number" &&
+            {/* {(detail.searchType === "Account number" &&
               detail.accountNo.length < 16) ||
-            (detail.name === "Email ID" && detail.email.length < 12) ||
-            (detail.name === "PAN" && detail.panNo.length < 10) ||
-            (detail.name === "Credit Card" &&
+            (detail.searchType === "Email ID" && detail.email.length < 12) ||
+            (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+            (detail.searchType === "Credit Card" &&
               detail.creditCardNo.length < 16) ||
-            (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-            (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-            (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-            (detail.name === "RRN" && detail.rrn.length < 12) ||
-            (detail.name === "CRN" && detail.crnNo.length < 10)
+            (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+            (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
+            (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+            (detail.searchType === "CRN" && detail.crnNo.length < 10)
               ? customFormText("")
               : detail.type === ""
               ? customFormText(
@@ -3053,11 +3085,11 @@ export default function CreateRequest() {
           </FormControl>
         )}
 
-        {reportName === "IP Logs" && detailIndex === 2 && (
+{reportName === "IP Logs" && detailIndex === 2 && (
           <Box className="iplog-void-button"></Box>
         )}
 
-        {detailIndex < reportsState[reportIndex][detailName].length && (
+        {reportsState[reportIndex][detailName].length > (reportName === "IP Logs" ? 3 : 1) && detailIndex < reportsState[reportIndex][detailName].length && (
           <Button
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
@@ -3099,33 +3131,37 @@ export default function CreateRequest() {
             data-testid={`add-button-${detailIndex}`}
             style={{
               opacity:
-                (detail.name === "Account number" &&
+                (detail.searchType === "Account number" &&
                   detail.accountNo.length < 1) ||
-                (detail.name === "Email ID" && detail.email.length < 1) ||
-                (detail.name === "PAN" && detail.panNo.length < 1) ||
-                (detail.name === "Credit Card" &&
+                (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                (detail.searchType === "Credit Card" &&
                   detail.creditCardNo.length < 1) ||
-                (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-                (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-                (detail.name === "RRN" && detail.rrn.length < 1) ||
-                (detail.name === "CRN" && detail.crnNo.length < 1) ||
+                (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                (detail.searchType === "Debit Card" &&
+                  detail.debitCard.length < 1) ||
+                (detail.searchType === "Mobile No." &&
+                  detail.mobileNo.length < 1) ||
+                (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
                 detail.type === ""
                   ? 0.25
                   : 1,
             }}
             disabled={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length < 1) ||
-              (detail.name === "Email ID" && detail.email.length < 1) ||
-              (detail.name === "PAN" && detail.panNo.length < 1) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length < 1) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              (detail.name === "RRN" && detail.rrn.length < 1) ||
-              (detail.name === "CRN" && detail.crnNo.length < 1) ||
+              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length < 1) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length < 1) ||
+              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
               detail.type === ""
                 ? true
                 : false
@@ -3189,31 +3225,33 @@ export default function CreateRequest() {
                     : "none"
                 }
               >
-                <Typography sx={previewProps.name} component="span">{`${
-                  detail.name === "Account number" ? "Acc no." : detail.name
+                <Typography sx={previewProps.searchType} component="span">{`${
+                  detail.searchType === "Account number"
+                    ? "Acc no."
+                    : detail.searchType
                 }  : `}</Typography>
-                {/* {detail.name === "Email ID" ? ( */}
+                {/* {detail.searchType === "Email ID" ? ( */}
                 <InputBase
                   readOnly={true}
                   multiline={true}
                   value={
-                    detail.name === "Account number"
+                    detail.searchType === "Account number"
                       ? detail.accountNo
-                      : detail.name === "Email ID"
+                      : detail.searchType === "Email ID"
                       ? detail.email
-                      : detail.name === "PAN"
+                      : detail.searchType === "PAN"
                       ? detail.panNo
-                      : detail.name === "Credit Card"
+                      : detail.searchType === "Credit Card"
                       ? detail.creditCardNo
-                      : detail.name === "Aadhar"
+                      : detail.searchType === "Aadhar"
                       ? detail.aadhar
-                      : detail.name === "Debit Card"
+                      : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.name === "Mobile No."
+                      : detail.searchType === "Mobile No."
                       ? detail.mobileNo
-                      : detail.name === "RRN"
+                      : detail.searchType === "RRN"
                       ? detail.rrn
-                      : detail.name === "CRN"
+                      : detail.searchType === "CRN"
                       ? detail.crnNo
                       : ""
                   }
@@ -3221,23 +3259,23 @@ export default function CreateRequest() {
                 />
                 {/* ) : (
                   <Typography sx={previewProps.value} component="span">
-                    {detail.name === "Account number"
+                    {detail.searchType === "Account number"
                       ? detail.accountNo
-                      : detail.name === "Email ID"
+                      : detail.searchType === "Email ID"
                       ? detail.email
-                      : detail.name === "PAN"
+                      : detail.searchType === "PAN"
                       ? detail.panNo
-                      : detail.name === "Credit Card"
+                      : detail.searchType === "Credit Card"
                       ? detail.creditCardNo
-                      : detail.name === "Aadhar"
+                      : detail.searchType === "Aadhar"
                       ? detail.aadhar
-                      : detail.name === "Debit Card"
+                      : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.name === "Mobile No."
+                      : detail.searchType === "Mobile No."
                       ? detail.mobileNo
-                      : detail.name === "RRN"
+                      : detail.searchType === "RRN"
                       ? detail.rrn
-                      : detail.name === "CRN"
+                      : detail.searchType === "CRN"
                       ? detail.crnNo
                       : ""}
                   </Typography>
@@ -3261,7 +3299,7 @@ export default function CreateRequest() {
                     "Beneficiary details for Bulk UPI transactions")) && (
                 <Box className="detail-range">
                   <Box className="preview-range">
-                    <Typography sx={previewProps.name} component="span">
+                    <Typography sx={previewProps.searchType} component="span">
                       Date :{" "}
                     </Typography>
                   </Box>
@@ -3294,7 +3332,7 @@ export default function CreateRequest() {
                     "Beneficiary details for Single UPI transactions")) && (
                 <Box className="detail-range">
                   <Box className="rrn-preview-2">
-                    <Typography sx={previewProps.name} component="span">
+                    <Typography sx={previewProps.searchType} component="span">
                       Amount :{" "}
                     </Typography>
 
@@ -3305,7 +3343,7 @@ export default function CreateRequest() {
 
                   {/* {detail.fromDate !== "" && ( */}
                   <Box className="rrn-preview-2">
-                    <Typography sx={previewProps.name} component="span">
+                    <Typography sx={previewProps.searchType} component="span">
                       Date :{" "}
                     </Typography>
 
@@ -3321,11 +3359,11 @@ export default function CreateRequest() {
 
               {reportName === "IP Logs" && (
                 <Box className="mobileno-preview">
-                  {detail.name === "Mobile No." ? (
+                  {detail.searchType === "Mobile No." ? (
                     <>
                       {/* <Typography
                         marginLeft="1rem"
-                        sx={previewProps.name}
+                        sx={previewProps.searchType}
                         component="span"
                       >
                         Mobile No. :{" "}
@@ -3339,7 +3377,7 @@ export default function CreateRequest() {
                     <>
                       <Typography
                         marginLeft="1rem"
-                        sx={previewProps.name}
+                        sx={previewProps.searchType}
                         component="span"
                       >
                         Mobile No. :{" "}
@@ -3361,7 +3399,7 @@ export default function CreateRequest() {
               {reportName === "Statement in PDF/Excel" && (
                 <Box className="type-preview">
                   <Typography
-                    sx={previewProps.name}
+                    sx={previewProps.searchType}
                     marginLeft="1rem"
                     component="span"
                   >
@@ -3556,6 +3594,7 @@ export default function CreateRequest() {
   const createRequestPayload = {
     // ticketId: "",
     ticketNumber: ticketNumber,
+    ticketType: ticketType,
     ticketDescription: ticketDescription,
     status: "In-progress",
     createdDate: currentDate,
@@ -3563,6 +3602,12 @@ export default function CreateRequest() {
     createdBy: "User",
     reportDetails: reportDetails,
   };
+
+  useEffect(() => {
+    if (ticketType !== "Other") {
+      setTicketDescription("");
+    }
+  }, [ticketType]);
 
   const handleSubmit = () => {
     if (isValidReportData === false) {
@@ -3597,10 +3642,10 @@ export default function CreateRequest() {
   };
 
   // ////////console.log("Valid Report Data", isValidReportData);
-  console.log("Spring Boot Payload", reportDetails);
+  // console.log("Spring Boot Payload", reportDetails);
   //console.log("Triple Reports State", reportsState);
 
-  //////console.log("Create Request Details array", createRequestPayload);
+console.log("Create Request Payload", createRequestPayload);
   //////console.log("Device Details Array", deviceDetails);
 
   const dynamicReports =
@@ -3654,7 +3699,7 @@ export default function CreateRequest() {
                       inputProps={{
                         style: {
                           fontSize: "0.88rem",
-                          height: "0.6rem",
+                          height: "0.48rem",
                         },
                         // maxLength: 10,
                       }}
@@ -3683,7 +3728,113 @@ export default function CreateRequest() {
                   <FormControl
                     variant="outlined"
                     margin="none"
-                    className="ticket-description-container"
+                    className="ticket-type-cont"
+                  >
+                    <Select
+                      label="Ticket Type"
+                      name="ticket-type-dropdown"
+                      id="ticket-type-dropdown"
+                      data-testid="ticket-type-dropdown"
+                      // multiple={true}
+                      value={ticketType}
+                      displayEmpty
+                      // disabled={
+                      //   ticketNumber.length < 1 || ticketDescription.length < 1
+                      //     ? true
+                      //     : false
+                      // }
+                      onChange={(event) => {
+                        handleTicketType(event);
+                      }}
+                      // variant="standard"
+                      input={<OutlinedInput fullWidth />}
+                      IconComponent={(props) => (
+                        <KeyboardArrowDownOutlinedIcon
+                          className="select-icon"
+                          {...props}
+                        />
+                      )}
+                      renderValue={(ticket) => {
+                        if (ticketType === "") {
+                          return (
+                            <Typography
+                              component="span"
+                              fontSize="95%"
+                              color="rgb(149, 149, 149)"
+                              data-testid="ticket-type-input-initial"
+                            >
+                              {" "}
+                              {"Select Ticket Type *"}
+                            </Typography>
+                          );
+                        }
+                        return (
+                          <Input
+                            className="ticket-type-input-changed"
+                            disableUnderline={true}
+                            value={ticketType}
+                            data-testid="ticket-type-input-changed"
+                          ></Input>
+                        );
+                      }}
+                      inputProps={{}}
+                      sx={
+                        ticketType.trim() === ""
+                          ? SelectProps.containerProps
+                          : SelectProps.validatedContainerProps
+                      }
+                      MenuProps={{
+                        autoFocus: false,
+                        ...SelectProps.TICKET_SELECT_PROPS,
+                      }}
+                      autoWidth={false}
+                      className="ticket-type-box"
+                      placeholder={"Select Ticket Type"}
+                    >
+                      {ticketDescTypes.map((ticket, index) => (
+                        <MenuItem
+                          key={ticket}
+                          value={ticket}
+                          data-testid={`ticket-menu-item`}
+                          className={
+                            ticket === ticketType
+                              ? "ticket-menu-sel-item"
+                              : "ticket-menu-item"
+                          }
+                        >
+                          {/* <Checkbox
+                          size="medium"
+                          className="checkbox"
+                          data-testid={`ticket-checkbox`}
+                          icon={
+                            <CheckBoxOutlineBlankIcon className="uncheck-icon" />
+                          }
+                          checkedIcon={
+                            <CheckBoxOutlinedIcon className="check-icon" />
+                          }
+                          checked={[].indexOf(ticket) > -1}
+                          color="primary"
+                          value={ticket}
+                        /> */}
+                          <ListItemText
+                            primary={ticket}
+                            data-testid="ticket-menu-listext"
+                            className="ticket-menu-listext"
+                            // color="black"
+                            inputMode="text"
+                            primaryTypographyProps={primaryTextProps}
+                          />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                {ticketType === "Other" && (
+                  <FormControl
+                    variant="outlined"
+                    margin="none"
+                    className="ticket-desc-cont"
                   >
                     <TextField
                       placeholder={
@@ -3718,7 +3869,7 @@ export default function CreateRequest() {
                       }
                       className="ticket-description-input"
                       autoComplete="off"
-                      rows={Math.ceil(ticketDescription.length / 60)}
+                      rows={Math.ceil(ticketDescription.trim().length / 60)}
                       size="small"
                       fullWidth
                       inputProps={inputControl.textAreaProps}
@@ -3737,14 +3888,13 @@ export default function CreateRequest() {
                       // }}
                       type="text"
                       inputMode="text"
-                      // disabled={ticketNumber.length < 1 ? true : false}
                       color="primary"
                       value={ticketDescription}
                       data-testid="ticket-descr-input"
                       onChange={(e) => setTicketDescription(e.target.value)}
                     />
                   </FormControl>
-                </Box>
+                )}
 
                 <FormControl className="reports-box">
                   <Select
@@ -3782,7 +3932,7 @@ export default function CreateRequest() {
                           <Typography
                             component="span"
                             fontSize="95%"
-                            color="silver"
+                            color="rgb(149, 149, 149)"
                             data-testid="reports-dropdown-input-initial"
                           >
                             {" "}
@@ -3868,7 +4018,7 @@ export default function CreateRequest() {
                           className="reports-menu-listext"
                           // color="black"
                           inputMode="text"
-                          primaryTypographyProps={{ fontSize: "0.825rem" }}
+                          primaryTypographyProps={primaryTextProps}
                         />
                       </MenuItem>
                     ))}
@@ -3980,9 +4130,10 @@ export default function CreateRequest() {
                                       // variant="standard"
                                       sx={{
                                         width:
-                                          request.selectedReport === "IP Logs"
-                                            ? "26.6%"
-                                            : "28%",
+                                          // request.selectedReport === "IP Logs"
+                                          //   ? "26.6%"
+                                          //   : 
+                                            "28%",
                                         marginBottom:
                                           reportsState[reportIndex]
                                             .selectedParams.length === 0
@@ -4046,6 +4197,7 @@ export default function CreateRequest() {
                                               <Typography
                                                 component="span"
                                                 className="param-display-placeholder"
+                                                color="rgb(149, 149, 149)"
                                               >
                                                 {t("selectDetails")}
                                               </Typography>
@@ -4156,9 +4308,9 @@ export default function CreateRequest() {
                                                 data-testid={`param-listitemtext}`}
                                                 color="black"
                                                 inputMode="text"
-                                                primaryTypographyProps={{
-                                                  fontSize: "0.85rem",
-                                                }}
+                                                primaryTypographyProps={
+                                                  primaryTextProps
+                                                }
                                               />
                                             </MenuItem>
                                           ))}
@@ -4177,13 +4329,17 @@ export default function CreateRequest() {
                                   <Box
                                     className="details-subsection"
                                     style={{
+                                      marginBottom:
+                                        request.selectedParams.length === 0
+                                          ? "1.4rem"
+                                          : "1.85rem",
                                       marginTop:
                                         request.selectedReport ===
                                           "Beneficiary details for Single IMPS transactions" ||
                                         request.selectedReport ===
                                           "Beneficiary details for Single UPI transactions"
                                           ? "0rem"
-                                          : "-2rem",
+                                          : "-1.95rem",
                                       // marginBottom:
                                       //   reportsState[reportIndex].selectedParams
                                       //     .length === 0
