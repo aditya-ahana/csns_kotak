@@ -3039,6 +3039,7 @@ export default function CreateRequest() {
               style={{
                 // fontSize: "0.88rem",
                 color: detail.type === "" ? "rgba(0, 0, 0, 0.49)" : "black",
+                height : "2.575rem"
               }}
               className="request-type-selectbox"
               placeholder={t("type")}
@@ -3085,16 +3086,16 @@ export default function CreateRequest() {
           </FormControl>
         )}
 
-{reportName === "IP Logs" && detailIndex === 2 && (
+{reportName === "IP Logs" && detailIndex < reportsState[reportIndex][detailName].length - 3 && (
           <Box className="iplog-void-button"></Box>
         )}
 
-        {reportsState[reportIndex][detailName].length > (reportName === "IP Logs" ? 3 : 1) && detailIndex < reportsState[reportIndex][detailName].length && (
+        {detailIndex < reportsState[reportIndex][detailName].length && (
           <Button
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
             disabled={
-              reportName === "IP Logs" && detailIndex < 3
+              reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
                 ? true
                 : reportsState[reportIndex][detailName].length === 1
                 ? true
@@ -3108,7 +3109,7 @@ export default function CreateRequest() {
                   ? "4.4%"
                   : "0%",
               opacity:
-                reportName === "IP Logs" && detailIndex < 3
+                reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
                   ? 0.25
                   : reportsState[reportIndex][detailName].length === 1
                   ? 0.25
