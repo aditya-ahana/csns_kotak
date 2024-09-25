@@ -10,6 +10,7 @@ import {
   AccordionDetails,
   FormHelperText,
   InputBase,
+  Autocomplete,
 } from "@mui/material";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
@@ -37,32 +38,52 @@ import ExpandCircleDownOutlinedIcon from "@mui/icons-material/ExpandCircleDownOu
 import dayjs, { Dayjs } from "dayjs";
 import Accordion from "@mui/material/Accordion";
 import InputAdornment from "@mui/material/InputAdornment";
-import { setRequestPayloads } from "../../Redux/csnsReducers";
 import Fade from "@mui/material/Fade";
 import { Provider } from "react-redux";
 import store from "../../Redux/reduxStore";
 import { useTranslation } from "react-i18next";
-import {
-  requiredReportsData,
-  availableParameters,
-} from "../../components/data/requestsData";
 import Loader from "../../components/Loader";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import MaterialToast from "../../components/Snackbar";
 import Skeleton from "@mui/material/Skeleton";
-import { readOnly } from "../../components/data/requestsData";
 import ErrorIcon from "@mui/icons-material/Error";
+import SearchIcon from "@mui/icons-material/Search";
+import { ticketTypeData } from "../../Redux/reducedData";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
+  const ticketDescTypes = [...ticketTypeData, "Other"];
+  const readOnly = useSelector((state) => state.csns.readOnly);
+  const availableReportTypes = useSelector(
+    (state) => state.csns.availableReportTypes
+  );
+  const availableParameters = useSelector(
+    (state) => state.csns.availableParameters
+  );
+  const requiredReportsData = useSelector(
+    (state) => state.csns.requiredReportsData
+  );
+
+  const countries = useSelector((state) =>
+    state.csns.countryCodeData.map((code) => code)
+  );
+
+  const countryCodes = countries.sort((array, sortedArray) =>
+    array.phone.localeCompare(sortedArray.phone)
+  );
+
   const [showToast, setShowToast] = useState(false);
+  const [ticketType, setTicketType] = useState("");
+  const [searchedReports, setSearchedReports] = useState([]);
   const [toastMessage, setToastMessage] = useState("");
   const [toastDuration, setToastDuration] = useState(0);
   const [toastBackground, setToastBackground] = useState("brown");
   const [toastColor, setToastColor] = useState("");
   const [toastFontWeight, setToastFontWeight] = useState();
   const [payloadConfigured, setPayloadConfigured] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [selected, setSelected] = useState(true);
 
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
@@ -86,7 +107,6 @@ export default function CreateRequest() {
   });
 
   const route_to = useNavigate();
-  const dispatch = useDispatch();
 
   const [ticketNumber, setTicketNumber] = useState("");
   const [ticketDescription, setTicketDescription] = useState("");
@@ -100,12 +120,16 @@ export default function CreateRequest() {
   // const new_date = new Date();
   // new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
 
-  const currentDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
-  const reduxDate = dayjs(new Date()).format("DD-MM-YYYY");
-  ////console.log("Current Date", currentDate);
+  const maxDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
+  const currentDate = useSelector((state) => state.csns.currentDate);
 
+  ////////console.log("Current Date", currentDate);
+
+  const primaryTextProps = {
+    fontSize: "0.825rem",
+  };
   const previewProps = {
-    name: {
+    searchType: {
       fontWeight: 500,
       fontFamily: "Roboto",
       fontSize: "0.85rem",
@@ -121,7 +145,7 @@ export default function CreateRequest() {
     textfield: {
       "& .MuiOutlinedInput-root": {
         "& fieldset": {
-          border: "1.45px solid rgb(67, 91, 102)",
+          border: "1.45px solid rgb(103, 125, 106)",
           backgroundColor: "transparent",
         },
         "&:hover fieldset": {
@@ -159,7 +183,7 @@ export default function CreateRequest() {
     inputProps: {
       style: {
         fontSize: "0.88rem",
-        height: "0.6rem",
+        height: "0.48rem",
       },
       // maxLength: 10,
     },
@@ -170,7 +194,7 @@ export default function CreateRequest() {
         fontSize: "0.88rem",
         alignSelf: "center",
         display: "flex",
-        color: "rgb(92, 84, 112)",
+        color: "rgb(95, 105, 91)",
         alignItems: "center",
         marginTop: "0.125rem",
       },
@@ -203,7 +227,7 @@ export default function CreateRequest() {
         paddingTop: "0.15rem",
         alignSelf: "center",
         display: "flex",
-        color: "rgb(92, 84, 112)",
+        color: "rgb(95, 105, 91)",
         alignItems: "center",
         height: "auto",
       },
@@ -227,7 +251,29 @@ export default function CreateRequest() {
   const SelectProps = {
     containerProps: {
       ".MuiOutlinedInput-notchedOutline": {
-        border: "1.4px solid rgb(67, 91, 102)",
+        border: "1.4px solid rgb(103, 125, 106)",
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        border: "1.65px solid rgba(131, 131, 210)",
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        border:
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          // ? "0.25px solid grey"
+          // :
+          "1.5px solid rgb(131, 131, 210)",
+      },
+      ".MuiSvgIcon-root ": {
+        fill:
+          // ticketNumber.length === 0 || ticketDescription.length === 0
+          //   ? "silver"
+          // :
+          "rgba(95, 99, 104, 1)",
+      },
+    },
+    mobileNoProps: {
+      ".MuiOutlinedInput-notchedOutline": {
+        border: "1.4px solid rgb(103, 125, 106)",
       },
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         border: "1.65px solid rgba(131, 131, 210)",
@@ -264,7 +310,16 @@ export default function CreateRequest() {
     REPORT_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "19.6rem",
+          maxHeight: "21.75rem",
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
+    TICKET_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          maxHeight: "21.75rem",
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
         },
@@ -273,7 +328,7 @@ export default function CreateRequest() {
     PARAM_SELECT_PROPS: {
       PaperProps: {
         style: {
-          maxHeight: "9.36rem",
+          maxHeight: "14rem",
           marginTop: "-0.15rem",
           overflow: "auto",
         },
@@ -282,7 +337,6 @@ export default function CreateRequest() {
         sx: {
           border: "1.5px solid rgba(161, 161, 161, 1)",
           borderWidth: "1.5px 0px 1.5px 1.5px",
-          margin: 0,
           borderTopLeftRadius: "0px",
           borderTopRightRadius: "0px",
           borderBottomLeftRadius: "4px",
@@ -296,6 +350,16 @@ export default function CreateRequest() {
         style: {
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
+    CC_SELECT_PROPS: {
+      PaperProps: {
+        style: {
+          marginTop: "-0.5rem",
+          boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+          maxHeight: "27.6rem",
+          overflow: "auto",
         },
       },
     },
@@ -315,9 +379,9 @@ export default function CreateRequest() {
           },
         },
       },
-      field: {
-        readOnly: true,
-      },
+      // field: {
+      //   readOnly: true,
+      // },
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
@@ -327,7 +391,7 @@ export default function CreateRequest() {
         InputLabelProps: {
           sx: {
             paddingTop: "0.05rem",
-            color: "rgb(92, 84, 112)",
+            color: "rgb(95, 105, 91)",
             fontSize: "0.92rem",
           },
         },
@@ -339,14 +403,14 @@ export default function CreateRequest() {
           width: "100%",
 
           "& .MuiInputBase-input": {
-            height: "1.575rem",
+            height: "1.5rem",
             //  width : '100%',
             width: "100%",
             fontSize: "0.85rem",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: "1.45px solid rgb(67, 91, 102)",
+              border: "1.45px solid rgb(103, 125, 106)",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(131, 131, 210)",
@@ -381,7 +445,7 @@ export default function CreateRequest() {
       openPickerIcon: {
         sx: {
           fontSize: "1.5rem",
-          color: "rgb(67, 91, 102)",
+          color: "rgb(103, 125, 106)",
         },
       },
       textField: {
@@ -448,7 +512,7 @@ export default function CreateRequest() {
               CRNdetails: [],
               RRNdetails: [
                 {
-                  name: "RRN",
+                  searchType: "RRN",
                   accountNo: "",
                   aadhar: "",
                   crnNo: "",
@@ -472,6 +536,7 @@ export default function CreateRequest() {
               debitCardDetails: [],
               mobileNoDetails: [],
               viewState: "Expanded",
+              searchQuery: "",
             }
           );
         } else {
@@ -489,6 +554,7 @@ export default function CreateRequest() {
               debitCardDetails: [],
               mobileNoDetails: [],
               viewState: "Expanded",
+              searchQuery: "",
             }
           );
         }
@@ -497,12 +563,10 @@ export default function CreateRequest() {
     });
   }, [selectedReports]);
 
-  // //////console.log('Selected REPORTS : ',selectedReports);
-  // //////console.log('Selected REPORTS : ',selectedReports);
+  // //////////console.log('Selected REPORTS : ',selectedReports);
+  // //////////console.log('Selected REPORTS : ',selectedReports);
 
-  // //////console.log('selected reports : ',selectedReports);
-
-  const availableReportTypes = ["PDF", "Excel"];
+  // //////////console.log('selected reports : ',selectedReports);
 
   // const autoScrollDown = (scrollingSpace) => {
   //   var height = 0;
@@ -539,7 +603,7 @@ export default function CreateRequest() {
   //   }
   // };
 
-  // //////console.log('Final Selected',selectedParams);
+  // //////////console.log('Final Selected',selectedParams);
 
   const handleMinimizedView = (reportIndex) => {
     setReportsState((prevState) => {
@@ -557,11 +621,30 @@ export default function CreateRequest() {
     });
   };
 
+  const handleParamSearch = (value, reportIndex) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      newState[reportIndex].searchQuery = value;
+      return newState;
+    });
+  };
+
+  const handleTicketType = (event) => {
+    setTicketType(event.target.value);
+  };
+
   const handleReportSelection = (event) => {
     const {
       target: { value },
     } = event;
-    setSelectedReports(typeof value === "string" ? value.split(",") : value);
+
+    ////console.log("event",event)
+    // ////console.log("Value first length",value[0] );
+    if (event.target.value.length > 0 && event.target.value[0] !== undefined) {
+      setSelectedReports(typeof value === "string" ? value.split(",") : value);
+    } else {
+      setSelectedReports([]);
+    }
   };
 
   // useEffect(() => {
@@ -588,8 +671,15 @@ export default function CreateRequest() {
         return prevState;
       }
 
-      report.selectedParams =
-        typeof value === "string" ? value.split(",") : value;
+      if (
+        event.target.value.length > 0 &&
+        event.target.value[0] !== undefined
+      ) {
+        report.selectedParams =
+          typeof value === "string" ? value.split(",") : value;
+      } else {
+        report.selectedParams = [];
+      }
 
       if (
         // value.some((param) => param === "Account number")
@@ -598,7 +688,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -610,6 +700,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -617,7 +708,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -629,6 +720,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -636,7 +728,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -648,6 +740,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -656,7 +749,7 @@ export default function CreateRequest() {
           });
         } else {
           report.accountNumberDetails.push({
-            name: "Account number",
+            searchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -683,7 +776,7 @@ export default function CreateRequest() {
       if (value.includes("PAN") && report.PANdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -695,6 +788,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -702,7 +796,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -714,6 +808,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -721,7 +816,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -733,6 +828,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -741,7 +837,7 @@ export default function CreateRequest() {
           });
         } else {
           report.PANdetails.push({
-            name: "PAN",
+            searchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -767,7 +863,7 @@ export default function CreateRequest() {
       if (value.includes("CRN") && report.CRNdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -779,6 +875,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -786,7 +883,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -798,6 +895,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -805,7 +903,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -817,6 +915,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -825,7 +924,7 @@ export default function CreateRequest() {
           });
         } else {
           report.CRNdetails.push({
-            name: "CRN",
+            searchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -851,7 +950,7 @@ export default function CreateRequest() {
       if (value.includes("RRN") && report.RRNdetails.length === 0) {
         if (reportName === "IP Logs") {
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -863,6 +962,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -870,7 +970,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -882,6 +982,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -889,7 +990,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -901,6 +1002,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -909,7 +1011,7 @@ export default function CreateRequest() {
           });
         } else {
           report.RRNdetails.push({
-            name: "RRN",
+            searchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -935,7 +1037,7 @@ export default function CreateRequest() {
       if (value.includes("Aadhar") && report.aadharDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -947,6 +1049,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -954,7 +1057,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -966,6 +1069,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -973,7 +1077,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -985,6 +1089,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -993,7 +1098,7 @@ export default function CreateRequest() {
           });
         } else {
           report.aadharDetails.push({
-            name: "Aadhar",
+            searchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1019,7 +1124,7 @@ export default function CreateRequest() {
       if (value.includes("Email ID") && report.emailDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1031,6 +1136,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1038,7 +1144,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1050,6 +1156,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1057,7 +1164,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1069,6 +1176,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1077,7 +1185,7 @@ export default function CreateRequest() {
           });
         } else {
           report.emailDetails.push({
-            name: "Email ID",
+            searchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1106,7 +1214,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1118,6 +1226,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1125,7 +1234,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1137,6 +1246,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1144,7 +1254,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1156,6 +1266,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1164,7 +1275,7 @@ export default function CreateRequest() {
           });
         } else {
           report.creditCardDetails.push({
-            name: "Credit Card",
+            searchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1193,7 +1304,7 @@ export default function CreateRequest() {
       ) {
         if (reportName === "IP Logs") {
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1205,6 +1316,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1212,7 +1324,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1224,6 +1336,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1231,7 +1344,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1243,6 +1356,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1251,7 +1365,7 @@ export default function CreateRequest() {
           });
         } else {
           report.debitCardDetails.push({
-            name: "Debit Card",
+            searchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1277,7 +1391,7 @@ export default function CreateRequest() {
       if (value.includes("Mobile No.") && report.mobileNoDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1289,6 +1403,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1296,7 +1411,7 @@ export default function CreateRequest() {
             subRequest: "IPLastLogin",
           });
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1308,6 +1423,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1315,7 +1431,7 @@ export default function CreateRequest() {
             subRequest: "IPLogTxn",
           });
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1327,6 +1443,7 @@ export default function CreateRequest() {
             creditCardNo: "",
             email: "",
             amount: "",
+            countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
             type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1335,7 +1452,7 @@ export default function CreateRequest() {
           });
         } else {
           report.mobileNoDetails.push({
-            name: "Mobile No.",
+            searchType: "Mobile No.",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1398,6 +1515,8 @@ export default function CreateRequest() {
     });
   };
 
+  //console.log("device log", searchInput);
+
   const deleteDetail = (reportIndex, detailIndex, details, reportName) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
@@ -1411,9 +1530,9 @@ export default function CreateRequest() {
     });
   };
 
-  const addDetail = (reportIndex, detailName, name, reportName) => {
-    //////console.log("for detail", reportIndex, detailName);
-    //////console.log("for detail", reportIndex, detailName);
+  const addDetail = (reportIndex, detailName, searchType, reportName) => {
+    //////////console.log("for detail", reportIndex, detailName);
+    //////////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
       const report = newState[reportIndex];
@@ -1434,7 +1553,7 @@ export default function CreateRequest() {
       //   reportName === "IP Logs"
       //     ? [
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1453,7 +1572,7 @@ export default function CreateRequest() {
       //           subRequest: "IPLastLogin",
       //         },
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1472,7 +1591,7 @@ export default function CreateRequest() {
       //           subRequest: "IPLogTxn",
       //         },
       //         {
-      //           name: name,
+      //           searchType: searchType,
       //           accountNo: "",
       //           aadhar: "",
       //           crnNo: "",
@@ -1492,7 +1611,7 @@ export default function CreateRequest() {
       //         },
       //       ]
       //     : {
-      //         name: name,
+      //         searchType: searchType,
       //         accountNo: "",
       //         aadhar: "",
       //         crnNo: "",
@@ -1513,7 +1632,7 @@ export default function CreateRequest() {
 
       if (reportName === "IP Logs") {
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1525,6 +1644,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1533,7 +1653,7 @@ export default function CreateRequest() {
         });
 
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1545,6 +1665,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1553,7 +1674,7 @@ export default function CreateRequest() {
         });
 
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1565,6 +1686,7 @@ export default function CreateRequest() {
           creditCardNo: "",
           email: "",
           amount: "",
+          countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
@@ -1573,7 +1695,7 @@ export default function CreateRequest() {
         });
       } else {
         newState[reportIndex][detailName].push({
-          name: name,
+          searchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1692,15 +1814,94 @@ export default function CreateRequest() {
     });
   };
 
-  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+  const handleCountryCode = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].mobileNo = value;
-      newState[reportIndex][detail][detailIndex - 1].mobileNo = value;
-      newState[reportIndex][detail][detailIndex - 2].mobileNo = value;
+      const report = newState[reportIndex][detail];
+
+      const newMobileNum0 = report[detailIndex].mobileNo.replace(
+        report[detailIndex].countryCode,
+        ""
+      );
+      const newMobileNum1 = report[detailIndex].mobileNo.replace(
+        report[detailIndex - 1].countryCode,
+        ""
+      );
+      const newMobileNum2 = report[detailIndex].mobileNo.replace(
+        report[detailIndex - 2].countryCode,
+        ""
+      );
+
+      report[detailIndex].countryCode = value;
+      report[detailIndex - 1].countryCode = value;
+      report[detailIndex - 2].countryCode = value;
+
+      // if (report[detailIndex].mobileNo.length >= 10) {
+      report[detailIndex].mobileNo = value + newMobileNum0;
+      report[detailIndex - 1].mobileNo = value + newMobileNum1;
+      report[detailIndex - 2].mobileNo = value + newMobileNum2;
+      // }
       return newState;
     });
   };
+
+  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      const report = newState[reportIndex][detail];
+
+      report[detailIndex].mobileNo = value;
+      report[detailIndex - 1].mobileNo = value;
+      report[detailIndex - 2].mobileNo = value;
+
+      // if (value.length >= 10) {
+      report[detailIndex].mobileNo =
+        report[detailIndex].countryCode +
+        value.replace(report[detailIndex].countryCode, "");
+      report[detailIndex - 1].mobileNo =
+        report[detailIndex - 1].countryCode +
+        value.replace(report[detailIndex - 1].countryCode, "");
+      report[detailIndex - 2].mobileNo =
+        report[detailIndex - 2].countryCode +
+        value.replace(report[detailIndex - 2].countryCode, "");
+      // }
+      return newState;
+    });
+  };
+
+  const handleNewMobileNo = (reportIndex, detailIndex, detail) => {
+    console.log("New params", reportIndex, detailIndex, detail);
+    setReportsState((prevState) => {
+      const newState = [...prevState];
+      const report = newState[reportIndex][detail];
+
+      // if (value.length >= 10) {
+      report[detailIndex].mobileNo =
+        report[detailIndex].countryCode + report[detailIndex].mobileNo;
+      report[detailIndex - 1].mobileNo =
+        report[detailIndex - 1].countryCode + report[detailIndex].mobileNo;
+      report[detailIndex - 2].mobileNo =
+        report[detailIndex - 2].countryCode + report[detailIndex].mobileNo;
+      // }
+      return newState;
+    });
+  };
+
+  // const completeMobileNo = (value, reportIndex, detailIndex, detail) => {
+  //   setReportsState((prevState) => {
+  //     const newState = [...prevState];
+  //     const report = newState[reportIndex][detail];
+
+  //     report[detailIndex].mobileNo =
+  //       report[detailIndex].countryCode + report[detailIndex].mobileNo;
+  //     report[detailIndex - 1].mobileNo =
+  //       report[detailIndex - 1].countryCode + report[detailIndex - 1].mobileNo;
+  //     report[detailIndex - 2].mobileNo =
+  //       report[detailIndex - 2].countryCode + report[detailIndex - 2].mobileNo;
+
+  //     return newState;
+  //   });
+  // };
 
   const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
@@ -1723,7 +1924,7 @@ export default function CreateRequest() {
     return dayjs(day).isAfter(dayjs(to, "DD-MM-YYYY"), "day");
   };
 
-  //////console.log('ULTIMATE',reportsState);
+  //////////console.log('ULTIMATE',reportsState);
 
   const handleFromDate = (
     date,
@@ -1746,43 +1947,43 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //////console.log("time2");
-        //////console.log("time2");
+        //////////console.log("time2");
+        //////////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         return prevState;
       }
 
       if (formatted_date === "01-01-1970") {
-        console.log("Clear Date");
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate = "";
           newState[reportIndex][detail][detailIndex - 2].fromDate = "";
         }
       } else {
-        console.log("Set Date");
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate =
@@ -1817,43 +2018,43 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    // //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    // //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
       if (!newState[reportIndex]) {
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         //console.error("Report is undefined for index:", reportIndex);
-        //////console.log("time1");
+        //////////console.log("time1");
         return prevState;
       }
       if (!newState[reportIndex][detail]) {
-        //////console.log("time2");
-        //////console.log("time2");
+        //////////console.log("time2");
+        //////////console.log("time2");
         newState[reportIndex][detail] = [];
       }
       if (!newState[reportIndex][detail][detailIndex]) {
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         //console.error("Detail is undefined for detail index:", detailIndex);
-        //////console.log("time3");
+        //////////console.log("time3");
         return prevState;
       }
 
       if (formatted_date === "01-01-1970") {
-        console.log("Clear Date");
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].toDate = "";
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate = "";
           newState[reportIndex][detail][detailIndex - 2].toDate = "";
         }
       } else {
-        console.log("Set Date");
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].toDate = formatted_date;
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate =
@@ -1867,15 +2068,14 @@ export default function CreateRequest() {
     });
   };
 
-  const handleDate = (date, reportIndex, detailIndex, detailName) => {
-    //////console.log("RRN date", date);
-    //////console.log("RRN reportIndex", reportIndex);
-    //////console.log("RRN detailIndex", detailIndex);
-    //////console.log("RRN Detail", detailName);
-    //////console.log("RRN date", date);
-    //////console.log("RRN reportIndex", reportIndex);
-    //////console.log("RRN detailIndex", detailIndex);
-    //////console.log("RRN Detail", detailName);
+  const handleDate = (
+    date,
+    reportIndex,
+    detailIndex,
+    detail,
+    to,
+    reportName
+  ) => {
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -1889,25 +2089,68 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
-    // //////console.log(formatted_date);
-    // //////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
+    //////////console.log(formatted_date);
+    // //////////console.log('Detail Index',detailIndex);
 
     setReportsState((prevState) => {
       const newState = [...prevState];
 
+      if (!newState[reportIndex]) {
+        //console.error("Report is undefined for index:", reportIndex);
+        //////////console.log("time1");
+        //console.error("Report is undefined for index:", reportIndex);
+        //////////console.log("time1");
+        return prevState;
+      }
+      if (!newState[reportIndex][detail]) {
+        //////////console.log("time2");
+        //////////console.log("time2");
+        newState[reportIndex][detail] = [];
+      }
+      if (!newState[reportIndex][detail][detailIndex]) {
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //////////console.log("time3");
+        //console.error("Detail is undefined for detail index:", detailIndex);
+        //////////console.log("time3");
+        return prevState;
+      }
+
       if (formatted_date === "01-01-1970") {
+        ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
       } else {
+        ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
       }
 
-      //////console.log("time4", date);
-      //////console.log("time4", date);
       return newState;
     });
   };
+
+  useEffect(() => {
+    if (searchInput.length > 0) {
+      const queried_reports = requiredReportsData.filter((report) =>
+        report.toLowerCase().includes(searchInput.toLowerCase().trim())
+      );
+      setSearchedReports(queried_reports);
+    }
+  }, [searchInput]);
+
+  // useEffect(() => {
+  //   setReportsState(prevState => {
+  //     const newState = [...prevState]
+  //     const IPLOGS = newState.filter(state => state.selectedReport === "IP Logs");
+
+  //     //console.log("NEW STATE",IPLOGS);
+
+  //     IPLOGS
+
+  //     return newState;
+  //   })
+
+  // },[reportsState]);
 
   // const accountNumberDetailsValid =
 
@@ -1928,7 +2171,7 @@ export default function CreateRequest() {
               reportName === "Beneficiary details for Single UPI transactions"
               ? "0rem"
               : "2rem"
-            : "2.25rem"
+            : "2rem"
         }
         key={detailIndex}
         display={
@@ -1939,66 +2182,72 @@ export default function CreateRequest() {
         }
         data-testid={`detail-fieldset-${detailIndex}`}
       >
-        {/* {//////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
+        {/* {//////////console.log(detailsArray, reportIndex, detailName, param, reportName)} */}
 
         <FormControl
           variant="outlined"
           margin="none"
           className={
-            reportName === "IP Logs" ? "primary-input-iplogs" : "primary-input"
+            reportName === "IP Logs"
+              ? // (detail.name === "Mobile No." ? "mobile-input-iplogs" :
+                "primary-input-iplogs"
+              : "primary-input"
           }
         >
           <TextField
+            // size="medium"
             sx={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length > 0) ||
-              (detail.name === "Email ID" && detail.email.length > 0) ||
-              (detail.name === "PAN" && detail.panNo.length > 0) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length > 0) ||
+              (detail.searchType === "PAN" && detail.panNo.length > 0) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length > 0) ||
-              (detail.name === "Aadhar" && detail.aadhar.length > 0) ||
-              (detail.name === "Debit Card" && detail.debitCard.length > 0) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length > 0) ||
-              (detail.name === "RRN" && detail.rrn.length > 0) ||
-              (detail.name === "CRN" && detail.crnNo.length > 0)
+              (detail.searchType === "Aadhar" && detail.aadhar.length > 0) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length > 0) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length > 0) ||
+              (detail.searchType === "RRN" && detail.rrn.length > 0) ||
+              (detail.searchType === "CRN" && detail.crnNo.length > 0)
                 ? inputControl.validatedTextfield
                 : inputControl.textfield
             }
-            data-testid={`detail-name-input-${detailIndex}`}
+            data-testid={`search-type-input-${detailIndex}`}
             //             helperText={
-            //               (detail.name === "Account number" &&
+            //               (detail.searchType === "Account number" &&
             //                 detail.accountNo.length < 16) ||
-            //               (detail.name === "Email ID" && detail.email.length < 12) ||
-            //               (detail.name === "PAN" && detail.panNo.length < 10) ||
-            //               (detail.name === "Credit Card" &&
+            //               (detail.searchType === "Email ID" && detail.email.length < 12) ||
+            //               (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+            //               (detail.searchType === "Credit Card" &&
             //                 detail.creditCardNo.length < 16) ||
-            //               (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-            //               (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-            //               (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-            //               (detail.name === "RRN" && detail.rrn.length < 12) ||
-            //               (detail.name === "CRN" && detail.crnNo.length < 10)
+            //               (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+            //               (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
+            //               (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            //               (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+            //               (detail.searchType === "CRN" && detail.crnNo.length < 10)
             //                 ? warningHelperText(
             //                     `
             //                     ${t("only")}
 
             //                     ${
-            //                       detail.name === "Account number"
+            //                       detail.searchType === "Account number"
             //                         ? 16
-            //                         : detail.name === "Email ID"
+            //                         : detail.searchType === "Email ID"
             //                         ? "12-320"
-            //                         : detail.name === "PAN"
+            //                         : detail.searchType === "PAN"
             //                         ? 10
-            //                         : detail.name === "Credit Card"
+            //                         : detail.searchType === "Credit Card"
             //                         ? 16
-            //                         : detail.name === "Aadhar"
+            //                         : detail.searchType === "Aadhar"
             //                         ? 12
-            //                         : detail.name === "Debit Card"
+            //                         : detail.searchType === "Debit Card"
             //                         ? 16
-            //                         : detail.name === "Mobile No."
+            //                         : detail.searchType === "Mobile No."
             //                         ? 10
-            //                         : detail.name === "RRN"
+            //                         : detail.searchType === "RRN"
             //                         ? 12
-            //                         : detail.name === "CRN"
+            //                         : detail.searchType === "CRN"
             //                         ? 10
             //                         : 0
             //                     }   ${t("characters")}
@@ -2008,135 +2257,240 @@ export default function CreateRequest() {
             //                 : validatedDetail()
             //             }
             InputLabelProps={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length < 1) ||
-              (detail.name === "Email ID" && detail.email.length < 1) ||
-              (detail.name === "PAN" && detail.panNo.length < 1) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length < 1) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              (detail.name === "RRN" && detail.rrn.length < 1) ||
-              (detail.name === "CRN" && detail.crnNo.length < 1)
+              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length < 1) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length < 1) ||
+              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              (detail.searchType === "CRN" && detail.crnNo.length < 1)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
             InputProps={{
-              startAdornment: detail.name === "Mobile No." && (
-                <InputAdornment
-                  variant="standard"
-                  component="text"
-                  position="start"
-                >
-                  <Typography fontSize="0.92rem" component="span">
-                    +91
-                  </Typography>
-                </InputAdornment>
-              ),
+              startAdornment: reportName === "IP Logs" &&
+                detail.searchType === "Mobile No." && (
+                  <>
+                    {/* <InputLabel
+                      htmlFor="cc-selectbox"
+                      variant="outlined"
+                      className={
+                        detail.mobileNo === ""
+                          ? "mobile-label"
+                          : "valid-mobile-label"
+                      }
+                    >
+                      {detail.searchType}
+                    </InputLabel> */}
+                    <FormControl
+                      className="cc-dropdown"
+                      sx={{
+                        width:
+                          detail.countryCode.length === 5
+                            ? "51%"
+                            : detail.countryCode.length === 3
+                            ? "42%"
+                            : detail.countryCode.length === 2
+                            ? "36%"
+                            : "32%",
+                      }}
+                      size="medium"
+                    >
+                      <Select
+                        id="cc-dropdown"
+                        value={detail.countryCode}
+                        label="Code"
+                        data-testid={`cc-dropdown-${detailIndex}`}
+                        displayEmpty
+                        onChange={(e) =>
+                          handleCountryCode(
+                            e.target.value,
+                            reportIndex,
+                            detailIndex,
+                            detailName
+                          )
+                        }
+                        // sx={
+                        //   detail.countryCode === ""
+                        //     ? SelectProps.countryProps
+                        //     : SelectProps.validatedCountryProps
+                        // }
+                        input={<OutlinedInput fullWidth={true} />}
+                        IconComponent={(props) => (
+                          <KeyboardArrowDownOutlinedIcon {...props} />
+                        )}
+                        renderValue={(code) => `+${code}`}
+                        MenuProps={SelectProps.CC_SELECT_PROPS}
+                        inputProps={{ "aria-label": "Country Code Dropdown" }}
+                        autoWidth={false}
+                        variant="outlined"
+                        style={{
+                          // fontSize: "0.88rem",
+                          color:
+                            // detail.countryCode === ""
+                            //   ? "rgba(0, 0, 0, 0.49)"
+
+                            // :
+                            "black",
+                          boxShadow: "none",
+                          height: "2.55rem",
+                        }}
+                        className="cc-selectbox"
+                        placeholder="CC"
+                      >
+                        {countryCodes.map((code, codeIndex) => (
+                          <MenuItem
+                            key={codeIndex}
+                            data-testid={`cc-menuitem`}
+                            value={code.phone}
+                            className="cc-menuitem"
+                          >
+                            <ListItemText
+                              primary={`${code.phone} ${code.name}`}
+                              color="black"
+                              inputMode="text"
+                              primaryTypographyProps={primaryTextProps}
+                            />
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </>
+                ),
             }}
             required
             inputProps={{
               style: {
                 fontSize: "0.88rem",
-                height: "0.6rem",
+                height: "0.48rem",
               },
               //   maxLength:
-              //     detail.name === "Account number"
+              //     detail.searchType === "Account number"
               //       ? 16
-              //       : detail.name === "Email ID"
+              //       : detail.searchType === "Email ID"
               //       ? 320
-              //       : detail.name === "PAN"
+              //       : detail.searchType === "PAN"
               //       ? 10
-              //       : detail.name === "Credit Card"
+              //       : detail.searchType === "Credit Card"
               //       ? 16
-              //       : detail.name === "Aadhar"
+              //       : detail.searchType === "Aadhar"
               //       ? 12
-              //       : detail.name === "Debit Card"
+              //       : detail.searchType === "Debit Card"
               //       ? 16
-              //       : detail.name === "Mobile No."
+              //       : detail.searchType === "Mobile No."
               //       ? 10
-              //       : detail.name === "RRN"
+              //       : detail.searchType === "RRN"
               //       ? 12
-              //       : detail.name === "CRN"
+              //       : detail.searchType === "CRN"
               //       ? 10
               //       : 0,
             }}
             className="selected-param-box"
             // value={
-            //   (detail.name === "Credit Card" ||
-            //     detail.name === "Aadhar" ||
-            //     detail.name === "Debit Card" ||
-            //     detail.name === "RRN") &&
+            //   (detail.searchType === "Credit Card" ||
+            //     detail.searchType === "Aadhar" ||
+            //     detail.searchType === "Debit Card" ||
+            //     detail.searchType === "RRN") &&
             //   (detail.value === 0 || detail.value.length === 0)
             //     ? ""
-            //     : (detail.name === "Credit Card" ||
-            //           detail.name === "Aadhar" ||
-            //           detail.name === "Debit Card" ||
-            //           detail.name === "RRN") &&
+            //     : (detail.searchType === "Credit Card" ||
+            //           detail.searchType === "Aadhar" ||
+            //           detail.searchType === "Debit Card" ||
+            //           detail.searchType === "RRN") &&
             //         (detail.value !== 0 || detail.value.length !== 0)
             //       ? parseInt(detail.value, 10)
             //       : detail.value
             // }
             value={
-              detail.name === "Account number"
+              detail.searchType === "Account number"
                 ? detail.accountNo
-                : detail.name === "Email ID"
+                : detail.searchType === "Email ID"
                 ? detail.email
-                : detail.name === "PAN"
+                : detail.searchType === "PAN"
                 ? detail.panNo
-                : detail.name === "Credit Card"
+                : detail.searchType === "Credit Card"
                 ? detail.creditCardNo
-                : detail.name === "Aadhar"
+                : detail.searchType === "Aadhar"
                 ? detail.aadhar
-                : detail.name === "Debit Card"
+                : detail.searchType === "Debit Card"
                 ? detail.debitCard
-                : detail.name === "Mobile No."
-                ? detail.mobileNo
-                : detail.name === "RRN"
+                : detail.searchType === "Mobile No."
+                ? reportName === "IP Logs"
+                  ? detail.mobileNo.replace(detail.countryCode, "")
+                  : detail.mobileNo
+                : detail.searchType === "RRN"
                 ? detail.rrn
-                : detail.name === "CRN"
+                : detail.searchType === "CRN"
                 ? detail.crnNo
                 : ""
             }
             id="paramvalue"
-            placeholder={`Enter ${detail.name}`}
+            placeholder={
+              // reportName === "IP Logs" &&
+              // detail.searchType === "Mobile No." &&
+              // detail.countryCode === ""
+              //   ? "Select Country Code"
+              //   :
+              `Enter ${detail.searchType}`
+            }
             autoComplete="off"
             // style={{
             //   margin: "0rem 0rem 0rem 0rem",
             //   fontSize: "0.88rem",
             // }}
-            label={detail.name}
-            // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
-            margin="none"
-            onChange={(e) =>
-              handleInputValue(
-                e.target.value,
-                reportIndex,
-                detailIndex,
-                detailName,
-                reportName,
-                detailsArray
-              )
+            label={
+              reportName === "IP Logs" && detail.searchType === "Mobile No."
+                ? ""
+                : detail.searchType
             }
+            // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
+            margin="none"
+            onChange={(e) => {
+              if (
+                reportName === "IP Logs" &&
+                detail.searchType === "Mobile No."
+              ) {
+                handleMobileNoValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName
+                );
+              } else {
+                handleInputValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  reportName,
+                  detailsArray
+                );
+              }
+            }}
             // type={
-            //   detail.name === "Account number"
+            //   detail.searchType === "Account number"
             //     ? "text"
-            //     : detail.name === "CRN"
+            //     : detail.searchType === "CRN"
             //       ? "text"
-            //       : detail.name === "Email ID"
+            //       : detail.searchType === "Email ID"
             //         ? "email"
-            //         : detail.name === "PAN"
+            //         : detail.searchType === "PAN"
             //           ? "text"
-            //           : detail.name === "Mobile No."
+            //           : detail.searchType === "Mobile No."
             //             ? "tel"
-            //             : detail.name === "Credit Card"
+            //             : detail.searchType === "Credit Card"
             //               ? "number"
-            //               : detail.name === "Aadhar"
+            //               : detail.searchType === "Aadhar"
             //                 ? "number"
-            //                 : detail.name === "Debit Card"
+            //                 : detail.searchType === "Debit Card"
             //                   ? "number"
-            //                   : detail.name === "RRN"
+            //                   : detail.searchType === "RRN"
             //                     ? "number"
             //                     : "text"
             // }
@@ -2148,7 +2502,6 @@ export default function CreateRequest() {
 
         {((detailName === "accountNumberDetails" &&
           reportName !== "Device details") ||
-          (detailName === "CRNdetails" && reportName === "IP Logs") ||
           reportName === "IP Logs" ||
           reportName === "Statement in PDF/Excel" ||
           reportName === "Beneficiary details for Bulk IMPS transactions" ||
@@ -2163,26 +2516,27 @@ export default function CreateRequest() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   format="DD-MM-YYYY"
+                  index={detailIndex}
                   className="date-picker"
-                  data-testid={`from-date-picker-${detailIndex}`}
+                  data-testid={`from-date-${detailIndex}`}
                   shouldDisableDate={(day) =>
                     disableInvalidDates(day, detail.toDate, detail.toDate)
                   }
                   label={t("from")}
                   // disabled={
-                  //   (detail.name === "Account number" &&
+                  //   (detail.searchType === "Account number" &&
                   //     detail.accountNo.length < 1) ||
-                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.name === "Credit Card" &&
+                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.searchType === "Credit Card" &&
                   //     detail.creditCardNo.length < 1) ||
-                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.name === "Debit Card" &&
+                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.name === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No." &&
                   //     detail.mobileNo.length < 1) ||
-                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
@@ -2191,7 +2545,7 @@ export default function CreateRequest() {
                       ? null
                       : dayjs(detail.fromDate, "DD-MM-YYYY")
                   }
-                  maxDate={currentDate}
+                  maxDate={maxDate}
                   defaultValue={dayjs.Dayjs}
                   slotProps={
                     detail.fromDate === ""
@@ -2212,37 +2566,37 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.name === "Account number" &&
+                  ((detail.searchType === "Account number" &&
                     detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
+                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
+                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+                    (detail.searchType === "Credit Card" &&
                       detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
+                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+                    (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
+                    (detail.searchType === "Mobile No." &&
                       detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)) &&
+                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
                   detail.fromDate === ""
                     ? customFormText("")
-                    : ((detail.name === "Account number" &&
+                    : ((detail.searchType === "Account number" &&
                         detail.accountNo.length === 16) ||
-                        (detail.name === "Email ID" &&
+                        (detail.searchType === "Email ID" &&
                           detail.email.length > 02 &&
                           detail.email.length <= 320) ||
-                        (detail.name === "PAN" && detail.panNo.length === 10) ||
-                        (detail.name === "Credit Card" &&
+                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
+                        (detail.searchType === "Credit Card" &&
                           detail.creditCardNo.length === 16) ||
-                        (detail.name === "Aadhar" &&
+                        (detail.searchType === "Aadhar" &&
                           detail.aadhar.length === 12) ||
-                        (detail.name === "Debit Card" &&
+                        (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.name === "Mobile No." &&
+                        (detail.searchType === "Mobile No." &&
                           detail.mobileNo.length === 10) ||
-                        (detail.name === "RRN" && detail.rrn.length === 12) ||
-                        (detail.name === "CRN" &&
+                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
+                        (detail.searchType === "CRN" &&
                           detail.crnNo.length === 10)) &&
                       detail.fromDate === ""
                     ? customFormText("If needed, select from date", "grey", 1)
@@ -2260,19 +2614,19 @@ export default function CreateRequest() {
                   className="date-picker"
                   label={t("to")}
                   // disabled={
-                  //   (detail.name === "Account number" &&
+                  //   (detail.searchType === "Account number" &&
                   //     detail.accountNo.length < 1) ||
-                  //   (detail.name === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.name === "Credit Card" &&
+                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                  //   (detail.searchType === "Credit Card" &&
                   //     detail.creditCardNo.length < 1) ||
-                  //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.name === "Debit Card" &&
+                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                  //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.name === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No." &&
                   //     detail.mobileNo.length < 1) ||
-                  //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.name === "CRN" && detail.crnNo.length < 1)
+                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
@@ -2282,7 +2636,7 @@ export default function CreateRequest() {
                       : dayjs(detail.toDate, "DD-MM-YYYY")
                   }
                   defaultValue={dayjs.Dayjs}
-                  maxDate={currentDate}
+                  maxDate={maxDate}
                   shouldDisableDate={(day) =>
                     dayjs(day).isBefore(
                       dayjs(detail.fromDate, "DD-MM-YYYY"),
@@ -2308,37 +2662,37 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.name === "Account number" &&
+                  ((detail.searchType === "Account number" &&
                     detail.accountNo.length < 16) ||
-                    (detail.name === "Email ID" && detail.email.length < 12) ||
-                    (detail.name === "PAN" && detail.panNo.length < 10) ||
-                    (detail.name === "Credit Card" &&
+                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
+                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+                    (detail.searchType === "Credit Card" &&
                       detail.creditCardNo.length < 16) ||
-                    (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.name === "Debit Card" &&
+                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+                    (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.name === "Mobile No." &&
+                    (detail.searchType === "Mobile No." &&
                       detail.mobileNo.length < 10) ||
-                    (detail.name === "RRN" && detail.rrn.length < 12) ||
-                    (detail.name === "CRN" && detail.crnNo.length < 10)) &&
+                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
                   detail.toDate === ""
                     ? customFormText("")
-                    : ((detail.name === "Account number" &&
+                    : ((detail.searchType === "Account number" &&
                         detail.accountNo.length === 16) ||
-                        (detail.name === "Email ID" &&
+                        (detail.searchType === "Email ID" &&
                           detail.email.length > 02 &&
                           detail.email.length <= 320) ||
-                        (detail.name === "PAN" && detail.panNo.length === 10) ||
-                        (detail.name === "Credit Card" &&
+                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
+                        (detail.searchType === "Credit Card" &&
                           detail.creditCardNo.length === 16) ||
-                        (detail.name === "Aadhar" &&
+                        (detail.searchType === "Aadhar" &&
                           detail.aadhar.length === 12) ||
-                        (detail.name === "Debit Card" &&
+                        (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.name === "Mobile No." &&
+                        (detail.searchType === "Mobile No." &&
                           detail.mobileNo.length === 10) ||
-                        (detail.name === "RRN" && detail.rrn.length === 12) ||
-                        (detail.name === "CRN" &&
+                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
+                        (detail.searchType === "CRN" &&
                           detail.crnNo.length === 10)) &&
                       detail.toDate === ""
                     ? customFormText("If needed, select to date", "grey", 1)
@@ -2351,91 +2705,174 @@ export default function CreateRequest() {
           </Box>
         )}
 
-        {reportName === "IP Logs" && detailName !== "mobileNoDetails" && (
+        {reportName === "IP Logs" && (
           <FormControl
             variant="outlined"
             margin="none"
+            size="small"
             className="iplogs-mobileno-input"
+            data-testid={`iplogs-mobileno-input-${detailIndex}`}
           >
-            <TextField
-              sx={
-                detail.mobileNo.length > 1
-                  ? inputControl.validatedTextfield
-                  : inputControl.textfield
-              }
-              data-testid={`mobileno-input-${detailIndex}`}
-              InputLabelProps={
-                detail.mobileNo.length > 1
-                  ? inputControl.validatedInputLabelProps
-                  : inputControl.inputLabelProps
-              }
-              inputProps={{
-                style: {
-                  fontSize: "0.88rem",
-                  height: "0.6rem",
-                },
-                // maxLength: 10,
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    className="iplogmobileno-adornment"
-                  >
-                    <Typography fontSize="0.88rem" component="span">
-                      +91
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-              placeholder="Enter Mobile No."
-              className="number-box"
-              // helperText={
-              //   detail.mobileNo.length < 10
-              //     ? customFormText(
-              //         t("only10Characters"),
+            {detail.searchType === "Mobile No." ? (
+              <></>
+            ) : (
+              <TextField
+                // disabled={detail.countryCode === ""}
+                size="small"
+                sx={
+                  detail.mobileNo.length > 1
+                    ? inputControl.validatedTextfield
+                    : inputControl.textfield
+                }
+                data-testid={`mobileno-input-${detailIndex}`}
+                InputLabelProps={
+                  detail.mobileNo.length > 1
+                    ? inputControl.validatedInputLabelProps
+                    : inputControl.inputLabelProps
+                }
+                fullWidth={false}
+                inputProps={{
+                  style: {
+                    fontSize: "0.88rem",
+                    height: "0.48rem",
 
-              //         "grey",
-              //         1
-              //       )
-              //     : validatedDetail()
-              // }
-              value={detail.mobileNo}
-              // value={`${detailIndex} - ${detail.subRequest}`}
-              autoComplete="off"
-              label="Mobile No."
-              // disabled={
-              //   (detail.name === "Account number" &&
-              //     detail.accountNo.length < 1) ||
-              //   (detail.name === "Email ID" && detail.email.length < 1) ||
-              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-              //   (detail.name === "Credit Card" &&
-              //     detail.creditCardNo.length < 1) ||
-              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              //   (detail.name === "Debit Card" &&
-              //     detail.debitCard.length < 1) ||
-              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-              //   (detail.name === "CRN" && detail.crnNo.length < 1)
-              //     ? true
-              //     : false
-              // }
-              margin="none"
-              onChange={(e) =>
-                handleMobileNoValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  reportName
-                )
-              }
-              type="tel"
-              inputMode="tel"
-              // type="text"
-              // inputMode="text"
-              color="primary"
-            />
+                    // marginLeft : "3rem"
+                  },
+                  // maxLength: 10,
+                }}
+                placeholder={
+                  // detail.countryCode === ""
+                  //   ? "Select Country Code"
+                  //   :
+                  "Enter Mobile No."
+                }
+                className="number-box"
+                value={detail.mobileNo.replace(detail.countryCode, "")}
+                autoComplete="off"
+                // label="Mobile No."
+
+                margin="none"
+                onChange={(e) => {
+                  handleMobileNoValue(
+                    e.target.value,
+                    reportIndex,
+                    detailIndex,
+                    detailName,
+                    reportName
+                  );
+                }}
+                type="tel"
+                inputMode="tel"
+                // type="text"
+                // inputMode="text"
+                color="primary"
+                InputProps={{
+                  startAdornment: (
+                    <>
+                      {/* <InputLabel
+                        htmlFor="cc-selectbox"
+                        variant="outlined"
+                        className={
+                          detail.mobileNo === ""
+                            ? "mobile-label"
+                            : "valid-mobile-label"
+                        }
+                        // color={detail.mobileNo === "" ? "grey" : "green"}
+                      >
+                        Mobile No.
+                      </InputLabel> */}
+                      <FormControl
+                        className="cc-dropdown"
+                        sx={{
+                          width:
+                            detail.countryCode.length === 5
+                              ? "80%"
+                              : detail.countryCode.length === 3
+                              ? "62%"
+                              : detail.countryCode.length === 2
+                              ? "54%"
+                              : "48%",
+                        }}
+                        size="small"
+                      >
+                        <Select
+                          id="cc-dropdown"
+                          size="small"
+                          value={detail.countryCode}
+                          label="Code"
+                          data-testid={`cc-dropdown-${detailIndex}`}
+                          displayEmpty
+                          onChange={(e) => {
+                            handleCountryCode(
+                              e.target.value,
+                              reportIndex,
+                              detailIndex,
+                              detailName
+                            );
+
+                            // if(detail.mobileNo.length === 10){
+                            // handleNewMobileNo(
+                            //   reportIndex,
+                            //   detailIndex,
+                            //   detailName,
+                            // )
+                            // }
+                          }}
+                          sx={SelectProps.validatedContainerProps}
+                          input={<OutlinedInput fullWidth={true} />}
+                          IconComponent={(props) => (
+                            <KeyboardArrowDownOutlinedIcon {...props} />
+                          )}
+                          renderValue={(code) =>
+                            // detail.countryCode === "" ? "CC"
+                            // :
+                            `+${code}`
+                          }
+                          MenuProps={SelectProps.CC_SELECT_PROPS}
+                          inputProps={{ "aria-label": "Country Code Dropdown" }}
+                          autoWidth={false}
+                          variant="outlined"
+                          style={{
+                            // fontSize: "0.88rem",
+                            color:
+                              // detail.countryCode === ""
+                              //   ? "rgba(0, 0, 0, 0.49)"
+                              //   :
+                              "black",
+                            boxShadow: "none",
+                            height: "2.55rem",
+                            paddingLeft: 0,
+                          }}
+                          className="cc-selectbox"
+                          placeholder="CC"
+                        >
+                          {countryCodes.map((code, codeIndex) => (
+                            <MenuItem
+                              key={codeIndex}
+                              data-testid={`cc-menuitem`}
+                              value={code.phone}
+                              className="cc-menuitem"
+                            >
+                              <ListItemText
+                                primary={`${code.phone} ${code.name}`}
+                                color="black"
+                                inputMode="text"
+                                primaryTypographyProps={primaryTextProps}
+                              />
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </>
+                  ),
+                }}
+              />
+            )}
+            {/* {handleNewMobileNo(
+            reportIndex,
+            detailIndex,
+            detailName
+          )} */}
           </FormControl>
         )}
 
@@ -2464,7 +2901,7 @@ export default function CreateRequest() {
                   inputProps={{
                     style: {
                       fontSize: "0.88rem",
-                      height: "0.6rem",
+                      height: "0.48rem",
                     },
                     // maxLength: 6,
                   }}
@@ -2482,7 +2919,7 @@ export default function CreateRequest() {
                   //     : validatedDetail()
                   // }
                   autoComplete="off"
-                  // FormHelperTextProps={{ sx: { color: "rgb(92, 84, 112)" } }}
+                  // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
                   label="Amount"
                   margin="none"
                   onChange={(e) =>
@@ -2516,7 +2953,7 @@ export default function CreateRequest() {
                         : dayjs(detail.fromDate, "DD-MM-YYYY")
                     }
                     defaultValue={dayjs.Dayjs}
-                    maxDate={currentDate}
+                    maxDate={maxDate}
                     slotProps={
                       detail.fromDate === ""
                         ? datePickerControl.slotProps
@@ -2524,7 +2961,14 @@ export default function CreateRequest() {
                     }
                     sx={datePickerControl.sx}
                     onChange={(date) =>
-                      handleDate(date, reportIndex, detailIndex, detailName)
+                      handleDate(
+                        date,
+                        reportIndex,
+                        detailIndex,
+                        detailName,
+                        detail.toDate,
+                        reportName
+                      )
                     }
                   />
                   {/* {detail.fromDate !== ""
@@ -2540,26 +2984,26 @@ export default function CreateRequest() {
           )}
 
         {reportName === "Statement in PDF/Excel" && (
-          <FormControl className="report-type-dropdown" size="medium">
+          <FormControl className="request-type-dropdown" size="medium">
             <Select
-              id="report-type-dropdown"
+              id="request-type-dropdown"
               value={detail.type}
               label="Type"
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
               // disabled={
-              //   (detail.name === "Account number" &&
+              //   (detail.searchType === "Account number" &&
               //     detail.accountNo.length < 1) ||
-              //   (detail.name === "Email ID" && detail.email.length < 1) ||
-              //   (detail.name === "PAN" && detail.panNo.length < 1) ||
-              //   (detail.name === "Credit Card" &&
+              //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              //   (detail.searchType === "Credit Card" &&
               //     detail.creditCardNo.length < 1) ||
-              //   (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              //   (detail.name === "Debit Card" &&
+              //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              //   (detail.searchType === "Debit Card" &&
               //     detail.debitCard.length < 1) ||
-              //   (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              //   (detail.name === "RRN" && detail.rrn.length < 1) ||
-              //   (detail.name === "CRN" && detail.crnNo.length < 1)
+              //   (detail.searchType === "Mobile No." && detail.mobileNo.length < 1) ||
+              //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
               //     ? true
               //     : false
               // }
@@ -2595,8 +3039,9 @@ export default function CreateRequest() {
               style={{
                 // fontSize: "0.88rem",
                 color: detail.type === "" ? "rgba(0, 0, 0, 0.49)" : "black",
+                height : "2.575rem"
               }}
-              className="report-type-selectbox"
+              className="request-type-selectbox"
               placeholder={t("type")}
             >
               {availableReportTypes.map((type, typeIndex) => (
@@ -2604,28 +3049,32 @@ export default function CreateRequest() {
                   key={type}
                   data-testid={`type-dropdown-menuitem-${typeIndex}`}
                   value={type}
-                  className="type-dropdown-menuitem"
+                  className={
+                    type === detail.type
+                      ? "type-sel-menuitem"
+                      : "type-dropdown-menuitem"
+                  }
                 >
                   <ListItemText
                     primary={type}
                     color="black"
                     inputMode="text"
-                    primaryTypographyProps={{ fontSize: "0.825rem" }}
+                    primaryTypographyProps={primaryTextProps}
                   />
                 </MenuItem>
               ))}
             </Select>
-            {/* {(detail.name === "Account number" &&
+            {/* {(detail.searchType === "Account number" &&
               detail.accountNo.length < 16) ||
-            (detail.name === "Email ID" && detail.email.length < 12) ||
-            (detail.name === "PAN" && detail.panNo.length < 10) ||
-            (detail.name === "Credit Card" &&
+            (detail.searchType === "Email ID" && detail.email.length < 12) ||
+            (detail.searchType === "PAN" && detail.panNo.length < 10) ||
+            (detail.searchType === "Credit Card" &&
               detail.creditCardNo.length < 16) ||
-            (detail.name === "Aadhar" && detail.aadhar.length < 12) ||
-            (detail.name === "Debit Card" && detail.debitCard.length < 16) ||
-            (detail.name === "Mobile No." && detail.mobileNo.length < 10) ||
-            (detail.name === "RRN" && detail.rrn.length < 12) ||
-            (detail.name === "CRN" && detail.crnNo.length < 10)
+            (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
+            (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
+            (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            (detail.searchType === "RRN" && detail.rrn.length < 12) ||
+            (detail.searchType === "CRN" && detail.crnNo.length < 10)
               ? customFormText("")
               : detail.type === ""
               ? customFormText(
@@ -2637,12 +3086,16 @@ export default function CreateRequest() {
           </FormControl>
         )}
 
+{reportName === "IP Logs" && detailIndex < reportsState[reportIndex][detailName].length - 3 && (
+          <Box className="iplog-void-button"></Box>
+        )}
+
         {detailIndex < reportsState[reportIndex][detailName].length && (
           <Button
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
             disabled={
-              reportName === "IP Logs" && detailIndex < 3
+              reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
                 ? true
                 : reportsState[reportIndex][detailName].length === 1
                 ? true
@@ -2656,7 +3109,7 @@ export default function CreateRequest() {
                   ? "4.4%"
                   : "0%",
               opacity:
-                reportName === "IP Logs" && detailIndex < 3
+                reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
                   ? 0.25
                   : reportsState[reportIndex][detailName].length === 1
                   ? 0.25
@@ -2679,33 +3132,37 @@ export default function CreateRequest() {
             data-testid={`add-button-${detailIndex}`}
             style={{
               opacity:
-                (detail.name === "Account number" &&
+                (detail.searchType === "Account number" &&
                   detail.accountNo.length < 1) ||
-                (detail.name === "Email ID" && detail.email.length < 1) ||
-                (detail.name === "PAN" && detail.panNo.length < 1) ||
-                (detail.name === "Credit Card" &&
+                (detail.searchType === "Email ID" && detail.email.length < 1) ||
+                (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+                (detail.searchType === "Credit Card" &&
                   detail.creditCardNo.length < 1) ||
-                (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-                (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-                (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-                (detail.name === "RRN" && detail.rrn.length < 1) ||
-                (detail.name === "CRN" && detail.crnNo.length < 1) ||
+                (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+                (detail.searchType === "Debit Card" &&
+                  detail.debitCard.length < 1) ||
+                (detail.searchType === "Mobile No." &&
+                  detail.mobileNo.length < 1) ||
+                (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+                (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
                 detail.type === ""
                   ? 0.25
                   : 1,
             }}
             disabled={
-              (detail.name === "Account number" &&
+              (detail.searchType === "Account number" &&
                 detail.accountNo.length < 1) ||
-              (detail.name === "Email ID" && detail.email.length < 1) ||
-              (detail.name === "PAN" && detail.panNo.length < 1) ||
-              (detail.name === "Credit Card" &&
+              (detail.searchType === "Email ID" && detail.email.length < 1) ||
+              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
+              (detail.searchType === "Credit Card" &&
                 detail.creditCardNo.length < 1) ||
-              (detail.name === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.name === "Debit Card" && detail.debitCard.length < 1) ||
-              (detail.name === "Mobile No." && detail.mobileNo.length < 1) ||
-              (detail.name === "RRN" && detail.rrn.length < 1) ||
-              (detail.name === "CRN" && detail.crnNo.length < 1) ||
+              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
+              (detail.searchType === "Debit Card" &&
+                detail.debitCard.length < 1) ||
+              (detail.searchType === "Mobile No." &&
+                detail.mobileNo.length < 1) ||
+              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
+              (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
               detail.type === ""
                 ? true
                 : false
@@ -2769,31 +3226,33 @@ export default function CreateRequest() {
                     : "none"
                 }
               >
-                <Typography sx={previewProps.name} component="span">{`${
-                  detail.name === "Account number" ? "Acc no." : detail.name
+                <Typography sx={previewProps.searchType} component="span">{`${
+                  detail.searchType === "Account number"
+                    ? "Acc no."
+                    : detail.searchType
                 }  : `}</Typography>
-                {/* {detail.name === "Email ID" ? ( */}
+                {/* {detail.searchType === "Email ID" ? ( */}
                 <InputBase
                   readOnly={true}
                   multiline={true}
                   value={
-                    detail.name === "Account number"
+                    detail.searchType === "Account number"
                       ? detail.accountNo
-                      : detail.name === "Email ID"
+                      : detail.searchType === "Email ID"
                       ? detail.email
-                      : detail.name === "PAN"
+                      : detail.searchType === "PAN"
                       ? detail.panNo
-                      : detail.name === "Credit Card"
+                      : detail.searchType === "Credit Card"
                       ? detail.creditCardNo
-                      : detail.name === "Aadhar"
+                      : detail.searchType === "Aadhar"
                       ? detail.aadhar
-                      : detail.name === "Debit Card"
+                      : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.name === "Mobile No."
+                      : detail.searchType === "Mobile No."
                       ? detail.mobileNo
-                      : detail.name === "RRN"
+                      : detail.searchType === "RRN"
                       ? detail.rrn
-                      : detail.name === "CRN"
+                      : detail.searchType === "CRN"
                       ? detail.crnNo
                       : ""
                   }
@@ -2801,23 +3260,23 @@ export default function CreateRequest() {
                 />
                 {/* ) : (
                   <Typography sx={previewProps.value} component="span">
-                    {detail.name === "Account number"
+                    {detail.searchType === "Account number"
                       ? detail.accountNo
-                      : detail.name === "Email ID"
+                      : detail.searchType === "Email ID"
                       ? detail.email
-                      : detail.name === "PAN"
+                      : detail.searchType === "PAN"
                       ? detail.panNo
-                      : detail.name === "Credit Card"
+                      : detail.searchType === "Credit Card"
                       ? detail.creditCardNo
-                      : detail.name === "Aadhar"
+                      : detail.searchType === "Aadhar"
                       ? detail.aadhar
-                      : detail.name === "Debit Card"
+                      : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.name === "Mobile No."
+                      : detail.searchType === "Mobile No."
                       ? detail.mobileNo
-                      : detail.name === "RRN"
+                      : detail.searchType === "RRN"
                       ? detail.rrn
-                      : detail.name === "CRN"
+                      : detail.searchType === "CRN"
                       ? detail.crnNo
                       : ""}
                   </Typography>
@@ -2841,7 +3300,7 @@ export default function CreateRequest() {
                     "Beneficiary details for Bulk UPI transactions")) && (
                 <Box className="detail-range">
                   <Box className="preview-range">
-                    <Typography sx={previewProps.name} component="span">
+                    <Typography sx={previewProps.searchType} component="span">
                       Date :{" "}
                     </Typography>
                   </Box>
@@ -2874,7 +3333,7 @@ export default function CreateRequest() {
                     "Beneficiary details for Single UPI transactions")) && (
                 <Box className="detail-range">
                   <Box className="rrn-preview-2">
-                    <Typography sx={previewProps.name} component="span">
+                    <Typography sx={previewProps.searchType} component="span">
                       Amount :{" "}
                     </Typography>
 
@@ -2884,8 +3343,8 @@ export default function CreateRequest() {
                   </Box>
 
                   {/* {detail.fromDate !== "" && ( */}
-                  <Box className="type-preview">
-                    <Typography sx={previewProps.name} component="span">
+                  <Box className="rrn-preview-2">
+                    <Typography sx={previewProps.searchType} component="span">
                       Date :{" "}
                     </Typography>
 
@@ -2901,11 +3360,11 @@ export default function CreateRequest() {
 
               {reportName === "IP Logs" && (
                 <Box className="mobileno-preview">
-                  {detail.name === "Mobile No." ? (
+                  {detail.searchType === "Mobile No." ? (
                     <>
                       {/* <Typography
                         marginLeft="1rem"
-                        sx={previewProps.name}
+                        sx={previewProps.searchType}
                         component="span"
                       >
                         Mobile No. :{" "}
@@ -2919,7 +3378,7 @@ export default function CreateRequest() {
                     <>
                       <Typography
                         marginLeft="1rem"
-                        sx={previewProps.name}
+                        sx={previewProps.searchType}
                         component="span"
                       >
                         Mobile No. :{" "}
@@ -2941,7 +3400,7 @@ export default function CreateRequest() {
               {reportName === "Statement in PDF/Excel" && (
                 <Box className="type-preview">
                   <Typography
-                    sx={previewProps.name}
+                    sx={previewProps.searchType}
                     marginLeft="1rem"
                     component="span"
                   >
@@ -2964,12 +3423,12 @@ export default function CreateRequest() {
       </Box>
     ));
 
-  //////console.log("ticket number length", ticketNumber);
+  //////////console.log("ticket number length", ticketNumber);
 
   const [reportDetails, setReportDetails] = useState([]);
 
-  const [deviceDetails, setDeviceDetails] = useState([]);
-  const [ipLogs, setIpLogs] = useState([]);
+  // const [deviceDetails, setDeviceDetails] = useState([]);
+  // const [ipLogs, setIpLogs] = useState([]);
 
   useEffect(() => {
     setReportDetails((prevState) => {
@@ -2994,6 +3453,13 @@ export default function CreateRequest() {
       return updatedReportState;
     });
   }, [reportsState]);
+
+  // useEffect(() => {
+  //   setReportDetails(prevState => )
+  //   const ipLogReport = reportDetails.filter(reportDetail => reportDetail.reportType === "IP Logs")
+  //   console.log("IP LOG filter",ipLogReport);
+
+  // });
 
   // const individualReportHandler = (updatedReportState) => {
 
@@ -3121,7 +3587,7 @@ export default function CreateRequest() {
   //   ticketNumber: ticketNumber,
   //   ticketDescription: ticketDescription,
   //   status: "In-progress",
-  //   createdDate: reduxDate,
+  //   createdDate: currentDate,
   //   createdBy: Creator,
   //   reportDetails: deviceDetails,
   // };
@@ -3129,13 +3595,20 @@ export default function CreateRequest() {
   const createRequestPayload = {
     // ticketId: "",
     ticketNumber: ticketNumber,
+    ticketType: ticketType,
     ticketDescription: ticketDescription,
     status: "In-progress",
-    createdDate: reduxDate,
+    createdDate: currentDate,
     // createdBy: Creator,
     createdBy: "User",
     reportDetails: reportDetails,
   };
+
+  useEffect(() => {
+    if (ticketType !== "Other") {
+      setTicketDescription("");
+    }
+  }, [ticketType]);
 
   const handleSubmit = () => {
     if (isValidReportData === false) {
@@ -3147,7 +3620,7 @@ export default function CreateRequest() {
         500
       );
     } else {
-      console.log("Payload", createRequestPayload);
+      ////console.log("Payload", createRequestPayload);
       //Submit API Function
 
       //Error Block
@@ -3156,7 +3629,6 @@ export default function CreateRequest() {
       // SuccessBlock
 
       setSubmitted(true);
-      // dispatch(setRequestPayloads(responsePayload));
       displayToast(
         "Successfully Submitted Request",
         2000,
@@ -3170,12 +3642,17 @@ export default function CreateRequest() {
     }
   };
 
-  // ////console.log("Valid Report Data", isValidReportData);
-  //console.log("Spring Boot Payload", reportDetails);
-  console.log("Triple Reports State", reportsState);
+  // ////////console.log("Valid Report Data", isValidReportData);
+  // console.log("Spring Boot Payload", reportDetails);
+  //console.log("Triple Reports State", reportsState);
 
-  //console.log("Create Request Details array", createRequestPayload);
-  //console.log("Device Details Array", deviceDetails);
+console.log("Create Request Payload", createRequestPayload);
+  //////console.log("Device Details Array", deviceDetails);
+
+  const dynamicReports =
+    searchInput.length === 0 ? requiredReportsData : searchedReports;
+
+  ////console.log("Selected Reports", selectedReports, selectedReports.length);
 
   return (
     <Provider store={store}>
@@ -3218,12 +3695,12 @@ export default function CreateRequest() {
                           : inputControl.inputLabelProps
                       }
                       // FormHelperTextProps={{
-                      //   sx: { color: "rgb(92, 84, 112)" },
+                      //   sx: { color: "rgb(95, 105, 91)" },
                       // }}
                       inputProps={{
                         style: {
                           fontSize: "0.88rem",
-                          height: "0.6rem",
+                          height: "0.48rem",
                         },
                         // maxLength: 10,
                       }}
@@ -3252,7 +3729,113 @@ export default function CreateRequest() {
                   <FormControl
                     variant="outlined"
                     margin="none"
-                    className="ticket-description-container"
+                    className="ticket-type-cont"
+                  >
+                    <Select
+                      label="Ticket Type"
+                      name="ticket-type-dropdown"
+                      id="ticket-type-dropdown"
+                      data-testid="ticket-type-dropdown"
+                      // multiple={true}
+                      value={ticketType}
+                      displayEmpty
+                      // disabled={
+                      //   ticketNumber.length < 1 || ticketDescription.length < 1
+                      //     ? true
+                      //     : false
+                      // }
+                      onChange={(event) => {
+                        handleTicketType(event);
+                      }}
+                      // variant="standard"
+                      input={<OutlinedInput fullWidth />}
+                      IconComponent={(props) => (
+                        <KeyboardArrowDownOutlinedIcon
+                          className="select-icon"
+                          {...props}
+                        />
+                      )}
+                      renderValue={(ticket) => {
+                        if (ticketType === "") {
+                          return (
+                            <Typography
+                              component="span"
+                              fontSize="95%"
+                              color="rgb(149, 149, 149)"
+                              data-testid="ticket-type-input-initial"
+                            >
+                              {" "}
+                              {"Select Ticket Type *"}
+                            </Typography>
+                          );
+                        }
+                        return (
+                          <Input
+                            className="ticket-type-input-changed"
+                            disableUnderline={true}
+                            value={ticketType}
+                            data-testid="ticket-type-input-changed"
+                          ></Input>
+                        );
+                      }}
+                      inputProps={{}}
+                      sx={
+                        ticketType.trim() === ""
+                          ? SelectProps.containerProps
+                          : SelectProps.validatedContainerProps
+                      }
+                      MenuProps={{
+                        autoFocus: false,
+                        ...SelectProps.TICKET_SELECT_PROPS,
+                      }}
+                      autoWidth={false}
+                      className="ticket-type-box"
+                      placeholder={"Select Ticket Type"}
+                    >
+                      {ticketDescTypes.map((ticket, index) => (
+                        <MenuItem
+                          key={ticket}
+                          value={ticket}
+                          data-testid={`ticket-menu-item`}
+                          className={
+                            ticket === ticketType
+                              ? "ticket-menu-sel-item"
+                              : "ticket-menu-item"
+                          }
+                        >
+                          {/* <Checkbox
+                          size="medium"
+                          className="checkbox"
+                          data-testid={`ticket-checkbox`}
+                          icon={
+                            <CheckBoxOutlineBlankIcon className="uncheck-icon" />
+                          }
+                          checkedIcon={
+                            <CheckBoxOutlinedIcon className="check-icon" />
+                          }
+                          checked={[].indexOf(ticket) > -1}
+                          color="primary"
+                          value={ticket}
+                        /> */}
+                          <ListItemText
+                            primary={ticket}
+                            data-testid="ticket-menu-listext"
+                            className="ticket-menu-listext"
+                            // color="black"
+                            inputMode="text"
+                            primaryTypographyProps={primaryTextProps}
+                          />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+
+                {ticketType === "Other" && (
+                  <FormControl
+                    variant="outlined"
+                    margin="none"
+                    className="ticket-desc-cont"
                   >
                     <TextField
                       placeholder={
@@ -3260,7 +3843,7 @@ export default function CreateRequest() {
                       }
                       variant="outlined"
                       // FormHelperTextProps={{
-                      //   sx: { color: "rgb(92, 84, 112)" },
+                      //   sx: { color: "rgb(95, 105, 91)" },
                       // }}
                       // helperText={
                       //   ticketNumber.length < 10
@@ -3287,7 +3870,7 @@ export default function CreateRequest() {
                       }
                       className="ticket-description-input"
                       autoComplete="off"
-                      rows={Math.ceil(ticketDescription.length / 60)}
+                      rows={Math.ceil(ticketDescription.trim().length / 60)}
                       size="small"
                       fullWidth
                       inputProps={inputControl.textAreaProps}
@@ -3306,14 +3889,13 @@ export default function CreateRequest() {
                       // }}
                       type="text"
                       inputMode="text"
-                      // disabled={ticketNumber.length < 1 ? true : false}
                       color="primary"
                       value={ticketDescription}
                       data-testid="ticket-descr-input"
                       onChange={(e) => setTicketDescription(e.target.value)}
                     />
                   </FormControl>
-                </Box>
+                )}
 
                 <FormControl className="reports-box">
                   <Select
@@ -3329,9 +3911,16 @@ export default function CreateRequest() {
                     //     ? true
                     //     : false
                     // }
-                    onChange={handleReportSelection}
+                    onChange={(event) => {
+                      if (
+                        event.target.value !== undefined ||
+                        event.target.value !== ""
+                      ) {
+                        handleReportSelection(event);
+                      }
+                    }}
                     // variant="standard"
-                    input={<OutlinedInput fullWidth={true} />}
+                    input={<OutlinedInput fullWidth />}
                     IconComponent={(props) => (
                       <KeyboardArrowDownOutlinedIcon
                         className="select-icon"
@@ -3344,7 +3933,7 @@ export default function CreateRequest() {
                           <Typography
                             component="span"
                             fontSize="95%"
-                            color="grey"
+                            color="rgb(149, 149, 149)"
                             data-testid="reports-dropdown-input-initial"
                           >
                             {" "}
@@ -3356,7 +3945,9 @@ export default function CreateRequest() {
                         <Input
                           className="reports-dropdown-input-changed"
                           disableUnderline={true}
-                          value={reports.join(" , ")}
+                          value={reports
+                            .filter((report) => report !== undefined)
+                            .join(" , ")}
                           data-testid="reports-dropdown-input-changed"
                         ></Input>
                       );
@@ -3367,12 +3958,41 @@ export default function CreateRequest() {
                         ? SelectProps.containerProps
                         : SelectProps.validatedContainerProps
                     }
-                    MenuProps={SelectProps.REPORT_SELECT_PROPS}
+                    MenuProps={{
+                      autoFocus: false,
+                      ...SelectProps.REPORT_SELECT_PROPS,
+                    }}
                     autoWidth={false}
                     className="reports-dropdown-box"
                     placeholder={t("statementsReportRequire")}
                   >
-                    {requiredReportsData.map((report, index) => (
+                    {/* <MenuItem> */}
+                    <Box
+                      className="reports-search"
+                      data-testid="reports-search"
+                    >
+                      <SearchIcon className="request-search-icon" />
+                      <FormControl fullWidth variant="outlined">
+                        <InputBase
+                          disableUnderline
+                          type="search"
+                          autoFocus
+                          fullWidth
+                          inputMode="text"
+                          data-testid="reports-search-input"
+                          value={searchInput}
+                          placeholder="Search Report"
+                          className="request-search-input"
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            e.stopPropagation();
+                          }}
+                        ></InputBase>
+                      </FormControl>
+                    </Box>
+                    {/* </MenuItem> */}
+
+                    {dynamicReports.map((report, index) => (
                       <MenuItem
                         key={report}
                         value={report}
@@ -3382,7 +4002,7 @@ export default function CreateRequest() {
                         <Checkbox
                           size="medium"
                           className="checkbox"
-                          data-testid={`reports-selection-dropdown-menu-item-checkbox-${index}`}
+                          data-testid={`reports-checkbox`}
                           icon={
                             <CheckBoxOutlineBlankIcon className="uncheck-icon" />
                           }
@@ -3391,6 +4011,7 @@ export default function CreateRequest() {
                           }
                           checked={selectedReports.indexOf(report) > -1}
                           color="primary"
+                          value={report}
                         />
                         <ListItemText
                           primary={report}
@@ -3398,7 +4019,7 @@ export default function CreateRequest() {
                           className="reports-menu-listext"
                           // color="black"
                           inputMode="text"
-                          primaryTypographyProps={{ fontSize: "0.825rem" }}
+                          primaryTypographyProps={primaryTextProps}
                         />
                       </MenuItem>
                     ))}
@@ -3431,348 +4052,422 @@ export default function CreateRequest() {
 
               <Box>
                 {reportsState.length > 0 &&
-                  reportsState.map((request, reportIndex) => (
-                    <Box key={reportIndex} className="selected-reports-content">
-                      <Accordion
-                        className="selected-report-view"
-                        //  defaultExpanded={true}
-                        //  slots={{ transition : Fade }}
-                        //  slotProps={{ transition: { timeout: 10000 } }}
-                        //  sx={{
-                        //    boxShadow : "none",
-                        //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
-                        //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
-                        // }}
-                        disableGutters
-                        expanded={
-                          reportsState[reportIndex]?.viewState === "Minimized"
-                            ? false
-                            : true
-                        }
+                  reportsState
+                    .filter((request) => request.selectedReport !== undefined)
+                    .map((request, reportIndex) => (
+                      <Box
+                        key={reportIndex}
+                        className="selected-reports-content"
                       >
-                        <AccordionSummary
-                          className="selected-report-header"
-                          expandIcon={
-                            <ExpandCircleDownOutlinedIcon
-                              className="view-icon"
-                              data-testid={`selected-report-detail-control-${reportIndex}`}
-                              onClick={() => {
-                                if (
-                                  reportsState[reportIndex].viewState ===
-                                  "Minimized"
-                                ) {
-                                  handleExpandedView(reportIndex);
-                                } else {
-                                  handleMinimizedView(reportIndex);
-                                }
-                              }}
-                            />
-                          }
-                        >
-                          <Typography
-                            className="selected-report-heading"
-                            component="span"
-                          >
-                            {request.selectedReport}
-                          </Typography>
-                        </AccordionSummary>
-
-                        <AccordionDetails
-                          hidden={
+                        <Accordion
+                          className="selected-report-view"
+                          //  defaultExpanded={true}
+                          //  slots={{ transition : Fade }}
+                          //  slotProps={{ transition: { timeout: 10000 } }}
+                          //  sx={{
+                          //    boxShadow : "none",
+                          //   '& .MuiAccordion-region': { height: reportsState[reportIndex]?.viewState === 'Expanded' ? 'auto' : 0 },
+                          //   '& .MuiAccordionDetails-root': { display: reportsState[reportIndex]?.viewState === 'Expanded' ? 'block' : 'none' },
+                          // }}
+                          disableGutters
+                          expanded={
                             reportsState[reportIndex]?.viewState === "Minimized"
-                              ? true
-                              : false
+                              ? false
+                              : true
                           }
-                          data-testid={`selected-report-detail-${reportIndex}`}
-                          className="accordion-details"
                         >
-                          <Box className="selected-report-details">
-                            {reportsState[reportIndex] && (
-                              <>
-                                <Box
-                                  width="100%"
-                                  display={
-                                    request.selectedReport ===
-                                      "Beneficiary details for Single IMPS transactions" ||
-                                    request.selectedReport ===
-                                      "Beneficiary details for Single UPI transactions"
-                                      ? "none"
-                                      : "block"
+                          <AccordionSummary
+                            className="selected-report-header"
+                            expandIcon={
+                              <ExpandCircleDownOutlinedIcon
+                                className="view-icon"
+                                data-testid={`selected-report-detail-control-${reportIndex}`}
+                                onClick={() => {
+                                  if (
+                                    reportsState[reportIndex].viewState ===
+                                    "Minimized"
+                                  ) {
+                                    handleExpandedView(reportIndex);
+                                  } else {
+                                    handleMinimizedView(reportIndex);
                                   }
-                                >
-                                  <FormControl
-                                    // variant="standard"
-                                    sx={{
-                                      width:
-                                        request.selectedReport === "IP Logs"
-                                          ? "24%"
-                                          : "32%",
-                                      marginBottom:
-                                        reportsState[reportIndex].selectedParams
-                                          .length === 0
-                                          ? "1.36rem"
-                                          : "0.75rem",
-                                    }}
-                                  >
-                                    <Select
-                                      label="Param Selection Dropdown"
-                                      name="param-selection-dropdown"
-                                      className="param-selection-dropdown"
-                                      role="combobox"
-                                      id="param-selection-dropdown"
-                                      data-testid={`param-dropdown-${reportIndex}`}
-                                      multiple={true}
-                                      sx={
-                                        reportsState[reportIndex].selectedParams
-                                          .length === 0
-                                          ? SelectProps.containerProps
-                                          : SelectProps.validatedContainerProps
-                                      }
-                                      SelectDisplayProps={{
-                                        "data-testid": `param-dropdown-sas-${reportIndex}`,
-                                        role: "combobox",
-                                      }}
-                                      aria-labelledby="param-selection-dropdown-label"
-                                      value={
-                                        reportsState[reportIndex]
-                                          .selectedParams || []
-                                      }
-                                      displayEmpty
-                                      onChange={(event) =>
-                                        handleParamSelection(
-                                          event,
-                                          reportIndex,
-                                          request.selectedReport
-                                        )
-                                      }
-                                      // variant="standard"
-                                      input={
-                                        <OutlinedInput
-                                          className="param-display"
-                                          role="combobox"
-                                          fullWidth={false}
-                                        />
-                                      }
-                                      IconComponent={(props) => (
-                                        <KeyboardArrowDownOutlinedIcon
-                                          className="select-icon"
-                                          {...props}
-                                        />
-                                      )}
-                                      renderValue={(params) => {
-                                        if (params.length === 0) {
-                                          return (
-                                            <Typography
-                                              component="span"
-                                              className="param-display-placeholder"
-                                            >
-                                              {t("selectDetails")}
-                                            </Typography>
-                                          );
-                                        }
-                                        return (
-                                          <Input
-                                            className="selected-params-display"
-                                            disableUnderline={true}
-                                            data-testid={`param-dropdown-input-${reportIndex}`}
-                                            value={params.join(" , ")}
-                                          ></Input>
-                                        );
-                                      }}
-                                      MenuProps={SelectProps.PARAM_SELECT_PROPS}
-                                      inputProps={{
-                                        "aria-label": "Select Parameters",
-                                      }}
-                                      autoWidth={false}
-                                      placeholder={t("selectDetails")}
-                                    >
-                                      {availableParameters.map(
-                                        (param, paramIndex) => (
-                                          <MenuItem
-                                            key={param}
-                                            value={param}
-                                            data-testid={`param-dropdown-menu-item-${paramIndex}`}
-                                            className="param-menu-item"
-                                          >
-                                            <Checkbox
-                                              checked={
-                                                reportsState[
-                                                  reportIndex
-                                                ].selectedParams.indexOf(
-                                                  param
-                                                ) > -1
-                                              }
-                                              color="primary"
-                                              data-testid={`param-dropdown-checkbox-${paramIndex}`}
-                                              className="param-dropdown-checkbox"
-                                              icon={
-                                                <CheckBoxOutlineBlankIcon className="uncheck-icon" />
-                                              }
-                                              checkedIcon={
-                                                <CheckBoxOutlinedIcon className="check-icon" />
-                                              }
-                                            />
-                                            <ListItemText
-                                              primary={param}
-                                              className="param-menu-listext"
-                                              data-testid={`param-dropdown-listitemtext-${paramIndex}`}
-                                              color="black"
-                                              inputMode="text"
-                                              primaryTypographyProps={{
-                                                fontSize: "0.85rem",
-                                              }}
-                                            />
-                                          </MenuItem>
-                                        )
-                                      )}
-                                    </Select>
-                                    {/* {reportsState[reportIndex].selectedParams
-                                      .length === 0
-                                      ? customFormText(
-                                          "",
-                                          "rgb(92, 84, 112)",
-                                          1
-                                        )
-                                      : datePickerHelper("")} */}
-                                  </FormControl>
-                                </Box>
+                                }}
+                              />
+                            }
+                          >
+                            <Typography
+                              className="selected-report-heading"
+                              component="span"
+                            >
+                              {request.selectedReport}
+                            </Typography>
+                          </AccordionSummary>
 
-                                <Box
-                                  className="details-subsection"
-                                  style={{
-                                    marginTop:
+                          <AccordionDetails
+                            hidden={
+                              reportsState[reportIndex]?.viewState ===
+                              "Minimized"
+                                ? true
+                                : false
+                            }
+                            data-testid={`selected-report-detail-${reportIndex}`}
+                            className="accordion-details"
+                          >
+                            <Box className="selected-report-details">
+                              {reportsState[reportIndex] && (
+                                <>
+                                  <Box
+                                    width="100%"
+                                    display={
                                       request.selectedReport ===
                                         "Beneficiary details for Single IMPS transactions" ||
                                       request.selectedReport ===
                                         "Beneficiary details for Single UPI transactions"
-                                        ? "0rem"
-                                        : "-2rem",
-                                    // marginBottom:
-                                    //   reportsState[reportIndex].selectedParams
-                                    //     .length === 0
-                                    //     ? "1.5rem"
-                                    //     : "2.25rem",
-                                  }}
-                                >
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Account number"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .accountNumberDetails,
-                                      reportIndex,
-                                      "accountNumberDetails",
-                                      "Account number",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "PAN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].PANdetails,
-                                      reportIndex,
-                                      "PANdetails",
-                                      "PAN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "CRN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].CRNdetails,
-                                      reportIndex,
-                                      "CRNdetails",
-                                      "CRN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "RRN"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].RRNdetails,
-                                      reportIndex,
-                                      "RRNdetails",
-                                      "RRN",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Aadhar"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].aadharDetails,
-                                      reportIndex,
-                                      "aadharDetails",
-                                      "Aadhar",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Email ID"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].emailDetails,
-                                      reportIndex,
-                                      "emailDetails",
-                                      "Email ID",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Credit Card"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .creditCardDetails,
-                                      reportIndex,
-                                      "creditCardDetails",
-                                      "Credit Card",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Debit Card"
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex]
-                                        .debitCardDetails,
-                                      reportIndex,
-                                      "debitCardDetails",
-                                      "Debit Card",
-                                      request.selectedReport
-                                    )}
-                                  {reportsState[
-                                    reportIndex
-                                  ].selectedParams.some(
-                                    (param) => param === "Mobile No."
-                                  ) &&
-                                    displayRequestedReports(
-                                      reportsState[reportIndex].mobileNoDetails,
-                                      reportIndex,
-                                      "mobileNoDetails",
-                                      "Mobile No.",
-                                      request.selectedReport
-                                    )}
-                                </Box>
-                              </>
-                            )}
-                          </Box>
-                        </AccordionDetails>
-                      </Accordion>
-                    </Box>
-                  ))}
+                                        ? "none"
+                                        : "block"
+                                    }
+                                  >
+                                    <FormControl
+                                      // variant="standard"
+                                      sx={{
+                                        width:
+                                          // request.selectedReport === "IP Logs"
+                                          //   ? "26.6%"
+                                          //   : 
+                                            "28%",
+                                        marginBottom:
+                                          reportsState[reportIndex]
+                                            .selectedParams.length === 0
+                                            ? "1.36rem"
+                                            : "0.75rem",
+                                      }}
+                                    >
+                                      <Select
+                                        label="Param Selection Dropdown"
+                                        name="param-selection-dropdown"
+                                        className="param-selection-dropdown"
+                                        role="combobox"
+                                        id="param-selection-dropdown"
+                                        data-testid={`param-dropdown-${reportIndex}`}
+                                        multiple={true}
+                                        sx={
+                                          reportsState[reportIndex]
+                                            .selectedParams.length === 0
+                                            ? SelectProps.containerProps
+                                            : SelectProps.validatedContainerProps
+                                        }
+                                        SelectDisplayProps={{
+                                          "data-testid": `param-dropdown-sas-${reportIndex}`,
+                                          role: "combobox",
+                                        }}
+                                        aria-labelledby="param-selection-dropdown-label"
+                                        value={
+                                          reportsState[reportIndex]
+                                            .selectedParams || []
+                                        }
+                                        displayEmpty
+                                        onChange={(event) => {
+                                          if (
+                                            event.target.value !== undefined ||
+                                            event.target.value !== ""
+                                          ) {
+                                            handleParamSelection(
+                                              event,
+                                              reportIndex,
+                                              request.selectedReport
+                                            );
+                                          }
+                                        }}
+                                        // variant="standard"
+                                        input={
+                                          <OutlinedInput
+                                            className="param-display"
+                                            role="combobox"
+                                            fullWidth={false}
+                                          />
+                                        }
+                                        IconComponent={(props) => (
+                                          <KeyboardArrowDownOutlinedIcon
+                                            className="select-icon"
+                                            {...props}
+                                          />
+                                        )}
+                                        renderValue={(params) => {
+                                          if (params.length === 0) {
+                                            return (
+                                              <Typography
+                                                component="span"
+                                                className="param-display-placeholder"
+                                                color="rgb(149, 149, 149)"
+                                              >
+                                                {t("selectDetails")}
+                                              </Typography>
+                                            );
+                                          }
+                                          return (
+                                            <Input
+                                              className="selected-params-display"
+                                              disableUnderline={true}
+                                              data-testid={`param-dropdown-input-${reportIndex}`}
+                                              value={params
+                                                .filter(
+                                                  (param) => param !== undefined
+                                                )
+                                                .join(" , ")}
+                                            ></Input>
+                                          );
+                                        }}
+                                        MenuProps={{
+                                          disableAutoFocus: true,
+                                          ...SelectProps.PARAM_SELECT_PROPS,
+                                        }}
+                                        inputProps={{
+                                          "aria-label": "Select Parameters",
+                                        }}
+                                        autoWidth={false}
+                                        placeholder={t("selectDetails")}
+                                      >
+                                        {/* <MenuItem> */}
+                                        <Box
+                                          className="param-search"
+                                          data-testid={`param-search-${reportIndex}`}
+                                        >
+                                          <SearchIcon className="param-search-icon" />
+                                          <FormControl
+                                            fullWidth
+                                            variant="outlined"
+                                          >
+                                            <InputBase
+                                              disableUnderline
+                                              autoFocus
+                                              type="search"
+                                              fullWidth
+                                              inputMode="text"
+                                              data-testid={`param-search-input-${reportIndex}`}
+                                              value={
+                                                reportsState[reportIndex]
+                                                  .searchQuery
+                                              }
+                                              placeholder="Search Parameter"
+                                              className="param-search-input"
+                                              onChange={(e) =>
+                                                handleParamSearch(
+                                                  e.target.value,
+                                                  reportIndex
+                                                )
+                                              }
+                                              onKeyDown={(e) =>
+                                                e.stopPropagation()
+                                              }
+                                            ></InputBase>
+                                          </FormControl>
+                                        </Box>
+                                        {/* </MenuItem> */}
+
+                                        {availableParameters
+                                          .filter((param) =>
+                                            param
+                                              .toLowerCase()
+                                              .includes(
+                                                reportsState[
+                                                  reportIndex
+                                                ].searchQuery
+                                                  .toLowerCase()
+                                                  .trim()
+                                              )
+                                          )
+                                          .map((param, paramIndex) => (
+                                            <MenuItem
+                                              key={param}
+                                              value={param}
+                                              data-testid={`param-menuitem`}
+                                              className="param-menu-item"
+                                              role="option"
+                                            >
+                                              <Checkbox
+                                                checked={
+                                                  reportsState[
+                                                    reportIndex
+                                                  ].selectedParams.indexOf(
+                                                    param
+                                                  ) > -1
+                                                }
+                                                color="primary"
+                                                data-testid={`param-checkbox`}
+                                                className="param-checkbox"
+                                                icon={
+                                                  <CheckBoxOutlineBlankIcon className="uncheck-icon" />
+                                                }
+                                                checkedIcon={
+                                                  <CheckBoxOutlinedIcon className="check-icon" />
+                                                }
+                                                value={param}
+                                              />
+                                              <ListItemText
+                                                primary={param}
+                                                className="param-menu-listext"
+                                                data-testid={`param-listitemtext}`}
+                                                color="black"
+                                                inputMode="text"
+                                                primaryTypographyProps={
+                                                  primaryTextProps
+                                                }
+                                              />
+                                            </MenuItem>
+                                          ))}
+                                      </Select>
+                                      {/* {reportsState[reportIndex].selectedParams
+                                      .length === 0
+                                      ? customFormText(
+                                          "",
+                                          "rgb(95, 105, 91)",
+                                          1
+                                        )
+                                      : datePickerHelper("")} */}
+                                    </FormControl>
+                                  </Box>
+
+                                  <Box
+                                    className="details-subsection"
+                                    style={{
+                                      marginBottom:
+                                        request.selectedParams.length === 0
+                                          ? "1.4rem"
+                                          : "1.85rem",
+                                      marginTop:
+                                        request.selectedReport ===
+                                          "Beneficiary details for Single IMPS transactions" ||
+                                        request.selectedReport ===
+                                          "Beneficiary details for Single UPI transactions"
+                                          ? "0rem"
+                                          : "-1.95rem",
+                                      // marginBottom:
+                                      //   reportsState[reportIndex].selectedParams
+                                      //     .length === 0
+                                      //     ? "1.5rem"
+                                      //     : "2.25rem",
+                                    }}
+                                  >
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Account number"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .accountNumberDetails,
+                                        reportIndex,
+                                        "accountNumberDetails",
+                                        "Account number",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "PAN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].PANdetails,
+                                        reportIndex,
+                                        "PANdetails",
+                                        "PAN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "CRN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].CRNdetails,
+                                        reportIndex,
+                                        "CRNdetails",
+                                        "CRN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "RRN"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].RRNdetails,
+                                        reportIndex,
+                                        "RRNdetails",
+                                        "RRN",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Aadhar"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].aadharDetails,
+                                        reportIndex,
+                                        "aadharDetails",
+                                        "Aadhar",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Email ID"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex].emailDetails,
+                                        reportIndex,
+                                        "emailDetails",
+                                        "Email ID",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Credit Card"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .creditCardDetails,
+                                        reportIndex,
+                                        "creditCardDetails",
+                                        "Credit Card",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Debit Card"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .debitCardDetails,
+                                        reportIndex,
+                                        "debitCardDetails",
+                                        "Debit Card",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Mobile No."
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .mobileNoDetails,
+                                        reportIndex,
+                                        "mobileNoDetails",
+                                        "Mobile No.",
+                                        request.selectedReport
+                                      )}
+                                  </Box>
+                                </>
+                              )}
+                            </Box>
+                          </AccordionDetails>
+                        </Accordion>
+                      </Box>
+                    ))}
 
                 <Box className="action-buttons">
                   <Button

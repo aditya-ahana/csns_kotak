@@ -6,7 +6,7 @@ import {
   within,
   waitFor,
 } from "@testing-library/react";
-import { test, expect,vi,describe } from "vitest";
+import { test, expect, vi, describe } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -19,7 +19,7 @@ import ViewRequest from "../../pages/ViewRequest/ViewRequest";
 import MailDraft from "../../components/Modals/MailDraft";
 import CreateRequest from "../../pages/CreateRequest/CreateRequest";
 import ViewRequestDetails from "../../pages/ViewRequest/ViewRequestDetails";
-import { requestDetails } from "../../components/data/requestsData";
+
 import Header from "../../components/Header";
 import LanguageSelector from "../../components/LanguageSelector";
 

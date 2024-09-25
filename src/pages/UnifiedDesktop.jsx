@@ -3,6 +3,8 @@ import { Box, Typography } from "@mui/material";
 import federationData from "../components/data/FederationData";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
+import { Provider } from "react-redux";
+import store from "../Redux/reduxStore";
 
 function UnifiedDesktop() {
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ function UnifiedDesktop() {
   });
 
   return (
-    <Fragment>
+    <Provider store={store}>
       {loading === true ? (
         <Loader />
       ) : (
@@ -40,7 +42,7 @@ function UnifiedDesktop() {
           ))}
         </Box>
       )}
-    </Fragment>
+    </Provider>
   );
 }
 
