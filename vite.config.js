@@ -3,13 +3,23 @@ import { fileURLToPath, URL } from 'url';
 import react from '@vitejs/plugin-react';
 import { config } from 'dotenv';
 
-config();
+// config();
 
 export default defineConfig(() => {
   return {
-    define:{
-     'process.env': process.env
-    },
+    // define:{
+    //  'process.env': process.env
+    // },
+    // esbuild: {
+    //   loader: 'jsx',
+    // },
+    // optimizeDeps: {
+    //   esbuildOptions: {
+    //     loader: {
+    //       '.js': 'jsx',
+    //     },
+    //   },
+    // },
     plugins: [react()],
     build: {
       outDir: 'build',
@@ -28,6 +38,7 @@ export default defineConfig(() => {
       globals : true,
       setupFiles: ["src/Mocks/VitestSetup.js"],
       environment: 'jsdom',
+      testTimeout : 2000,
       css : true,
       coverage: {
         reporter: ['lcov', 'text'],
