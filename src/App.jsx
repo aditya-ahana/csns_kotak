@@ -38,12 +38,12 @@ export default function App() {
           <Route element={<UnifiedDesktop />} path="/" />
         </Route> */}
 
-        <Route element={<Login />} path="/" />
+        {/* <Route element={<Login />} path="/" /> */}
 
         <Route element={<WithNav />}>
           <Route element={<Sidebar />} />
           <Route element={<Header />} />
-          <Route element={<Dashboard />} path="/Dashboard" />
+          <Route element={<Dashboard />} path="/" />
           <Route element={<CreateRequest />} path="/CreateRequest" />
           <Route element={<ViewRequest />} path="/ViewRequest" />
           <Route
