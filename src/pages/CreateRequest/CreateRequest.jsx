@@ -25,7 +25,11 @@ import Select from "@mui/material/Select";
 import { Button } from "@mui/base/Button";
 import { Modal } from "@mui/material";
 import KeyboardArrowDownOutlinedIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers-pro";
+import {
+  DateField,
+  DatePicker,
+  LocalizationProvider,
+} from "@mui/x-date-pickers-pro";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -70,7 +74,7 @@ export default function CreateRequest() {
   );
 
   const countryCodes = countries.sort((array, sortedArray) =>
-    array.phone.localeCompare(sortedArray.phone)
+    array.name.localeCompare(sortedArray.name)
   );
 
   const [showToast, setShowToast] = useState(false);
@@ -401,12 +405,14 @@ export default function CreateRequest() {
         sx: {
           backgroundColor: "transparent",
           width: "100%",
+          color: "silver",
 
           "& .MuiInputBase-input": {
             height: "1.5rem",
             //  width : '100%',
             width: "100%",
             fontSize: "0.85rem",
+            // color:"grey",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -417,6 +423,9 @@ export default function CreateRequest() {
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
+            },
+            "& fieldset>legend": {
+              fontSize: "0.62rem",
             },
           },
         },
@@ -465,7 +474,7 @@ export default function CreateRequest() {
           width: "100%",
 
           "& .MuiInputBase-input": {
-            height: "1.575rem",
+            height: "1.5rem",
             //  width : '100%',
             width: "100%",
             fontSize: "0.85rem",
@@ -479,6 +488,9 @@ export default function CreateRequest() {
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
+            },
+            "& fieldset>legend": {
+              fontSize: "0.62rem",
             },
           },
         },
@@ -513,6 +525,7 @@ export default function CreateRequest() {
               RRNdetails: [
                 {
                   searchType: "RRN",
+                  mainAccountSearchType: "RRN",
                   accountNo: "",
                   aadhar: "",
                   crnNo: "",
@@ -526,7 +539,8 @@ export default function CreateRequest() {
                   amount: "",
                   mobileNo: "",
                   req_status: "In-progress",
-                  type: "excel",
+                  type: "",
+                  documentType: "excel",
                   filePath: "",
                 },
               ],
@@ -689,6 +703,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.accountNumberDetails.push({
             searchType: "Account number",
+            mainAccountSearchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -703,12 +718,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.accountNumberDetails.push({
             searchType: "Account number",
+            mainAccountSearchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -723,12 +741,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.accountNumberDetails.push({
             searchType: "Account number",
+            mainAccountSearchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -743,13 +764,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.accountNumberDetails.push({
             searchType: "Account number",
+            mainAccountSearchType: "Account number",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -763,7 +787,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -777,6 +803,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.PANdetails.push({
             searchType: "PAN",
+            mainAccountSearchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -791,12 +818,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.PANdetails.push({
             searchType: "PAN",
+            mainAccountSearchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -811,12 +841,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.PANdetails.push({
             searchType: "PAN",
+            mainAccountSearchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -831,13 +864,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.PANdetails.push({
             searchType: "PAN",
+            mainAccountSearchType: "PAN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -851,7 +887,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -864,6 +902,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.CRNdetails.push({
             searchType: "CRN",
+            mainAccountSearchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -878,12 +917,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.CRNdetails.push({
             searchType: "CRN",
+            mainAccountSearchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -898,12 +940,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.CRNdetails.push({
             searchType: "CRN",
+            mainAccountSearchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -918,13 +963,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.CRNdetails.push({
             searchType: "CRN",
+            mainAccountSearchType: "CRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -938,7 +986,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -951,6 +1001,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.RRNdetails.push({
             searchType: "RRN",
+            mainAccountSearchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -965,12 +1016,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.RRNdetails.push({
             searchType: "RRN",
+            mainAccountSearchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -985,12 +1039,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.RRNdetails.push({
             searchType: "RRN",
+            mainAccountSearchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1005,13 +1062,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.RRNdetails.push({
             searchType: "RRN",
+            mainAccountSearchType: "RRN",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1025,7 +1085,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1038,6 +1100,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.aadharDetails.push({
             searchType: "Aadhar",
+            mainAccountSearchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1052,12 +1115,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.aadharDetails.push({
             searchType: "Aadhar",
+            mainAccountSearchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1072,12 +1138,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.aadharDetails.push({
             searchType: "Aadhar",
+            mainAccountSearchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1092,13 +1161,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.aadharDetails.push({
             searchType: "Aadhar",
+            mainAccountSearchType: "Aadhar",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1112,7 +1184,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1125,6 +1199,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.emailDetails.push({
             searchType: "Email ID",
+            mainAccountSearchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1139,12 +1214,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.emailDetails.push({
             searchType: "Email ID",
+            mainAccountSearchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1159,12 +1237,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.emailDetails.push({
             searchType: "Email ID",
+            mainAccountSearchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1179,13 +1260,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.emailDetails.push({
             searchType: "Email ID",
+            mainAccountSearchType: "Email ID",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1199,7 +1283,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1215,6 +1301,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.creditCardDetails.push({
             searchType: "Credit Card",
+            mainAccountSearchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1229,12 +1316,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.creditCardDetails.push({
             searchType: "Credit Card",
+            mainAccountSearchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1249,12 +1339,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.creditCardDetails.push({
             searchType: "Credit Card",
+            mainAccountSearchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1269,13 +1362,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.creditCardDetails.push({
             searchType: "Credit Card",
+            mainAccountSearchType: "Credit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1289,7 +1385,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1305,6 +1403,7 @@ export default function CreateRequest() {
         if (reportName === "IP Logs") {
           report.debitCardDetails.push({
             searchType: "Debit Card",
+            mainAccountSearchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1319,12 +1418,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.debitCardDetails.push({
             searchType: "Debit Card",
+            mainAccountSearchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1339,12 +1441,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.debitCardDetails.push({
             searchType: "Debit Card",
+            mainAccountSearchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1359,13 +1464,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.debitCardDetails.push({
             searchType: "Debit Card",
+            mainAccountSearchType: "Debit Card",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1379,7 +1487,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1388,10 +1498,11 @@ export default function CreateRequest() {
       //   report.debitCardDetails = [];
       // }
 
-      if (value.includes("Mobile No.") && report.mobileNoDetails.length === 0) {
+      if (value.includes("Mobile No") && report.mobileNoDetails.length === 0) {
         if (reportName === "IP Logs") {
           report.mobileNoDetails.push({
-            searchType: "Mobile No.",
+            searchType: "Mobile No",
+            mainAccountSearchType: "Mobile No",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1406,12 +1517,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLastLogin",
           });
           report.mobileNoDetails.push({
-            searchType: "Mobile No.",
+            searchType: "Mobile No",
+            mainAccountSearchType: "Mobile No",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1426,12 +1540,15 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogTxn",
           });
           report.mobileNoDetails.push({
-            searchType: "Mobile No.",
+            searchType: "Mobile No",
+            mainAccountSearchType: "Mobile No",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1446,13 +1563,16 @@ export default function CreateRequest() {
             countryCode: "91",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
             subRequest: "IPLogUpi",
           });
         } else {
           report.mobileNoDetails.push({
-            searchType: "Mobile No.",
+            searchType: "Mobile No",
+            mainAccountSearchType: "Mobile No",
             accountNo: "",
             aadhar: "",
             crnNo: "",
@@ -1466,7 +1586,9 @@ export default function CreateRequest() {
             amount: "",
             mobileNo: "",
             req_status: "In-progress",
-            type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+            type: "",
+            documentType:
+              reportName === "Statement in PDF/Excel" ? "" : "excel",
             filePath: "",
           });
         }
@@ -1495,7 +1617,7 @@ export default function CreateRequest() {
         report.aadharDetails = [];
       }
 
-      if (!value.includes("Mobile No.")) {
+      if (!value.includes("Mobile No")) {
         report.mobileNoDetails = [];
       }
 
@@ -1537,102 +1659,10 @@ export default function CreateRequest() {
       const newState = [...prevState];
       const report = newState[reportIndex];
 
-      // newState[reportIndex][detailName] = [
-      //   ...newState[reportIndex][detailName],
-      //   // reportName === "IP Logs" ? [{},{},{}] : {}
-      //   // detailName === "accountNumberDetails" ||
-      //   // detailName === "PANdetails" ||
-      //   // detailName === "RRNdetails" ||
-      //   // detailName === "CRNdetails" ||
-      //   // detailName === "creditCardDetails" ||
-      //   // detailName === "debitCardDetails" ||
-      //   // detailName === "mobileNoDetails" ||
-      //   // detailName === "emailDetails" ||
-      //   // detailName === "aadharDetails"
-      //   // ?
-      //   reportName === "IP Logs"
-      //     ? [
-      //         {
-      //           searchType: searchType,
-      //           accountNo: "",
-      //           aadhar: "",
-      //           crnNo: "",
-      //           fromDate: "",
-      //           toDate: "",
-      //           rrn: "",
-      //           panNo: "",
-      //           debitCard: "",
-      //           creditCardNo: "",
-      //           email: "",
-      //           amount: "",
-      //           mobileNo: "",
-      //           req_status: "In-progress",
-      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-      //           filePath: "",
-      //           subRequest: "IPLastLogin",
-      //         },
-      //         {
-      //           searchType: searchType,
-      //           accountNo: "",
-      //           aadhar: "",
-      //           crnNo: "",
-      //           fromDate: "",
-      //           toDate: "",
-      //           rrn: "",
-      //           panNo: "",
-      //           debitCard: "",
-      //           creditCardNo: "",
-      //           email: "",
-      //           amount: "",
-      //           mobileNo: "",
-      //           req_status: "In-progress",
-      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-      //           filePath: "",
-      //           subRequest: "IPLogTxn",
-      //         },
-      //         {
-      //           searchType: searchType,
-      //           accountNo: "",
-      //           aadhar: "",
-      //           crnNo: "",
-      //           fromDate: "",
-      //           toDate: "",
-      //           rrn: "",
-      //           panNo: "",
-      //           debitCard: "",
-      //           creditCardNo: "",
-      //           email: "",
-      //           amount: "",
-      //           mobileNo: "",
-      //           req_status: "In-progress",
-      //           type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-      //           filePath: "",
-      //           subRequest: "IPLogUpi",
-      //         },
-      //       ]
-      //     : {
-      //         searchType: searchType,
-      //         accountNo: "",
-      //         aadhar: "",
-      //         crnNo: "",
-      //         fromDate: "",
-      //         toDate: "",
-      //         rrn: "",
-      //         panNo: "",
-      //         debitCard: "",
-      //         creditCardNo: "",
-      //         email: "",
-      //         amount: "",
-      //         mobileNo: "",
-      //         req_status: "In-progress",
-      //         type: reportName === "Statement in PDF/Excel" ? "" : "excel",
-      //         filePath: "",
-      //       },
-      // ];
-
       if (reportName === "IP Logs") {
         newState[reportIndex][detailName].push({
           searchType: searchType,
+          mainAccountSearchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1647,13 +1677,15 @@ export default function CreateRequest() {
           countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          type: "",
+          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
           filePath: "",
           subRequest: "IPLastLogin",
         });
 
         newState[reportIndex][detailName].push({
           searchType: searchType,
+          mainAccountSearchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1668,13 +1700,15 @@ export default function CreateRequest() {
           countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          type: "",
+          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
           filePath: "",
           subRequest: "IPLogTxn",
         });
 
         newState[reportIndex][detailName].push({
           searchType: searchType,
+          mainAccountSearchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1689,13 +1723,15 @@ export default function CreateRequest() {
           countryCode: "91",
           mobileNo: "",
           req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          type: "",
+          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
           filePath: "",
           subRequest: "IPLogUpi",
         });
       } else {
         newState[reportIndex][detailName].push({
           searchType: searchType,
+          mainAccountSearchType: searchType,
           accountNo: "",
           aadhar: "",
           crnNo: "",
@@ -1709,7 +1745,8 @@ export default function CreateRequest() {
           amount: "",
           mobileNo: "",
           req_status: "In-progress",
-          type: reportName === "Statement in PDF/Excel" ? "" : "excel",
+          type: "",
+          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
           filePath: "",
         });
       }
@@ -1915,7 +1952,7 @@ export default function CreateRequest() {
   const handleReportType = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
-      newState[reportIndex][detail][detailIndex].type = value;
+      newState[reportIndex][detail][detailIndex].documentType = value;
       return newState;
     });
   };
@@ -1947,37 +1984,22 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    //////////console.log(formatted_date);
-    // //////////console.log('Detail Index',detailIndex);
-    //////////console.log(formatted_date);
-    // //////////console.log('Detail Index',detailIndex);
-
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      if (!newState[reportIndex]) {
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        return prevState;
-      }
-      if (!newState[reportIndex][detail]) {
-        //////////console.log("time2");
-        //////////console.log("time2");
-        newState[reportIndex][detail] = [];
-      }
-      if (!newState[reportIndex][detail][detailIndex]) {
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        return prevState;
+      const futureDate = dayjs(date).isAfter(
+        dayjs(currentDate, "DD-MM-YYYY"),
+        "day"
+      );
+
+      if (futureDate) {
+        displayToast("Invalid Query Date", 2000, "red", "white", 500);
       }
 
       if (formatted_date === "01-01-1970") {
-        ////console.log("Clear Date");
+        console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
+        ////console.log("Clear Date");
         if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate = "";
           newState[reportIndex][detail][detailIndex - 2].fromDate = "";
@@ -2026,27 +2048,17 @@ export default function CreateRequest() {
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      if (!newState[reportIndex]) {
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        return prevState;
-      }
-      if (!newState[reportIndex][detail]) {
-        //////////console.log("time2");
-        //////////console.log("time2");
-        newState[reportIndex][detail] = [];
-      }
-      if (!newState[reportIndex][detail][detailIndex]) {
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        return prevState;
+      const futureDate = dayjs(date).isAfter(
+        dayjs(currentDate, "DD-MM-YYYY"),
+        "day"
+      );
+
+      if (futureDate) {
+        displayToast("Invalid Query Date", 2000, "red", "white", 500);
       }
 
       if (formatted_date === "01-01-1970") {
+        console.log("Clear Date");
         ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].toDate = "";
         if (reportName === "IP Logs") {
@@ -2076,6 +2088,7 @@ export default function CreateRequest() {
     to,
     reportName
   ) => {
+    console.log("Date : ", date);
     const selected_date = new Date(date);
     selected_date.setDate(selected_date.getDate()).toLocaleString("en-Us");
 
@@ -2089,36 +2102,20 @@ export default function CreateRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-    //////////console.log(formatted_date);
-    // //////////console.log('Detail Index',detailIndex);
-    //////////console.log(formatted_date);
-    // //////////console.log('Detail Index',detailIndex);
-
     setReportsState((prevState) => {
       const newState = [...prevState];
 
-      if (!newState[reportIndex]) {
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        //console.error("Report is undefined for index:", reportIndex);
-        //////////console.log("time1");
-        return prevState;
-      }
-      if (!newState[reportIndex][detail]) {
-        //////////console.log("time2");
-        //////////console.log("time2");
-        newState[reportIndex][detail] = [];
-      }
-      if (!newState[reportIndex][detail][detailIndex]) {
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        //console.error("Detail is undefined for detail index:", detailIndex);
-        //////////console.log("time3");
-        return prevState;
+      const futureDate = dayjs(date).isAfter(
+        dayjs(currentDate, "DD-MM-YYYY"),
+        "day"
+      );
+
+      if (futureDate) {
+        displayToast("Invalid Query Date", 2000, "red", "white", 500);
       }
 
       if (formatted_date === "01-01-1970") {
-        ////console.log("Clear Date");
+        console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
       } else {
         ////console.log("Set Date");
@@ -2189,7 +2186,7 @@ export default function CreateRequest() {
           margin="none"
           className={
             reportName === "IP Logs"
-              ? // (detail.name === "Mobile No." ? "mobile-input-iplogs" :
+              ? // (detail.name === "Mobile No" ? "mobile-input-iplogs" :
                 "primary-input-iplogs"
               : "primary-input"
           }
@@ -2206,7 +2203,7 @@ export default function CreateRequest() {
               (detail.searchType === "Aadhar" && detail.aadhar.length > 0) ||
               (detail.searchType === "Debit Card" &&
                 detail.debitCard.length > 0) ||
-              (detail.searchType === "Mobile No." &&
+              (detail.searchType === "Mobile No" &&
                 detail.mobileNo.length > 0) ||
               (detail.searchType === "RRN" && detail.rrn.length > 0) ||
               (detail.searchType === "CRN" && detail.crnNo.length > 0)
@@ -2223,7 +2220,7 @@ export default function CreateRequest() {
             //                 detail.creditCardNo.length < 16) ||
             //               (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
             //               (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
-            //               (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            //               (detail.searchType === "Mobile No" && detail.mobileNo.length < 10) ||
             //               (detail.searchType === "RRN" && detail.rrn.length < 12) ||
             //               (detail.searchType === "CRN" && detail.crnNo.length < 10)
             //                 ? warningHelperText(
@@ -2243,7 +2240,7 @@ export default function CreateRequest() {
             //                         ? 12
             //                         : detail.searchType === "Debit Card"
             //                         ? 16
-            //                         : detail.searchType === "Mobile No."
+            //                         : detail.searchType === "Mobile No"
             //                         ? 10
             //                         : detail.searchType === "RRN"
             //                         ? 12
@@ -2266,7 +2263,7 @@ export default function CreateRequest() {
               (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
               (detail.searchType === "Debit Card" &&
                 detail.debitCard.length < 1) ||
-              (detail.searchType === "Mobile No." &&
+              (detail.searchType === "Mobile No" &&
                 detail.mobileNo.length < 1) ||
               (detail.searchType === "RRN" && detail.rrn.length < 1) ||
               (detail.searchType === "CRN" && detail.crnNo.length < 1)
@@ -2275,7 +2272,7 @@ export default function CreateRequest() {
             }
             InputProps={{
               startAdornment: reportName === "IP Logs" &&
-                detail.searchType === "Mobile No." && (
+                detail.searchType === "Mobile No" && (
                   <>
                     {/* <InputLabel
                       htmlFor="cc-selectbox"
@@ -2352,7 +2349,7 @@ export default function CreateRequest() {
                             className="cc-menuitem"
                           >
                             <ListItemText
-                              primary={`${code.phone} ${code.name}`}
+                              primary={`${code.name} ${code.phone}`}
                               color="black"
                               inputMode="text"
                               primaryTypographyProps={primaryTextProps}
@@ -2383,7 +2380,7 @@ export default function CreateRequest() {
               //       ? 12
               //       : detail.searchType === "Debit Card"
               //       ? 16
-              //       : detail.searchType === "Mobile No."
+              //       : detail.searchType === "Mobile No"
               //       ? 10
               //       : detail.searchType === "RRN"
               //       ? 12
@@ -2420,7 +2417,7 @@ export default function CreateRequest() {
                 ? detail.aadhar
                 : detail.searchType === "Debit Card"
                 ? detail.debitCard
-                : detail.searchType === "Mobile No."
+                : detail.searchType === "Mobile No"
                 ? reportName === "IP Logs"
                   ? detail.mobileNo.replace(detail.countryCode, "")
                   : detail.mobileNo
@@ -2433,7 +2430,7 @@ export default function CreateRequest() {
             id="paramvalue"
             placeholder={
               // reportName === "IP Logs" &&
-              // detail.searchType === "Mobile No." &&
+              // detail.searchType === "Mobile No" &&
               // detail.countryCode === ""
               //   ? "Select Country Code"
               //   :
@@ -2445,7 +2442,7 @@ export default function CreateRequest() {
             //   fontSize: "0.88rem",
             // }}
             label={
-              reportName === "IP Logs" && detail.searchType === "Mobile No."
+              reportName === "IP Logs" && detail.searchType === "Mobile No"
                 ? ""
                 : detail.searchType
             }
@@ -2454,7 +2451,7 @@ export default function CreateRequest() {
             onChange={(e) => {
               if (
                 reportName === "IP Logs" &&
-                detail.searchType === "Mobile No."
+                detail.searchType === "Mobile No"
               ) {
                 handleMobileNoValue(
                   e.target.value,
@@ -2482,7 +2479,7 @@ export default function CreateRequest() {
             //         ? "email"
             //         : detail.searchType === "PAN"
             //           ? "text"
-            //           : detail.searchType === "Mobile No."
+            //           : detail.searchType === "Mobile No"
             //             ? "tel"
             //             : detail.searchType === "Credit Card"
             //               ? "number"
@@ -2533,18 +2530,14 @@ export default function CreateRequest() {
                   //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
                   //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.searchType === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No" &&
                   //     detail.mobileNo.length < 1) ||
                   //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
                   //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
-                  value={
-                    detail.fromDate === ""
-                      ? null
-                      : dayjs(detail.fromDate, "DD-MM-YYYY")
-                  }
+                  value={dayjs(detail.fromDate, "DD-MM-YYYY")}
                   maxDate={maxDate}
                   defaultValue={dayjs.Dayjs}
                   slotProps={
@@ -2575,7 +2568,7 @@ export default function CreateRequest() {
                     (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
                     (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.searchType === "Mobile No." &&
+                    (detail.searchType === "Mobile No" &&
                       detail.mobileNo.length < 10) ||
                     (detail.searchType === "RRN" && detail.rrn.length < 12) ||
                     (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
@@ -2593,7 +2586,7 @@ export default function CreateRequest() {
                           detail.aadhar.length === 12) ||
                         (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.searchType === "Mobile No." &&
+                        (detail.searchType === "Mobile No" &&
                           detail.mobileNo.length === 10) ||
                         (detail.searchType === "RRN" && detail.rrn.length === 12) ||
                         (detail.searchType === "CRN" &&
@@ -2623,18 +2616,14 @@ export default function CreateRequest() {
                   //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
                   //   (detail.searchType === "Debit Card" &&
                   //     detail.debitCard.length < 1) ||
-                  //   (detail.searchType === "Mobile No." &&
+                  //   (detail.searchType === "Mobile No" &&
                   //     detail.mobileNo.length < 1) ||
                   //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
                   //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
                   //     ? true
                   //     : false
                   // }
-                  value={
-                    detail.toDate === ""
-                      ? null
-                      : dayjs(detail.toDate, "DD-MM-YYYY")
-                  }
+                  value={dayjs(detail.toDate, "DD-MM-YYYY")}
                   defaultValue={dayjs.Dayjs}
                   maxDate={maxDate}
                   shouldDisableDate={(day) =>
@@ -2644,7 +2633,11 @@ export default function CreateRequest() {
                     )
                   }
                   slotProps={
-                    detail.toDate === ""
+                    detail.toDate === "" ||
+                    dayjs(detail.toDate, "DD-MM-YYYY").isAfter(
+                      currentDate,
+                      "DD-MM-YYYY"
+                    )
                       ? datePickerControl.slotProps
                       : datePickerControl.validatedSlotProps
                   }
@@ -2671,7 +2664,7 @@ export default function CreateRequest() {
                     (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
                     (detail.searchType === "Debit Card" &&
                       detail.debitCard.length < 16) ||
-                    (detail.searchType === "Mobile No." &&
+                    (detail.searchType === "Mobile No" &&
                       detail.mobileNo.length < 10) ||
                     (detail.searchType === "RRN" && detail.rrn.length < 12) ||
                     (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
@@ -2689,7 +2682,7 @@ export default function CreateRequest() {
                           detail.aadhar.length === 12) ||
                         (detail.searchType === "Debit Card" &&
                           detail.debitCard.length === 16) ||
-                        (detail.searchType === "Mobile No." &&
+                        (detail.searchType === "Mobile No" &&
                           detail.mobileNo.length === 10) ||
                         (detail.searchType === "RRN" && detail.rrn.length === 12) ||
                         (detail.searchType === "CRN" &&
@@ -2713,7 +2706,7 @@ export default function CreateRequest() {
             className="iplogs-mobileno-input"
             data-testid={`iplogs-mobileno-input-${detailIndex}`}
           >
-            {detail.searchType === "Mobile No." ? (
+            {detail.searchType === "Mobile No" ? (
               <></>
             ) : (
               <TextField
@@ -2744,12 +2737,12 @@ export default function CreateRequest() {
                   // detail.countryCode === ""
                   //   ? "Select Country Code"
                   //   :
-                  "Enter Mobile No."
+                  "Enter Mobile No"
                 }
                 className="number-box"
                 value={detail.mobileNo.replace(detail.countryCode, "")}
                 autoComplete="off"
-                // label="Mobile No."
+                // label="Mobile No"
 
                 margin="none"
                 onChange={(e) => {
@@ -2779,7 +2772,7 @@ export default function CreateRequest() {
                         }
                         // color={detail.mobileNo === "" ? "grey" : "green"}
                       >
-                        Mobile No.
+                        Mobile No
                       </InputLabel> */}
                       <FormControl
                         className="cc-dropdown"
@@ -2854,7 +2847,7 @@ export default function CreateRequest() {
                               className="cc-menuitem"
                             >
                               <ListItemText
-                                primary={`${code.phone} ${code.name}`}
+                                primary={`${code.name} ${code.phone}`}
                                 color="black"
                                 inputMode="text"
                                 primaryTypographyProps={primaryTextProps}
@@ -2941,17 +2934,52 @@ export default function CreateRequest() {
                   <DatePicker
                     format="DD-MM-YYYY"
                     label={t("date")}
+                    disableFuture
                     data-testid={`rrn-datepicker-${detailIndex}`}
                     // disabled={
                     //   detail.rrn === "" || detail.rrn.length === 0
                     //     ? true
                     //     : false
                     // }
-                    value={
+                    value={dayjs(detail.fromDate, "DD-MM-YYYY")}
+                    defaultValue={dayjs.Dayjs}
+                    maxDate={maxDate}
+                    slotProps={
                       detail.fromDate === ""
-                        ? null
-                        : dayjs(detail.fromDate, "DD-MM-YYYY")
+                        ? // ||
+                          // dayjs(detail.fromDate, "DD-MM-YYYY").isAfter(
+                          //   currentDate,
+                          //   "DD-MM-YYYY"
+                          // )
+                          datePickerControl.slotProps
+                        : datePickerControl.validatedSlotProps
                     }
+                    sx={datePickerControl.sx}
+                    onChange={(date) => {
+                      handleDate(
+                        date,
+                        reportIndex,
+                        detailIndex,
+                        detailName,
+                        detail.toDate,
+                        reportName
+                      );
+                    }}
+                  />
+                  {/* <DateField
+                    format="DD-MM-YYYY"
+                    label={t("date")}
+                    data-testid={`rrn-datepicker-${detailIndex}`}
+                    // disabled={
+                    //   detail.rrn === "" || detail.rrn.length === 0
+                    //     ? true
+                    //     : false
+                    // }
+                    // value={
+                    //   detail.fromDate === ""
+                    //     ? null
+                    //     : dayjs(detail.fromDate, "DD-MM-YYYY")
+                    // }
                     defaultValue={dayjs.Dayjs}
                     maxDate={maxDate}
                     slotProps={
@@ -2970,7 +2998,7 @@ export default function CreateRequest() {
                         reportName
                       )
                     }
-                  />
+                  /> */}
                   {/* {detail.fromDate !== ""
                     ? datePickerHelper()
                     : detail.rrn.length === 12
@@ -2987,7 +3015,7 @@ export default function CreateRequest() {
           <FormControl className="request-type-dropdown" size="medium">
             <Select
               id="request-type-dropdown"
-              value={detail.type}
+              value={detail.documentType}
               label="Type"
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
@@ -3001,7 +3029,7 @@ export default function CreateRequest() {
               //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
               //   (detail.searchType === "Debit Card" &&
               //     detail.debitCard.length < 1) ||
-              //   (detail.searchType === "Mobile No." && detail.mobileNo.length < 1) ||
+              //   (detail.searchType === "Mobile No" && detail.mobileNo.length < 1) ||
               //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
               //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
               //     ? true
@@ -3016,7 +3044,7 @@ export default function CreateRequest() {
                 )
               }
               sx={
-                detail.type === ""
+                detail.documentType === ""
                   ? SelectProps.containerProps
                   : SelectProps.validatedContainerProps
               }
@@ -3038,8 +3066,9 @@ export default function CreateRequest() {
               autoWidth={false}
               style={{
                 // fontSize: "0.88rem",
-                color: detail.type === "" ? "rgba(0, 0, 0, 0.49)" : "black",
-                height : "2.575rem"
+                color:
+                  detail.documentType === "" ? "rgba(0, 0, 0, 0.49)" : "black",
+                height: "2.575rem",
               }}
               className="request-type-selectbox"
               placeholder={t("type")}
@@ -3050,7 +3079,7 @@ export default function CreateRequest() {
                   data-testid={`type-dropdown-menuitem-${typeIndex}`}
                   value={type}
                   className={
-                    type === detail.type
+                    type === detail.documentType
                       ? "type-sel-menuitem"
                       : "type-dropdown-menuitem"
                   }
@@ -3072,11 +3101,11 @@ export default function CreateRequest() {
               detail.creditCardNo.length < 16) ||
             (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
             (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
-            (detail.searchType === "Mobile No." && detail.mobileNo.length < 10) ||
+            (detail.searchType === "Mobile No" && detail.mobileNo.length < 10) ||
             (detail.searchType === "RRN" && detail.rrn.length < 12) ||
             (detail.searchType === "CRN" && detail.crnNo.length < 10)
               ? customFormText("")
-              : detail.type === ""
+              : detail.documentType === ""
               ? customFormText(
                   "select report type",
                   "rgba(92, 84, 112, 0.75)",
@@ -3086,16 +3115,18 @@ export default function CreateRequest() {
           </FormControl>
         )}
 
-{reportName === "IP Logs" && detailIndex < reportsState[reportIndex][detailName].length - 3 && (
-          <Box className="iplog-void-button"></Box>
-        )}
+        {reportName === "IP Logs" &&
+          detailIndex < reportsState[reportIndex][detailName].length - 3 && (
+            <Box className="iplog-void-button"></Box>
+          )}
 
         {detailIndex < reportsState[reportIndex][detailName].length && (
           <Button
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
             disabled={
-              reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
+              reportName === "IP Logs" &&
+              reportsState[reportIndex][detailName].length === 3
                 ? true
                 : reportsState[reportIndex][detailName].length === 1
                 ? true
@@ -3109,7 +3140,8 @@ export default function CreateRequest() {
                   ? "4.4%"
                   : "0%",
               opacity:
-                reportName === "IP Logs" && reportsState[reportIndex][detailName].length === 3
+                reportName === "IP Logs" &&
+                reportsState[reportIndex][detailName].length === 3
                   ? 0.25
                   : reportsState[reportIndex][detailName].length === 1
                   ? 0.25
@@ -3141,11 +3173,11 @@ export default function CreateRequest() {
                 (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
                 (detail.searchType === "Debit Card" &&
                   detail.debitCard.length < 1) ||
-                (detail.searchType === "Mobile No." &&
+                (detail.searchType === "Mobile No" &&
                   detail.mobileNo.length < 1) ||
                 (detail.searchType === "RRN" && detail.rrn.length < 1) ||
                 (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
-                detail.type === ""
+                detail.documentType === ""
                   ? 0.25
                   : 1,
             }}
@@ -3159,11 +3191,11 @@ export default function CreateRequest() {
               (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
               (detail.searchType === "Debit Card" &&
                 detail.debitCard.length < 1) ||
-              (detail.searchType === "Mobile No." &&
+              (detail.searchType === "Mobile No" &&
                 detail.mobileNo.length < 1) ||
               (detail.searchType === "RRN" && detail.rrn.length < 1) ||
               (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
-              detail.type === ""
+              detail.documentType === ""
                 ? true
                 : false
             }
@@ -3248,7 +3280,7 @@ export default function CreateRequest() {
                       ? detail.aadhar
                       : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.searchType === "Mobile No."
+                      : detail.searchType === "Mobile No"
                       ? detail.mobileNo
                       : detail.searchType === "RRN"
                       ? detail.rrn
@@ -3272,7 +3304,7 @@ export default function CreateRequest() {
                       ? detail.aadhar
                       : detail.searchType === "Debit Card"
                       ? detail.debitCard
-                      : detail.searchType === "Mobile No."
+                      : detail.searchType === "Mobile No"
                       ? detail.mobileNo
                       : detail.searchType === "RRN"
                       ? detail.rrn
@@ -3360,14 +3392,14 @@ export default function CreateRequest() {
 
               {reportName === "IP Logs" && (
                 <Box className="mobileno-preview">
-                  {detail.searchType === "Mobile No." ? (
+                  {detail.searchType === "Mobile No" ? (
                     <>
                       {/* <Typography
                         marginLeft="1rem"
                         sx={previewProps.searchType}
                         component="span"
                       >
-                        Mobile No. :{" "}
+                        Mobile No :{" "}
                       </Typography>
 
                       <Typography sx={previewProps.value} component="span">
@@ -3381,7 +3413,7 @@ export default function CreateRequest() {
                         sx={previewProps.searchType}
                         component="span"
                       >
-                        Mobile No. :{" "}
+                        Mobile No :{" "}
                       </Typography>
 
                       <Typography sx={previewProps.value} component="span">
@@ -3407,11 +3439,11 @@ export default function CreateRequest() {
                     Type :{" "}
                   </Typography>
                   <Typography sx={previewProps.value} component="span">
-                    {detail.type === ""
+                    {detail.documentType === ""
                       ? ""
-                      : detail.type === "pdf"
+                      : detail.documentType === "pdf"
                       ? "PDF"
-                      : detail.type === "excel"
+                      : detail.documentType === "excel"
                       ? "Excel"
                       : ""}
                   </Typography>
@@ -3470,7 +3502,7 @@ export default function CreateRequest() {
       // state.accountNumberDetails.length > 0 &&
       state.accountNumberDetails.every(
         (detail, subIndex) => state.accountNumberDetails[0].accountNo.length > 0
-        // && state.accountNumberDetails[0].type !== ""
+        // && state.accountNumberDetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3478,7 +3510,7 @@ export default function CreateRequest() {
       state.PANdetails.every(
         (detail, subIndex) => state.PANdetails[0].panNo.length > 0
         // &&
-        //   state.PANdetails[0].type !== ""
+        //   state.PANdetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3486,7 +3518,7 @@ export default function CreateRequest() {
       state.CRNdetails.every(
         (detail, subIndex) => state.CRNdetails[0].crnNo.length > 0
         // &&
-        //   state.CRNdetails[0].type !== ""
+        //   state.CRNdetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3494,7 +3526,7 @@ export default function CreateRequest() {
       state.RRNdetails.every(
         (detail, subIndex) => state.RRNdetails[0].rrn.length > 0
         // &&
-        //   state.RRNdetails[0].type !== ""
+        //   state.RRNdetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3502,7 +3534,7 @@ export default function CreateRequest() {
       state.aadharDetails.every(
         (detail, subIndex) => state.aadharDetails[0].aadhar.length > 0
         // &&
-        //   state.aadharDetails[0].type !== ""
+        //   state.aadharDetails[0].documentType !== ""
       )
     ) ||
     reportsState.every(
@@ -3511,7 +3543,7 @@ export default function CreateRequest() {
         state.mobileNoDetails.every(
           (detail, subIndex) => state.mobileNoDetails[0].mobileNo.length > 0
           // &&
-          //   state.mobileNoDetails[0].type !== ""
+          //   state.mobileNoDetails[0].documentType !== ""
         )
     ) ||
     reportsState.every((state, index) =>
@@ -3519,7 +3551,7 @@ export default function CreateRequest() {
       state.creditCardDetails.every(
         (detail, subIndex) => state.creditCardDetails[0].creditCardNo.length > 0
         // &&
-        //   state.creditCardDetails[0].type !== ""
+        //   state.creditCardDetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3527,7 +3559,7 @@ export default function CreateRequest() {
       state.debitCardDetails.every(
         (detail, subIndex) => state.debitCardDetails[0].debitCard.length > 0
         // &&
-        //   state.debitCardDetails[0].type !== ""
+        //   state.debitCardDetails[0].documentType !== ""
       )
     ) ||
     reportsState.every((state, index) =>
@@ -3535,7 +3567,7 @@ export default function CreateRequest() {
       state.emailDetails.every(
         (detail, subIndex) => state.emailDetails[0].email.length > 0
         // &&
-        //   state.emailDetails[0].type !== ""
+        //   state.emailDetails[0].documentType !== ""
       )
     );
 
@@ -3544,41 +3576,47 @@ export default function CreateRequest() {
       (state.accountNumberDetails.length > 0 &&
         state.accountNumberDetails.every(
           (detail, subIndex) =>
-            detail.accountNo.length > 1 && detail.type !== ""
+            detail.accountNo.length > 1 && detail.documentType !== ""
         )) ||
       (state.PANdetails.length > 0 &&
         state.PANdetails.every(
-          (detail, subIndex) => detail.panNo.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.panNo.length > 1 && detail.documentType !== ""
         )) ||
       (state.CRNdetails.length > 0 &&
         state.CRNdetails.every(
-          (detail, subIndex) => detail.crnNo.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.crnNo.length > 1 && detail.documentType !== ""
         )) ||
       (state.RRNdetails.length > 0 &&
         state.RRNdetails.every(
-          (detail, subIndex) => detail.rrn.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.rrn.length > 1 && detail.documentType !== ""
         )) ||
       (state.aadharDetails.length > 0 &&
         state.aadharDetails.every(
-          (detail, subIndex) => detail.aadhar.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.aadhar.length > 1 && detail.documentType !== ""
         )) ||
       (state.mobileNoDetails.length > 0 &&
         state.mobileNoDetails.every(
-          (detail, subIndex) => detail.mobileNo.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.mobileNo.length > 1 && detail.documentType !== ""
         )) ||
       (state.creditCardDetails.length > 0 &&
         state.creditCardDetails.every(
           (detail, subIndex) =>
-            detail.creditCardNo.length > 1 && detail.type !== ""
+            detail.creditCardNo.length > 1 && detail.documentType !== ""
         )) ||
       (state.debitCardDetails.length > 0 &&
         state.debitCardDetails.every(
           (detail, subIndex) =>
-            detail.debitCard.length > 1 && detail.type !== ""
+            detail.debitCard.length > 1 && detail.documentType !== ""
         )) ||
       (state.emailDetails.length > 0 &&
         state.emailDetails.every(
-          (detail, subIndex) => detail.email.length > 1 && detail.type !== ""
+          (detail, subIndex) =>
+            detail.email.length > 1 && detail.documentType !== ""
         ))
   );
 
@@ -3646,7 +3684,7 @@ export default function CreateRequest() {
   // console.log("Spring Boot Payload", reportDetails);
   //console.log("Triple Reports State", reportsState);
 
-console.log("Create Request Payload", createRequestPayload);
+  console.log("Create Request Payload", createRequestPayload);
   //////console.log("Device Details Array", deviceDetails);
 
   const dynamicReports =
@@ -4133,8 +4171,8 @@ console.log("Create Request Payload", createRequestPayload);
                                         width:
                                           // request.selectedReport === "IP Logs"
                                           //   ? "26.6%"
-                                          //   : 
-                                            "28%",
+                                          //   :
+                                          "28%",
                                         marginBottom:
                                           reportsState[reportIndex]
                                             .selectedParams.length === 0
@@ -4450,14 +4488,14 @@ console.log("Create Request Payload", createRequestPayload);
                                     {reportsState[
                                       reportIndex
                                     ].selectedParams.some(
-                                      (param) => param === "Mobile No."
+                                      (param) => param === "Mobile No"
                                     ) &&
                                       displayRequestedReports(
                                         reportsState[reportIndex]
                                           .mobileNoDetails,
                                         reportIndex,
                                         "mobileNoDetails",
-                                        "Mobile No.",
+                                        "Mobile No",
                                         request.selectedReport
                                       )}
                                   </Box>
@@ -4612,7 +4650,7 @@ console.log("Create Request Payload", createRequestPayload);
                                           .mobileNoDetails,
                                         reportIndex,
                                         "mobileNoDetails",
-                                        "Mobile No.",
+                                        "Mobile No",
                                         request.selectedReport
                                       )}
                                     </>

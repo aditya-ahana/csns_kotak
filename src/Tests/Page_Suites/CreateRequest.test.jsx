@@ -591,7 +591,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     );
 
     const menuItem6 = menuItems.find(
-      (input) => input.getAttribute("data-value") === "Mobile No."
+      (input) => input.getAttribute("data-value") === "Mobile No"
     );
 
     const menuItem7 = menuItems.find(
@@ -698,7 +698,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox5).toBeChecked();
     expect(checkerBox6).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No."
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No"
     );
 
     fireEvent.click(checkerBox7);
@@ -712,7 +712,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox6).toBeChecked();
     expect(checkerBox7).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN"
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN"
     );
 
     fireEvent.click(checkerBox8);
@@ -727,7 +727,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN,RRN"
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox3);
@@ -742,7 +742,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,PAN,RRN"
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox7);
@@ -757,7 +757,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).not.toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
     );
 
     fireEvent.click(checkerBox0);
@@ -772,7 +772,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).not.toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+      "Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
     );
   });
 });
@@ -1051,7 +1051,7 @@ describe("Triple Detail Render and Change for IP Logs", () => {
 
       fillTicketNumberInput();
       fillTicketDescriptionInput();
-      selectParams("IP Logs", "Mobile No.");
+      selectParams("IP Logs", "Mobile No");
 
       const ccDropdown0 = screen.getByTestId(`cc-dropdown-0`);
       const ccDropdown1 = screen.getByTestId(`cc-dropdown-1`);

@@ -35,7 +35,7 @@ export const availableParameters = [
   "RRN",
   "PAN",
   "Aadhar",
-  "Mobile No.",
+  "Mobile No",
   "Debit Card",
   "Credit Card",
   "Email ID",
@@ -1139,7 +1139,7 @@ export const countryCodeData = [
 export const countries = countryCodeData.map((code) => code.data);
 
 export const countryCodes = countries.sort((array, sortedArray) =>
-  array.phone.localeCompare(sortedArray.phone)
+  array.name.localeCompare(sortedArray.name)
 );
 
 // console.log("Countries length",countryCodes.length);
