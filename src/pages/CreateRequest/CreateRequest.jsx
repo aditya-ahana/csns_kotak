@@ -317,6 +317,9 @@ export default function CreateRequest() {
           maxHeight: "21.75rem",
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
+          alignItems : "center",
+          justifyContent : "center",
+          padding : "0.15rem 1.25rem 0.75rem 1.25rem"
         },
       },
     },

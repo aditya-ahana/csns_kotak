@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import {
   render,
   fireEvent,
@@ -26,10 +25,11 @@ import {
   ticketTypeData,
 } from "../../Redux/reducedData";
 
-
 const countryCodes = countryCodeData.map((code) => code.phone);
 
-const ticketTypes = ticketTypeData.filter(ticketType => ticketType !== "Other");
+const ticketTypes = ticketTypeData.filter(
+  (ticketType) => ticketType !== "Other"
+);
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -87,37 +87,34 @@ const fillTicketNumberInput = () => {
 };
 
 const selectTicketType = () => {
-  ticketTypeData.forEach(ticketType => {
-  renderCreateRequest();
-  advanceTimer();
+  ticketTypeData.forEach((ticketType) => {
+    renderCreateRequest();
+    advanceTimer();
 
-  fillTicketNumberInput();
+    fillTicketNumberInput();
 
-  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
+    const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
-  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
-    hidden: true,
+    const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+      hidden: true,
+    });
+
+    fireEvent.mouseDown(ticketDropdownBox);
+
+    const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+
+    const ticketItem1 = ticketItems.find(
+      (cc) => cc.getAttribute("data-value") === ticketType
+    );
+
+    fireEvent.click(ticketItem1);
+
+    expect(ticketDropdown.querySelector("input").value).toBe(ticketType);
+    cleanup();
   });
-
-  fireEvent.mouseDown(ticketDropdownBox);
-
-  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
-
-
-
-  const ticketItem1 = ticketItems.find(
-    (cc) => cc.getAttribute("data-value") === ticketType
-  );
-
-  fireEvent.click(ticketItem1);
-
-  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
-  cleanup();
-});
-}
+};
 
 const fillTicketDescriptionInput = () => {
-
   const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
   const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
@@ -134,7 +131,7 @@ const fillTicketDescriptionInput = () => {
 
   fireEvent.click(ticketItem1);
 
-  expect(ticketDropdown.querySelector('input').value).toBe("Other");
+  expect(ticketDropdown.querySelector("input").value).toBe("Other");
 
   const ticketDescriptionField = screen.getByTestId("ticket-descr-input");
 
@@ -155,56 +152,53 @@ const fillTicketDescriptionInput = () => {
   );
 };
 
-describe("Ticket Type Check",() => {
-test("Ticket Type Selection Check",() => {
-  selectTicketType();
-});
-
-test("Ticket Description Input Render Check",() => {
-
-  ticketTypeData.forEach(ticketType => {
-  renderCreateRequest();
-  advanceTimer();
-  fillTicketNumberInput();
-
-  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
-
-  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
-    hidden: true,
+describe("Ticket Type Check", () => {
+  test("Ticket Type Selection Check", () => {
+    selectTicketType();
   });
 
-  fireEvent.mouseDown(ticketDropdownBox);
+  test("Ticket Description Input Render Check", () => {
+    ticketTypeData.forEach((ticketType) => {
+      renderCreateRequest();
+      advanceTimer();
+      fillTicketNumberInput();
 
-  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+      const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
-  const ticketItem1 = ticketItems.find(
-    (cc) => cc.getAttribute("data-value") === ticketType
-  );
+      const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+        hidden: true,
+      });
 
-  fireEvent.click(ticketItem1);
+      fireEvent.mouseDown(ticketDropdownBox);
 
-  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
+      const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
 
-  const ticketDescriptionField = screen.queryByTestId("ticket-descr-input");
+      const ticketItem1 = ticketItems.find(
+        (cc) => cc.getAttribute("data-value") === ticketType
+      );
 
-  if(ticketType === "Other"){
-  expect(ticketDescriptionField).toBeInTheDocument();
-  } else {
-    expect(ticketDescriptionField).not.toBeInTheDocument();
-  }
-  cleanup();
+      fireEvent.click(ticketItem1);
+
+      expect(ticketDropdown.querySelector("input").value).toBe(ticketType);
+
+      const ticketDescriptionField = screen.queryByTestId("ticket-descr-input");
+
+      if (ticketType === "Other") {
+        expect(ticketDescriptionField).toBeInTheDocument();
+      } else {
+        expect(ticketDescriptionField).not.toBeInTheDocument();
+      }
+      cleanup();
+    });
+  });
+
+  test("Ticket Description Input Check", () => {
+    renderCreateRequest();
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+  });
 });
-})
-
-test("Ticket Description Input Check",() => {
-  renderCreateRequest();
-  advanceTimer();
-  fillTicketNumberInput();
-  fillTicketDescriptionInput();
-})
-});
-
-
 
 const selectReports = (selectedReport) => {
   const dropdown = screen.getByTestId("reports-selection-dropdown");

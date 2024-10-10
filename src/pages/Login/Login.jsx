@@ -31,6 +31,9 @@ import logo from "../../static/logo.png";
 
 export default function Login() {
   const nav = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   // const [showPassword, setShowPassword] = React.useState(false);
 
@@ -50,6 +53,7 @@ export default function Login() {
     <>
       <div
         className="parent"
+        data-testid="login-container"
         // style={{ backgroundColor: "rgba(245, 248, 250, 1)" }}
       >
         <div className="main" style={{ height: "100vh" }}>
@@ -91,6 +95,9 @@ export default function Login() {
                         <InputAdornment position="end"></InputAdornment>
                       }
                       label="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      data-testid="username-field"
                       placeholder="Eg: abc@example.com"
                     />
                   </FormControl>
@@ -120,12 +127,16 @@ export default function Login() {
                     <OutlinedInput
                       id="outlined-adornment-password"
                       type={showPassword ? "text" : "password"}
+                      data-testid="password-field"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       endAdornment={
                         <InputAdornment position="end">
                           <IconButton
                             aria-label="toggle password visibility"
                             onClick={handleClickShowPassword}
                             onMouseDown={handleMouseDownPassword}
+                            data-testid="show-password-icon"
                             edge="end"
                           >
                             {showPassword ? <VisibilityOff /> : <Visibility />}
@@ -167,7 +178,7 @@ export default function Login() {
                       <span> Remember me</span> */}
 
                       <FormControlLabel
-                        control={<Checkbox />}
+                        control={<Checkbox data-testid="remember-box" />}
                         label="Remember Me"
                       />
 
@@ -180,6 +191,7 @@ export default function Login() {
                   <Button
                     type="primary"
                     // danger
+                    data-testid="signin-button"
                     className=" logoColorBtn rounded height3rem"
                     onClick={(e) => {
                       signInHandle();

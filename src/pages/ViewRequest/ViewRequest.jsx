@@ -422,8 +422,8 @@ export default function ViewRequest() {
 
   const dateRangeFilteredData = queried_data.filter((ticket) => {
     const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
-    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
-    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY").subtract(1,'day') : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY").add(1,'day') : null;
 
     if (from) {
       return dayjs(createdDate, "DD-MM-YYYY").isAfter(
@@ -791,7 +791,7 @@ export default function ViewRequest() {
                   </Menu>
                 </Box>
 
-                {requestData.length === 0 ? (
+                {requestData && requestData.length === 0 ? (
                   <Box data-testid="lottie-data" className="no-data-lottie">
                     <Lottie
                       animationData={zeroDataAnimation}
