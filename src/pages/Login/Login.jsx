@@ -40,7 +40,7 @@ export default function Login() {
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   function signInHandle(e) {
-    nav("/Dashboard");
+    nav("/");
   }
 
   // const handleClickShowPassword = () => setShowPassword((show) => !show);
