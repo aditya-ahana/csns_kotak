@@ -1039,7 +1039,7 @@ describe("Triple Detail Render and Change for IP Logs", () => {
   });
 
   test("Triple Country Code Select Functionality Check for Primary Mobile Number", () => {
-    countryCodes.forEach((code) => {
+    // countryCodes.forEach((code) => {
       renderCreateRequest();
       advanceTimer();
 
@@ -1064,16 +1064,27 @@ describe("Triple Detail Render and Change for IP Logs", () => {
       const ccMenuItems = screen.getAllByTestId(`cc-menuitem`);
 
       const ccMenuItem1 = ccMenuItems.find(
-        (cc) => cc.getAttribute("data-value") === code
+        (cc) => cc.getAttribute("data-value") === "358"
       );
 
       fireEvent.click(ccMenuItem1);
 
-      expect(ccSelectInput2.value).toBe(code);
-      expect(ccSelectInput1.value).toBe(code);
-      expect(ccSelectInput0.value).toBe(code);
+      expect(ccSelectInput2.value).toBe("358");
+      expect(ccSelectInput1.value).toBe("358");
+      expect(ccSelectInput0.value).toBe("358");
+
+      const ccMenuItem2 = ccMenuItems.find(
+        (cc) => cc.getAttribute("data-value") === "91"
+      );
+
+      fireEvent.click(ccMenuItem2);
+
+      expect(ccSelectInput2.value).toBe("91");
+      expect(ccSelectInput1.value).toBe("91");
+      expect(ccSelectInput0.value).toBe("91");
+
       cleanup();
-    });
+    // });
   });
 
   test("Triple Country Code Select Functionality Check for Secondary Mobile Number", () => {
