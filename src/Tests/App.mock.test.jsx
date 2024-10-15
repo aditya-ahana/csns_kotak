@@ -11,6 +11,8 @@ test("All Component Mocks", () => {
 
   vi.mock("../pages/UnifiedDesktop.jsx");
 
+  vi.mock("../pages/Login/Login.jsx");
+
   vi.mock("../pages/Dashboard/Dashboard.jsx");
 
   vi.mock("../pages/CreateRequest/CreateRequest.jsx");

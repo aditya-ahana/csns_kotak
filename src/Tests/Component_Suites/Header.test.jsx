@@ -52,7 +52,9 @@ const renderSidebar = () => {
 const renderDashboard = () => {
   return render(
     <BrowserRouter>
+    <Provider store={store}>
       <Dashboard />
+      </Provider>
     </BrowserRouter>
   );
 };

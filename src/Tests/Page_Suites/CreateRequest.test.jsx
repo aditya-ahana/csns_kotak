@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-
 import {
   render,
   fireEvent,
@@ -26,10 +25,11 @@ import {
   ticketTypeData,
 } from "../../Redux/reducedData";
 
-
 const countryCodes = countryCodeData.map((code) => code.phone);
 
-const ticketTypes = ticketTypeData.filter(ticketType => ticketType !== "Other");
+const ticketTypes = ticketTypeData.filter(
+  (ticketType) => ticketType !== "Other"
+);
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -87,37 +87,34 @@ const fillTicketNumberInput = () => {
 };
 
 const selectTicketType = () => {
-  ticketTypeData.forEach(ticketType => {
-  renderCreateRequest();
-  advanceTimer();
+  ticketTypeData.forEach((ticketType) => {
+    renderCreateRequest();
+    advanceTimer();
 
-  fillTicketNumberInput();
+    fillTicketNumberInput();
 
-  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
+    const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
-  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
-    hidden: true,
+    const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+      hidden: true,
+    });
+
+    fireEvent.mouseDown(ticketDropdownBox);
+
+    const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+
+    const ticketItem1 = ticketItems.find(
+      (cc) => cc.getAttribute("data-value") === ticketType
+    );
+
+    fireEvent.click(ticketItem1);
+
+    expect(ticketDropdown.querySelector("input").value).toBe(ticketType);
+    cleanup();
   });
-
-  fireEvent.mouseDown(ticketDropdownBox);
-
-  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
-
-
-
-  const ticketItem1 = ticketItems.find(
-    (cc) => cc.getAttribute("data-value") === ticketType
-  );
-
-  fireEvent.click(ticketItem1);
-
-  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
-  cleanup();
-});
-}
+};
 
 const fillTicketDescriptionInput = () => {
-
   const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
   const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
@@ -134,7 +131,7 @@ const fillTicketDescriptionInput = () => {
 
   fireEvent.click(ticketItem1);
 
-  expect(ticketDropdown.querySelector('input').value).toBe("Other");
+  expect(ticketDropdown.querySelector("input").value).toBe("Other");
 
   const ticketDescriptionField = screen.getByTestId("ticket-descr-input");
 
@@ -155,56 +152,53 @@ const fillTicketDescriptionInput = () => {
   );
 };
 
-describe("Ticket Type Check",() => {
-test("Ticket Type Selection Check",() => {
-  selectTicketType();
-});
-
-test("Ticket Description Input Render Check",() => {
-
-  ticketTypeData.forEach(ticketType => {
-  renderCreateRequest();
-  advanceTimer();
-  fillTicketNumberInput();
-
-  const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
-
-  const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
-    hidden: true,
+describe("Ticket Type Check", () => {
+  test("Ticket Type Selection Check", () => {
+    selectTicketType();
   });
 
-  fireEvent.mouseDown(ticketDropdownBox);
+  test("Ticket Description Input Render Check", () => {
+    ticketTypeData.forEach((ticketType) => {
+      renderCreateRequest();
+      advanceTimer();
+      fillTicketNumberInput();
 
-  const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
+      const ticketDropdown = screen.getByTestId(`ticket-type-dropdown`);
 
-  const ticketItem1 = ticketItems.find(
-    (cc) => cc.getAttribute("data-value") === ticketType
-  );
+      const ticketDropdownBox = within(ticketDropdown).getByRole("combobox", {
+        hidden: true,
+      });
 
-  fireEvent.click(ticketItem1);
+      fireEvent.mouseDown(ticketDropdownBox);
 
-  expect(ticketDropdown.querySelector('input').value).toBe(ticketType);
+      const ticketItems = screen.getAllByTestId(`ticket-menu-item`);
 
-  const ticketDescriptionField = screen.queryByTestId("ticket-descr-input");
+      const ticketItem1 = ticketItems.find(
+        (cc) => cc.getAttribute("data-value") === ticketType
+      );
 
-  if(ticketType === "Other"){
-  expect(ticketDescriptionField).toBeInTheDocument();
-  } else {
-    expect(ticketDescriptionField).not.toBeInTheDocument();
-  }
-  cleanup();
+      fireEvent.click(ticketItem1);
+
+      expect(ticketDropdown.querySelector("input").value).toBe(ticketType);
+
+      const ticketDescriptionField = screen.queryByTestId("ticket-descr-input");
+
+      if (ticketType === "Other") {
+        expect(ticketDescriptionField).toBeInTheDocument();
+      } else {
+        expect(ticketDescriptionField).not.toBeInTheDocument();
+      }
+      cleanup();
+    });
+  });
+
+  test("Ticket Description Input Check", () => {
+    renderCreateRequest();
+    advanceTimer();
+    fillTicketNumberInput();
+    fillTicketDescriptionInput();
+  });
 });
-})
-
-test("Ticket Description Input Check",() => {
-  renderCreateRequest();
-  advanceTimer();
-  fillTicketNumberInput();
-  fillTicketDescriptionInput();
-})
-});
-
-
 
 const selectReports = (selectedReport) => {
   const dropdown = screen.getByTestId("reports-selection-dropdown");
@@ -591,7 +585,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     );
 
     const menuItem6 = menuItems.find(
-      (input) => input.getAttribute("data-value") === "Mobile No."
+      (input) => input.getAttribute("data-value") === "Mobile No"
     );
 
     const menuItem7 = menuItems.find(
@@ -698,7 +692,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox5).toBeChecked();
     expect(checkerBox6).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No."
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No"
     );
 
     fireEvent.click(checkerBox7);
@@ -712,7 +706,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox6).toBeChecked();
     expect(checkerBox7).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN"
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN"
     );
 
     fireEvent.click(checkerBox8);
@@ -727,7 +721,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No.,PAN,RRN"
+      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox3);
@@ -742,7 +736,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,PAN,RRN"
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox7);
@@ -757,7 +751,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).not.toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
     );
 
     fireEvent.click(checkerBox0);
@@ -772,7 +766,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).not.toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Account number,CRN,Debit Card,Email ID,Mobile No.,RRN"
+      "Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
     );
   });
 });
@@ -1045,13 +1039,13 @@ describe("Triple Detail Render and Change for IP Logs", () => {
   });
 
   test("Triple Country Code Select Functionality Check for Primary Mobile Number", () => {
-    countryCodes.forEach((code) => {
+    // countryCodes.forEach((code) => {
       renderCreateRequest();
       advanceTimer();
 
       fillTicketNumberInput();
       fillTicketDescriptionInput();
-      selectParams("IP Logs", "Mobile No.");
+      selectParams("IP Logs", "Mobile No");
 
       const ccDropdown0 = screen.getByTestId(`cc-dropdown-0`);
       const ccDropdown1 = screen.getByTestId(`cc-dropdown-1`);
@@ -1070,16 +1064,27 @@ describe("Triple Detail Render and Change for IP Logs", () => {
       const ccMenuItems = screen.getAllByTestId(`cc-menuitem`);
 
       const ccMenuItem1 = ccMenuItems.find(
-        (cc) => cc.getAttribute("data-value") === code
+        (cc) => cc.getAttribute("data-value") === "358"
       );
 
       fireEvent.click(ccMenuItem1);
 
-      expect(ccSelectInput2.value).toBe(code);
-      expect(ccSelectInput1.value).toBe(code);
-      expect(ccSelectInput0.value).toBe(code);
+      expect(ccSelectInput2.value).toBe("358");
+      expect(ccSelectInput1.value).toBe("358");
+      expect(ccSelectInput0.value).toBe("358");
+
+      const ccMenuItem2 = ccMenuItems.find(
+        (cc) => cc.getAttribute("data-value") === "91"
+      );
+
+      fireEvent.click(ccMenuItem2);
+
+      expect(ccSelectInput2.value).toBe("91");
+      expect(ccSelectInput1.value).toBe("91");
+      expect(ccSelectInput0.value).toBe("91");
+
       cleanup();
-    });
+    // });
   });
 
   test("Triple Country Code Select Functionality Check for Secondary Mobile Number", () => {

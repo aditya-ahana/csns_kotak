@@ -11,7 +11,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { viewRequestHeaders } from "../../Redux/reducedData";
+import { currentDate, viewRequestHeaders } from "../../Redux/reducedData";
 import {
   DatePicker,
   DesktopDatePicker,
@@ -53,8 +53,29 @@ import zeroDataAnimation from "../../Dynamic/ktk_no_data.json";
 import { useSelector } from "react-redux";
 import { Provider } from "react-redux";
 import store from "../../Redux/reduxStore";
+import MaterialToast from "../../components/Snackbar";
 
 export default function ViewRequest() {
+
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastDuration, setToastDuration] = useState(0);
+  const [toastBackground, setToastBackground] = useState("brown");
+  const [toastColor, setToastColor] = useState("");
+  const [toastFontWeight, setToastFontWeight] = useState();
+
+  const displayToast = (message, duration, background, color, fontWeight) => {
+    setToastMessage(message);
+    setToastDuration(duration);
+    setToastBackground(background);
+    setToastColor(color);
+    setToastFontWeight(fontWeight);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, duration);
+  };
+
   const readOnly = useSelector((state) => state.csns.readOnly);
   const requestPhases = useSelector((state) => state.csns.requestPhases);
   const rowOptions = useSelector((state) => state.csns.rowOptions);
@@ -160,6 +181,16 @@ export default function ViewRequest() {
       .join("-");
 
     callRetrieve();
+
+    const futureDate = dayjs(date).isAfter(
+      dayjs(currentDate, "DD-MM-YYYY"),
+      "day"
+    );
+
+    if (futureDate) {
+      displayToast("Invalid Query Date", 2000, "red", "white", 500);
+    }
+
     if (formatted_date === "01-01-1970") {
       setFromDate("");
     } else {
@@ -181,6 +212,15 @@ export default function ViewRequest() {
       .split("/")
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
+
+      const futureDate = dayjs(date).isAfter(
+        dayjs(currentDate, "DD-MM-YYYY"),
+        "day"
+      );
+
+      if (futureDate) {
+        displayToast("Invalid Query Date", 2000, "red", "white", 500);
+      }
 
     setToDate(formatted_date);
     // handleCloseFilterMenu();
@@ -235,6 +275,7 @@ export default function ViewRequest() {
             width: "100%",
             paddingLeft: "0.48rem",
             fontSize: "0.72rem",
+            // color:fromDate === "" ? "grey" : "black",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -248,6 +289,9 @@ export default function ViewRequest() {
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
+            },
+            "& fieldset>legend": {
+              fontSize: "0.64rem",
             },
           },
         },
@@ -300,6 +344,7 @@ export default function ViewRequest() {
             width: "100%",
             paddingLeft: "0.48rem",
             fontSize: "0.72rem",
+            // color:toDate === "" ? "grey" : "black",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -313,6 +358,9 @@ export default function ViewRequest() {
             },
             "&.Mui-focused fieldset": {
               border: "1.65px solid rgb(131, 131, 210)",
+            },
+            "& fieldset>legend": {
+              fontSize: "0.64rem",
             },
           },
         },
@@ -374,8 +422,8 @@ export default function ViewRequest() {
 
   const dateRangeFilteredData = queried_data.filter((ticket) => {
     const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
-    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY") : null;
-    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY") : null;
+    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY").subtract(1,'day') : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY").add(1,'day') : null;
 
     if (from) {
       return dayjs(createdDate, "DD-MM-YYYY").isAfter(
@@ -683,11 +731,7 @@ export default function ViewRequest() {
                                   )
                                 }
                                 data-testid="from-date-picker"
-                                value={
-                                  fromDate === ""
-                                    ? null
-                                    : dayjs(fromDate, "DD-MM-YYYY")
-                                }
+                                value={dayjs(fromDate, "DD-MM-YYYY")}
                                 // defaultValue=''
                                 maxDate={maxDate}
                                 defaultValue={null}
@@ -714,11 +758,7 @@ export default function ViewRequest() {
                                     "day"
                                   )
                                 }
-                                value={
-                                  toDate === ""
-                                    ? null
-                                    : dayjs(toDate, "DD-MM-YYYY")
-                                }
+                                value={dayjs(toDate, "DD-MM-YYYY")}
                                 // defaultValue=''
                                 maxDate={maxDate}
                                 defaultValue={null}
@@ -751,7 +791,7 @@ export default function ViewRequest() {
                   </Menu>
                 </Box>
 
-                {requestData.length === 0 ? (
+                {requestData && requestData.length === 0 ? (
                   <Box data-testid="lottie-data" className="no-data-lottie">
                     <Lottie
                       animationData={zeroDataAnimation}
@@ -814,13 +854,18 @@ export default function ViewRequest() {
                             {requestData
                               .slice(topRowIndex, nthRowIndex)
                               .map((request, index) => (
-                                <TableRow key={index} className="table-body-row">
+                                <TableRow
+                                  key={index}
+                                  className="table-body-row"
+                                >
                                   <TableCell
                                     key={index}
                                     className="vr-ticketid"
                                     sx={{
                                       borderBottomLeftRadius:
-                                        nthRowIndex === index + 1 ? "4px" : "0px",
+                                        nthRowIndex === index + 1
+                                          ? "4px"
+                                          : "0px",
                                     }}
                                     align="center"
                                   >
@@ -950,7 +995,9 @@ export default function ViewRequest() {
                                     className="view-table-data-row"
                                     sx={{
                                       borderBottomRightRadius:
-                                        nthRowIndex === index + 1 ? "4px" : "0px",
+                                        nthRowIndex === index + 1
+                                          ? "4px"
+                                          : "0px",
                                     }}
                                   >
                                     <Box className="detail-buttons">
@@ -1005,12 +1052,14 @@ export default function ViewRequest() {
                                           style={{
                                             alignSelf: "center",
                                             backgroundColor:
-                                              request.status === "In-progress" ||
+                                              request.status ===
+                                                "In-progress" ||
                                               request.status === "Failed"
                                                 ? "rgb(236, 236, 236)"
                                                 : "transparent",
                                             color:
-                                              request.status === "In-progress" ||
+                                              request.status ===
+                                                "In-progress" ||
                                               request.status === "Failed"
                                                 ? "rgba(165, 165, 165, 1)"
                                                 : "rgba(96, 96, 96, 1)",
@@ -1018,7 +1067,9 @@ export default function ViewRequest() {
                                               "rgba(161, 161, 161, 1)",
                                           }}
                                           onClick={(e) => {
-                                            if (request.status === "Completed") {
+                                            if (
+                                              request.status === "Completed"
+                                            ) {
                                               setMailDraftModal(true);
                                             }
                                           }}
@@ -1164,6 +1215,16 @@ export default function ViewRequest() {
         setMailDraftModal={setMailDraftModal}
         mailDraftModal={mailDraftModal}
       />
+
+{showToast === true && (
+        <MaterialToast
+          message={toastMessage}
+          duration={toastDuration}
+          backgroundColor={toastBackground}
+          color={toastColor}
+          fontWeight={toastFontWeight}
+        />
+      )}
     </Provider>
   );
 }
