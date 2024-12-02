@@ -56,6 +56,7 @@ import store from "../../Redux/reduxStore";
 import MaterialToast from "../../components/Snackbar";
 
 export default function ViewRequest() {
+  const { readOnly, requestPhases, rowOptions,viewRequestHeaders,viewRequestData } = useSelector((state) => state.csns);
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -75,14 +76,7 @@ export default function ViewRequest() {
       setShowToast(false);
     }, duration);
   };
-
-  const readOnly = useSelector((state) => state.csns.readOnly);
-  const requestPhases = useSelector((state) => state.csns.requestPhases);
-  const rowOptions = useSelector((state) => state.csns.rowOptions);
-  const viewRequestData = useSelector((state) => state.csns.viewRequestData);
-  const viewRequestHeaders = useSelector(
-    (state) => state.csns.viewRequestHeaders
-  );
+  
   const maxDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
 
   const { t } = useTranslation();
@@ -117,12 +111,6 @@ export default function ViewRequest() {
   const viewFilterMenu = Boolean(filterAnchor);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const [checkedStates, setCheckedStates] = useState([
-    { "In-progress": false },
-    { Completed: false },
-    { Failed: false },
-  ]);
 
   const handleViewFilterMenu = (event) => {
     setFilterAnchor(event.currentTarget);
@@ -213,14 +201,14 @@ export default function ViewRequest() {
       .map((part, index, array) => (index < 2 ? array[1 - index] : part))
       .join("-");
 
-      const futureDate = dayjs(date).isAfter(
-        dayjs(currentDate, "DD-MM-YYYY"),
-        "day"
-      );
+    const futureDate = dayjs(date).isAfter(
+      dayjs(currentDate, "DD-MM-YYYY"),
+      "day"
+    );
 
-      if (futureDate) {
-        displayToast("Invalid Query Date", 2000, "red", "white", 500);
-      }
+    if (futureDate) {
+      displayToast("Invalid Query Date", 2000, "red", "white", 500);
+    }
 
     setToDate(formatted_date);
     // handleCloseFilterMenu();
@@ -281,7 +269,7 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 fromDate === ""
-                  ? "1.45px solid rgb(103, 125, 106)"
+                  ? "1px solid rgb(103, 125, 106) !important"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
@@ -350,7 +338,7 @@ export default function ViewRequest() {
             "& fieldset": {
               border:
                 toDate === ""
-                  ? "1.45px solid rgb(103, 125, 106)"
+                  ? "1px solid rgb(103, 125, 106) !important"
                   : "1.85px solid rgb(0, 142, 0)",
             },
             "&:hover fieldset": {
@@ -422,8 +410,9 @@ export default function ViewRequest() {
 
   const dateRangeFilteredData = queried_data.filter((ticket) => {
     const createdDate = dayjs(ticket.createdDate, "DD-MM-YYYY");
-    const from = fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY").subtract(1,'day') : null;
-    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY").add(1,'day') : null;
+    const from =
+      fromDate !== "" ? dayjs(fromDate, "DD-MM-YYYY").subtract(1, "day") : null;
+    const to = toDate !== "" ? dayjs(toDate, "DD-MM-YYYY").add(1, "day") : null;
 
     if (from) {
       return dayjs(createdDate, "DD-MM-YYYY").isAfter(
@@ -556,22 +545,22 @@ export default function ViewRequest() {
               <Loader />
             ) : (
               <>
-                <Box className="view-request-header">
+                <Box className="search-header">
                   <Box
-                    className="request-searchbar"
+                    className="searchbox"
                     sx={{ opacity: retrieving === true ? 0.25 : 1 }}
                   >
-                    <SearchIcon className="request-search-icon" />
+                    <SearchIcon className="search-icon" />
                     <FormControl fullWidth>
                       <Input
-                        disableUnderline={true}
+                        disableUnderline
                         data-testid="searchbar"
                         type="search"
                         disabled={retrieving}
-                        inputMode="text"
+                        inputMode="search"
                         value={searchInput}
                         placeholder={t("searchByTicketRequester")}
-                        className="request-search-input"
+                        className="search-input"
                         onChange={(e) => handleSearchQuery(e)}
                       ></Input>
                     </FormControl>
@@ -579,7 +568,7 @@ export default function ViewRequest() {
 
                   <Button
                     disabled={retrieving}
-                    className="request-filter-section"
+                    className="filter-section"
                     id="filter-menu-container"
                     data-testid="filter-menu-button"
                     onClick={handleViewFilterMenu}
@@ -1216,7 +1205,7 @@ export default function ViewRequest() {
         mailDraftModal={mailDraftModal}
       />
 
-{showToast === true && (
+      {showToast === true && (
         <MaterialToast
           message={toastMessage}
           duration={toastDuration}

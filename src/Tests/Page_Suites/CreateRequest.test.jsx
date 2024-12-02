@@ -518,7 +518,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
 
     screen.debug(searchBar);
 
-    const value = "      AadhaR ";
+    const value = "      Aadhaar ";
 
     fireEvent.change(searchInput, {
       target: {
@@ -526,7 +526,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
       },
     });
 
-    expect(searchInput.value).toBe("aadhar");
+    expect(searchInput.value).toBe("aadhaar");
 
     vi.useRealTimers();
   });
@@ -535,7 +535,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     advanceTimer();
     fillTicketNumberInput();
     fillTicketDescriptionInput();
-    selectParams("Beneficiary details for Bulk IMPS transactions", "Aadhar");
+    selectParams("Beneficiary details for Bulk IMPS transactions", "Aadhaar");
   });
 
   test("Multiple Params Selection Check", () => {
@@ -561,7 +561,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     const menuItems = screen.getAllByRole("option");
 
     const menuItem0 = menuItems.find(
-      (input) => input.getAttribute("data-value") === "Aadhar"
+      (input) => input.getAttribute("data-value") === "Aadhaar"
     );
 
     const menuItem1 = menuItems.find(
@@ -636,20 +636,20 @@ describe("Params Selection Dropdown Functionality Check", () => {
 
     fireEvent.click(checkerBox0);
     expect(checkerBox0).toBeChecked();
-    expect(selectInput.value).toBe("Aadhar");
+    expect(selectInput.value).toBe("Aadhaar");
 
     fireEvent.click(checkerBox1);
 
     expect(checkerBox0).toBeChecked();
     expect(checkerBox1).toBeChecked();
-    expect(selectInput.value).toBe("Aadhar,Account number");
+    expect(selectInput.value).toBe("Aadhaar,Account number");
 
     fireEvent.click(checkerBox2);
 
     expect(checkerBox0).toBeChecked();
     expect(checkerBox1).toBeChecked();
     expect(checkerBox2).toBeChecked();
-    expect(selectInput.value).toBe("Aadhar,Account number,CRN");
+    expect(selectInput.value).toBe("Aadhaar,Account number,CRN");
 
     fireEvent.click(checkerBox3);
 
@@ -657,7 +657,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox1).toBeChecked();
     expect(checkerBox2).toBeChecked();
     expect(checkerBox3).toBeChecked();
-    expect(selectInput.value).toBe("Aadhar,Account number,CRN,Credit Card");
+    expect(selectInput.value).toBe("Aadhaar,Account number,CRN,Credit Card");
 
     fireEvent.click(checkerBox4);
 
@@ -667,7 +667,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox3).toBeChecked();
     expect(checkerBox4).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card"
+      "Aadhaar,Account number,CRN,Credit Card,Debit Card"
     );
 
     fireEvent.click(checkerBox5);
@@ -679,7 +679,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox4).toBeChecked();
     expect(checkerBox5).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID"
+      "Aadhaar,Account number,CRN,Credit Card,Debit Card,Email ID"
     );
 
     fireEvent.click(checkerBox6);
@@ -692,7 +692,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox5).toBeChecked();
     expect(checkerBox6).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No"
+      "Aadhaar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No"
     );
 
     fireEvent.click(checkerBox7);
@@ -706,7 +706,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox6).toBeChecked();
     expect(checkerBox7).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN"
+      "Aadhaar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN"
     );
 
     fireEvent.click(checkerBox8);
@@ -721,7 +721,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN,RRN"
+      "Aadhaar,Account number,CRN,Credit Card,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox3);
@@ -736,7 +736,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,PAN,RRN"
+      "Aadhaar,Account number,CRN,Debit Card,Email ID,Mobile No,PAN,RRN"
     );
 
     fireEvent.click(checkerBox7);
@@ -751,7 +751,7 @@ describe("Params Selection Dropdown Functionality Check", () => {
     expect(checkerBox7).not.toBeChecked();
     expect(checkerBox8).toBeChecked();
     expect(selectInput.value).toBe(
-      "Aadhar,Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
+      "Aadhaar,Account number,CRN,Debit Card,Email ID,Mobile No,RRN"
     );
 
     fireEvent.click(checkerBox0);
@@ -943,7 +943,7 @@ describe("Triple Detail Render and Change for IP Logs", () => {
 
     fillTicketNumberInput();
     fillTicketDescriptionInput();
-    selectParams("IP Logs", "Aadhar");
+    selectParams("IP Logs", "Aadhaar");
 
     const detailSet0 = screen.getByTestId("detail-fieldset-0");
     const detailSet1 = screen.getByTestId("detail-fieldset-1");
@@ -1093,7 +1093,7 @@ describe("Triple Detail Render and Change for IP Logs", () => {
 
     fillTicketNumberInput();
     fillTicketDescriptionInput();
-    selectParams("IP Logs", "Aadhar");
+    selectParams("IP Logs", "Aadhaar");
 
     const ccDropdown0 = screen.getByTestId(`cc-dropdown-0`);
     const ccDropdown1 = screen.getByTestId(`cc-dropdown-1`);
@@ -1147,7 +1147,7 @@ test("Mobile Number Input Functionality Check for IP Logs", () => {
 
   fillTicketNumberInput();
   fillTicketDescriptionInput();
-  selectParams("IP Logs", "Aadhar");
+  selectParams("IP Logs", "Aadhaar");
 
   const detailNameField = screen.getByTestId("search-type-input-2");
 

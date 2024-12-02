@@ -4,6 +4,7 @@ import {
   availableReportTypes,
   countryCodeData,
   currentDate,
+  fundTransfers,
   readOnly,
   requestPhases,
   requiredReportsData,
@@ -12,6 +13,10 @@ import {
   viewDetailsData,
   viewRequestData,
   viewRequestHeaders,
+  userDataHeaders,
+  userRoles,
+  userMgtData,
+  userStatusOptions
 } from "./reducedData";
 
 let initialData = {
@@ -27,12 +32,17 @@ let initialData = {
   viewRequestData: viewRequestData,
   viewDetailHeaders: viewDetailHeaders,
   viewDetailsData: viewDetailsData,
+  fundTransfers : fundTransfers,
+  userDataHeaders:userDataHeaders,
+  userRoles:userRoles,
+  userMgtData:userMgtData,
+  userStatusOptions:userStatusOptions
 };
 
 let updatedData;
 
 const handleReducerDispatch = (state, action, parameter) => {
-  if (action.payload !== null || action.payload !== undefined) {
+  if (action.payload) {
     const updater = action;
     parameter = [...parameter, updater.payload];
     //console.log('payload',updater);
@@ -83,6 +93,22 @@ export const slicedDataConfig = createSlice({
     setViewDetailsData: (state, action) => {
       handleReducerDispatch(state, action, state.viewDetailsData);
     },
+    setFundTransfers: (state, action) => {
+      handleReducerDispatch(state, action, state.fundTransfers);
+    },
+   
+    setUserDataHeaders: (state, action) => {
+      handleReducerDispatch(state, action, state.userDataHeaders);
+    },
+    setUserRoles: (state, action) => {
+      handleReducerDispatch(state, action, state.userRoles);
+    },
+    setUserMgtData: (state, action) => {
+      handleReducerDispatch(state, action, state.userMgtData);
+    },
+    setUserStatusOptions: (state, action) => {
+      handleReducerDispatch(state, action, state.userStatusOptions);
+    },
   },
 });
 
@@ -99,6 +125,11 @@ export const {
   setViewRequestData,
   setViewDetailHeaders,
   setViewDetailsData,
+  setFundTransfers,
+  setUserDataHeaders,
+  setUserRoles,
+  setUserMgtData,
+  setUserStatusOptions
 } = slicedDataConfig.actions;
 
 const dataReducer = slicedDataConfig.reducer;

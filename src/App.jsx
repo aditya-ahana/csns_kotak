@@ -22,6 +22,7 @@ import { debounce } from "@mui/material";
 
 import "react-toastify/dist/ReactToastify.css";
 import UnifiedDesktop from "./pages/UnifiedDesktop";
+import UserManagement from "./pages/UserManagement/UserManagement";
 
 export default function App() {
   const handleResize = debounce(() => {}, 200);
@@ -46,6 +47,7 @@ export default function App() {
           <Route element={<Dashboard />} path="/" />
           <Route element={<CreateRequest />} path="/CreateRequest" />
           <Route element={<ViewRequest />} path="/ViewRequest" />
+          <Route element={<UserManagement />} path="/UserManagement" />
           <Route
             element={<ViewRequestDetails />}
             path="/ViewRequest/ViewRequestDetails"

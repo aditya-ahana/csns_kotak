@@ -53,10 +53,50 @@ import Skeleton from "@mui/material/Skeleton";
 import ErrorIcon from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 import { ticketTypeData } from "../../Redux/reducedData";
+import { CheckBoxOutlineBlank } from "@mui/icons-material";
+import { Axios } from "axios";
+import CustomModal from "../../components/Exports/CustomModal";
 
 // document.documentElement.style.setProperty('--rmsc-h', '48px');
 
 export default function CreateRequest() {
+  const [showToast, setShowToast] = useState(false);
+  const [ticketType, setTicketType] = useState("");
+  const [searchedReports, setSearchedReports] = useState([]);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastDuration, setToastDuration] = useState(0);
+  const [toastBackground, setToastBackground] = useState("brown");
+  const [toastColor, setToastColor] = useState("");
+  const [toastFontWeight, setToastFontWeight] = useState();
+  const [payloadConfigured, setPayloadConfigured] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [selected, setSelected] = useState(true);
+  const [ticketNumber, setTicketNumber] = useState("");
+  const [ticketDescription, setTicketDescription] = useState("");
+  const [descriptionFocused, setDescriptionFocused] = useState(false);
+  const [Creator, setCreator] = useState("");
+  const [selectedReports, setSelectedReports] = useState([]);
+  const [viewPreview, setViewPreview] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [inwardSelected, setInwardSelected] = useState(false);
+  const [outwardSelected, setOutwardSelected] = useState(false);
+  const [reportsState, setReportsState] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [reportDetails, setReportDetails] = useState([]);
+  const [selectedFunds, setSelectedFunds] = useState([]);
+
+  useEffect(() => {
+    if (selectedFunds.includes("Inward")) {
+      setInwardSelected(true);
+    }
+
+    if (selectedFunds.includes("Outward")) {
+      setOutwardSelected(true);
+    }
+  }, [selectedFunds]);
+
+  const inoutSelected = inwardSelected == true && outwardSelected == true;
+
   const ticketDescTypes = [...ticketTypeData, "Other"];
   const readOnly = useSelector((state) => state.csns.readOnly);
   const availableReportTypes = useSelector(
@@ -77,17 +117,7 @@ export default function CreateRequest() {
     array.name.localeCompare(sortedArray.name)
   );
 
-  const [showToast, setShowToast] = useState(false);
-  const [ticketType, setTicketType] = useState("");
-  const [searchedReports, setSearchedReports] = useState([]);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastDuration, setToastDuration] = useState(0);
-  const [toastBackground, setToastBackground] = useState("brown");
-  const [toastColor, setToastColor] = useState("");
-  const [toastFontWeight, setToastFontWeight] = useState();
-  const [payloadConfigured, setPayloadConfigured] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [selected, setSelected] = useState(true);
+  const fundTransfers = useSelector((state) => state.csns.fundTransfers);
 
   const displayToast = (message, duration, background, color, fontWeight) => {
     setToastMessage(message);
@@ -102,7 +132,6 @@ export default function CreateRequest() {
   };
 
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
@@ -112,26 +141,16 @@ export default function CreateRequest() {
 
   const route_to = useNavigate();
 
-  const [ticketNumber, setTicketNumber] = useState("");
-  const [ticketDescription, setTicketDescription] = useState("");
-  const [descriptionFocused, setDescriptionFocused] = useState(false);
-  const [Creator, setCreator] = useState("");
-
-  const [selectedReports, setSelectedReports] = useState([]);
-  const [viewPreview, setViewPreview] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
   // const new_date = new Date();
   // new_date.setDate(new_date.getDate()).toLocaleString("en-Us");
 
   const maxDate = dayjs(dayjs().format("DD-MM-YYYY"), "DD-MM-YYYY");
   const currentDate = useSelector((state) => state.csns.currentDate);
 
-  ////////console.log("Current Date", currentDate);
-
   const primaryTextProps = {
     fontSize: "0.825rem",
   };
+  
   const previewProps = {
     searchType: {
       fontWeight: 500,
@@ -317,9 +336,9 @@ export default function CreateRequest() {
           maxHeight: "21.75rem",
           marginTop: "-0.5rem",
           boxShadow: "1px 2px 12px 0px rgba(0, 0, 0, 0.1)",
-          alignItems : "center",
-          justifyContent : "center",
-          padding : "0.15rem 1.25rem 0.75rem 1.25rem"
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "0.15rem 1.25rem 0.75rem 1.25rem",
         },
       },
     },
@@ -415,11 +434,12 @@ export default function CreateRequest() {
             //  width : '100%',
             width: "100%",
             fontSize: "0.85rem",
-            // color:"grey",
+
+            // color:"rgb(160, 160, 160) !important",
           },
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              border: "1.45px solid rgb(103, 125, 106)",
+              border: "1px solid rgb(103, 125, 106) !important",
             },
             "&:hover fieldset": {
               border: "1.5px solid rgb(131, 131, 210)",
@@ -505,8 +525,6 @@ export default function CreateRequest() {
     },
   };
 
-  const [reportsState, setReportsState] = useState([]);
-
   useEffect(() => {
     setReportsState((prevReportsState) => {
       const updatedReportState = selectedReports.map((report) => {
@@ -514,7 +532,49 @@ export default function CreateRequest() {
           (existing) => existing.selectedReport === report
         );
 
-        if (
+        if (report === "PG Transaction") {
+          return (
+            existingReport || {
+              selectedReport: report,
+              selectedParams: ["bankRefNumber"],
+              accountNumberDetails: [],
+              PANdetails: [],
+              CRNdetails: [],
+              RRNdetails: [],
+              bankRefNumberDetails: [
+                {
+                  searchType: "bankRefNumber",
+                  mainAccountSearchType: "bankRefNumber",
+                  accountNo: "",
+                  aadhar: "",
+                  crnNo: "",
+                  bankRefNumber: "",
+                  fromDate: "",
+                  toDate: "",
+                  rrn: "",
+                  panNo: "",
+                  debitCard: "",
+                  creditCardNo: "",
+                  email: "",
+                  amount: "",
+                  phoneNo: "",
+                  mobileNo: "",
+                  req_status: "In-progress",
+                  type: "",
+                  documentType: "excel",
+                  filePath: "",
+                },
+              ],
+              aadharDetails: [],
+              emailDetails: [],
+              creditCardDetails: [],
+              debitCardDetails: [],
+              mobileNoDetails: [],
+              viewState: "Expanded",
+              searchQuery: "",
+            }
+          );
+        } else if (
           report === "Beneficiary details for Single IMPS transactions" ||
           report === "Beneficiary details for Single UPI transactions"
         ) {
@@ -525,6 +585,7 @@ export default function CreateRequest() {
               accountNumberDetails: [],
               PANdetails: [],
               CRNdetails: [],
+              bankRefNumberDetails:[],
               RRNdetails: [
                 {
                   searchType: "RRN",
@@ -540,6 +601,7 @@ export default function CreateRequest() {
                   creditCardNo: "",
                   email: "",
                   amount: "",
+                  phoneNo: "",
                   mobileNo: "",
                   req_status: "In-progress",
                   type: "",
@@ -563,6 +625,7 @@ export default function CreateRequest() {
               selectedParams: [],
               accountNumberDetails: [],
               PANdetails: [],
+              bankRefNumberDetails:[],
               CRNdetails: [],
               RRNdetails: [],
               aadharDetails: [],
@@ -654,9 +717,8 @@ export default function CreateRequest() {
     const {
       target: { value },
     } = event;
-
     ////console.log("event",event)
-    // ////console.log("Value first length",value[0] );
+    console.log("Value first length", value[0]);
     if (event.target.value.length > 0 && event.target.value[0] !== undefined) {
       setSelectedReports(typeof value === "string" ? value.split(",") : value);
     } else {
@@ -674,6 +736,79 @@ export default function CreateRequest() {
   //     document.querySelector('#selected-reports-section').scrollIntoView();
   //   }
   // }, [selectedReports.length]);
+
+  function handleDetail(reportName, detailName, subReq) {
+    if (reportName === "Fund Transfer" || reportName === "IP Logs") {
+      return {
+        searchType: detailName,
+        mainAccountSearchType: detailName,
+        accountNo: "",
+        aadhar: "",
+        crnNo: "",
+        fromDate: "",
+        toDate: "",
+        rrn: "",
+        panNo: "",
+        debitCard: "",
+        creditCardNo: "",
+        email: "",
+        amount: "",
+        countryCode: "",
+        phoneNo: "",
+        mobileNo: reportName === "IP Logs" ? "91" : "",
+        req_status: "In-progress",
+        type: "",
+        documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
+        filePath: "",
+        subRequest: subReq,
+      };
+    } else if (reportName === "PG Transaction") {
+      return {
+        searchType: detailName,
+        mainAccountSearchType: detailName,
+        accountNo: "",
+        aadhar: "",
+        crnNo: "",
+        fromDate: "",
+        toDate: "",
+        rrn: "",
+        bankRefNumber: "",
+        panNo: "",
+        debitCard: "",
+        creditCardNo: "",
+        email: "",
+        amount: "",
+        phoneNo: "",
+        mobileNo: "",
+        req_status: "In-progress",
+        type: "",
+        documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
+        filePath: "",
+      };
+    } else {
+      return {
+        searchType: detailName,
+        mainAccountSearchType: detailName,
+        accountNo: "",
+        aadhar: "",
+        crnNo: "",
+        fromDate: "",
+        toDate: "",
+        rrn: "",
+        panNo: "",
+        debitCard: "",
+        creditCardNo: "",
+        email: "",
+        amount: "",
+        phoneNo: "",
+        mobileNo: "",
+        req_status: "In-progress",
+        type: "",
+        documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
+        filePath: "",
+      };
+    }
+  };
 
   const handleParamSelection = (event, reportIndex, reportName) => {
     setReportsState((prevState) => {
@@ -699,906 +834,249 @@ export default function CreateRequest() {
       }
 
       if (
-        // value.some((param) => param === "Account number")
         value.includes("Account number") &&
         report.accountNumberDetails.length === 0
       ) {
-        if (reportName === "IP Logs") {
-          report.accountNumberDetails.push({
-            searchType: "Account number",
-            mainAccountSearchType: "Account number",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.accountNumberDetails.push({
-            searchType: "Account number",
-            mainAccountSearchType: "Account number",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.accountNumberDetails.push({
-            searchType: "Account number",
-            mainAccountSearchType: "Account number",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.accountNumberDetails.push(
+              handleDetail(reportName, "Account number", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.accountNumberDetails.push(
+              handleDetail(reportName, "Account number", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.accountNumberDetails.push(
+            handleDetail(reportName, "Account number", "IPLastLogin")
+          );
+          report.accountNumberDetails.push(
+            handleDetail(reportName, "Account number", "IPLogTxn")
+          );
+          report.accountNumberDetails.push(
+            handleDetail(reportName, "Account number", "IPLogUpi")
+          );
         } else {
-          report.accountNumberDetails.push({
-            searchType: "Account number",
-            mainAccountSearchType: "Account number",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.accountNumberDetails.push(
+            handleDetail(reportName, "Account number", "")
+          );
         }
       }
-
-      // else {
-      //   report.accountNumberDetails = [];
-      // }
 
       if (value.includes("PAN") && report.PANdetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.PANdetails.push({
-            searchType: "PAN",
-            mainAccountSearchType: "PAN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.PANdetails.push({
-            searchType: "PAN",
-            mainAccountSearchType: "PAN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.PANdetails.push({
-            searchType: "PAN",
-            mainAccountSearchType: "PAN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.PANdetails.push(handleDetail(reportName, "PAN", "Inward"));
+          }
+
+          if (outwardSelected == true) {
+            report.PANdetails.push(handleDetail(reportName, "PAN", "Outward"));
+          }
+        } else if (reportName === "IP Logs") {
+          report.PANdetails.push(
+            handleDetail(reportName, "PAN", "IPLastLogin")
+          );
+          report.PANdetails.push(handleDetail(reportName, "PAN", "IPLogTxn"));
+          report.PANdetails.push(handleDetail(reportName, "PAN", "IPLogUpi"));
         } else {
-          report.PANdetails.push({
-            searchType: "PAN",
-            mainAccountSearchType: "PAN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.PANdetails.push(handleDetail(reportName, "PAN", ""));
         }
       }
-      // else {
-      //   report.PANdetails = [];
-      // }
 
       if (value.includes("CRN") && report.CRNdetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.CRNdetails.push({
-            searchType: "CRN",
-            mainAccountSearchType: "CRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.CRNdetails.push({
-            searchType: "CRN",
-            mainAccountSearchType: "CRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.CRNdetails.push({
-            searchType: "CRN",
-            mainAccountSearchType: "CRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.CRNdetails.push(handleDetail(reportName, "CRN", "Inward"));
+          }
+
+          if (outwardSelected == true) {
+            report.CRNdetails.push(handleDetail(reportName, "CRN", "Outward"));
+          }
+        } else if (reportName === "IP Logs") {
+          report.CRNdetails.push(
+            handleDetail(reportName, "CRN", "IPLastLogin")
+          );
+          report.CRNdetails.push(handleDetail(reportName, "CRN", "IPLogTxn"));
+          report.CRNdetails.push(handleDetail(reportName, "CRN", "IPLogUpi"));
         } else {
-          report.CRNdetails.push({
-            searchType: "CRN",
-            mainAccountSearchType: "CRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.CRNdetails.push(handleDetail(reportName, "CRN", ""));
         }
       }
-      // else {
-      //   report.CRNdetails = [];
-      // }
 
       if (value.includes("RRN") && report.RRNdetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.RRNdetails.push({
-            searchType: "RRN",
-            mainAccountSearchType: "RRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.RRNdetails.push({
-            searchType: "RRN",
-            mainAccountSearchType: "RRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.RRNdetails.push({
-            searchType: "RRN",
-            mainAccountSearchType: "RRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
-        } else {
-          report.RRNdetails.push({
-            searchType: "RRN",
-            mainAccountSearchType: "RRN",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
-        }
-      }
-      // else {
-      //   report.RRNdetails = [];
-      // }
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.RRNdetails.push(handleDetail(reportName, "RRN", "Inward"));
+          }
 
-      if (value.includes("Aadhar") && report.aadharDetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.aadharDetails.push({
-            searchType: "Aadhar",
-            mainAccountSearchType: "Aadhar",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.aadharDetails.push({
-            searchType: "Aadhar",
-            mainAccountSearchType: "Aadhar",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.aadharDetails.push({
-            searchType: "Aadhar",
-            mainAccountSearchType: "Aadhar",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+          if (outwardSelected == true) {
+            report.RRNdetails.push(handleDetail(reportName, "RRN", "Outward"));
+          }
+        } else if (reportName === "IP Logs") {
+          report.RRNdetails.push(
+            handleDetail(reportName, "RRN", "IPLastLogin")
+          );
+          report.RRNdetails.push(handleDetail(reportName, "RRN", "IPLogTxn"));
+          report.RRNdetails.push(handleDetail(reportName, "RRN", "IPLogUpi"));
         } else {
-          report.aadharDetails.push({
-            searchType: "Aadhar",
-            mainAccountSearchType: "Aadhar",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.RRNdetails.push(handleDetail(reportName, "RRN", ""));
         }
       }
-      // else {
-      //   report.aadharDetails = [];
-      // }
+
+      if (value.includes("Aadhaar") && report.aadharDetails.length === 0) {
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.aadharDetails.push(
+              handleDetail(reportName, "Aadhar", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.aadharDetails.push(
+              handleDetail(reportName, "Aadhar", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.aadharDetails.push(
+            handleDetail(reportName, "Aadhar", "IPLastLogin")
+          );
+          report.aadharDetails.push(
+            handleDetail(reportName, "Aadhar", "IPLogTxn")
+          );
+          report.aadharDetails.push(
+            handleDetail(reportName, "Aadhar", "IPLogUpi")
+          );
+        } else {
+          report.aadharDetails.push(handleDetail(reportName, "Aadhar", ""));
+        }
+      }
 
       if (value.includes("Email ID") && report.emailDetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.emailDetails.push({
-            searchType: "Email ID",
-            mainAccountSearchType: "Email ID",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.emailDetails.push({
-            searchType: "Email ID",
-            mainAccountSearchType: "Email ID",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.emailDetails.push({
-            searchType: "Email ID",
-            mainAccountSearchType: "Email ID",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.emailDetails.push(
+              handleDetail(reportName, "Email ID", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.emailDetails.push(
+              handleDetail(reportName, "Email ID", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.emailDetails.push(
+            handleDetail(reportName, "Email ID", "IPLastLogin")
+          );
+          report.emailDetails.push(
+            handleDetail(reportName, "Email ID", "IPLogTxn")
+          );
+          report.emailDetails.push(
+            handleDetail(reportName, "Email ID", "IPLogUpi")
+          );
         } else {
-          report.emailDetails.push({
-            searchType: "Email ID",
-            mainAccountSearchType: "Email ID",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.emailDetails.push(handleDetail(reportName, "Email ID", ""));
         }
       }
-      // else {
-      //   report.emailDetails = [];
-      // }
 
       if (
         value.includes("Credit Card") &&
         report.creditCardDetails.length === 0
       ) {
-        if (reportName === "IP Logs") {
-          report.creditCardDetails.push({
-            searchType: "Credit Card",
-            mainAccountSearchType: "Credit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.creditCardDetails.push({
-            searchType: "Credit Card",
-            mainAccountSearchType: "Credit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.creditCardDetails.push({
-            searchType: "Credit Card",
-            mainAccountSearchType: "Credit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.creditCardDetails.push(
+              handleDetail(reportName, "Credit Card", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.creditCardDetails.push(
+              handleDetail(reportName, "Credit Card", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.creditCardDetails.push(
+            handleDetail(reportName, "Credit Card", "IPLastLogin")
+          );
+          report.creditCardDetails.push(
+            handleDetail(reportName, "Credit Card", "IPLogTxn")
+          );
+          report.creditCardDetails.push(
+            handleDetail(reportName, "Credit Card", "IPLogUpi")
+          );
         } else {
-          report.creditCardDetails.push({
-            searchType: "Credit Card",
-            mainAccountSearchType: "Credit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.creditCardDetails.push(
+            handleDetail(reportName, "Credit Card", "")
+          );
         }
       }
-      // else {
-      //   report.creditCardDetails = [];
-      // }
 
       if (
         value.includes("Debit Card") &&
         report.debitCardDetails.length === 0
       ) {
-        if (reportName === "IP Logs") {
-          report.debitCardDetails.push({
-            searchType: "Debit Card",
-            mainAccountSearchType: "Debit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.debitCardDetails.push({
-            searchType: "Debit Card",
-            mainAccountSearchType: "Debit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.debitCardDetails.push({
-            searchType: "Debit Card",
-            mainAccountSearchType: "Debit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.debitCardDetails.push(
+              handleDetail(reportName, "Debit Card", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.debitCardDetails.push(
+              handleDetail(reportName, "Debit Card", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.debitCardDetails.push(
+            handleDetail(reportName, "Debit Card", "IPLastLogin")
+          );
+          report.debitCardDetails.push(
+            handleDetail(reportName, "Debit Card", "IPLogTxn")
+          );
+          report.debitCardDetails.push(
+            handleDetail(reportName, "Debit Card", "IPLogUpi")
+          );
         } else {
-          report.debitCardDetails.push({
-            searchType: "Debit Card",
-            mainAccountSearchType: "Debit Card",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.debitCardDetails.push(
+            handleDetail(reportName, "Debit Card", "")
+          );
         }
       }
-      // else {
-      //   report.debitCardDetails = [];
-      // }
 
       if (value.includes("Mobile No") && report.mobileNoDetails.length === 0) {
-        if (reportName === "IP Logs") {
-          report.mobileNoDetails.push({
-            searchType: "Mobile No",
-            mainAccountSearchType: "Mobile No",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLastLogin",
-          });
-          report.mobileNoDetails.push({
-            searchType: "Mobile No",
-            mainAccountSearchType: "Mobile No",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogTxn",
-          });
-          report.mobileNoDetails.push({
-            searchType: "Mobile No",
-            mainAccountSearchType: "Mobile No",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            countryCode: "91",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-            subRequest: "IPLogUpi",
-          });
+        if (reportName === "Fund Transfer") {
+          if (inwardSelected == true) {
+            report.mobileNoDetails.push(
+              handleDetail(reportName, "Mobile No", "Inward")
+            );
+          }
+
+          if (outwardSelected == true) {
+            report.mobileNoDetails.push(
+              handleDetail(reportName, "Mobile No", "Outward")
+            );
+          }
+        } else if (reportName === "IP Logs") {
+          report.mobileNoDetails.push(
+            handleDetail(reportName, "Mobile No", "IPLastLogin")
+          );
+          report.mobileNoDetails.push(
+            handleDetail(reportName, "Mobile No", "IPLogTxn")
+          );
+          report.mobileNoDetails.push(
+            handleDetail(reportName, "Mobile No", "IPLogUpi")
+          );
         } else {
-          report.mobileNoDetails.push({
-            searchType: "Mobile No",
-            mainAccountSearchType: "Mobile No",
-            accountNo: "",
-            aadhar: "",
-            crnNo: "",
-            fromDate: "",
-            toDate: "",
-            rrn: "",
-            panNo: "",
-            debitCard: "",
-            creditCardNo: "",
-            email: "",
-            amount: "",
-            mobileNo: "",
-            req_status: "In-progress",
-            type: "",
-            documentType:
-              reportName === "Statement in PDF/Excel" ? "" : "excel",
-            filePath: "",
-          });
+          report.mobileNoDetails.push(
+            handleDetail(reportName, "Mobile No", "")
+          );
         }
       }
-      // else {
-      //   report.mobileNoDetails = [];
-      // }
 
       if (!value.includes("Account number")) {
         report.accountNumberDetails = [];
@@ -1616,7 +1094,7 @@ export default function CreateRequest() {
         report.PANdetails = [];
       }
 
-      if (!value.includes("Aadhar")) {
+      if (!value.includes("Aadhaar")) {
         report.aadharDetails = [];
       }
 
@@ -1660,98 +1138,24 @@ export default function CreateRequest() {
     //////////console.log("for detail", reportIndex, detailName);
     setReportsState((prevState) => {
       const newState = [...prevState];
-      const report = newState[reportIndex];
+      const report = newState[reportIndex][detailName];
 
-      if (reportName === "IP Logs") {
-        newState[reportIndex][detailName].push({
-          searchType: searchType,
-          mainAccountSearchType: searchType,
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          countryCode: "91",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: "",
-          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-          subRequest: "IPLastLogin",
-        });
+      if (reportName === "Fund Transfer") {
+        if (inwardSelected == true) {
+          report.push(handleDetail(reportName, searchType, "Inward"));
+        }
 
-        newState[reportIndex][detailName].push({
-          searchType: searchType,
-          mainAccountSearchType: searchType,
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          countryCode: "91",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: "",
-          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-          subRequest: "IPLogTxn",
-        });
+        if (outwardSelected == true) {
+          report.push(handleDetail(reportName, searchType, "Outward"));
+        }
+      } else if (reportName === "IP Logs") {
+        report.push(handleDetail(reportName, searchType, "IPLastLogin"));
 
-        newState[reportIndex][detailName].push({
-          searchType: searchType,
-          mainAccountSearchType: searchType,
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          countryCode: "91",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: "",
-          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-          subRequest: "IPLogUpi",
-        });
+        report.push(handleDetail(reportName, searchType, "IPLogTxn"));
+
+        report.push(handleDetail(reportName, searchType, "IPLogUpi"));
       } else {
-        newState[reportIndex][detailName].push({
-          searchType: searchType,
-          mainAccountSearchType: searchType,
-          accountNo: "",
-          aadhar: "",
-          crnNo: "",
-          fromDate: "",
-          toDate: "",
-          rrn: "",
-          panNo: "",
-          debitCard: "",
-          creditCardNo: "",
-          email: "",
-          amount: "",
-          mobileNo: "",
-          req_status: "In-progress",
-          type: "",
-          documentType: reportName === "Statement in PDF/Excel" ? "" : "excel",
-          filePath: "",
-        });
+        report.push(handleDetail(reportName, searchType, ""));
       }
 
       // document.querySelector("#selected-reports-section").scrollIntoView();
@@ -1769,78 +1173,102 @@ export default function CreateRequest() {
   ) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
+      const report = newState[reportIndex][detailName];
+
+      if (detailName === "bankRefNumberDetails") {
+        report[detailIndex].bankRefNumber = value;
+      }
 
       if (detailName === "accountNumberDetails") {
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].accountNo = value;
-          newState[reportIndex][detailName][detailIndex - 2].accountNo = value;
+        report[detailIndex].accountNo = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].accountNo = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].accountNo = value;
+          report[detailIndex - 2].accountNo = value;
         }
-        newState[reportIndex][detailName][detailIndex].accountNo = value;
       }
 
       if (detailName === "PANdetails") {
-        newState[reportIndex][detailName][detailIndex].panNo = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].panNo = value;
-          newState[reportIndex][detailName][detailIndex - 2].panNo = value;
+        report[detailIndex].panNo = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].panNo = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].panNo = value;
+          report[detailIndex - 2].panNo = value;
         }
       }
 
       if (detailName === "CRNdetails") {
-        newState[reportIndex][detailName][detailIndex].crnNo = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].crnNo = value;
-          newState[reportIndex][detailName][detailIndex - 2].crnNo = value;
+        report[detailIndex].crnNo = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].crnNo = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].crnNo = value;
+          report[detailIndex - 2].crnNo = value;
         }
       }
 
       if (detailName === "RRNdetails") {
-        newState[reportIndex][detailName][detailIndex].rrn = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].rrn = value;
-          newState[reportIndex][detailName][detailIndex - 2].rrn = value;
+        report[detailIndex].rrn = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].rrn = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].rrn = value;
+          report[detailIndex - 2].rrn = value;
         }
       }
 
       if (detailName === "aadharDetails") {
-        newState[reportIndex][detailName][detailIndex].aadhar = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].aadhar = value;
-          newState[reportIndex][detailName][detailIndex - 2].aadhar = value;
+        report[detailIndex].aadhar = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].aadhar = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].aadhar = value;
+          report[detailIndex - 2].aadhar = value;
         }
       }
 
       if (detailName === "emailDetails") {
-        newState[reportIndex][detailName][detailIndex].email = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].email = value;
-          newState[reportIndex][detailName][detailIndex - 2].email = value;
+        report[detailIndex].email = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].email = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].email = value;
+          report[detailIndex - 2].email = value;
         }
       }
 
       if (detailName === "creditCardDetails") {
-        newState[reportIndex][detailName][detailIndex].creditCardNo = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].creditCardNo =
-            value;
-          newState[reportIndex][detailName][detailIndex - 2].creditCardNo =
-            value;
+        report[detailIndex].creditCardNo = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].creditCardNo = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].creditCardNo = value;
+          report[detailIndex - 2].creditCardNo = value;
         }
       }
 
       if (detailName === "debitCardDetails") {
-        newState[reportIndex][detailName][detailIndex].debitCard = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].debitCard = value;
-          newState[reportIndex][detailName][detailIndex - 2].debitCard = value;
+        report[detailIndex].debitCard = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex - 1].debitCard = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex - 1].debitCard = value;
+          report[detailIndex - 2].debitCard = value;
         }
       }
 
       if (detailName === "mobileNoDetails") {
-        newState[reportIndex][detailName][detailIndex].mobileNo = value;
-        if (reportName === "IP Logs") {
-          newState[reportIndex][detailName][detailIndex - 1].mobileNo = value;
-          newState[reportIndex][detailName][detailIndex - 2].mobileNo = value;
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          report[detailIndex].mobileNo = value;
+          report[detailIndex - 1].mobileNo = value;
+        } else if (reportName === "IP Logs") {
+          report[detailIndex].phoneNo = value;
+          report[detailIndex - 1].phoneNo = value;
+          report[detailIndex - 2].phoneNo = value;
+        } else {
+          report[detailIndex].mobileNo = value;
         }
       }
       // detailName === "creditCardDetails" ||
@@ -1859,89 +1287,58 @@ export default function CreateRequest() {
       const newState = [...prevState];
       const report = newState[reportIndex][detail];
 
-      const newMobileNum0 = report[detailIndex].mobileNo.replace(
-        report[detailIndex].countryCode,
-        ""
-      );
-      const newMobileNum1 = report[detailIndex].mobileNo.replace(
-        report[detailIndex - 1].countryCode,
-        ""
-      );
-      const newMobileNum2 = report[detailIndex].mobileNo.replace(
-        report[detailIndex - 2].countryCode,
-        ""
-      );
-
       report[detailIndex].countryCode = value;
       report[detailIndex - 1].countryCode = value;
       report[detailIndex - 2].countryCode = value;
 
       // if (report[detailIndex].mobileNo.length >= 10) {
-      report[detailIndex].mobileNo = value + newMobileNum0;
-      report[detailIndex - 1].mobileNo = value + newMobileNum1;
-      report[detailIndex - 2].mobileNo = value + newMobileNum2;
-      // }
+      // report[detailIndex].mobileNo = value + newMobileNum0;
+      // report[detailIndex - 1].mobileNo = value + newMobileNum1;
+      // report[detailIndex - 2].mobileNo = value + newMobileNum2;
+
       return newState;
     });
   };
 
-  const handleMobileNoValue = (value, reportIndex, detailIndex, detail) => {
+  const handleMobileNoValue = (
+    value,
+    reportIndex,
+    detailIndex,
+    detail,
+    reportName
+  ) => {
     setReportsState((prevState) => {
       const newState = [...prevState];
       const report = newState[reportIndex][detail];
 
-      report[detailIndex].mobileNo = value;
-      report[detailIndex - 1].mobileNo = value;
-      report[detailIndex - 2].mobileNo = value;
+      if (reportName === "IP Logs") {
+        report[detailIndex].phoneNo = value;
+        report[detailIndex - 1].phoneNo = value;
+        report[detailIndex - 2].phoneNo = value;
+      } else {
+        report[detailIndex].mobileNo = value;
+      }
 
-      // if (value.length >= 10) {
-      report[detailIndex].mobileNo =
-        report[detailIndex].countryCode +
-        value.replace(report[detailIndex].countryCode, "");
-      report[detailIndex - 1].mobileNo =
-        report[detailIndex - 1].countryCode +
-        value.replace(report[detailIndex - 1].countryCode, "");
-      report[detailIndex - 2].mobileNo =
-        report[detailIndex - 2].countryCode +
-        value.replace(report[detailIndex - 2].countryCode, "");
-      // }
       return newState;
     });
   };
 
-  const handleNewMobileNo = (reportIndex, detailIndex, detail) => {
-    console.log("New params", reportIndex, detailIndex, detail);
+  function updateMobileNo(reportIndex, detailIndex, detail) {
+    console.log("Team Time Up");
     setReportsState((prevState) => {
       const newState = [...prevState];
       const report = newState[reportIndex][detail];
 
-      // if (value.length >= 10) {
       report[detailIndex].mobileNo =
-        report[detailIndex].countryCode + report[detailIndex].mobileNo;
+        report[detailIndex].countryCode + report[detailIndex].phoneNo;
       report[detailIndex - 1].mobileNo =
-        report[detailIndex - 1].countryCode + report[detailIndex].mobileNo;
+        report[detailIndex - 1].countryCode + report[detailIndex - 1].phoneNo;
       report[detailIndex - 2].mobileNo =
-        report[detailIndex - 2].countryCode + report[detailIndex].mobileNo;
-      // }
+        report[detailIndex - 2].countryCode + report[detailIndex - 2].phoneNo;
+
       return newState;
     });
-  };
-
-  // const completeMobileNo = (value, reportIndex, detailIndex, detail) => {
-  //   setReportsState((prevState) => {
-  //     const newState = [...prevState];
-  //     const report = newState[reportIndex][detail];
-
-  //     report[detailIndex].mobileNo =
-  //       report[detailIndex].countryCode + report[detailIndex].mobileNo;
-  //     report[detailIndex - 1].mobileNo =
-  //       report[detailIndex - 1].countryCode + report[detailIndex - 1].mobileNo;
-  //     report[detailIndex - 2].mobileNo =
-  //       report[detailIndex - 2].countryCode + report[detailIndex - 2].mobileNo;
-
-  //     return newState;
-  //   });
-  // };
+  }
 
   const handleAmountValue = (value, reportIndex, detailIndex, detail) => {
     setReportsState((prevState) => {
@@ -1958,6 +1355,15 @@ export default function CreateRequest() {
       newState[reportIndex][detail][detailIndex].documentType = value;
       return newState;
     });
+  };
+
+  const handleFundSelection = (event, fund) => {
+    // setChecked(event.target.checked);
+    if (event.target.checked) {
+      setSelectedFunds((selected) => [...selected, fund]);
+    } else {
+      setSelectedFunds((selected) => selected.filter((f) => f !== fund));
+    }
   };
 
   const disableInvalidDates = (day, to) => {
@@ -2003,14 +1409,19 @@ export default function CreateRequest() {
         console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].fromDate = "";
         ////console.log("Clear Date");
-        if (reportName === "IP Logs") {
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          newState[reportIndex][detail][detailIndex - 1].fromDate = "";
+        } else if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate = "";
           newState[reportIndex][detail][detailIndex - 2].fromDate = "";
         }
       } else {
         ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].fromDate = formatted_date;
-        if (reportName === "IP Logs") {
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          newState[reportIndex][detail][detailIndex - 1].fromDate =
+            formatted_date;
+        } else if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].fromDate =
             formatted_date;
           newState[reportIndex][detail][detailIndex - 2].fromDate =
@@ -2064,14 +1475,19 @@ export default function CreateRequest() {
         console.log("Clear Date");
         ////console.log("Clear Date");
         newState[reportIndex][detail][detailIndex].toDate = "";
-        if (reportName === "IP Logs") {
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          newState[reportIndex][detail][detailIndex - 1].fromDate = "";
+        } else if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate = "";
           newState[reportIndex][detail][detailIndex - 2].toDate = "";
         }
       } else {
         ////console.log("Set Date");
         newState[reportIndex][detail][detailIndex].toDate = formatted_date;
-        if (reportName === "IP Logs") {
+        if (reportName === "Fund Transfer" && inoutSelected) {
+          newState[reportIndex][detail][detailIndex - 1].toDate =
+            formatted_date;
+        } else if (reportName === "IP Logs") {
           newState[reportIndex][detail][detailIndex - 1].toDate =
             formatted_date;
           newState[reportIndex][detail][detailIndex - 2].toDate =
@@ -2168,7 +1584,9 @@ export default function CreateRequest() {
           detailIndex === 0
             ? reportName ===
                 "Beneficiary details for Single IMPS transactions" ||
-              reportName === "Beneficiary details for Single UPI transactions"
+              reportName ===
+                "Beneficiary details for Single UPI transactions" ||
+              reportName === "PG Transaction"
               ? "0rem"
               : "2rem"
             : "2rem"
@@ -2176,7 +1594,10 @@ export default function CreateRequest() {
         key={detailIndex}
         display={
           (reportName === "IP Logs" && detail.subRequest === "IPLastLogin") ||
-          (reportName === "IP Logs" && detail.subRequest === "IPLogTxn")
+          (reportName === "IP Logs" && detail.subRequest === "IPLogTxn") ||
+          (reportName === "Fund Transfer" &&
+            inoutSelected &&
+            detail.subRequest === "Inward")
             ? "none"
             : "flex"
         }
@@ -2196,83 +1617,93 @@ export default function CreateRequest() {
         >
           <TextField
             // size="medium"
+            autoFocus
             sx={
-              (detail.searchType === "Account number" &&
-                detail.accountNo.length > 0) ||
-              (detail.searchType === "Email ID" && detail.email.length > 0) ||
-              (detail.searchType === "PAN" && detail.panNo.length > 0) ||
-              (detail.searchType === "Credit Card" &&
-                detail.creditCardNo.length > 0) ||
-              (detail.searchType === "Aadhar" && detail.aadhar.length > 0) ||
-              (detail.searchType === "Debit Card" &&
-                detail.debitCard.length > 0) ||
-              (detail.searchType === "Mobile No" &&
-                detail.mobileNo.length > 0) ||
-              (detail.searchType === "RRN" && detail.rrn.length > 0) ||
-              (detail.searchType === "CRN" && detail.crnNo.length > 0)
+              validInputs(detail, reportName) == true
                 ? inputControl.validatedTextfield
                 : inputControl.textfield
             }
             data-testid={`search-type-input-${detailIndex}`}
             //             helperText={
-            //               (detail.searchType === "Account number" &&
-            //                 detail.accountNo.length < 16) ||
-            //               (detail.searchType === "Email ID" && detail.email.length < 12) ||
-            //               (detail.searchType === "PAN" && detail.panNo.length < 10) ||
-            //               (detail.searchType === "Credit Card" &&
-            //                 detail.creditCardNo.length < 16) ||
-            //               (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
-            //               (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
-            //               (detail.searchType === "Mobile No" && detail.mobileNo.length < 10) ||
-            //               (detail.searchType === "RRN" && detail.rrn.length < 12) ||
-            //               (detail.searchType === "CRN" && detail.crnNo.length < 10)
+            //               validInputs(detail, reportName)
             //                 ? warningHelperText(
             //                     `
             //                     ${t("only")}
 
-            //                     ${
-            //                       detail.searchType === "Account number"
-            //                         ? 16
-            //                         : detail.searchType === "Email ID"
-            //                         ? "12-320"
-            //                         : detail.searchType === "PAN"
-            //                         ? 10
-            //                         : detail.searchType === "Credit Card"
-            //                         ? 16
-            //                         : detail.searchType === "Aadhar"
-            //                         ? 12
-            //                         : detail.searchType === "Debit Card"
-            //                         ? 16
-            //                         : detail.searchType === "Mobile No"
-            //                         ? 10
-            //                         : detail.searchType === "RRN"
-            //                         ? 12
-            //                         : detail.searchType === "CRN"
-            //                         ? 10
-            //                         : 0
-            //                     }   ${t("characters")}
+            //                     ${validLengths(detail)} ${t("characters")}
             // `,
             //                     1
             //                   )
             //                 : validatedDetail()
             //             }
             InputLabelProps={
-              (detail.searchType === "Account number" &&
-                detail.accountNo.length < 1) ||
-              (detail.searchType === "Email ID" && detail.email.length < 1) ||
-              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-              (detail.searchType === "Credit Card" &&
-                detail.creditCardNo.length < 1) ||
-              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.searchType === "Debit Card" &&
-                detail.debitCard.length < 1) ||
-              (detail.searchType === "Mobile No" &&
-                detail.mobileNo.length < 1) ||
-              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-              (detail.searchType === "CRN" && detail.crnNo.length < 1)
+              invalidInputs(detail, reportName)
                 ? inputControl.inputLabelProps
                 : inputControl.validatedInputLabelProps
             }
+            required
+            inputProps={{
+              style: {
+                fontSize: "0.88rem",
+                height: "0.48rem",
+              },
+              //   maxLength:
+              //     validLengths(detail)
+            }}
+            className="selected-param-box"
+            value={valueInfo(detail, reportName)}
+            id="paramvalue"
+            placeholder={
+              detail.searchType === "bankRefNumber"
+                ? "Enter Bank Reference no."
+                : detail.searchType === "Aadhar"
+                ? "Enter Aadhaar"
+                : reportName === "IP Logs" && detail.searchType === "Mobile No"
+                ? `${detail.searchType} *`
+                : `Enter ${detail.searchType}`
+            }
+            autoComplete="off"
+            // style={{
+            //   margin: "0rem 0rem 0rem 0rem",
+            //   fontSize: "0.88rem",
+            // }}
+            label={
+              detail.searchType === "bankRefNumber"
+                ? "Bank Reference no."
+                : detail.searchType === "Aadhar"
+                ? "Aadhaar"
+                : reportName === "IP Logs" && detail.searchType === "Mobile No"
+                ? ""
+                : detail.searchType
+            }
+            // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
+            margin="none"
+            onChange={(e) => {
+              if (detail.searchType === "Mobile No") {
+                handleMobileNoValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  reportName
+                );
+                if (reportName === "IP Logs") {
+                  updateMobileNo(reportIndex, detailIndex, detailName);
+                }
+              } else {
+                handleInputValue(
+                  e.target.value,
+                  reportIndex,
+                  detailIndex,
+                  detailName,
+                  reportName,
+                  detailsArray
+                );
+              }
+            }}
+            type="text"
+            inputMode="text"
+            color="primary"
             InputProps={{
               startAdornment: reportName === "IP Logs" &&
                 detail.searchType === "Mobile No" && (
@@ -2281,7 +1712,7 @@ export default function CreateRequest() {
                       htmlFor="cc-selectbox"
                       variant="outlined"
                       className={
-                        detail.mobileNo === ""
+                        detail.phoneNo === ""
                           ? "mobile-label"
                           : "valid-mobile-label"
                       }
@@ -2308,14 +1739,15 @@ export default function CreateRequest() {
                         label="Code"
                         data-testid={`cc-dropdown-${detailIndex}`}
                         displayEmpty
-                        onChange={(e) =>
+                        onChange={(e) => {
                           handleCountryCode(
                             e.target.value,
                             reportIndex,
                             detailIndex,
                             detailName
-                          )
-                        }
+                          );
+                          updateMobileNo(reportIndex, detailIndex, detailName);
+                        }}
                         // sx={
                         //   detail.countryCode === ""
                         //     ? SelectProps.countryProps
@@ -2364,145 +1796,15 @@ export default function CreateRequest() {
                   </>
                 ),
             }}
-            required
-            inputProps={{
-              style: {
-                fontSize: "0.88rem",
-                height: "0.48rem",
-              },
-              //   maxLength:
-              //     detail.searchType === "Account number"
-              //       ? 16
-              //       : detail.searchType === "Email ID"
-              //       ? 320
-              //       : detail.searchType === "PAN"
-              //       ? 10
-              //       : detail.searchType === "Credit Card"
-              //       ? 16
-              //       : detail.searchType === "Aadhar"
-              //       ? 12
-              //       : detail.searchType === "Debit Card"
-              //       ? 16
-              //       : detail.searchType === "Mobile No"
-              //       ? 10
-              //       : detail.searchType === "RRN"
-              //       ? 12
-              //       : detail.searchType === "CRN"
-              //       ? 10
-              //       : 0,
-            }}
-            className="selected-param-box"
-            // value={
-            //   (detail.searchType === "Credit Card" ||
-            //     detail.searchType === "Aadhar" ||
-            //     detail.searchType === "Debit Card" ||
-            //     detail.searchType === "RRN") &&
-            //   (detail.value === 0 || detail.value.length === 0)
-            //     ? ""
-            //     : (detail.searchType === "Credit Card" ||
-            //           detail.searchType === "Aadhar" ||
-            //           detail.searchType === "Debit Card" ||
-            //           detail.searchType === "RRN") &&
-            //         (detail.value !== 0 || detail.value.length !== 0)
-            //       ? parseInt(detail.value, 10)
-            //       : detail.value
-            // }
-            value={
-              detail.searchType === "Account number"
-                ? detail.accountNo
-                : detail.searchType === "Email ID"
-                ? detail.email
-                : detail.searchType === "PAN"
-                ? detail.panNo
-                : detail.searchType === "Credit Card"
-                ? detail.creditCardNo
-                : detail.searchType === "Aadhar"
-                ? detail.aadhar
-                : detail.searchType === "Debit Card"
-                ? detail.debitCard
-                : detail.searchType === "Mobile No"
-                ? reportName === "IP Logs"
-                  ? detail.mobileNo.replace(detail.countryCode, "")
-                  : detail.mobileNo
-                : detail.searchType === "RRN"
-                ? detail.rrn
-                : detail.searchType === "CRN"
-                ? detail.crnNo
-                : ""
-            }
-            id="paramvalue"
-            placeholder={
-              // reportName === "IP Logs" &&
-              // detail.searchType === "Mobile No" &&
-              // detail.countryCode === ""
-              //   ? "Select Country Code"
-              //   :
-              `Enter ${detail.searchType}`
-            }
-            autoComplete="off"
-            // style={{
-            //   margin: "0rem 0rem 0rem 0rem",
-            //   fontSize: "0.88rem",
-            // }}
-            label={
-              reportName === "IP Logs" && detail.searchType === "Mobile No"
-                ? ""
-                : detail.searchType
-            }
-            // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
-            margin="none"
-            onChange={(e) => {
-              if (
-                reportName === "IP Logs" &&
-                detail.searchType === "Mobile No"
-              ) {
-                handleMobileNoValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName
-                );
-              } else {
-                handleInputValue(
-                  e.target.value,
-                  reportIndex,
-                  detailIndex,
-                  detailName,
-                  reportName,
-                  detailsArray
-                );
-              }
-            }}
-            // type={
-            //   detail.searchType === "Account number"
-            //     ? "text"
-            //     : detail.searchType === "CRN"
-            //       ? "text"
-            //       : detail.searchType === "Email ID"
-            //         ? "email"
-            //         : detail.searchType === "PAN"
-            //           ? "text"
-            //           : detail.searchType === "Mobile No"
-            //             ? "tel"
-            //             : detail.searchType === "Credit Card"
-            //               ? "number"
-            //               : detail.searchType === "Aadhar"
-            //                 ? "number"
-            //                 : detail.searchType === "Debit Card"
-            //                   ? "number"
-            //                   : detail.searchType === "RRN"
-            //                     ? "number"
-            //                     : "text"
-            // }
-            type="text"
-            inputMode="text"
-            color="primary"
           />
         </FormControl>
 
         {((detailName === "accountNumberDetails" &&
           reportName !== "Device details") ||
           reportName === "IP Logs" ||
+          reportName === "Fund Transfer" ||
+          // reportName === "PG Transaction" ||
+          // reportName === "MB Transaction" ||
           reportName === "Statement in PDF/Excel" ||
           reportName === "Beneficiary details for Bulk IMPS transactions" ||
           reportName === "Beneficiary details for Bulk UPI transactions" ||
@@ -2511,7 +1813,7 @@ export default function CreateRequest() {
           (detailName === "RRNdetails" &&
             reportName ===
               "Beneficiary details for Bulk UPI transactions")) && (
-          <Box className="detail-datepickers">
+          <Box className="secondary-fields">
             <Box flex={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
@@ -2524,19 +1826,7 @@ export default function CreateRequest() {
                   }
                   label={t("from")}
                   // disabled={
-                  //   (detail.searchType === "Account number" &&
-                  //     detail.accountNo.length < 1) ||
-                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.searchType === "Credit Card" &&
-                  //     detail.creditCardNo.length < 1) ||
-                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.searchType === "Debit Card" &&
-                  //     detail.debitCard.length < 1) ||
-                  //   (detail.searchType === "Mobile No" &&
-                  //     detail.mobileNo.length < 1) ||
-                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
+                  // invalidInputs(detail)
                   //     ? true
                   //     : false
                   // }
@@ -2562,38 +1852,10 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.searchType === "Account number" &&
-                    detail.accountNo.length < 16) ||
-                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
-                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
-                    (detail.searchType === "Credit Card" &&
-                      detail.creditCardNo.length < 16) ||
-                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.searchType === "Debit Card" &&
-                      detail.debitCard.length < 16) ||
-                    (detail.searchType === "Mobile No" &&
-                      detail.mobileNo.length < 10) ||
-                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
-                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
+                  invalidInput(detail,reportName) &&
                   detail.fromDate === ""
                     ? customFormText("")
-                    : ((detail.searchType === "Account number" &&
-                        detail.accountNo.length === 16) ||
-                        (detail.searchType === "Email ID" &&
-                          detail.email.length > 02 &&
-                          detail.email.length <= 320) ||
-                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
-                        (detail.searchType === "Credit Card" &&
-                          detail.creditCardNo.length === 16) ||
-                        (detail.searchType === "Aadhar" &&
-                          detail.aadhar.length === 12) ||
-                        (detail.searchType === "Debit Card" &&
-                          detail.debitCard.length === 16) ||
-                        (detail.searchType === "Mobile No" &&
-                          detail.mobileNo.length === 10) ||
-                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
-                        (detail.searchType === "CRN" &&
-                          detail.crnNo.length === 10)) &&
+                    : validInputs(detail,reportName) &&
                       detail.fromDate === ""
                     ? customFormText("If needed, select from date", "grey", 1)
                     : detail.fromDate !== ""
@@ -2610,19 +1872,7 @@ export default function CreateRequest() {
                   className="date-picker"
                   label={t("to")}
                   // disabled={
-                  //   (detail.searchType === "Account number" &&
-                  //     detail.accountNo.length < 1) ||
-                  //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
-                  //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-                  //   (detail.searchType === "Credit Card" &&
-                  //     detail.creditCardNo.length < 1) ||
-                  //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-                  //   (detail.searchType === "Debit Card" &&
-                  //     detail.debitCard.length < 1) ||
-                  //   (detail.searchType === "Mobile No" &&
-                  //     detail.mobileNo.length < 1) ||
-                  //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-                  //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
+                  //   invalidInputs(detail, reportName)
                   //     ? true
                   //     : false
                   // }
@@ -2636,11 +1886,7 @@ export default function CreateRequest() {
                     )
                   }
                   slotProps={
-                    detail.toDate === "" ||
-                    dayjs(detail.toDate, "DD-MM-YYYY").isAfter(
-                      currentDate,
-                      "DD-MM-YYYY"
-                    )
+                    detail.toDate === ""
                       ? datePickerControl.slotProps
                       : datePickerControl.validatedSlotProps
                   }
@@ -2658,38 +1904,10 @@ export default function CreateRequest() {
                 />
                 {/* {
                   // detail.fromDate !== "" ? datePickerHelper("Dated") :
-                  ((detail.searchType === "Account number" &&
-                    detail.accountNo.length < 16) ||
-                    (detail.searchType === "Email ID" && detail.email.length < 12) ||
-                    (detail.searchType === "PAN" && detail.panNo.length < 10) ||
-                    (detail.searchType === "Credit Card" &&
-                      detail.creditCardNo.length < 16) ||
-                    (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
-                    (detail.searchType === "Debit Card" &&
-                      detail.debitCard.length < 16) ||
-                    (detail.searchType === "Mobile No" &&
-                      detail.mobileNo.length < 10) ||
-                    (detail.searchType === "RRN" && detail.rrn.length < 12) ||
-                    (detail.searchType === "CRN" && detail.crnNo.length < 10)) &&
+                  invalidInputs(detail, reportName) &&
                   detail.toDate === ""
                     ? customFormText("")
-                    : ((detail.searchType === "Account number" &&
-                        detail.accountNo.length === 16) ||
-                        (detail.searchType === "Email ID" &&
-                          detail.email.length > 02 &&
-                          detail.email.length <= 320) ||
-                        (detail.searchType === "PAN" && detail.panNo.length === 10) ||
-                        (detail.searchType === "Credit Card" &&
-                          detail.creditCardNo.length === 16) ||
-                        (detail.searchType === "Aadhar" &&
-                          detail.aadhar.length === 12) ||
-                        (detail.searchType === "Debit Card" &&
-                          detail.debitCard.length === 16) ||
-                        (detail.searchType === "Mobile No" &&
-                          detail.mobileNo.length === 10) ||
-                        (detail.searchType === "RRN" && detail.rrn.length === 12) ||
-                        (detail.searchType === "CRN" &&
-                          detail.crnNo.length === 10)) &&
+                    : validInputs(detail, reportName) &&
                       detail.toDate === ""
                     ? customFormText("If needed, select to date", "grey", 1)
                     : detail.toDate !== ""
@@ -2716,13 +1934,13 @@ export default function CreateRequest() {
                 // disabled={detail.countryCode === ""}
                 size="small"
                 sx={
-                  detail.mobileNo.length > 1
+                  detail.phoneNo.length > 1
                     ? inputControl.validatedTextfield
                     : inputControl.textfield
                 }
                 data-testid={`mobileno-input-${detailIndex}`}
                 InputLabelProps={
-                  detail.mobileNo.length > 1
+                  detail.phoneNo.length > 1
                     ? inputControl.validatedInputLabelProps
                     : inputControl.inputLabelProps
                 }
@@ -2743,10 +1961,9 @@ export default function CreateRequest() {
                   "Enter Mobile No"
                 }
                 className="number-box"
-                value={detail.mobileNo.replace(detail.countryCode, "")}
+                value={detail.phoneNo}
                 autoComplete="off"
                 // label="Mobile No"
-
                 margin="none"
                 onChange={(e) => {
                   handleMobileNoValue(
@@ -2756,6 +1973,7 @@ export default function CreateRequest() {
                     detailName,
                     reportName
                   );
+                  updateMobileNo(reportIndex, detailIndex, detailName);
                 }}
                 type="tel"
                 inputMode="tel"
@@ -2769,11 +1987,11 @@ export default function CreateRequest() {
                         htmlFor="cc-selectbox"
                         variant="outlined"
                         className={
-                          detail.mobileNo === ""
+                          detail.phoneNo === ""
                             ? "mobile-label"
                             : "valid-mobile-label"
                         }
-                        // color={detail.mobileNo === "" ? "grey" : "green"}
+                        // color={detail.phoneNo === "" ? "grey" : "green"}
                       >
                         Mobile No
                       </InputLabel> */}
@@ -2805,8 +2023,13 @@ export default function CreateRequest() {
                               detailIndex,
                               detailName
                             );
+                            updateMobileNo(
+                              reportIndex,
+                              detailIndex,
+                              detailName
+                            );
 
-                            // if(detail.mobileNo.length === 10){
+                            // if(detail.phoneNo.length === 10){
                             // handleNewMobileNo(
                             //   reportIndex,
                             //   detailIndex,
@@ -2876,11 +2099,12 @@ export default function CreateRequest() {
           (reportName === "Beneficiary details for Single IMPS transactions" ||
             reportName ===
               "Beneficiary details for Single UPI transactions") && (
-            <Box className="rrn-fields">
+            <Box className="secondary-fields">
+             <Box flex={1}>
               <FormControl
                 variant="outlined"
                 margin="none"
-                className="single-rrn-field"
+                className="rrn-amount-field"
               >
                 <TextField
                   sx={
@@ -2906,7 +2130,7 @@ export default function CreateRequest() {
                   //   detail.rrn === "" || detail.rrn.length === 0 ? true : false
                   // }
                   className="selected-param-box-3"
-                  value={detail.amount.length === 0 ? "" : detail.amount}
+                  value={detail.amount}
                   // helperText={
                   //   detail.rrn.length < 12
                   //     ? ""
@@ -2931,6 +2155,7 @@ export default function CreateRequest() {
                   color="primary"
                 />
               </FormControl>
+              </Box>
 
               <Box flex={1}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -3023,18 +2248,7 @@ export default function CreateRequest() {
               data-testid={`type-dropdown-${detailIndex}`}
               displayEmpty
               // disabled={
-              //   (detail.searchType === "Account number" &&
-              //     detail.accountNo.length < 1) ||
-              //   (detail.searchType === "Email ID" && detail.email.length < 1) ||
-              //   (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-              //   (detail.searchType === "Credit Card" &&
-              //     detail.creditCardNo.length < 1) ||
-              //   (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-              //   (detail.searchType === "Debit Card" &&
-              //     detail.debitCard.length < 1) ||
-              //   (detail.searchType === "Mobile No" && detail.mobileNo.length < 1) ||
-              //   (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-              //   (detail.searchType === "CRN" && detail.crnNo.length < 1)
+              //   invalidInputs(detail, reportName)
               //     ? true
               //     : false
               // }
@@ -3096,17 +2310,7 @@ export default function CreateRequest() {
                 </MenuItem>
               ))}
             </Select>
-            {/* {(detail.searchType === "Account number" &&
-              detail.accountNo.length < 16) ||
-            (detail.searchType === "Email ID" && detail.email.length < 12) ||
-            (detail.searchType === "PAN" && detail.panNo.length < 10) ||
-            (detail.searchType === "Credit Card" &&
-              detail.creditCardNo.length < 16) ||
-            (detail.searchType === "Aadhar" && detail.aadhar.length < 12) ||
-            (detail.searchType === "Debit Card" && detail.debitCard.length < 16) ||
-            (detail.searchType === "Mobile No" && detail.mobileNo.length < 10) ||
-            (detail.searchType === "RRN" && detail.rrn.length < 12) ||
-            (detail.searchType === "CRN" && detail.crnNo.length < 10)
+            {/* {invalidInputs(detail, reportName)
               ? customFormText("")
               : detail.documentType === ""
               ? customFormText(
@@ -3128,23 +2332,24 @@ export default function CreateRequest() {
             className="add-remove-button"
             data-testid={`delete-button-${detailIndex}`}
             disabled={
-              reportName === "IP Logs" &&
-              reportsState[reportIndex][detailName].length === 3
+              (reportName === "Fund Transfer" &&
+                inoutSelected &&
+                reportsState[reportIndex][detailName].length === 2) ||
+              (reportName === "IP Logs" &&
+                reportsState[reportIndex][detailName].length === 3)
                 ? true
                 : reportsState[reportIndex][detailName].length === 1
                 ? true
                 : false
             }
             style={{
-              marginLeft:
-                reportName ===
-                  "Beneficiary details for Single IMPS transactions" ||
-                reportName === "Beneficiary details for Single UPI transactions"
-                  ? "4.4%"
-                  : "0%",
+              
               opacity:
-                reportName === "IP Logs" &&
-                reportsState[reportIndex][detailName].length === 3
+                (reportName === "Fund Transfer" &&
+                  inoutSelected &&
+                  reportsState[reportIndex][detailName].length === 2) ||
+                (reportName === "IP Logs" &&
+                  reportsState[reportIndex][detailName].length === 3)
                   ? 0.25
                   : reportsState[reportIndex][detailName].length === 1
                   ? 0.25
@@ -3166,42 +2371,9 @@ export default function CreateRequest() {
             className="add-remove-button"
             data-testid={`add-button-${detailIndex}`}
             style={{
-              opacity:
-                (detail.searchType === "Account number" &&
-                  detail.accountNo.length < 1) ||
-                (detail.searchType === "Email ID" && detail.email.length < 1) ||
-                (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-                (detail.searchType === "Credit Card" &&
-                  detail.creditCardNo.length < 1) ||
-                (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-                (detail.searchType === "Debit Card" &&
-                  detail.debitCard.length < 1) ||
-                (detail.searchType === "Mobile No" &&
-                  detail.mobileNo.length < 1) ||
-                (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-                (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
-                detail.documentType === ""
-                  ? 0.25
-                  : 1,
+              opacity: invalidInputs(detail, reportName) ? 0.25 : 1,
             }}
-            disabled={
-              (detail.searchType === "Account number" &&
-                detail.accountNo.length < 1) ||
-              (detail.searchType === "Email ID" && detail.email.length < 1) ||
-              (detail.searchType === "PAN" && detail.panNo.length < 1) ||
-              (detail.searchType === "Credit Card" &&
-                detail.creditCardNo.length < 1) ||
-              (detail.searchType === "Aadhar" && detail.aadhar.length < 1) ||
-              (detail.searchType === "Debit Card" &&
-                detail.debitCard.length < 1) ||
-              (detail.searchType === "Mobile No" &&
-                detail.mobileNo.length < 1) ||
-              (detail.searchType === "RRN" && detail.rrn.length < 1) ||
-              (detail.searchType === "CRN" && detail.crnNo.length < 1) ||
-              detail.documentType === ""
-                ? true
-                : false
-            }
+            disabled={invalidInputs(detail, reportName)}
             onClick={() =>
               addDetail(reportIndex, detailName, param, reportName)
             }
@@ -3222,182 +2394,128 @@ export default function CreateRequest() {
     detail,
     reportName
   ) =>
-    detailsArray.map((detail, detailIndex) => (
+    detailsArray?.map((detail, detailIndex) => (
       <Box>
-        {(detail.accountNo.length > 0 ||
-          detail.panNo.length > 0 ||
-          detail.rrn.length > 0 ||
-          detail.crnNo.length > 0 ||
-          detail.mobileNo.length > 0 ||
-          detail.email.length > 0 ||
-          detail.creditCardNo.length > 0 ||
-          detail.debitCard.length > 0 ||
-          detail.aadhar.length > 0) && (
-          <>
-            <Box
-              className="preview-data"
-              justifyContent="space-evenly"
-              display={
-                (reportName === "IP Logs" &&
-                  detail.subRequest === "IPLastLogin") ||
-                (reportName === "IP Logs" && detail.subRequest === "IPLogTxn")
-                  ? "none"
-                  : "flex"
-              }
-            >
-              <Box
-                className="detail-input"
-                display={
-                  detail.accountNo.length ||
-                  detail.panNo.length > 0 ||
-                  detail.rrn.length > 0 ||
-                  detail.crnNo.length > 0 ||
-                  detail.mobileNo.length > 0 ||
-                  detail.email.length > 0 ||
-                  detail.creditCardNo.length > 0 ||
-                  detail.debitCard.length > 0 ||
-                  detail.aadhar.length > 0
-                    ? "block"
-                    : "none"
-                }
-              >
-                <Typography sx={previewProps.searchType} component="span">{`${
-                  detail.searchType === "Account number"
-                    ? "Acc no."
-                    : detail.searchType
-                }  : `}</Typography>
-                {/* {detail.searchType === "Email ID" ? ( */}
-                <InputBase
-                  readOnly={true}
-                  multiline={true}
-                  value={
-                    detail.searchType === "Account number"
-                      ? detail.accountNo
-                      : detail.searchType === "Email ID"
-                      ? detail.email
-                      : detail.searchType === "PAN"
-                      ? detail.panNo
-                      : detail.searchType === "Credit Card"
-                      ? detail.creditCardNo
-                      : detail.searchType === "Aadhar"
-                      ? detail.aadhar
-                      : detail.searchType === "Debit Card"
-                      ? detail.debitCard
-                      : detail.searchType === "Mobile No"
-                      ? detail.mobileNo
-                      : detail.searchType === "RRN"
-                      ? detail.rrn
-                      : detail.searchType === "CRN"
-                      ? detail.crnNo
-                      : ""
-                  }
-                  className="preview-email"
-                />
-                {/* ) : (
+        <>
+          <Box
+            className="preview-data"
+            justifyContent="space-evenly"
+            display={
+              (reportName === "IP Logs" &&
+                detail.subRequest === "IPLastLogin") ||
+              (reportName === "IP Logs" && detail.subRequest === "IPLogTxn") ||
+              (reportName === "Fund Transfer" &&
+                inoutSelected &&
+                detail.subRequest === "Inward")
+                ? "none"
+                : "flex"
+            }
+          >
+            <Box className="detail-input">
+              <Typography sx={previewProps.searchType} component="span">{`${
+                detail.searchType === "bankRefNumber"
+                  ? "Bank RN"
+                  : detail.searchType === "Aadhar"
+                  ? "Aadhaar"
+                  : detail.searchType === "Account number"
+                  ? "Acc no."
+                  : detail.searchType
+              }  : `}</Typography>
+              {/* {detail.searchType === "Email ID" ? ( */}
+              <InputBase
+                readOnly={true}
+                multiline={true}
+                value={valueInfo(detail, reportName)}
+                className="preview-email"
+              />
+              {/* ) : (
                   <Typography sx={previewProps.value} component="span">
-                    {detail.searchType === "Account number"
-                      ? detail.accountNo
-                      : detail.searchType === "Email ID"
-                      ? detail.email
-                      : detail.searchType === "PAN"
-                      ? detail.panNo
-                      : detail.searchType === "Credit Card"
-                      ? detail.creditCardNo
-                      : detail.searchType === "Aadhar"
-                      ? detail.aadhar
-                      : detail.searchType === "Debit Card"
-                      ? detail.debitCard
-                      : detail.searchType === "Mobile No"
-                      ? detail.mobileNo
-                      : detail.searchType === "RRN"
-                      ? detail.rrn
-                      : detail.searchType === "CRN"
-                      ? detail.crnNo
-                      : ""}
+                    {valueInfo(detail,reportName)}
                   </Typography>
                 )} */}
-              </Box>
+            </Box>
 
-              {((detailName === "accountNumberDetails" &&
-                reportName !== "Device details") ||
-                (detailName === "CRNdetails" && reportName === "IP Logs") ||
-                reportName === "IP Logs" ||
-                reportName === "Statement in PDF/Excel" ||
+            {((detailName === "accountNumberDetails" &&
+              reportName !== "Device details") ||
+              (detailName === "CRNdetails" && reportName === "IP Logs") ||
+              reportName === "IP Logs" ||
+              reportName === "Fund Transfer" ||
+              // reportName === "PG Transaction" ||
+              // reportName === "MB Transaction" ||
+              reportName === "Statement in PDF/Excel" ||
+              reportName === "Beneficiary details for Bulk IMPS transactions" ||
+              reportName === "Beneficiary details for Bulk UPI transactions" ||
+              (detailName === "RRNdetails" &&
                 reportName ===
-                  "Beneficiary details for Bulk IMPS transactions" ||
+                  "Beneficiary details for Bulk IMPS transactions") ||
+              (detailName === "RRNdetails" &&
                 reportName ===
-                  "Beneficiary details for Bulk UPI transactions" ||
-                (detailName === "RRNdetails" &&
-                  reportName ===
-                    "Beneficiary details for Bulk IMPS transactions") ||
-                (detailName === "RRNdetails" &&
-                  reportName ===
-                    "Beneficiary details for Bulk UPI transactions")) && (
-                <Box className="detail-range">
-                  <Box className="preview-range">
-                    <Typography sx={previewProps.searchType} component="span">
-                      Date :{" "}
-                    </Typography>
-                  </Box>
+                  "Beneficiary details for Bulk UPI transactions")) && (
+              <Box className="detail-range">
+                <Box className="preview-range">
+                  <Typography sx={previewProps.searchType} component="span">
+                    Date :{" "}
+                  </Typography>
+                </Box>
+
+                <Typography sx={previewProps.value} component="span">
+                  {detail.fromDate !== ""
+                    ? `${detail.fromDate} - `
+                    : `___________ - `}
+                </Typography>
+
+                <Typography sx={previewProps.value} component="span">
+                  {detail.toDate !== "" ? `${detail.toDate}` : `____________`}
+                </Typography>
+              </Box>
+            )}
+
+            {reportName === "Device details" && (
+              <Box className="detail-range">
+                {/* <Box className="preview-range">
+                 
+                 </Box> */}
+              </Box>
+            )}
+
+            {((detailName === "RRNdetails" &&
+              reportName ===
+                "Beneficiary details for Single IMPS transactions") ||
+              (detailName === "RRNdetails" &&
+                reportName ===
+                  "Beneficiary details for Single UPI transactions")) && (
+              <Box className="detail-range">
+                <Box className="rrn-preview-2">
+                  <Typography sx={previewProps.searchType} component="span">
+                    Amount :{" "}
+                  </Typography>
+
+                  <Typography sx={previewProps.value} component="span">
+                    {detail.amount}
+                  </Typography>
+                </Box>
+
+                {/* {detail.fromDate !== "" && ( */}
+                <Box className="rrn-preview-2">
+                  <Typography sx={previewProps.searchType} component="span">
+                    Date :{" "}
+                  </Typography>
 
                   <Typography sx={previewProps.value} component="span">
                     {detail.fromDate !== ""
-                      ? `${detail.fromDate} - `
-                      : `___________ - `}
-                  </Typography>
-
-                  <Typography sx={previewProps.value} component="span">
-                    {detail.toDate !== "" ? `${detail.toDate}` : `____________`}
+                      ? `${detail.fromDate}`
+                      : `___________`}
                   </Typography>
                 </Box>
-              )}
+                {/* )} */}
+              </Box>
+            )}
 
-              {reportName === "Device details" && (
-                <Box className="detail-range">
-                  {/* <Box className="preview-range">
-                 
-                 </Box> */}
-                </Box>
-              )}
-
-              {((detailName === "RRNdetails" &&
-                reportName ===
-                  "Beneficiary details for Single IMPS transactions") ||
-                (detailName === "RRNdetails" &&
-                  reportName ===
-                    "Beneficiary details for Single UPI transactions")) && (
-                <Box className="detail-range">
-                  <Box className="rrn-preview-2">
-                    <Typography sx={previewProps.searchType} component="span">
-                      Amount :{" "}
-                    </Typography>
-
-                    <Typography sx={previewProps.value} component="span">
-                      {detail.amount.length === 0 ? "0" : detail.amount}
-                    </Typography>
-                  </Box>
-
-                  {/* {detail.fromDate !== "" && ( */}
-                  <Box className="rrn-preview-2">
-                    <Typography sx={previewProps.searchType} component="span">
-                      Date :{" "}
-                    </Typography>
-
-                    <Typography sx={previewProps.value} component="span">
-                      {detail.fromDate !== ""
-                        ? `${detail.fromDate}`
-                        : `___________`}
-                    </Typography>
-                  </Box>
-                  {/* )} */}
-                </Box>
-              )}
-
-              {reportName === "IP Logs" && (
-                <Box className="mobileno-preview">
-                  {detail.searchType === "Mobile No" ? (
-                    <>
-                      {/* <Typography
+            {reportName === "IP Logs" && (
+              <Box className="mobileno-preview">
+                {detail.searchType === "Mobile No" ? (
+                  <>
+                    {/* <Typography
                         marginLeft="1rem"
                         sx={previewProps.searchType}
                         component="span"
@@ -3406,64 +2524,60 @@ export default function CreateRequest() {
                       </Typography>
 
                       <Typography sx={previewProps.value} component="span">
-                        {detail.mobileNo}
+                        {detail.phoneNo}
                       </Typography> */}
-                    </>
-                  ) : (
-                    <>
-                      <Typography
-                        marginLeft="1rem"
-                        sx={previewProps.searchType}
-                        component="span"
-                      >
-                        Mobile No :{" "}
-                      </Typography>
+                  </>
+                ) : (
+                  <>
+                    <Typography
+                      marginLeft="1rem"
+                      sx={previewProps.searchType}
+                      component="span"
+                    >
+                      Mobile No :{" "}
+                    </Typography>
 
-                      <Typography sx={previewProps.value} component="span">
-                        {detail.mobileNo}
-                      </Typography>
-                    </>
-                  )}
-                </Box>
-              )}
-
-              {reportName !== "IP Logs" &&
-                reportName !== "Statement in PDF/Excel" && (
-                  <Box className="mobileno-preview"></Box>
+                    <Typography sx={previewProps.value} component="span">
+                      {reportName === "IP Logs"
+                        ? detail.phoneNo
+                        : detail.mobileNo.length > 0}
+                    </Typography>
+                  </>
                 )}
+              </Box>
+            )}
 
-              {reportName === "Statement in PDF/Excel" && (
-                <Box className="type-preview">
-                  <Typography
-                    sx={previewProps.searchType}
-                    marginLeft="1rem"
-                    component="span"
-                  >
-                    Type :{" "}
-                  </Typography>
-                  <Typography sx={previewProps.value} component="span">
-                    {detail.documentType === ""
-                      ? ""
-                      : detail.documentType === "pdf"
-                      ? "PDF"
-                      : detail.documentType === "excel"
-                      ? "Excel"
-                      : ""}
-                  </Typography>
-                </Box>
+            {reportName !== "IP Logs" &&
+              reportName !== "Statement in PDF/Excel" && (
+                <Box className="mobileno-preview"></Box>
               )}
-            </Box>
-          </>
-        )}
+
+            {reportName === "Statement in PDF/Excel" && (
+              <Box className="type-preview">
+                <Typography
+                  sx={previewProps.searchType}
+                  marginLeft="1rem"
+                  component="span"
+                >
+                  Type :{" "}
+                </Typography>
+                <Typography sx={previewProps.value} component="span">
+                  {detail.documentType === ""
+                    ? ""
+                    : detail.documentType === "pdf"
+                    ? "PDF"
+                    : detail.documentType === "excel"
+                    ? "Excel"
+                    : ""}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </>
       </Box>
     ));
 
   //////////console.log("ticket number length", ticketNumber);
-
-  const [reportDetails, setReportDetails] = useState([]);
-
-  // const [deviceDetails, setDeviceDetails] = useState([]);
-  // const [ipLogs, setIpLogs] = useState([]);
 
   useEffect(() => {
     setReportDetails((prevState) => {
@@ -3481,6 +2595,7 @@ export default function CreateRequest() {
             ...report.aadharDetails,
             ...report.mobileNoDetails,
             ...report.emailDetails,
+            ...report.bankRefNumberDetails
           ],
         };
       });
@@ -3533,6 +2648,14 @@ export default function CreateRequest() {
       )
     ) ||
     reportsState.every((state, index) =>
+      // state.RRNdetails.length > 0 &&
+      state.bankRefNumberDetails?.every(
+        (detail, subIndex) => state.bankRefNumberDetails[0]?.bankRefNumber.length > 0
+        // &&
+        //   state.RRNdetails[0].documentType !== ""
+      )
+    ) ||
+    reportsState.every((state, index) =>
       // state.aadharDetails.length > 0 &&
       state.aadharDetails.every(
         (detail, subIndex) => state.aadharDetails[0].aadhar.length > 0
@@ -3576,6 +2699,11 @@ export default function CreateRequest() {
 
   const isValidReportData = reportsState.every(
     (state, index) =>
+      (state.bankRefNumberDetails?.length > 0 &&
+        state.bankRefNumberDetails?.every(
+          (detail, subIndex) =>
+            detail.bankRefNumber?.length > 1 && detail.documentType !== ""
+        )) ||
       (state.accountNumberDetails.length > 0 &&
         state.accountNumberDetails.every(
           (detail, subIndex) =>
@@ -3604,7 +2732,9 @@ export default function CreateRequest() {
       (state.mobileNoDetails.length > 0 &&
         state.mobileNoDetails.every(
           (detail, subIndex) =>
-            detail.mobileNo.length > 1 && detail.documentType !== ""
+            (state.selectedReport === "IP Logs"
+              ? detail.phoneNo.length > 1
+              : detail.mobileNo.length > 1) && detail.documentType !== ""
         )) ||
       (state.creditCardDetails.length > 0 &&
         state.creditCardDetails.every(
@@ -3693,7 +2823,128 @@ export default function CreateRequest() {
   const dynamicReports =
     searchInput.length === 0 ? requiredReportsData : searchedReports;
 
+  const submittable =
+    ticketNumber.length > 0 ||
+    ticketType !== "" ||
+    (ticketType === "Other" && ticketDescription.length > 0) ||
+    isValidReportData;
+
   ////console.log("Selected Reports", selectedReports, selectedReports.length);
+
+  function invalidInputs(detail, reportName) {
+    if (detail.searchType === "Account number") {
+      return detail.accountNo.length < 1;
+    } else if (detail && detail.searchType === "bankRefNumber") {
+      return detail.bankRefNumber.length < 1;
+    } else if (detail.searchType === "Email ID") {
+      return detail.email.length < 1;
+    } else if (detail.searchType === "PAN") {
+      return detail.panNo.length < 1;
+    } else if (detail.searchType === "Credit Card") {
+      return detail.creditCardNo.length < 1;
+    } else if (detail.searchType === "Aadhar") {
+      return detail.aadhar.length < 1;
+    } else if (detail.searchType === "Debit Card") {
+      return detail.debitCard.length < 1;
+    } else if (detail.searchType === "Mobile No") {
+      if (reportName === "IP Logs") {
+        return detail.phoneNo.length < 1;
+      } else {
+        return detail.mobileNo.length < 1;
+      }
+    } else if (detail.searchType === "RRN") {
+      return detail.rrn.length < 1;
+    } else if (detail.searchType === "CRN") {
+      return detail.crnNo.length < 1;
+    }
+  }
+
+  function validInputs(detail, reportName) {
+    if (detail.searchType === "Account number") {
+      return detail.accountNo.length > 0;
+    } 
+    else if (detail && detail.searchType === "bankRefNumber") {
+      return detail.bankRefNumber.length > 0;
+    } 
+    else if (detail.searchType === "Email ID") {
+      return detail.email.length > 0;
+    } else if (detail.searchType === "PAN") {
+      return detail.panNo.length > 0;
+    } else if (detail.searchType === "Credit Card") {
+      return detail.creditCardNo.length > 0;
+    } else if (detail.searchType === "Aadhar") {
+      return detail.aadhar.length > 0;
+    } else if (detail.searchType === "Debit Card") {
+      return detail.debitCard.length > 0;
+    } else if (detail.searchType === "Mobile No") {
+      if (reportName === "IP Logs") {
+        return detail.phoneNo.length > 0;
+      } else {
+        return detail.mobileNo.length > 0;
+      }
+    } else if (detail.searchType === "RRN") {
+      return detail.rrn.length > 0;
+    } else if (detail.searchType === "CRN") {
+      return detail.crnNo.length > 0;
+    }
+  }
+
+  function validLengths(detail) {
+    if (detail.searchType === "bankRefNumber") {
+      return 10;
+    } else if (detail.searchType === "Account number") {
+      return 16;
+    } else if (detail.searchType === "Email ID") {
+      return "12-230";
+    } else if (detail.searchType === "PAN") {
+      return 10;
+    } else if (detail.searchType === "Credit Card") {
+      return 16;
+    } else if (detail.searchType === "Aadhar") {
+      return 12;
+    } else if (detail.searchType === "Debit Card") {
+      return 16;
+    } else if (detail.searchType === "Mobile No") {
+      return 10;
+    } else if (detail.searchType === "RRN") {
+      return 12;
+    } else if (detail.searchType === "CRN") {
+      return 10;
+    } else {
+      return 0;
+    }
+  }
+
+  function valueInfo(detail, reportName) {
+    if (detail.searchType === "bankRefNumber") {
+      return detail.bankRefNumber;
+    } else if (detail.searchType === "Account number") {
+      return detail.accountNo;
+    } else if (detail.searchType === "Email ID") {
+      return detail.email;
+    } else if (detail.searchType === "PAN") {
+      return detail.panNo;
+    } else if (detail.searchType === "Credit Card") {
+      return detail.creditCardNo;
+    } else if (detail.searchType === "Aadhar") {
+      return detail.aadhar;
+    } else if (detail.searchType === "Debit Card") {
+      return detail.debitCard;
+    } else if (detail.searchType === "Mobile No") {
+      if (reportName === "IP Logs") {
+        return detail.phoneNo;
+      } else {
+        return detail.mobileNo;
+      }
+    } else if (detail.searchType === "RRN") {
+      return detail.rrn;
+    } else if (detail.searchType === "CRN") {
+      return detail.crnNo;
+    } else {
+      return "";
+    }
+  }
+  // console.log("Selected REPORTS", selectedReports);
 
   return (
     <Provider store={store}>
@@ -3703,7 +2954,7 @@ export default function CreateRequest() {
       <Box className="page" data-testid="create-request-page">
         <Box className="create-request-screen">
           <Box
-            className="ticket-entry-section"
+            className="ticket-section"
             minHeight={loading === true ? "10.275rem" : "auto"}
           >
             {loading === true ? (
@@ -4012,7 +3263,7 @@ export default function CreateRequest() {
                       className="reports-search"
                       data-testid="reports-search"
                     >
-                      <SearchIcon className="request-search-icon" />
+                      <SearchIcon className="search-icon" />
                       <FormControl fullWidth variant="outlined">
                         <InputBase
                           disableUnderline
@@ -4023,7 +3274,7 @@ export default function CreateRequest() {
                           data-testid="reports-search-input"
                           value={searchInput}
                           placeholder="Search Report"
-                          className="request-search-input"
+                          className="search-input"
                           onChange={(e) => setSearchInput(e.target.value)}
                           onKeyDown={(e) => {
                             e.stopPropagation();
@@ -4037,8 +3288,8 @@ export default function CreateRequest() {
                       <MenuItem
                         key={report}
                         value={report}
-                        data-testid={`reports-selection-dropdown-menu-item-${index}`}
-                        className="reports-selection-dropdown-menu-item"
+                        data-testid={`reports-menuitem-${index}`}
+                        className="reports-menuitem"
                       >
                         <Checkbox
                           size="medium"
@@ -4163,10 +3414,17 @@ export default function CreateRequest() {
                                       request.selectedReport ===
                                         "Beneficiary details for Single IMPS transactions" ||
                                       request.selectedReport ===
-                                        "Beneficiary details for Single UPI transactions"
+                                        "Beneficiary details for Single UPI transactions" ||
+                                      request.selectedReport ===
+                                        "PG Transaction"
                                         ? "none"
+                                        : request.selectedReport ===
+                                          "Fund Transfer"
+                                        ? "flex"
                                         : "block"
                                     }
+                                    alignItems="center"
+                                    flexDirection="row"
                                   >
                                     <FormControl
                                       // variant="standard"
@@ -4188,6 +3446,14 @@ export default function CreateRequest() {
                                         name="param-selection-dropdown"
                                         className="param-selection-dropdown"
                                         role="combobox"
+                                        disabled={
+                                          request.selectedReport ===
+                                            "Fund Transfer" &&
+                                          inwardSelected == false &&
+                                          outwardSelected == false
+                                            ? true
+                                            : false
+                                        }
                                         id="param-selection-dropdown"
                                         data-testid={`param-dropdown-${reportIndex}`}
                                         multiple={true}
@@ -4229,7 +3495,14 @@ export default function CreateRequest() {
                                         }
                                         IconComponent={(props) => (
                                           <KeyboardArrowDownOutlinedIcon
-                                            className="select-icon"
+                                            className={
+                                              request.selectedReport ===
+                                                "Fund Transfer" &&
+                                              inwardSelected == false &&
+                                              outwardSelected == false
+                                                ? "disabled-select-icon"
+                                                : "select-icon"
+                                            }
                                             {...props}
                                           />
                                         )}
@@ -4366,6 +3639,75 @@ export default function CreateRequest() {
                                         )
                                       : datePickerHelper("")} */}
                                     </FormControl>
+
+                                    {request.selectedReport ===
+                                      "Fund Transfer" && (
+                                      <Box
+                                        // data-testid={
+                                        //   selectedStatus.length === 0
+                                        //     ? "status-unchecked"
+                                        //     : "checked-box"
+                                        // }
+                                        data-testid=""
+                                        className="fund-checkers"
+                                        // data-testid="status-menu"
+                                      >
+                                        {fundTransfers.map(
+                                          (fund, fundIndex) => (
+                                            <MenuItem
+                                              key={fund}
+                                              role="option"
+                                              value={fund}
+                                              tabIndex={fundIndex}
+                                              // data-value={status}
+                                              onChange={(event) => {
+                                                event.stopPropagation();
+                                                handleFundSelection(
+                                                  event,
+                                                  fund
+                                                );
+                                              }}
+                                              data-testid={`fund-menu-item`}
+                                              className="fund-menuitem"
+                                            >
+                                              <Checkbox
+                                                size="medium"
+                                                // checked={selectedStatus.includes(status)}
+                                                checked={
+                                                  selectedFunds.indexOf(fund) >
+                                                  -1
+                                                }
+                                                value={fund}
+                                                // tabIndex={statusIndex - 1}
+                                                // inputProps={{
+                                                //   "aria-label": `checkbox-x-${statusIndex}`,
+                                                // }}
+                                                color="primary"
+                                                // name={`status-checkbox-${statusIndex}`}
+                                                role="checkbox"
+                                                data-testid={`status-checkbox`}
+                                                icon={
+                                                  <CheckBoxOutlineBlank className="uncheck-icon" />
+                                                }
+                                                checkedIcon={
+                                                  <CheckBoxOutlinedIcon className="check-icon" />
+                                                }
+                                              />
+                                              <ListItemText
+                                                primary={fund}
+                                                color="black"
+                                                inputMode="text"
+                                                // className=""
+                                                primaryTypographyProps={{
+                                                  fontSize: "0.85rem",
+                                                }}
+                                                data-testid={`fund-text-${fundIndex}`}
+                                              />
+                                            </MenuItem>
+                                          )
+                                        )}
+                                      </Box>
+                                    )}
                                   </Box>
 
                                   <Box
@@ -4379,7 +3721,10 @@ export default function CreateRequest() {
                                         request.selectedReport ===
                                           "Beneficiary details for Single IMPS transactions" ||
                                         request.selectedReport ===
-                                          "Beneficiary details for Single UPI transactions"
+                                          "Beneficiary details for Single UPI transactions" 
+                                          ||
+                                        request.selectedReport ===
+                                          "PG Transaction"
                                           ? "0rem"
                                           : "-1.95rem",
                                       // marginBottom:
@@ -4441,7 +3786,20 @@ export default function CreateRequest() {
                                     {reportsState[
                                       reportIndex
                                     ].selectedParams.some(
-                                      (param) => param === "Aadhar"
+                                      (param) => param === "bankRefNumber"
+                                    ) &&
+                                      displayRequestedReports(
+                                        reportsState[reportIndex]
+                                          .bankRefNumberDetails,
+                                        reportIndex,
+                                        "bankRefNumberDetails",
+                                        "bankRefNumber",
+                                        request.selectedReport
+                                      )}
+                                    {reportsState[
+                                      reportIndex
+                                    ].selectedParams.some(
+                                      (param) => param === "Aadhaar"
                                     ) &&
                                       displayRequestedReports(
                                         reportsState[reportIndex].aadharDetails,
@@ -4513,16 +3871,16 @@ export default function CreateRequest() {
                 <Box className="action-buttons">
                   <Button
                     className="submit-button"
-                    style={{ opacity: isValidReportData === true ? 1 : 0.45 }}
+                    style={{ opacity: submittable ? 1 : 0.45 }}
                     title="Submit"
                     data-testid="submit-button"
-                    // disabled={!isValidReportData}
+                    disabled={!submittable}
                     onClick={handleSubmit}
                   >
                     {" "}
                     <Typography
                       className="submit-text"
-                      color={isValidReportData === true ? "white" : "black"}
+                      color={submittable ? "white" : "black"}
                     >
                       {t("submit")}
                     </Typography>
@@ -4541,12 +3899,12 @@ export default function CreateRequest() {
                 </Box>
 
                 <Box>
-                  <Modal
-                    open={viewPreview === true}
+                  <CustomModal
+                    open={viewPreview}
                     onClose={() => setViewPreview(false)}
-                    className="preview-modal"
-                    data-testid="preview-modal"
+                    testid="preview-modal"
                     contentLabel="Preview Modal"
+                    keepMounted={false}
                   >
                     <Box className="preview-box">
                       <Box className="preview-header">
@@ -4619,6 +3977,14 @@ export default function CreateRequest() {
                                         request.selectedReport
                                       )}
                                       {showPreview(
+                                        reportsState[reportIndex]
+                                          ?.bankRefNumberDetails,
+                                        reportIndex,
+                                        "bankRefNumberDetails",
+                                        "bankRefNumber",
+                                        request.selectedReport
+                                      )}
+                                      {showPreview(
                                         reportsState[reportIndex].aadharDetails,
                                         reportIndex,
                                         "aadharDetails",
@@ -4664,7 +4030,7 @@ export default function CreateRequest() {
                           ))}
                       </Box>
                     </Box>
-                  </Modal>
+                  </CustomModal>
                 </Box>
               </Box>
             </Box>

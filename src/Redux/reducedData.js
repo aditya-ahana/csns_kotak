@@ -14,10 +14,7 @@ export const availableReportTypes = ["PDF", "Excel"].sort();
 
 export const rowOptions = [5, 10, 25, 40];
 
-export const ticketTypeData = [
-  "ED",
-  "Police",
-].sort();
+export const ticketTypeData = ["Cyber", "Non-Cyber", "Legal", "Tax"].sort();
 
 export const requiredReportsData = [
   "Statement in PDF/Excel",
@@ -26,15 +23,20 @@ export const requiredReportsData = [
   "Beneficiary details for Single UPI transactions",
   "Beneficiary details for Bulk UPI transactions",
   "IP Logs",
+  "Fund Transfer",
+  "PG Transaction",
+  "MB Transaction",
   "Device details",
 ].sort();
+
+export const fundTransfers = ["Inward", "Outward"].sort();
 
 export const availableParameters = [
   "Account number",
   "CRN",
   "RRN",
   "PAN",
-  "Aadhar",
+  "Aadhaar",
   "Mobile No",
   "Debit Card",
   "Credit Card",
@@ -1141,5 +1143,65 @@ export const countries = countryCodeData.map((code) => code.data);
 export const countryCodes = countries.sort((array, sortedArray) =>
   array.name.localeCompare(sortedArray.name)
 );
+
+
+export const userDataHeaders = [
+  "Sl No",
+  "User Email ID",
+  "Role",
+  "Status",
+  "Action"
+];
+
+export const userRoles = [
+  "Team Member",
+  "Team Leader",
+  "Team Supervisor",
+  "Team Manager",
+].sort();
+
+export const userMgtData = [
+  {
+    slNo: 1,
+    usermail: "user12@abc.com",
+    role: "Team Member",
+    status: "Active",
+  },
+  {
+    slNo: 2,
+    usermail: "user14@abc.com",
+    role: "Team Leader",
+    status: "Inactive",
+  },
+  {
+    slNo: 3,
+    usermail: "user15@abc.com",
+    role: "Team Leader",
+    status: "Active",
+  },
+  {
+    slNo: 4,
+    usermail: "user20@abc.com",
+    role: "Team Supervisor",
+    status: "Inactive",
+  },
+  {
+    slNo: 5,
+    usermail: "user21@abc.com",
+    role: "Team Manager",
+    status: "Inactive",
+  },
+  {
+    slNo: 6,
+    usermail: "user22@abc.com",
+    role: "Team Member",
+    status: "Active",
+  },
+];
+
+export const userStatusOptions = [
+ "Active",
+ "Inactive"
+];
 
 // console.log("Countries length",countryCodes.length);
