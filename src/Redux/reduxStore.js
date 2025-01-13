@@ -7,6 +7,6 @@ const store = configureStore({
   },
 });
 
-// console.log("CSNS-REDUX", slicedDataConfig);
+console.log("CSNS-REDUX", slicedDataConfig);
 
 export default store;

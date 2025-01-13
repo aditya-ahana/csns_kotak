@@ -76,6 +76,7 @@ export default function CreateRequest() {
   const [descriptionFocused, setDescriptionFocused] = useState(false);
   const [Creator, setCreator] = useState("");
   const [selectedReports, setSelectedReports] = useState([]);
+  const [chosenReportObjects, setChosenReportObjects] = useState([]);
   const [viewPreview, setViewPreview] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [inwardSelected, setInwardSelected] = useState(false);
@@ -150,7 +151,7 @@ export default function CreateRequest() {
   const primaryTextProps = {
     fontSize: "0.825rem",
   };
-  
+
   const previewProps = {
     searchType: {
       fontWeight: 500,
@@ -527,15 +528,16 @@ export default function CreateRequest() {
 
   useEffect(() => {
     setReportsState((prevReportsState) => {
-      const updatedReportState = selectedReports.map((report) => {
+      const updatedReportState = chosenReportObjects.map((report) => {
         const existingReport = prevReportsState.find(
-          (existing) => existing.selectedReport === report
+          (existing) => existing.selectedReport === report.reportName
         );
 
-        if (report === "PG Transaction") {
+        if (report.reportName === "PG Transaction") {
           return (
             existingReport || {
-              selectedReport: report,
+              selectedReportID: report.reportId,
+              selectedReport: report.reportName,
               selectedParams: ["bankRefNumber"],
               accountNumberDetails: [],
               PANdetails: [],
@@ -575,17 +577,18 @@ export default function CreateRequest() {
             }
           );
         } else if (
-          report === "Beneficiary details for Single IMPS transactions" ||
-          report === "Beneficiary details for Single UPI transactions"
+          report.reportName === "Beneficiary details for Single IMPS transactions" ||
+          report.reportName === "Beneficiary details for Single UPI transactions"
         ) {
           return (
             existingReport || {
-              selectedReport: report,
+              selectedReportID: report.reportId,
+              selectedReport: report.reportName,
               selectedParams: ["RRN"],
               accountNumberDetails: [],
               PANdetails: [],
               CRNdetails: [],
-              bankRefNumberDetails:[],
+              bankRefNumberDetails: [],
               RRNdetails: [
                 {
                   searchType: "RRN",
@@ -621,11 +624,12 @@ export default function CreateRequest() {
         } else {
           return (
             existingReport || {
-              selectedReport: report,
+              selectedReportID: report.reportId,
+              selectedReport: report.reportName,
               selectedParams: [],
               accountNumberDetails: [],
               PANdetails: [],
-              bankRefNumberDetails:[],
+              bankRefNumberDetails: [],
               CRNdetails: [],
               RRNdetails: [],
               aadharDetails: [],
@@ -641,7 +645,7 @@ export default function CreateRequest() {
       });
       return updatedReportState;
     });
-  }, [selectedReports]);
+  }, [chosenReportObjects]);
 
   // //////////console.log('Selected REPORTS : ',selectedReports);
   // //////////console.log('Selected REPORTS : ',selectedReports);
@@ -719,12 +723,25 @@ export default function CreateRequest() {
     } = event;
     ////console.log("event",event)
     console.log("Value first length", value[0]);
+    console.log("Event", event.target.value);
     if (event.target.value.length > 0 && event.target.value[0] !== undefined) {
       setSelectedReports(typeof value === "string" ? value.split(",") : value);
     } else {
       setSelectedReports([]);
     }
   };
+
+  useEffect(() => {
+    const selectiveReports = requiredReportsData.filter((reports) =>
+      selectedReports.some((selected) => selected === reports.reportName)
+    );
+    // console.log("selective", selectiveReports);
+    setChosenReportObjects(selectiveReports);
+  }, [selectedReports]);
+
+  console.log("Chosen Report Objects", chosenReportObjects);
+
+
 
   // useEffect(() => {
   //   if (selectedReports.length > 1) {
@@ -808,7 +825,7 @@ export default function CreateRequest() {
         filePath: "",
       };
     }
-  };
+  }
 
   const handleParamSelection = (event, reportIndex, reportName) => {
     setReportsState((prevState) => {
@@ -1799,20 +1816,13 @@ export default function CreateRequest() {
           />
         </FormControl>
 
-        {((detailName === "accountNumberDetails" &&
-          reportName !== "Device details") ||
-          reportName === "IP Logs" ||
+        {(reportName === "IP Logs" ||
           reportName === "Fund Transfer" ||
           // reportName === "PG Transaction" ||
           // reportName === "MB Transaction" ||
           reportName === "Statement in PDF/Excel" ||
           reportName === "Beneficiary details for Bulk IMPS transactions" ||
-          reportName === "Beneficiary details for Bulk UPI transactions" ||
-          (detailName === "RRNdetails" &&
-            reportName === "Beneficiary details for Bulk IMPS transactions") ||
-          (detailName === "RRNdetails" &&
-            reportName ===
-              "Beneficiary details for Bulk UPI transactions")) && (
+          reportName === "Beneficiary details for Bulk UPI transactions") && (
           <Box className="secondary-fields">
             <Box flex={1}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1918,6 +1928,8 @@ export default function CreateRequest() {
             </Box>
           </Box>
         )}
+
+
 
         {reportName === "IP Logs" && (
           <FormControl
@@ -2100,61 +2112,61 @@ export default function CreateRequest() {
             reportName ===
               "Beneficiary details for Single UPI transactions") && (
             <Box className="secondary-fields">
-             <Box flex={1}>
-              <FormControl
-                variant="outlined"
-                margin="none"
-                className="rrn-amount-field"
-              >
-                <TextField
-                  sx={
-                    detail.amount.length > 0
-                      ? inputControl.validatedTextfield
-                      : inputControl.textfield
-                  }
-                  data-testid={`amount-detail-${detailIndex}`}
-                  InputLabelProps={
-                    detail.amount.length > 0
-                      ? inputControl.validatedInputLabelProps
-                      : inputControl.inputLabelProps
-                  }
-                  inputProps={{
-                    style: {
-                      fontSize: "0.88rem",
-                      height: "0.48rem",
-                    },
-                    // maxLength: 6,
-                  }}
-                  placeholder="Enter Amount"
-                  // disabled={
-                  //   detail.rrn === "" || detail.rrn.length === 0 ? true : false
-                  // }
-                  className="selected-param-box-3"
-                  value={detail.amount}
-                  // helperText={
-                  //   detail.rrn.length < 12
-                  //     ? ""
-                  //     : detail.rrn.length === 12 && detail.amount.length === 0
-                  //     ? t("ifNeededAmountMustBe")
-                  //     : validatedDetail()
-                  // }
-                  autoComplete="off"
-                  // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
-                  label="Amount"
+              <Box flex={1}>
+                <FormControl
+                  variant="outlined"
                   margin="none"
-                  onChange={(e) =>
-                    handleAmountValue(
-                      e.target.value,
-                      reportIndex,
-                      detailIndex,
-                      detailName
-                    )
-                  }
-                  type="text"
-                  inputMode="text"
-                  color="primary"
-                />
-              </FormControl>
+                  className="rrn-amount-field"
+                >
+                  <TextField
+                    sx={
+                      detail.amount.length > 0
+                        ? inputControl.validatedTextfield
+                        : inputControl.textfield
+                    }
+                    data-testid={`amount-detail-${detailIndex}`}
+                    InputLabelProps={
+                      detail.amount.length > 0
+                        ? inputControl.validatedInputLabelProps
+                        : inputControl.inputLabelProps
+                    }
+                    inputProps={{
+                      style: {
+                        fontSize: "0.88rem",
+                        height: "0.48rem",
+                      },
+                      // maxLength: 6,
+                    }}
+                    placeholder="Enter Amount"
+                    // disabled={
+                    //   detail.rrn === "" || detail.rrn.length === 0 ? true : false
+                    // }
+                    className="selected-param-box-3"
+                    value={detail.amount}
+                    // helperText={
+                    //   detail.rrn.length < 12
+                    //     ? ""
+                    //     : detail.rrn.length === 12 && detail.amount.length === 0
+                    //     ? t("ifNeededAmountMustBe")
+                    //     : validatedDetail()
+                    // }
+                    autoComplete="off"
+                    // FormHelperTextProps={{ sx: { color: "rgb(95, 105, 91)" } }}
+                    label="Amount"
+                    margin="none"
+                    onChange={(e) =>
+                      handleAmountValue(
+                        e.target.value,
+                        reportIndex,
+                        detailIndex,
+                        detailName
+                      )
+                    }
+                    type="text"
+                    inputMode="text"
+                    color="primary"
+                  />
+                </FormControl>
               </Box>
 
               <Box flex={1}>
@@ -2343,7 +2355,6 @@ export default function CreateRequest() {
                 : false
             }
             style={{
-              
               opacity:
                 (reportName === "Fund Transfer" &&
                   inoutSelected &&
@@ -2386,6 +2397,219 @@ export default function CreateRequest() {
         )}
       </Box>
     ));
+
+  // const showPreview = (
+  //   detailsArray,
+  //   reportIndex,
+  //   detailName,
+  //   detail,
+  //   reportName
+  // ) =>
+  //   detailsArray?.map((detail, detailIndex) => (
+  //     <Box>
+  //       <>
+  //         <Box
+  //           className="preview-data"
+  //           justifyContent="space-evenly"
+  //           display={
+  //             (reportName === "IP Logs" &&
+  //               detail.subRequest === "IPLastLogin") ||
+  //             (reportName === "IP Logs" && detail.subRequest === "IPLogTxn") ||
+  //             (reportName === "Fund Transfer" &&
+  //               inoutSelected &&
+  //               detail.subRequest === "Inward")
+  //               ? "none"
+  //               : "flex"
+  //           }
+  //         >
+  //           <Box className="detail-input">
+  //             <Typography sx={previewProps.searchType} component="span">{`${
+  //               detail.searchType === "bankRefNumber"
+  //                 ? "Bank RN"
+  //                 : detail.searchType === "Aadhar"
+  //                 ? "Aadhaar"
+  //                 : detail.searchType === "Account number"
+  //                 ? "Acc no."
+  //                 : detail.searchType
+  //             }  : `}</Typography>
+  //             {/* {detail.searchType === "Email ID" ? ( */}
+  //             <InputBase
+  //               readOnly={true}
+  //               multiline={true}
+  //               value={valueInfo(detail, reportName)}
+  //               className="preview-email"
+  //             />
+  //             {/* ) : (
+  //                 <Typography sx={previewProps.value} component="span">
+  //                   {valueInfo(detail,reportName)}
+  //                 </Typography>
+  //               )} */}
+  //           </Box>
+
+  //           {/* {((detailName === "accountNumberDetails" &&
+  //             reportName !== "Device details") ||
+  //             (detailName === "CRNdetails" && reportName === "IP Logs") ||
+  //             reportName === "IP Logs" ||
+  //             reportName === "Fund Transfer" ||
+  //             // reportName === "PG Transaction" ||
+  //             // reportName === "MB Transaction" ||
+  //             reportName === "Statement in PDF/Excel" ||
+  //             reportName === "Beneficiary details for Bulk IMPS transactions" ||
+  //             reportName === "Beneficiary details for Bulk UPI transactions" || 
+  //             reportName === "MB transaction"
+  //             (detailName === "RRNdetails" &&
+  //               reportName ===
+  //                 "Beneficiary details for Bulk IMPS transactions") ||
+  //             (detailName === "RRNdetails" &&
+  //               reportName ===
+  //                 "Beneficiary details for Bulk UPI transactions")) && ( */}
+  //           <Box
+  //             className={
+  //               reportName ===
+  //                 "Beneficiary details for Single IMPS transactions" ||
+  //               reportName === "Beneficiary details for Single UPI transactions"
+  //                 ? "single-detail-range"
+  //                 : "detail-range"
+  //             }
+  //           >
+  //             {reportName !== "MB Transaction" &&
+  //               reportName !== "PG Transaction" &&
+  //               reportName !== "Device details" && (
+  //                 <>
+  //                   <Box className="preview-range">
+  //                     <Typography sx={previewProps.searchType} component="span">
+  //                       Date :{" "}
+  //                     </Typography>
+  //                   </Box>
+
+  //                   {reportName ===
+  //                     "Beneficiary details for Single IMPS transactions" ||
+  //                   reportName ===
+  //                     "Beneficiary details for Single UPI transactions" ? (
+  //                     <Typography sx={previewProps.value} component="span">
+  //                       {detail.fromDate !== ""
+  //                         ? `${detail.fromDate}`
+  //                         : `___________`}
+  //                     </Typography>
+  //                   ) : (
+  //                     <Typography sx={previewProps.value} component="span">
+  //                       {detail.fromDate !== ""
+  //                         ? `${detail.fromDate} - `
+  //                         : `___________ - `}
+  //                     </Typography>
+  //                   )}
+
+  //                   {reportName !==
+  //                     "Beneficiary details for Single IMPS transactions" &&
+  //                     reportName !==
+  //                       "Beneficiary details for Single UPI transactions" && (
+  //                       <Typography sx={previewProps.value} component="span">
+  //                         {detail.toDate !== ""
+  //                           ? `${detail.toDate}`
+  //                           : `____________`}
+  //                       </Typography>
+  //                     )}
+  //                 </>
+  //               )}
+  //           </Box>
+  //           {/* )} */}
+
+  //           {(reportName ===
+  //             "Beneficiary details for Single IMPS transactions" ||
+  //             reportName ===
+  //               "Beneficiary details for Single UPI transactions" ||
+  //             reportName === "MB Transaction" ||
+  //             reportName === "PG Transaction" ||
+  //             reportName === "Device details") && (
+  //             // <Box className="detail-range">
+  //             <Box className="amount-preview">
+  //               <Typography sx={previewProps.searchType} component="span">
+  //                 {reportName === "MB Transaction" ||
+  //                 reportName === "PG Transaction" ||
+  //                 reportName === "Device details"
+  //                   ? ""
+  //                   : `Amount :{" "}`}
+  //               </Typography>
+
+  //               <Typography sx={previewProps.value} component="span">
+  //                 {detail.amount}
+  //               </Typography>
+  //             </Box>
+
+  //             // </Box>
+  //           )}
+
+  //           {reportName === "IP Logs" && (
+  //             <Box className="mobileno-preview">
+  //               {detail.searchType === "Mobile No" ? (
+  //                 <>
+  //                   {/* <Typography
+  //                       marginLeft="1rem"
+  //                       sx={previewProps.searchType}
+  //                       component="span"
+  //                     >
+  //                       Mobile No :{" "}
+  //                     </Typography>
+
+  //                     <Typography sx={previewProps.value} component="span">
+  //                       {detail.phoneNo}
+  //                     </Typography> */}
+  //                 </>
+  //               ) : (
+  //                 <>
+  //                   <Typography
+  //                     marginLeft="1rem"
+  //                     sx={previewProps.searchType}
+  //                     component="span"
+  //                   >
+  //                     Mobile No :{" "}
+  //                   </Typography>
+
+  //                   <Typography sx={previewProps.value} component="span">
+  //                     {reportName === "IP Logs"
+  //                       ? detail.phoneNo
+  //                       : detail.mobileNo.length > 0}
+  //                   </Typography>
+  //                 </>
+  //               )}
+  //             </Box>
+  //           )}
+
+  //           {reportName !== "IP Logs" ||
+  //             reportName !== "Statement in PDF/Excel" ||
+  //             reportName !==
+  //               "Beneficiary details for Single IMPS transactions" ||
+  //             (reportName !==
+  //               "Beneficiary details for Single UPI transactions" && (
+  //               <Box width="80%"></Box>
+  //             ))}
+
+  //           {reportName === "Statement in PDF/Excel" ||
+  //             (reportName !==
+  //               "Beneficiary details for Bulk UPI transactions" && (
+  //               <Box className="type-preview">
+  //                 <Typography
+  //                   sx={previewProps.searchType}
+  //                   marginLeft="1rem"
+  //                   component="span"
+  //                 >
+  //                   Type :{" "}
+  //                 </Typography>
+  //                 <Typography sx={previewProps.value} component="span">
+  //                   {detail.documentType === ""
+  //                     ? ""
+  //                     : detail.documentType === "pdf"
+  //                     ? "PDF"
+  //                     : detail.documentType === "excel"
+  //                     ? "Excel"
+  //                     : ""}
+  //                 </Typography>
+  //               </Box>
+  //             ))}
+  //         </Box>
+  //       </>
+  //     </Box>
+  //   ));
 
   const showPreview = (
     detailsArray,
@@ -2583,6 +2807,7 @@ export default function CreateRequest() {
     setReportDetails((prevState) => {
       const updatedReportState = reportsState.map((report) => {
         return {
+          report_id:report.selectedReportID,
           reportType: report.selectedReport,
           report_status: "In-progress",
           requestDetails: [
@@ -2595,7 +2820,7 @@ export default function CreateRequest() {
             ...report.aadharDetails,
             ...report.mobileNoDetails,
             ...report.emailDetails,
-            ...report.bankRefNumberDetails
+            ...report.bankRefNumberDetails,
           ],
         };
       });
@@ -2650,7 +2875,8 @@ export default function CreateRequest() {
     reportsState.every((state, index) =>
       // state.RRNdetails.length > 0 &&
       state.bankRefNumberDetails?.every(
-        (detail, subIndex) => state.bankRefNumberDetails[0]?.bankRefNumber.length > 0
+        (detail, subIndex) =>
+          state.bankRefNumberDetails[0]?.bankRefNumber.length > 0
         // &&
         //   state.RRNdetails[0].documentType !== ""
       )
@@ -2753,16 +2979,6 @@ export default function CreateRequest() {
         ))
   );
 
-  // const deviceDetailsPayload = {
-  //   // ticketId: "",
-  //   ticketNumber: ticketNumber,
-  //   ticketDescription: ticketDescription,
-  //   status: "In-progress",
-  //   createdDate: currentDate,
-  //   createdBy: Creator,
-  //   reportDetails: deviceDetails,
-  // };
-
   const createRequestPayload = {
     // ticketId: "",
     ticketNumber: ticketNumber,
@@ -2774,6 +2990,8 @@ export default function CreateRequest() {
     createdBy: "User",
     reportDetails: reportDetails,
   };
+
+  console.log("Report Payload", createRequestPayload);
 
   useEffect(() => {
     if (ticketType !== "Other") {
@@ -2817,7 +3035,7 @@ export default function CreateRequest() {
   // console.log("Spring Boot Payload", reportDetails);
   //console.log("Triple Reports State", reportsState);
 
-  console.log("Create Request Payload", createRequestPayload);
+  // console.log("Create Request Payload", createRequestPayload);
   //////console.log("Device Details Array", deviceDetails);
 
   const dynamicReports =
@@ -2862,11 +3080,9 @@ export default function CreateRequest() {
   function validInputs(detail, reportName) {
     if (detail.searchType === "Account number") {
       return detail.accountNo.length > 0;
-    } 
-    else if (detail && detail.searchType === "bankRefNumber") {
+    } else if (detail && detail.searchType === "bankRefNumber") {
       return detail.bankRefNumber.length > 0;
-    } 
-    else if (detail.searchType === "Email ID") {
+    } else if (detail.searchType === "Email ID") {
       return detail.email.length > 0;
     } else if (detail.searchType === "PAN") {
       return detail.panNo.length > 0;
@@ -2888,6 +3104,8 @@ export default function CreateRequest() {
       return detail.crnNo.length > 0;
     }
   }
+
+  // console.log("REPORTS DATA",requiredReportsData);
 
   function validLengths(detail) {
     if (detail.searchType === "bankRefNumber") {
@@ -3211,7 +3429,7 @@ export default function CreateRequest() {
                         handleReportSelection(event);
                       }
                     }}
-                    // variant="standard"
+                    variant="standard"
                     input={<OutlinedInput fullWidth />}
                     IconComponent={(props) => (
                       <KeyboardArrowDownOutlinedIcon
@@ -3286,10 +3504,18 @@ export default function CreateRequest() {
 
                     {dynamicReports.map((report, index) => (
                       <MenuItem
-                        key={report}
-                        value={report}
+                        key={report.reportId}
+                        value={report.reportName}
                         data-testid={`reports-menuitem-${index}`}
                         className="reports-menuitem"
+                        // onChange={(event) => {
+                        //   if (
+                        //     event.target.value !== undefined ||
+                        //     event.target.value !== ""
+                        //   ) {
+                        //     handleReportSelection(event, report.reportId);
+                        //   }
+                        // }}
                       >
                         <Checkbox
                           size="medium"
@@ -3301,12 +3527,14 @@ export default function CreateRequest() {
                           checkedIcon={
                             <CheckBoxOutlinedIcon className="check-icon" />
                           }
-                          checked={selectedReports.indexOf(report) > -1}
+                          checked={
+                            selectedReports.indexOf(report.reportName) > -1
+                          }
                           color="primary"
-                          value={report}
+                          value={report.reportName}
                         />
                         <ListItemText
-                          primary={report}
+                          primary={report.reportName}
                           data-testid="reports-menu-listext"
                           className="reports-menu-listext"
                           // color="black"
@@ -3721,8 +3949,7 @@ export default function CreateRequest() {
                                         request.selectedReport ===
                                           "Beneficiary details for Single IMPS transactions" ||
                                         request.selectedReport ===
-                                          "Beneficiary details for Single UPI transactions" 
-                                          ||
+                                          "Beneficiary details for Single UPI transactions" ||
                                         request.selectedReport ===
                                           "PG Transaction"
                                           ? "0rem"

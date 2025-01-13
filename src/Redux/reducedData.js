@@ -16,18 +16,35 @@ export const rowOptions = [5, 10, 25, 40];
 
 export const ticketTypeData = ["Cyber", "Non-Cyber", "Legal", "Tax"].sort();
 
-export const requiredReportsData = [
-  "Statement in PDF/Excel",
-  "Beneficiary details for Single IMPS transactions",
-  "Beneficiary details for Bulk IMPS transactions",
-  "Beneficiary details for Single UPI transactions",
-  "Beneficiary details for Bulk UPI transactions",
-  "IP Logs",
-  "Fund Transfer",
-  "PG Transaction",
-  "MB Transaction",
-  "Device details",
+// export const requiredReportsData = [
+//   "Statement in PDF/Excel",
+//   "Beneficiary details for Single IMPS transactions",
+//   "Beneficiary details for Bulk IMPS transactions",
+//   "Beneficiary details for Single UPI transactions",
+//   "Beneficiary details for Bulk UPI transactions",
+//   "IP Logs",
+//   "Fund Transfer",
+//   "PG Transaction",
+//   "MB Transaction",
+//   "Device details",
+// ].sort();
+
+const requiredReports = [
+  {reportId : 1, reportName : "Statement in PDF/Excel"},
+  {reportId : 2, reportName : "Beneficiary details for Single IMPS transactions"},
+  {reportId : 3, reportName : "Beneficiary details for Bulk IMPS transactions"},
+  {reportId : 4, reportName : "Beneficiary details for Single UPI transactions"},
+  {reportId : 5, reportName : "Beneficiary details for Bulk UPI transactions"},
+  {reportId : 6, reportName : "IP Logs"},
+  {reportId : 7, reportName : "Fund Transfer"},
+  {reportId : 8, reportName : "PG Transaction"},
+  {reportId : 9, reportName : "MB Transaction"},
+  {reportId : 10, reportName : "Device details"},
 ].sort();
+
+export const requiredReportsData = requiredReports.sort((array, sortedArray) =>
+  array.reportName.localeCompare(sortedArray.reportName)
+);
 
 export const fundTransfers = ["Inward", "Outward"].sort();
 

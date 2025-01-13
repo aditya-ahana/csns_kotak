@@ -788,7 +788,8 @@ input::-webkit-inner-spin-button {
 
 .preview-header {
   padding: 0rem 1.25rem 0.45rem 1.5rem;
-  border: 1px solid rgba(236, 236, 236, 1);
+  border: 0px solid rgba(236, 236, 236, 1);
+  border-width : 0px 0px 1px 0px
 }
 
 .preview-main-heading {
@@ -927,6 +928,15 @@ input::-webkit-inner-spin-button {
   max-width: 23%;
 }
 
+.single-detail-range {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  margin-top: 0.19rem;
+  min-width: 25%;
+  max-width: 25%;
+}
+
 .rrn-preview-2 {
   display: flex;
   flex-direction: row;
@@ -948,6 +958,12 @@ input::-webkit-inner-spin-button {
 .mobileno-preview {
   min-width: 30%;
   max-width: 30%;
+  align-items: center;
+}
+
+.amount-preview {
+  min-width: 28%;
+  max-width: 28%;
   align-items: center;
 }
 
